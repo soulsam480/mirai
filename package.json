@@ -1,5 +1,5 @@
 {
-  "name": "@examples/next-starter",
+  "name": "mirai",
   "version": "9.16.0",
   "private": true,
   "scripts": {
@@ -11,7 +11,7 @@
     "db-migrate-dev": "yarn prisma migrate dev",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
     "dev": "next dev",
-    "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/trpcdb run-s db-up db-migrate-dev db-seed dev",
+    "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/trpcdb run-s db-up db-migrate-dev dev",
     "start": "next start",
     "lint": "eslint src",
     "lint-fix": "yarn lint --fix",
@@ -21,15 +21,20 @@
     "test:unit": "jest",
     "test:e2e": "jest --config jest.playwright.config.ts",
     "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "fmt": "prettier --write {src,prisma}/**/*.{js,ts,tsx}"
   },
   "prisma": {
     "seed": "yarn ts-node prisma/seed.ts"
   },
   "prettier": {
-    "printWidth": 80,
+    "semi": true,
+    "arrowParens": "always",
+    "printWidth": 120,
+    "bracketSpacing": true,
     "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": true,
+    "htmlWhitespaceSensitivity": "ignore"
   },
   "dependencies": {
     "@prisma/client": "^3.0.1",
@@ -52,6 +57,7 @@
     "@types/react": "^17.0.20",
     "@typescript-eslint/eslint-plugin": "^4.30.0",
     "@typescript-eslint/parser": "^4.26.0",
+    "autoprefixer": "^10.4.0",
     "cross-env": "^7.0.3",
     "eslint": "^7.32.0",
     "eslint-config-next": "^12.0.0",
@@ -64,8 +70,10 @@
     "jest-playwright-preset": "^1.4.5",
     "npm-run-all": "^4.1.5",
     "playwright": "^1.14.1",
+    "postcss": "^8.4.5",
     "prettier": "^2.3.2",
     "prisma": "^3.0.1",
+    "tailwindcss": "^3.0.7",
     "ts-jest": "^27.0.5",
     "ts-node": "^10.3.0",
     "typescript": "4.4.4"

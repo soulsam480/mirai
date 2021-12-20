@@ -8,15 +8,12 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
     <>
       <Head>
-        <title>Prisma Starter</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Mirai</title>
       </Head>
 
       <main>{children}</main>
 
-      {process.env.NODE_ENV !== 'production' && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
+      {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
     </>
   );
 };
