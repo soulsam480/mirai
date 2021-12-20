@@ -8,7 +8,7 @@ const IndexPage: NextPageWithLayout = () => {
   //   }
   // }, [postsQuery.data, utils]);
 
-  return <>Index</>;
+  return <div className="text-green-400">Hello mirai</div>;
 };
 
 export default IndexPage;
