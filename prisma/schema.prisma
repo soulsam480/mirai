@@ -7,7 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-prisma-client-js"
 }
 
 // model Post {
@@ -21,6 +21,49 @@ generator client {
 //   updatedAt DateTime @unique @default(now())
 // }
 
-model User {
-  id String @id
+model Institute {
+  id      Int              @id @default(autoincrement())
+  code    String?
+  name    String
+  batches Batch[]
+  status  OnboardingStatus
+  logo    String?
+}
+
+enum OnboardingStatus {
+  ONBOARDED
+  INPROGRESS
+  PENDING
+}
+
+model Batch {
+  id           Int               @id @default(autoincrement())
+  institute    Institute         @relation(references: [id], fields: [instituteId])
+  instituteId  Int
+  duration     String
+  durationType BatchDurationType
+  status       BatchStatus
+  name         String
+}
+
+enum BatchStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BatchDurationType {
+  YEAR
+  MONTH
+  WEEK
+  DAY
+}
+
+// enum InstituteType{
+//   ACADEMIC
+
+// }
+
+model Student {
+  id   Int     @id @default(autoincrement())
+  code String?
 }
