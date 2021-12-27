@@ -28,6 +28,8 @@ model Institute {
   batches Batch[]
   status  OnboardingStatus
   logo    String?
+
+  students Student[]
 }
 
 enum OnboardingStatus {
@@ -44,6 +46,7 @@ model Batch {
   durationType BatchDurationType
   status       BatchStatus
   name         String
+  students     Student[]
 }
 
 enum BatchStatus {
@@ -58,6 +61,7 @@ enum BatchDurationType {
   DAY
 }
 
+//TODO: for future reference
 // enum InstituteType{
 //   ACADEMIC
 
@@ -65,5 +69,22 @@ enum BatchDurationType {
 
 model Student {
   id   Int     @id @default(autoincrement())
-  code String?
+  code String? @unique
+
+  Batch   Batch? @relation(fields: [batchId], references: [id])
+  batchId Int?
+
+  Institute   Institute? @relation(fields: [instituteId], references: [id])
+  instituteId Int?
+
+  // basics
+  name              String
+  dob               String
+  gender            String
+  category          String
+  mobile_number     String
+  primary_email     String @unique
+  secondary_email   String @unique
+  permanent_address String
+  current_address   String
 }
