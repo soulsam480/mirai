@@ -10,16 +10,27 @@ generator client {
   provider = "prisma-client-prisma-client-js"
 }
 
-// model Post {
-//   id    String @id @default(uuid())
-//   title String
-//   text  String
+model Account {
+  id            Int     @id @default(autoincrement())
+  name          String
+  emailVerified Boolean
+  email         String
 
-//   // To return `Date`s intact through the API we need to add data transformers
-//   // https://trpc.io/docs/data-transformers
-//   createdAt DateTime @unique @default(now())
-//   updatedAt DateTime @unique @default(now())
-// }
+  //auth
+  role    Role
+  isOwner Boolean
+
+  owner       Institute @relation(fields: [instituteId], references: [id])
+  instituteId Int
+
+  tenant    Student @relation(fields: [studentId], references: [id])
+  studentId Int
+}
+
+enum Role {
+  STUDENT
+  INSTITUTE
+}
 
 model Institute {
   id      Int              @id @default(autoincrement())
@@ -30,6 +41,7 @@ model Institute {
   logo    String?
 
   students Student[]
+  Account  Account[]
 }
 
 enum OnboardingStatus {
@@ -83,8 +95,13 @@ model Student {
   gender            String
   category          String
   mobile_number     String
-  primary_email     String @unique
-  secondary_email   String @unique
+  primary_email     String    @unique
+  secondary_email   String    @unique
   permanent_address String
   current_address   String
+  Account           Account[]
 }
+
+// model Course{
+
+// }
