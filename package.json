@@ -1,6 +1,6 @@
 {
   "name": "mirai",
-  "version": "9.16.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "build:1-migrate": "prisma migrate deploy",
@@ -43,6 +43,9 @@
     "@trpc/react": "^9.16.0",
     "@trpc/server": "^9.16.0",
     "clsx": "^1.1.1",
+    "dayjs": "^1.10.7",
+    "jsonwebtoken": "^8.5.1",
+    "nanoid": "^3.1.32",
     "next": "^12.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -53,6 +56,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/jsonwebtoken": "^8.5.7",
     "@types/node": "^16.0.0",
     "@types/react": "^17.0.20",
     "@typescript-eslint/eslint-plugin": "^4.30.0",

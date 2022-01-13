@@ -7,24 +7,29 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model Account {
-  id            Int     @id @default(autoincrement())
-  name          String
-  emailVerified Boolean
-  email         String
+  id Int @id @default(autoincrement())
 
   //auth
+  email         String
+  password      String
+  emailVerified Boolean   @default(false)
+  emailToken    String?
+  otp           String?
+  otpExpiry     DateTime?
+
   role    Role
-  isOwner Boolean
+  isOwner Boolean @default(false)
 
   owner       Institute @relation(fields: [instituteId], references: [id])
-  instituteId Int
+  instituteId Int       @unique
 
   tenant    Student @relation(fields: [studentId], references: [id])
-  studentId Int
+  studentId Int     @unique
+
 }
 
 enum Role {
@@ -41,7 +46,7 @@ model Institute {
   logo    String?
 
   students Student[]
-  Account  Account[]
+  Account  Account?
 }
 
 enum OnboardingStatus {
@@ -95,11 +100,12 @@ model Student {
   gender            String
   category          String
   mobile_number     String
-  primary_email     String    @unique
-  secondary_email   String    @unique
+  primary_email     String  @unique
+  secondary_email   String? @unique
   permanent_address String
   current_address   String
-  Account           Account[]
+
+  Account Account?
 }
 
 // model Course{
