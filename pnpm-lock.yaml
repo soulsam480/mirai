@@ -15,6 +15,7 @@ specifiers:
   autoprefixer: ^10.4.2
   clsx: ^1.1.1
   cross-env: ^7.0.3
+  daisyui: ^1.22.2
   dayjs: ^1.10.7
   eslint: ^7.32.0
   eslint-config-next: ^12.0.8
@@ -51,6 +52,7 @@ dependencies:
   '@trpc/react': 9.16.0_1addd01eedf4302b475b371c06b9e49a
   '@trpc/server': 9.16.0
   clsx: 1.1.1
+  daisyui: 1.22.2
   dayjs: 1.10.7
   jsonwebtoken: 8.5.1
   nanoid: 3.1.32
@@ -2160,6 +2162,10 @@ packages:
       find-pkg: 0.1.2
       fs-exists-sync: 0.1.0
     dev: true
+
+  /daisyui/1.22.2:
+    resolution: {integrity: sha512-uaG7JC2wOEbcZT6mzODlfUjA0XOsCGcmJTda6qhdlYSaPoJDi9u87sfT64Hh8CNA1eeKpCm9xGt2WAWUcwqzIQ==}
+    dev: false
 
   /damerau-levenshtein/1.0.7:
     resolution: {integrity: sha512-VvdQIPGdWP0SqFXghj79Wf/5LArmreyMsGLa6FG6iC4t3j7j5s71TrwWmT/4akbDQIqjfACkLZmjXhA7g2oUZw==}

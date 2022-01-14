@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASEURL")
 }
 
 generator client {
@@ -11,7 +11,9 @@ generator client {
 }
 
 model Account {
-  id Int @id @default(autoincrement())
+  id   Int     @id @default(autoincrement())
+  // for platform admins
+  name String?
 
   //auth
   email         String
@@ -23,30 +25,40 @@ model Account {
 
   role    Role
   isOwner Boolean @default(false)
+  isAdmin Boolean @default(false)
 
-  owner       Institute @relation(fields: [instituteId], references: [id])
+  owner       Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   instituteId Int       @unique
 
-  tenant    Student @relation(fields: [studentId], references: [id])
+  tenant    Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int     @unique
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {
   STUDENT
   INSTITUTE
+  ADMIN
 }
 
 model Institute {
-  id      Int              @id @default(autoincrement())
-  code    String?
-  name    String
+  id     Int              @id @default(autoincrement())
+  code   String?
+  name   String
+  status OnboardingStatus
+  logo   String?
+
   batches Batch[]
-  status  OnboardingStatus
-  logo    String?
+
+  departments Department[]
 
   students Student[]
-  Account  Account?
+  account  Account?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum OnboardingStatus {
@@ -57,7 +69,7 @@ enum OnboardingStatus {
 
 model Batch {
   id           Int               @id @default(autoincrement())
-  institute    Institute         @relation(references: [id], fields: [instituteId])
+  institute    Institute         @relation(references: [id], onDelete: Cascade, fields: [instituteId])
   instituteId  Int
   duration     String
   durationType BatchDurationType
@@ -84,30 +96,48 @@ enum BatchDurationType {
 
 // }
 
+//TODO: add more details to student model
 model Student {
-  id   Int     @id @default(autoincrement())
-  code String? @unique
+  id    Int     @id @default(autoincrement())
+  code  String? @unique
+  uniId String?
 
-  Batch   Batch? @relation(fields: [batchId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Batch   Batch? @relation(fields: [batchId], references: [id], onDelete: Cascade)
   batchId Int?
 
-  Institute   Institute? @relation(fields: [instituteId], references: [id])
+  Institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   instituteId Int?
 
-  // basics
-  name              String
-  dob               String
-  gender            String
-  category          String
-  mobile_number     String
-  primary_email     String  @unique
-  secondary_email   String? @unique
-  permanent_address String
-  current_address   String
+  Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  departmentId Int?
 
-  Account Account?
+  // basics
+  name             String
+  dob              String
+  gender           String
+  category         String
+  mobileNumber     String
+  primaryEmail     String  @unique
+  secondaryEmail   String? @unique
+  permanentAddress String
+  currentAddress   String
+
+  account Account?
 }
 
-// model Course{
+model Department {
+  id       Int     @id @default(autoincrement())
+  name     String
+  inCharge String?
 
-// }
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  instituteId Int?
+
+  students Student[]
+
+  //TODO: add course relation
+
+}
