@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgres"
-  url      = env("DATABASEURL")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -40,6 +40,7 @@ model Account {
 enum Role {
   STUDENT
   INSTITUTE
+  INSTITUTE_MOD
   ADMIN
 }
 
@@ -50,12 +51,12 @@ model Institute {
   status OnboardingStatus
   logo   String?
 
-  batches Batch[]
-
+  batches     Batch[]
   departments Department[]
+  courses     Course[]
+  students    Student[]
 
-  students Student[]
-  account  Account?
+  account Account?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,9 +69,11 @@ enum OnboardingStatus {
 }
 
 model Batch {
-  id           Int               @id @default(autoincrement())
-  institute    Institute         @relation(references: [id], onDelete: Cascade, fields: [instituteId])
-  instituteId  Int
+  id Int @id @default(autoincrement())
+
+  institute   Institute @relation(references: [id], onDelete: Cascade, fields: [instituteId])
+  instituteId Int
+
   duration     String
   durationType BatchDurationType
   status       BatchStatus
@@ -108,11 +111,14 @@ model Student {
   Batch   Batch? @relation(fields: [batchId], references: [id], onDelete: Cascade)
   batchId Int?
 
-  Institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   instituteId Int?
 
   Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   departmentId Int?
+
+  course   Course? @relation(fields: [courseId], references: [id])
+  courseId Int?
 
   // basics
   name             String
@@ -122,8 +128,8 @@ model Student {
   mobileNumber     String
   primaryEmail     String  @unique
   secondaryEmail   String? @unique
-  permanentAddress String
-  currentAddress   String
+  permanentAddress Json    @default("{}")
+  currentAddress   Json    @default("{}")
 
   account Account?
 }
@@ -137,7 +143,45 @@ model Department {
   instituteId Int?
 
   students Student[]
+  courses  Course[]
+}
 
-  //TODO: add course relation
+model Course {
+  id Int @id @default(autoincrement())
 
+  institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  instituteId Int
+
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+
+  students Student[]
+
+  branchName String
+  branchCode String
+  scoreType  CourseScoreType
+
+  programName         String
+  programDurationType ProgramDurationType
+  programDuration     Int
+  programLevel        ProgramLevel
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum CourseScoreType {
+  CGPA
+  PERCENTAGE
+}
+
+enum ProgramDurationType {
+  SEMESTER
+  YEAR
+}
+
+enum ProgramLevel {
+  UG
+  PG
+  PHD
 }
