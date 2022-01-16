@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --rounded-box: 6px; /* border-radius for cards and other big elements */
+  --rounded-btn: 6px; /* border-radius for buttons and similar elements */
+  --rounded-badge: 6px;
+}
+
+.btn {
+  @apply normal-case;
+}
+
+html,
+body {
+  @apply bg-amber-50;
+}
