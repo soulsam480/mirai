@@ -1,4 +1,4 @@
-import { createHmac } from 'crypto';
+import { compare, hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 
 export function createTokens(id: string): { refreshToken: string; accessToken: string } {
@@ -12,10 +12,10 @@ export function createTokens(id: string): { refreshToken: string; accessToken: s
   return { refreshToken, accessToken };
 }
 
-export function comparePassword(password: string, hashedPass: string) {
-  return hashPass(password) === hashedPass;
+export async function comparePassword(password: string, hashedPass: string) {
+  return await compare(password, hashedPass);
 }
 
-export function hashPass(password: string) {
-  return createHmac(password, process.env.HASH).update(password).digest('hex');
+export async function hashPass(password: string) {
+  return await hash(password, parseInt(process.env.HASH as string));
 }

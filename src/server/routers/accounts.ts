@@ -27,11 +27,11 @@ export const accountRouter = createRouter()
       dob: z.string(),
       gender: z.string(),
       category: z.string(),
-      mobile_number: z.string(),
-      primary_email: z.string(),
-      secondary_email: z.string().optional(),
-      permanent_address: z.string(),
-      current_address: z.string(),
+      mobileNumber: z.string(),
+      primaryEmail: z.string(),
+      secondaryEmail: z.string().optional(),
+      permanentAddress: z.string(),
+      currentAddress: z.string(),
     }),
     async resolve({ ctx, input }) {
       const student = await ctx.prisma.student.create({

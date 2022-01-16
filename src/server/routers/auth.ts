@@ -9,16 +9,16 @@ export const authRouter = createRouter()
   .mutation('sign_up', {
     input: z.object({
       email: z.string().email(),
-      role: z.enum(['STUDENT', 'INSTITUTE']),
-      isOwner: z.boolean(),
+      role: z.enum(['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']),
       instituteId: z.number().optional(),
       studentId: z.number().optional(),
       password: z.string(),
+      name: z.string().optional(),
     }),
     async resolve({ ctx, input }) {
       const { role, instituteId, studentId, password, ...rest } = input;
 
-      if (role === 'INSTITUTE' && !instituteId)
+      if (['INSTITUTE_MOD', 'INSTITUTE'].includes(role) && !instituteId)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Missing institute Id for account',
@@ -30,17 +30,24 @@ export const authRouter = createRouter()
           message: 'Missing student Id for account',
         });
 
-      const relID = role === 'INSTITUTE' ? instituteId : studentId;
+      const relID =
+        role === 'ADMIN'
+          ? null
+          : ['INSTITUTE_MOD', 'INSTITUTE'].includes(role)
+          ? (instituteId as number)
+          : (studentId as number);
 
-      const hashedPass = hashPass(password);
+      const hashedPass = await hashPass(password);
 
       const account = await ctx.prisma.account.create({
         data: {
           ...rest,
           role,
-          instituteId: relID as number,
-          studentId: relID as number,
+          instituteId: relID,
+          studentId: relID,
           password: hashedPass,
+          isOwner: role === 'INSTITUTE',
+          emailVerified: false,
         },
       });
 
@@ -61,7 +68,7 @@ export const authRouter = createRouter()
           message: 'Account doeesn"t exist with the provided email',
         });
 
-      const isSamePassword = comparePassword(password, account.password);
+      const isSamePassword = await comparePassword(password, account.password);
 
       if (!isSamePassword)
         throw new TRPCError({

@@ -25,13 +25,12 @@ model Account {
 
   role    Role
   isOwner Boolean @default(false)
-  isAdmin Boolean @default(false)
 
-  owner       Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
-  instituteId Int       @unique
+  owner       Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  instituteId Int?       @unique
 
-  tenant    Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId Int     @unique
+  tenant    Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int?     @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -48,7 +47,7 @@ model Institute {
   id     Int              @id @default(autoincrement())
   code   String?
   name   String
-  status OnboardingStatus
+  status OnboardingStatus @default(PENDING)
   logo   String?
 
   batches     Batch[]
