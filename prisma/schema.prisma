@@ -12,7 +12,7 @@ generator client {
 
 model Account {
   id   Int     @id @default(autoincrement())
-  // for platform admins
+  // for platform admins and mods
   name String?
 
   //auth
@@ -105,22 +105,39 @@ model Student {
   code  String? @unique
   uniId String?
 
+  account Account?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  Batch   Batch? @relation(fields: [batchId], references: [id], onDelete: Cascade)
+  Batch   Batch? @relation(fields: [batchId], references: [id])
   batchId Int?
 
   institute   Institute? @relation(fields: [instituteId], references: [id], onDelete: Cascade)
   instituteId Int?
 
-  Department   Department? @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  Department   Department? @relation(fields: [departmentId], references: [id])
   departmentId Int?
 
   course   Course? @relation(fields: [courseId], references: [id])
   courseId Int?
 
   // basics
+  basics         StudentBasics?
+  score          StudentScore?
+  education      StudentEducation[]
+  experience     StudentWorkExperience[]
+  skills         Json                    @default("[]")
+  projects       StudentProject[]
+  certifications StudentCeritification[]
+}
+
+model StudentBasics {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int     @unique
+
   name             String
   dob              String
   gender           String
@@ -130,8 +147,139 @@ model Student {
   secondaryEmail   String? @unique
   permanentAddress Json    @default("{}")
   currentAddress   Json    @default("{}")
+}
 
-  account Account?
+model StudentScore {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int     @unique
+
+  aggregatePercentage String
+  currentTerm         Int
+  hasGraduated        Boolean @default(false)
+  lateralEntry        Boolean
+
+  // backlogs
+  hasBacklog     Boolean
+  totalBacklogs  Int     @default(0)
+  // Why JSON ?
+  // As this is going to be edited less frequently
+  // adding a new table doesn't make sense
+  // We can statically type this field using TS to ensure
+  // the JSON schema remains same
+  backlogDetails Json    @default("{}")
+
+  // Why JSON ?
+  // As this is going to be edited less frequently
+  // adding a new table doesn't make sense
+  // We can statically type this field using TS to ensure
+  // the JSON schema remains same
+  // Schema
+  // ongoingNumBacklogs: Int ongoing sem backs
+  // scoreValue: String CGPA
+  // semScoreValue: String SGPA
+  // term: Int SEM
+  // totalNumBacklogs: Int total sem backs
+  // verified: Bool
+  // verifiedBy: String
+  // verifiedOn: Date
+  scores          Json     @default("{}")
+  courseStartedAt DateTime
+
+  verified   Boolean   @default(false)
+  verifiedOn DateTime?
+  verifiedBy String?
+}
+
+model StudentEducation {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+
+  school          String
+  program         String
+  board           String
+  specialization  String
+  type            String
+  notes           String
+  score           String
+  scorePercentage String
+  scoreType       StudentScoreType
+  startedAt       DateTime
+  endedAt         DateTime?
+  isOngoing       Boolean          @default(false)
+
+  verified   Boolean   @default(false)
+  verifiedOn DateTime?
+  verifiedBy String?
+}
+
+enum StudentScoreType {
+  PERCENTAGE
+  CGPA
+  GRADES
+}
+
+model StudentWorkExperience {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+
+  company       String
+  title         String
+  location      String
+  type          String
+  isCurriculum  Boolean
+  jobType       String
+  companySector String
+  stipend       String?
+  notes         String?
+  startedAt     DateTime
+  endedAt       DateTime?
+  isOngoing     Boolean   @default(false)
+
+  verified   Boolean   @default(false)
+  verifiedOn DateTime?
+  verifiedBy String?
+}
+
+model StudentProject {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+
+  title       String
+  domain      String
+  startedAt   DateTime
+  endedAt     DateTime?
+  isOngoing   Boolean   @default(false)
+  description String?
+
+  verified   Boolean   @default(false)
+  verifiedOn DateTime?
+  verifiedBy String?
+}
+
+model StudentCeritification {
+  id Int @id @default(autoincrement())
+
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  studentId Int
+
+  name                 String
+  subject              String?
+  institute            String
+  documentName         String
+  date                 DateTime?
+  identificationNumber String?
+  expiresAt            DateTime?
+  score                String?
+  scoreType            StudentScoreType?
+  description          String?
 }
 
 model Department {
