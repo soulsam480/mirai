@@ -11,6 +11,9 @@ CREATE TYPE "BatchStatus" AS ENUM ('ACTIVE', 'INACTIVE');
 CREATE TYPE "BatchDurationType" AS ENUM ('YEAR', 'MONTH', 'WEEK', 'DAY');
 
 -- CreateEnum
+CREATE TYPE "StudentScoreType" AS ENUM ('PERCENTAGE', 'CGPA', 'GRADES');
+
+-- CreateEnum
 CREATE TYPE "CourseScoreType" AS ENUM ('CGPA', 'PERCENTAGE');
 
 -- CreateEnum
@@ -76,6 +79,15 @@ CREATE TABLE "Student" (
     "instituteId" INTEGER,
     "departmentId" INTEGER,
     "courseId" INTEGER,
+    "skills" JSONB NOT NULL DEFAULT '[]',
+
+    CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentBasics" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "dob" TEXT NOT NULL,
     "gender" TEXT NOT NULL,
@@ -86,7 +98,108 @@ CREATE TABLE "Student" (
     "permanentAddress" JSONB NOT NULL DEFAULT '{}',
     "currentAddress" JSONB NOT NULL DEFAULT '{}',
 
-    CONSTRAINT "Student_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "StudentBasics_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentScore" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
+    "aggregatePercentage" TEXT NOT NULL,
+    "currentTerm" INTEGER NOT NULL,
+    "hasGraduated" BOOLEAN NOT NULL DEFAULT false,
+    "lateralEntry" BOOLEAN NOT NULL,
+    "hasBacklog" BOOLEAN NOT NULL,
+    "totalBacklogs" INTEGER NOT NULL DEFAULT 0,
+    "backlogDetails" JSONB NOT NULL DEFAULT '{}',
+    "scores" JSONB NOT NULL DEFAULT '{}',
+    "courseStartedAt" TIMESTAMP(3) NOT NULL,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verifiedOn" TIMESTAMP(3),
+    "verifiedBy" TEXT,
+
+    CONSTRAINT "StudentScore_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentEducation" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
+    "school" TEXT NOT NULL,
+    "program" TEXT NOT NULL,
+    "board" TEXT NOT NULL,
+    "specialization" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "notes" TEXT NOT NULL,
+    "score" TEXT NOT NULL,
+    "scorePercentage" TEXT NOT NULL,
+    "scoreType" "StudentScoreType" NOT NULL,
+    "startedAt" TIMESTAMP(3) NOT NULL,
+    "endedAt" TIMESTAMP(3),
+    "isOngoing" BOOLEAN NOT NULL DEFAULT false,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verifiedOn" TIMESTAMP(3),
+    "verifiedBy" TEXT,
+
+    CONSTRAINT "StudentEducation_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentWorkExperience" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
+    "company" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "location" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "isCurriculum" BOOLEAN NOT NULL,
+    "jobType" TEXT NOT NULL,
+    "companySector" TEXT NOT NULL,
+    "stipend" TEXT,
+    "notes" TEXT,
+    "startedAt" TIMESTAMP(3) NOT NULL,
+    "endedAt" TIMESTAMP(3),
+    "isOngoing" BOOLEAN NOT NULL DEFAULT false,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verifiedOn" TIMESTAMP(3),
+    "verifiedBy" TEXT,
+
+    CONSTRAINT "StudentWorkExperience_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentProject" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "domain" TEXT NOT NULL,
+    "startedAt" TIMESTAMP(3) NOT NULL,
+    "endedAt" TIMESTAMP(3),
+    "isOngoing" BOOLEAN NOT NULL DEFAULT false,
+    "description" TEXT,
+    "verified" BOOLEAN NOT NULL DEFAULT false,
+    "verifiedOn" TIMESTAMP(3),
+    "verifiedBy" TEXT,
+
+    CONSTRAINT "StudentProject_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StudentCeritification" (
+    "id" SERIAL NOT NULL,
+    "studentId" INTEGER NOT NULL,
+    "name" TEXT NOT NULL,
+    "subject" TEXT,
+    "institute" TEXT NOT NULL,
+    "documentName" TEXT NOT NULL,
+    "date" TIMESTAMP(3),
+    "identificationNumber" TEXT,
+    "expiresAt" TIMESTAMP(3),
+    "score" TEXT,
+    "scoreType" "StudentScoreType",
+    "description" TEXT,
+
+    CONSTRAINT "StudentCeritification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -127,10 +240,16 @@ CREATE UNIQUE INDEX "Account_studentId_key" ON "Account"("studentId");
 CREATE UNIQUE INDEX "Student_code_key" ON "Student"("code");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_primaryEmail_key" ON "Student"("primaryEmail");
+CREATE UNIQUE INDEX "StudentBasics_studentId_key" ON "StudentBasics"("studentId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Student_secondaryEmail_key" ON "Student"("secondaryEmail");
+CREATE UNIQUE INDEX "StudentBasics_primaryEmail_key" ON "StudentBasics"("primaryEmail");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "StudentBasics_secondaryEmail_key" ON "StudentBasics"("secondaryEmail");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "StudentScore_studentId_key" ON "StudentScore"("studentId");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_instituteId_fkey" FOREIGN KEY ("instituteId") REFERENCES "Institute"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -152,6 +271,24 @@ ALTER TABLE "Student" ADD CONSTRAINT "Student_departmentId_fkey" FOREIGN KEY ("d
 
 -- AddForeignKey
 ALTER TABLE "Student" ADD CONSTRAINT "Student_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentBasics" ADD CONSTRAINT "StudentBasics_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentScore" ADD CONSTRAINT "StudentScore_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentEducation" ADD CONSTRAINT "StudentEducation_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentWorkExperience" ADD CONSTRAINT "StudentWorkExperience_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentProject" ADD CONSTRAINT "StudentProject_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "StudentCeritification" ADD CONSTRAINT "StudentCeritification_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Department" ADD CONSTRAINT "Department_instituteId_fkey" FOREIGN KEY ("instituteId") REFERENCES "Institute"("id") ON DELETE CASCADE ON UPDATE CASCADE;
