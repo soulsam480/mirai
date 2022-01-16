@@ -7,8 +7,8 @@ import React from 'react';
 import { trpc } from 'utils/trpc';
 
 const schema = z.object({
-  email: z.string().email().min(1, 'Required'),
-  password: z.string().min(1, 'Required'),
+  email: z.string().email().min(1, 'Email required'),
+  password: z.string().min(1, 'Password required'),
 });
 
 const Login: NextPageWithLayout = () => {
@@ -52,7 +52,9 @@ const Login: NextPageWithLayout = () => {
           </label>
           <input type="pawword" placeholder="password" className="input input-bordered " {...register('password')} />
           <label className="label">
-            {formState.errors?.password && <span className="label-text-alt"> {formState.errors.email?.message} </span>}{' '}
+            {formState.errors?.password && (
+              <span className="label-text-alt"> {formState.errors.password?.message} </span>
+            )}{' '}
           </label>
 
           <button type="submit" className="btn btn-block btn-primary mt-5">
