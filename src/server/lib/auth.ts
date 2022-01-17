@@ -9,7 +9,10 @@ export function createTokens(id: string): { refreshToken: string; accessToken: s
     expiresIn: '15min',
   });
 
-  return { refreshToken, accessToken };
+  return {
+    refreshToken: `refresh-token=${refreshToken}; HttpOnly; Secure; Path=/; Max-Age=${7 * 24 * 60 * 60}`,
+    accessToken,
+  };
 }
 
 export async function comparePassword(password: string, hashedPass: string) {

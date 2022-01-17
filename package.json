@@ -32,6 +32,7 @@
     "htmlWhitespaceSensitivity": "ignore"
   },
   "dependencies": {
+    "@headlessui/react": "^1.4.3",
     "@hookform/resolvers": "^2.8.5",
     "@prisma/client": "^3.8.1",
     "@trpc/client": "^9.17.0",
@@ -42,6 +43,7 @@
     "clsx": "^1.1.1",
     "daisyui": "^1.22.2",
     "dayjs": "^1.10.7",
+    "jotai": "^1.5.2",
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^3.1.32",
     "next": "^12.0.8",

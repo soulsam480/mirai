@@ -12,7 +12,11 @@ const schema = z.object({
 });
 
 const Login: NextPageWithLayout = () => {
-  const loginMut = trpc.useMutation(['auth.login']);
+  const loginMut = trpc.useMutation(['auth.login'], {
+    onSuccess() {
+      // set header here
+    },
+  });
 
   const { register, handleSubmit, formState } = useForm<{
     email: string;
@@ -42,7 +46,12 @@ const Login: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" placeholder="john@doe.com" className="input input-bordered " {...register('email')} />
+          <input
+            type="email"
+            placeholder="john@doe.com"
+            className="input input-bordered input-primary"
+            {...register('email')}
+          />
           <label className="label">
             {formState.errors?.email && <span className="label-text-alt"> {formState.errors.email.message} </span>}{' '}
           </label>
@@ -50,7 +59,12 @@ const Login: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Password</span>
           </label>
-          <input type="pawword" placeholder="password" className="input input-bordered " {...register('password')} />
+          <input
+            type="pawword"
+            placeholder="password"
+            className="input input-bordered input-primary"
+            {...register('password')}
+          />
           <label className="label">
             {formState.errors?.password && (
               <span className="label-text-alt"> {formState.errors.password?.message} </span>

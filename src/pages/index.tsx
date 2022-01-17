@@ -21,8 +21,10 @@ const IndexPage: NextPageWithLayout = () => {
       </div>
 
       <div className="text-center hero-content">
-        <div className="max-w-xl">
-          <h1 className="mb-6 sm:text-7xl text-4xl font-bold">Hiring simplified for humans</h1>
+        <div className="max-w-3xl">
+          <h1 className="mb-6 sm:text-8xl text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-primary-focus to-secondary">
+            Hiring simplified for humans
+          </h1>
           <p className="mb-5">
             Mirai makes it simple for both institutes and students with an amazing UI which looks good and esier to
             understand.

@@ -76,9 +76,13 @@ export const authRouter = createRouter()
           message: 'Invalid email or password',
         });
 
+      const { accessToken, refreshToken } = createTokens(`${account.id}`);
+
+      ctx.res.setHeader('Set-Cookie', refreshToken);
+
       return {
         ...account,
-        ...createTokens(`${account.id}`),
+        accessToken,
       };
     },
   });

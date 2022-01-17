@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@headlessui/react': ^1.4.3
   '@hookform/resolvers': ^2.8.5
   '@prisma/client': ^3.8.1
   '@trpc/client': ^9.17.0
@@ -25,6 +26,7 @@ specifiers:
   eslint-plugin-prettier: ^4.0.0
   eslint-plugin-react: ^7.28.0
   eslint-plugin-react-hooks: ^4.2.0
+  jotai: ^1.5.2
   jsonwebtoken: ^8.5.1
   nanoid: ^3.1.32
   next: ^12.0.8
@@ -43,6 +45,7 @@ specifiers:
   zod: ^3.0.0
 
 dependencies:
+  '@headlessui/react': 1.4.3_react-dom@17.0.2+react@17.0.2
   '@hookform/resolvers': 2.8.5_react-hook-form@7.24.0
   '@prisma/client': 3.8.1_prisma@3.8.1
   '@trpc/client': 9.17.0_@trpc+server@9.17.0
@@ -53,6 +56,7 @@ dependencies:
   clsx: 1.1.1
   daisyui: 1.22.2
   dayjs: 1.10.7
+  jotai: 1.5.2_react-query@3.34.8+react@17.0.2
   jsonwebtoken: 8.5.1
   nanoid: 3.1.32
   next: 12.0.8_react-dom@17.0.2+react@17.0.2
@@ -184,6 +188,17 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@headlessui/react/1.4.3_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-n2IQkaaw0aAAlQS5MEXsM4uRK+w18CrM72EqnGRl/UBOQeQajad8oiKXR9Nk15jOzTFQjpxzrZMf1NxHidFBiw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16 || ^17 || ^18
+      react-dom: ^16 || ^17 || ^18
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /@hookform/resolvers/2.8.5_react-hook-form@7.24.0:
     resolution: {integrity: sha512-n7eFm4snsejpfZVH8q2NU7YJbsGhF61IHB0TxgK11nmg08RymEr3KscnbTAZaPd9RaXa3vUPoULgBRN2nVDtMg==}
@@ -2082,6 +2097,44 @@ packages:
       '@types/node': 16.11.19
       merge-stream: 2.0.0
       supports-color: 8.1.1
+    dev: false
+
+  /jotai/1.5.2_react-query@3.34.8+react@17.0.2:
+    resolution: {integrity: sha512-h9rlP7Mxov8BglO6Xh9jttZlxEuPt3r8wJNU3zSNKvVFXmb1fw4808JkyUodVvZTBDZHrukz9Z6aigOh+nxK/A==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@babel/core': '*'
+      '@babel/template': '*'
+      '@urql/core': '*'
+      immer: '*'
+      optics-ts: '*'
+      react: '>=16.8'
+      react-query: '*'
+      valtio: '*'
+      wonka: '*'
+      xstate: '*'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@urql/core':
+        optional: true
+      immer:
+        optional: true
+      optics-ts:
+        optional: true
+      react-query:
+        optional: true
+      valtio:
+        optional: true
+      wonka:
+        optional: true
+      xstate:
+        optional: true
+    dependencies:
+      react: 17.0.2
+      react-query: 3.34.8_react-dom@17.0.2+react@17.0.2
     dev: false
 
   /js-sha3/0.8.0:
