@@ -10,6 +10,13 @@ import { AppType } from 'next/dist/shared/lib/utils';
 import { ReactElement, ReactNode } from 'react';
 import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
+import { useAtom } from 'jotai';
+import { userAtom } from 'stores/user';
+import { trpc } from '../utils/trpc';
+
+export let token: string | undefined;
+
+export const setToken = (payload?: string) => (token = payload);
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -20,6 +27,28 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
+  const [_, setUser] = useAtom(userAtom);
+  const { remove: removeRefresh } = trpc.useQuery(['auth.refresh_token'], {
+    onSuccess(data) {
+      if (data.accessToken) setToken(data.accessToken);
+      if ((data.refetch = false)) {
+        removeRefresh();
+        setToken();
+      }
+    },
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: true,
+    refetchInterval: 840000,
+  });
+
+  trpc.useQuery(['auth.account'], {
+    refetchOnWindowFocus: false,
+    enabled: !!token,
+    onSuccess(data) {
+      setUser(data);
+    },
+  });
+
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
   return getLayout(<Component {...pageProps} />);
@@ -72,6 +101,11 @@ export default withTRPC<AppRouter>({
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
+      headers() {
+        return {
+          authorization: !!token ? `Bearer ${token}` : undefined,
+        };
+      },
     };
   },
   /**

@@ -1,11 +1,14 @@
 import { Prisma } from '@prisma/client';
 import { atom } from 'jotai';
 
-export interface User extends Prisma.AccountSelect {
-  accessToken?: string;
-  refreshToken?: string;
-}
+// export interface User extends Prisma.AccountGetPayload {
+//   accessToken?: string;
+// }
 
-export const userAtom = atom<User>({});
+type User = Prisma.AccountGetPayload<{
+  include: { owner: true; tenant: true };
+}>;
+
+export const userAtom = atom<Partial<User>>({});
 
 export const isLoggedIn = atom((get) => !!Object.keys(get(userAtom)).length);

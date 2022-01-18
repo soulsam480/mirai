@@ -1,8 +1,9 @@
 import { TRPCError } from '@trpc/server';
+import { verify } from 'jsonwebtoken';
 // import dayjs from 'dayjs/esm';
 // import { nanoid } from 'nanoid';
 import { createRouter } from 'server/createRouter';
-import { comparePassword, createTokens, hashPass } from 'server/lib/auth';
+import { comparePassword, createTokens, hashPass, JwtPayload, prismaQueryHelper } from 'server/lib/auth';
 import { z } from 'zod';
 
 export const authRouter = createRouter()
@@ -60,15 +61,18 @@ export const authRouter = createRouter()
       password: z.string(),
     }),
     async resolve({ ctx, input: { email, password } }) {
-      const account = await ctx.prisma.account.findFirst({ where: { email } });
+      const authAccount = await ctx.prisma.account.findFirst({
+        where: { email },
+        select: { password: true, id: true, role: true },
+      });
 
-      if (!account)
+      if (!authAccount)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Account doeesn"t exist with the provided email',
         });
 
-      const isSamePassword = await comparePassword(password, account.password);
+      const isSamePassword = await comparePassword(password, authAccount.password);
 
       if (!isSamePassword)
         throw new TRPCError({
@@ -76,14 +80,80 @@ export const authRouter = createRouter()
           message: 'Invalid email or password',
         });
 
-      const { accessToken, refreshToken } = createTokens(`${account.id}`);
+      const { accessToken, refreshToken } = createTokens({ id: authAccount.id, role: authAccount.role });
 
       ctx.res.setHeader('Set-Cookie', refreshToken);
 
+      const account = await prismaQueryHelper(ctx.prisma).getAccount(authAccount.role, email);
+
+      if (!account)
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'account data not found',
+        });
+
       return {
         ...account,
+        password: undefined,
         accessToken,
       };
+    },
+  })
+  .query('refresh_token', {
+    async resolve({ ctx }) {
+      try {
+        const refreshToken = ctx.req.cookies['refresh-token'];
+
+        if (!refreshToken)
+          return {
+            accessToken: '',
+            refetch: false,
+          };
+
+        const payload = <JwtPayload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+
+        const account = await ctx.prisma.account.findFirst({
+          where: { id: +payload.id },
+          select: { id: true, role: true },
+        });
+
+        if (!account)
+          return {
+            accessToken: '',
+            refetch: false,
+          };
+
+        const { accessToken, refreshToken: rtoken } = createTokens({ id: account.id, role: account.role });
+        ctx.res.setHeader('Set-Cookie', rtoken);
+
+        return {
+          accessToken,
+          refetch: true,
+        };
+      } catch (error) {
+        return {
+          accessToken: undefined,
+          refetch: false,
+        };
+      }
+    },
+  })
+  .query('account', {
+    async resolve({ ctx }) {
+      if (!ctx.user)
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+        });
+
+      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.role, undefined, ctx.user.id);
+
+      if (!account)
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User account data not found',
+        });
+
+      return account;
     },
   });
 //TODO: add otp login setup

@@ -1,6 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
+import { verify } from 'jsonwebtoken';
+import { JwtPayload } from './lib/auth';
 
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
@@ -11,10 +13,27 @@ const prisma = new PrismaClient({
  */
 export const createContext = async ({ req, res }: trpcNext.CreateNextContextOptions) => {
   // for API-response caching see https://trpc.io/docs/caching
+
+  function getUserFromHeader() {
+    if (req.headers.authorization) {
+      try {
+        const user = <JwtPayload>(
+          verify(req.headers.authorization.split(' ')[1], process.env.ACCESS_TOKEN_SECRET as string)
+        );
+
+        return user || null;
+      } catch (error) {
+        return null;
+      }
+    }
+    return null;
+  }
+
   return {
     req,
     res,
     prisma,
+    user: getUserFromHeader(),
   };
 };
 

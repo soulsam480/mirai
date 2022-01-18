@@ -1,10 +1,12 @@
 import { AppLayout } from 'components/AppLayout';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout, setToken } from './_app';
 import { z } from 'zod';
 import React from 'react';
 import { trpc } from 'utils/trpc';
+import { useAtom } from 'jotai';
+import { userAtom } from 'stores/user';
 
 const schema = z.object({
   email: z.string().email().min(1, 'Email required'),
@@ -12,9 +14,16 @@ const schema = z.object({
 });
 
 const Login: NextPageWithLayout = () => {
+  const [_, setUser] = useAtom(userAtom);
+
+  const utils = trpc.useContext();
+
   const loginMut = trpc.useMutation(['auth.login'], {
-    onSuccess() {
-      // set header here
+    onSuccess(response) {
+      setToken(response.accessToken);
+      setUser(response);
+
+      utils.invalidateQueries(['auth.refresh_token']);
     },
   });
 
