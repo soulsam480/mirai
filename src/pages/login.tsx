@@ -3,10 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NextPageWithLayout, setToken } from './_app';
 import { z } from 'zod';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { trpc } from 'utils/trpc';
 import { useAtom } from 'jotai';
-import { userAtom } from 'stores/user';
+import { loggedInAtom, userAtom } from 'stores/user';
+import { useRouter } from 'next/router';
 
 const schema = z.object({
   email: z.string().email().min(1, 'Email required'),
@@ -15,6 +16,8 @@ const schema = z.object({
 
 const Login: NextPageWithLayout = () => {
   const [_, setUser] = useAtom(userAtom);
+  const [isLogegdIn] = useAtom(loggedInAtom);
+  const router = useRouter();
 
   const utils = trpc.useContext();
 
@@ -38,6 +41,14 @@ const Login: NextPageWithLayout = () => {
     },
     shouldFocusError: true,
   });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (isLogegdIn) {
+        router.push('/admin');
+      }
+    }
+  }, [isLogegdIn, router]);
 
   return (
     <div className="min-h-screen flex justify-center mt-16">

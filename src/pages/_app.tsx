@@ -28,7 +28,7 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const [_, setUser] = useAtom(userAtom);
-  const { remove: removeRefresh } = trpc.useQuery(['auth.refresh_token'], {
+  const { remove: removeRefresh, isLoading } = trpc.useQuery(['auth.refresh_token'], {
     onSuccess(data) {
       if (data.accessToken) setToken(data.accessToken);
       if ((data.refetch = false)) {
@@ -41,7 +41,7 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
     refetchInterval: 840000,
   });
 
-  trpc.useQuery(['auth.account'], {
+  const { isLoading: isUserLoading } = trpc.useQuery(['auth.account'], {
     refetchOnWindowFocus: false,
     enabled: !!token,
     onSuccess(data) {

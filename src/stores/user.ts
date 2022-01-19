@@ -11,4 +11,4 @@ type User = Prisma.AccountGetPayload<{
 
 export const userAtom = atom<Partial<User>>({});
 
-export const isLoggedIn = atom((get) => !!Object.keys(get(userAtom)).length);
+export const loggedInAtom = atom((get) => !!Object.keys(get(userAtom)).length);
