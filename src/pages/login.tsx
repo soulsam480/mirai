@@ -1,32 +1,44 @@
 import { AppLayout } from 'components/AppLayout';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { NextPageWithLayout, setToken } from './_app';
+import { NextPageWithLayout } from './_app';
 import { z } from 'zod';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { trpc } from 'utils/trpc';
 import { useAtom } from 'jotai';
-import { loggedInAtom, userAtom } from 'stores/user';
-import { useRouter } from 'next/router';
+import { userAtom } from 'stores/user';
+import { GetServerSideProps } from 'next';
+import { isInstituteRole } from 'utils/helpers';
+import { getUser } from 'server/lib/auth';
 
 const schema = z.object({
   email: z.string().email().min(1, 'Email required'),
   password: z.string().min(1, 'Password required'),
 });
 
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const user = getUser(ctx.req.cookies);
+
+  if (user) {
+    return {
+      redirect: {
+        destination: user.role === 'ADMIN' ? '/admin' : isInstituteRole(user.role).is ? '/institute' : '/student',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};
+
 const Login: NextPageWithLayout = () => {
   const [_, setUser] = useAtom(userAtom);
-  const [isLogegdIn] = useAtom(loggedInAtom);
-  const router = useRouter();
-
-  const utils = trpc.useContext();
 
   const loginMut = trpc.useMutation(['auth.login'], {
     onSuccess(response) {
-      setToken(response.accessToken);
       setUser(response);
-
-      utils.invalidateQueries(['auth.refresh_token']);
     },
   });
 
@@ -41,14 +53,6 @@ const Login: NextPageWithLayout = () => {
     },
     shouldFocusError: true,
   });
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (isLogegdIn) {
-        router.push('/admin');
-      }
-    }
-  }, [isLogegdIn, router]);
 
   return (
     <div className="min-h-screen flex justify-center mt-16">

@@ -15,11 +15,11 @@ export const createContext = async ({ req, res }: trpcNext.CreateNextContextOpti
   // for API-response caching see https://trpc.io/docs/caching
 
   function getUserFromHeader() {
-    if (req.headers.authorization) {
+    const token = req.cookies['__mirai-sess'];
+
+    if (token) {
       try {
-        const user = <JwtPayload>(
-          verify(req.headers.authorization.split(' ')[1], process.env.ACCESS_TOKEN_SECRET as string)
-        );
+        const user = <JwtPayload>verify(token, process.env.ACCESS_TOKEN_SECRET as string);
 
         return user || null;
       } catch (error) {

@@ -1,9 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import { verify } from 'jsonwebtoken';
-// import dayjs from 'dayjs/esm';
-// import { nanoid } from 'nanoid';
 import { createRouter } from 'server/createRouter';
-import { comparePassword, createTokens, hashPass, JwtPayload, prismaQueryHelper } from 'server/lib/auth';
+import { comparePassword, createTokens, hashPass, prismaQueryHelper } from 'server/lib/auth';
 import { z } from 'zod';
 
 export const authRouter = createRouter()
@@ -82,7 +79,7 @@ export const authRouter = createRouter()
 
       const { accessToken, refreshToken } = createTokens({ id: authAccount.id, role: authAccount.role });
 
-      ctx.res.setHeader('Set-Cookie', refreshToken);
+      ctx.res.setHeader('Set-Cookie', [accessToken, refreshToken]);
 
       const account = await prismaQueryHelper(ctx.prisma).getAccount(authAccount.role, email);
 
@@ -95,49 +92,44 @@ export const authRouter = createRouter()
       return {
         ...account,
         password: undefined,
-        accessToken,
       };
     },
   })
-  .query('refresh_token', {
-    async resolve({ ctx }) {
-      try {
-        const refreshToken = ctx.req.cookies['refresh-token'];
+  // .query('refresh_token', {
+  //   async resolve({ ctx }) {
+  //     try {
+  //       const refreshToken = ctx.req.cookies['refresh-token'];
 
-        if (!refreshToken)
-          return {
-            accessToken: '',
-            refetch: false,
-          };
+  //       if (!refreshToken)
+  //         return {
+  //           accessToken: '',
+  //           refetch: false,
+  //         };
 
-        const payload = <JwtPayload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+  //       const payload = <JwtPayload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
 
-        const account = await ctx.prisma.account.findFirst({
-          where: { id: +payload.id },
-          select: { id: true, role: true },
-        });
+  //       const account = await ctx.prisma.account.findFirst({
+  //         where: { id: +payload.id },
+  //         select: { id: true, role: true },
+  //       });
 
-        if (!account)
-          return {
-            accessToken: '',
-            refetch: false,
-          };
+  //       if (!account)
+  //         return {
+  //           accessToken: '',
+  //           refetch: false,
+  //         };
 
-        const { accessToken, refreshToken: rtoken } = createTokens({ id: account.id, role: account.role });
-        ctx.res.setHeader('Set-Cookie', rtoken);
+  //       const { accessToken, refreshToken: rtoken } = createTokens({ id: account.id, role: account.role });
 
-        return {
-          accessToken,
-          refetch: true,
-        };
-      } catch (error) {
-        return {
-          accessToken: undefined,
-          refetch: false,
-        };
-      }
-    },
-  })
+  //       ctx.res.setHeader('Set-Cookie', rtoken);
+  //     } catch (error) {
+  //       return {
+  //         accessToken: undefined,
+  //         refetch: false,
+  //       };
+  //     }
+  //   },
+  // })
   .query('account', {
     async resolve({ ctx }) {
       if (!ctx.user)
@@ -153,7 +145,19 @@ export const authRouter = createRouter()
           message: 'User account data not found',
         });
 
+      const { accessToken, refreshToken } = createTokens({ id: account.id, role: account.role });
+
+      ctx.res.setHeader('Set-Cookie', [accessToken, refreshToken]);
+
       return account;
+    },
+  })
+  .mutation('logout', {
+    resolve({ ctx }) {
+      ctx.res.setHeader('Set-Cookie', [
+        `refresh-token=${null}; HttpOnly; Secure; Path=/; Max-Age=${0}`,
+        `__mirai-sess=${null}; HttpOnly; Secure; Path=/; Max-Age=${0}`,
+      ]);
     },
   });
 //TODO: add otp login setup

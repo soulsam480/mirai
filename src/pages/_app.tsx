@@ -14,10 +14,6 @@ import { useAtom } from 'jotai';
 import { userAtom } from 'stores/user';
 import { trpc } from '../utils/trpc';
 
-export let token: string | undefined;
-
-export const setToken = (payload?: string) => (token = payload);
-
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -28,24 +24,12 @@ type AppPropsWithLayout = AppProps & {
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const [_, setUser] = useAtom(userAtom);
-  const { remove: removeRefresh, isLoading } = trpc.useQuery(['auth.refresh_token'], {
-    onSuccess(data) {
-      if (data.accessToken) setToken(data.accessToken);
-      if ((data.refetch = false)) {
-        removeRefresh();
-        setToken();
-      }
-    },
-    refetchOnWindowFocus: false,
-    refetchIntervalInBackground: true,
-    refetchInterval: 840000,
-  });
 
-  const { isLoading: isUserLoading } = trpc.useQuery(['auth.account'], {
+  trpc.useQuery(['auth.account'], {
     refetchOnWindowFocus: false,
-    enabled: !!token,
+    enabled: typeof window !== 'undefined',
     onSuccess(data) {
-      setUser(data);
+      data && setUser(data);
     },
   });
 
@@ -101,11 +85,11 @@ export default withTRPC<AppRouter>({
        * @link https://react-query.tanstack.com/reference/QueryClient
        */
       // queryClientConfig: { defaultOptions: { queries: { staleTime: 60 } } },
-      headers() {
-        return {
-          authorization: !!token ? `Bearer ${token}` : undefined,
-        };
-      },
+      // headers() {
+      //   return {
+      //     authorization: !!token ? `Bearer ${token}` : undefined,
+      //   };
+      // },
     };
   },
   /**

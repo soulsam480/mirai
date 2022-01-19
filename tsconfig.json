@@ -16,6 +16,7 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "incremental": true,
+    "useUnknownInCatchVariables": false,
     "paths": {
       "pages/*": ["pages/*"],
       "stores/*": ["stores/*"],
