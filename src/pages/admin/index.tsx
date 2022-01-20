@@ -1,10 +1,10 @@
 import { AppLayout } from 'components/AppLayout';
 import { GetServerSideProps } from 'next';
-import { getUser } from 'server/lib/auth';
+import { getSession, signOut } from 'next-auth/react';
 import { NextPageWithLayout } from '../_app';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const user = getUser(ctx.req.cookies);
+  const user = await getSession({ req: ctx.req });
 
   if (!user) {
     return {
@@ -21,9 +21,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Admin: NextPageWithLayout = () => {
+  // const data = useSession();
+
   return (
     <div>
-      {/* <div className="dropdown dropdown-right">
+      <button
+        className="btn btn-sm btn-primary"
+        onClick={() => signOut({ redirect: true, callbackUrl: 'http://localhost:3000/login' })}
+      >
+        Logout
+      </button>
+      <div className="dropdown dropdown-right">
         <div tabIndex={0} className="m-1 btn">
           Dropdown
         </div>
@@ -38,7 +46,7 @@ const Admin: NextPageWithLayout = () => {
             <a>Item 3</a>
           </li>
         </ul>
-      </div> */}
+      </div>
     </div>
   );
 };

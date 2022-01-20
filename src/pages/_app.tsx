@@ -10,9 +10,8 @@ import { AppType } from 'next/dist/shared/lib/utils';
 import { ReactElement, ReactNode } from 'react';
 import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
-import { useAtom } from 'jotai';
-import { userAtom } from 'stores/user';
-import { trpc } from '../utils/trpc';
+import { SessionProvider as NextAuthProvider } from 'next-auth/react';
+import { Auth } from 'components/Auth';
 
 export type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -23,19 +22,15 @@ type AppPropsWithLayout = AppProps & {
 };
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
-  const [_, setUser] = useAtom(userAtom);
-
-  trpc.useQuery(['auth.account'], {
-    refetchOnWindowFocus: false,
-    enabled: typeof window !== 'undefined',
-    onSuccess(data) {
-      data && setUser(data);
-    },
-  });
-
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
-  return getLayout(<Component {...pageProps} />);
+  return getLayout(
+    <NextAuthProvider session={pageProps.session}>
+      <Auth>
+        <Component {...pageProps} />
+      </Auth>
+    </NextAuthProvider>,
+  );
 }) as AppType;
 
 function getBaseUrl() {

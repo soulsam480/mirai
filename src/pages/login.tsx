@@ -3,13 +3,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { NextPageWithLayout } from './_app';
 import { z } from 'zod';
-import React from 'react';
+import React, { useState } from 'react';
 import { trpc } from 'utils/trpc';
-import { useAtom } from 'jotai';
-import { userAtom } from 'stores/user';
+
 import { GetServerSideProps } from 'next';
 import { isInstituteRole } from 'utils/helpers';
-import { getUser } from 'server/lib/auth';
+
+import { getSession, signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const schema = z.object({
   email: z.string().email().min(1, 'Email required'),
@@ -17,12 +18,13 @@ const schema = z.object({
 });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const user = getUser(ctx.req.cookies);
+  const user = await getSession({ req: ctx.req });
 
   if (user) {
     return {
       redirect: {
-        destination: user.role === 'ADMIN' ? '/admin' : isInstituteRole(user.role).is ? '/institute' : '/student',
+        destination:
+          user.user.role === 'ADMIN' ? '/admin' : isInstituteRole(user.user.role).is ? '/institute' : '/student',
         permanent: false,
       },
     };
@@ -34,13 +36,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const Login: NextPageWithLayout = () => {
-  const [_, setUser] = useAtom(userAtom);
-
-  const loginMut = trpc.useMutation(['auth.login'], {
-    onSuccess(response) {
-      setUser(response);
-    },
-  });
+  const utils = trpc.useContext();
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   const { register, handleSubmit, formState } = useForm<{
     email: string;
@@ -54,15 +52,37 @@ const Login: NextPageWithLayout = () => {
     shouldFocusError: true,
   });
 
+  async function userLogin(data: { email: string; password: string }) {
+    setError(null);
+
+    const status = await signIn('credentials', {
+      redirect: false,
+      ...data,
+    });
+
+    //@ts-expect-error bas types
+    if (status && status.error) {
+      //@ts-expect-error bas types
+      setError(status.error);
+
+      return;
+    }
+
+    utils.invalidateQueries(['auth.account']);
+    router.push('/admin');
+
+    console.log(status);
+  }
+
   return (
     <div className="min-h-screen flex justify-center mt-16">
       <div className="w-full sm:max-w-md">
-        <form className="form-control w-full" onSubmit={handleSubmit((data) => loginMut.mutate({ ...data }))}>
+        <form className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
           <div className="text-xl mb-4">Login</div>
-          {loginMut.error && (
+          {error && (
             <div className="alert alert-error py-2 text-sm">
               <div className="flex-1">
-                <label> {loginMut.error?.shape?.message || ''} </label>
+                <label> {error} </label>
               </div>
             </div>
           )}

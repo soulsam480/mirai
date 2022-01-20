@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { createRouter } from 'server/createRouter';
-import { comparePassword, createTokens, hashPass, prismaQueryHelper } from 'server/lib/auth';
+import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth';
 import { z } from 'zod';
 
 export const authRouter = createRouter()
@@ -58,30 +58,23 @@ export const authRouter = createRouter()
       password: z.string(),
     }),
     async resolve({ ctx, input: { email, password } }) {
-      const authAccount = await ctx.prisma.account.findFirst({
+      const account = await ctx.prisma.account.findFirst({
         where: { email },
-        select: { password: true, id: true, role: true },
       });
 
-      if (!authAccount)
+      if (!account)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Account doeesn"t exist with the provided email',
         });
 
-      const isSamePassword = await comparePassword(password, authAccount.password);
+      const isSamePassword = await comparePassword(password, account.password);
 
       if (!isSamePassword)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid email or password',
         });
-
-      const { accessToken, refreshToken } = createTokens({ id: authAccount.id, role: authAccount.role });
-
-      ctx.res.setHeader('Set-Cookie', [accessToken, refreshToken]);
-
-      const account = await prismaQueryHelper(ctx.prisma).getAccount(authAccount.role, email);
 
       if (!account)
         throw new TRPCError({
@@ -145,19 +138,7 @@ export const authRouter = createRouter()
           message: 'User account data not found',
         });
 
-      const { accessToken, refreshToken } = createTokens({ id: account.id, role: account.role });
-
-      ctx.res.setHeader('Set-Cookie', [accessToken, refreshToken]);
-
       return account;
-    },
-  })
-  .mutation('logout', {
-    resolve({ ctx }) {
-      ctx.res.setHeader('Set-Cookie', [
-        `refresh-token=${null}; HttpOnly; Secure; Path=/; Max-Age=${0}`,
-        `__mirai-sess=${null}; HttpOnly; Secure; Path=/; Max-Age=${0}`,
-      ]);
     },
   });
 //TODO: add otp login setup

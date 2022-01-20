@@ -1,10 +1,10 @@
 import { AppLayout } from 'components/AppLayout';
 import { GetServerSideProps } from 'next';
-import { getUser } from 'server/lib/auth';
+import { getSession } from 'next-auth/react';
 import { NextPageWithLayout } from '../_app';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const user = getUser(ctx.req.cookies);
+  const user = await getSession({ req: ctx.req });
 
   if (!user) {
     return {
