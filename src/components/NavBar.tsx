@@ -1,9 +1,8 @@
-import { Menu, Transition } from '@headlessui/react';
 import { useAtom } from 'jotai';
+import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { loggedInAtom, userAtom } from 'stores/user';
-import { ChevronDownIcon } from '@heroicons/react/solid';
 
 interface Props {}
 
@@ -19,37 +18,33 @@ export const NavBar: React.FC<Props> = () => {
         </Link>
       </div>
       <div className="flex-none space-x-2">
-        <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
         {!isLoggedIn ? (
-          <Link href="/login">
-            <a className="btn btn-sm btn-ghost hover:bg-primary btn-secondary">Login / Signup</a>
-          </Link>
+          <>
+            <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
+            <Link href="/login">
+              <a className="btn btn-sm btn-ghost hover:bg-primary btn-secondary">Login / Signup</a>
+            </Link>
+          </>
         ) : (
-          <Menu as="div" className="dropdown dropdown-left ">
-            <Menu.Button as="button" className="btn btn-sm btn-ghost hover:bg-primary btn-primary">
-              {userData.name}
-            </Menu.Button>
+          <div className="dropdown dropdown-end">
+            <button tabIndex={0} className="m-1 btn btn-sm btn-primary">
+              {userData.role} : {userData.name}
+            </button>
+            <ul tabIndex={0} className="p-2 shadow-lg menu dropdown-content bg-amber-50 rounded-box w-52 space-y-2">
+              <li>
+                <button className="btn btn-sm btn-outline">Settings</button>
+              </li>
 
-            <Transition
-              as={Fragment}
-              enter="transition ease-out duration-100"
-              enterFrom="transform opacity-0 scale-95"
-              enterTo="transform opacity-100 scale-100"
-              leave="transition ease-in duration-75"
-              leaveFrom="transform opacity-100 scale-100"
-              leaveTo="transform opacity-0 scale-95"
-            >
-              <Menu.Items
-                as="ul"
-                tabIndex={0}
-                className="p-2 shadow menu dropdown-content bg-base-100 rounded-box w-52"
-              >
-                <Menu.Item as="li" className="px-1 py-1">
-                  {() => <> Hello </>}
-                </Menu.Item>
-              </Menu.Items>
-            </Transition>
-          </Menu>
+              <li>
+                <button
+                  className="btn btn-sm btn-outline"
+                  onClick={() => signOut({ redirect: true, callbackUrl: 'http://localhost:3000/login' })}
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         )}
       </div>
     </div>
