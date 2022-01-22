@@ -1,5 +1,7 @@
 import { PrismaClient, Role } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
+import { GetServerSideProps } from 'next';
+import { getSession } from 'next-auth/react';
 import { isInstituteRole } from '../../utils/helpers';
 
 export type JwtPayload = {
@@ -44,5 +46,39 @@ export function prismaQueryHelper(
 
       return account;
     },
+  };
+}
+
+export function getServerSideAuthGuard(
+  role: Role[],
+  redirect = '/login',
+  /**
+   * Should only retunr props
+   */
+  serverFn?: GetServerSideProps,
+): GetServerSideProps {
+  return async (ctx) => {
+    const user = await getSession({ req: ctx.req });
+
+    if (!user || !role.includes(user.user.role)) {
+      return {
+        redirect: {
+          destination: !user
+            ? redirect
+            : user.user.role === 'ADMIN'
+            ? '/admin'
+            : isInstituteRole(user.user.role).is
+            ? '/institute'
+            : '/student',
+          permanent: false,
+        },
+      };
+    }
+
+    return (
+      (serverFn && (await serverFn(ctx))) || {
+        props: {},
+      }
+    );
   };
 }

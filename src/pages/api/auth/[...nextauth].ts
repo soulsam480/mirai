@@ -30,11 +30,6 @@ export default NextAuth({
 
       return session;
     },
-    async signIn(data) {
-      console.log(data);
-
-      return true;
-    },
   },
   providers: [
     CredentialsProvider({
@@ -76,5 +71,5 @@ export default NextAuth({
       },
     }),
   ],
-  debug: true,
+  debug: process.env.NODE_ENV !== 'production',
 });
