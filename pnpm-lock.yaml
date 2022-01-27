@@ -10,6 +10,7 @@ specifiers:
   '@trpc/next': ^9.17.0
   '@trpc/react': ^9.17.0
   '@trpc/server': ^9.17.0
+  '@types/bcrypt': ^5.0.0
   '@types/jest': ^27.4.0
   '@types/node': ^16.11.19
   '@types/react': ^17.0.38
@@ -33,7 +34,8 @@ specifiers:
   next-auth: ^4.1.2
   npm-run-all: ^4.1.5
   postcss: ^8.4.5
-  prettier: ^2.3.2
+  prettier: ^2.5.1
+  prettier-plugin-tailwindcss: ^0.1.4
   prisma: ^3.8.1
   react: ^17.0.2
   react-dom: ^17.0.2
@@ -73,6 +75,7 @@ dependencies:
 devDependencies:
   '@iconify-json/la': 1.0.1
   '@svgr/core': 6.2.0
+  '@types/bcrypt': 5.0.0
   '@types/jest': 27.4.0
   '@types/node': 16.11.19
   '@types/react': 17.0.38
@@ -89,6 +92,7 @@ devDependencies:
   npm-run-all: 4.1.5
   postcss: 8.4.5
   prettier: 2.5.1
+  prettier-plugin-tailwindcss: 0.1.4_prettier@2.5.1
   prisma: 3.8.1
   tailwindcss: 3.0.15_f98f8cb1d4c2734d9765edb689db6e16
   ts-node: 10.4.0_8fee0dbf39ae8459f66ff7817e3967f7
@@ -861,6 +865,12 @@ packages:
 
   /@tsconfig/node16/1.0.2:
     resolution: {integrity: sha512-eZxlbI8GZscaGS7kkc/trHTT5xgrjH3/1n2JDwusC9iahPKWMRvRjJSAN5mCXviuTGQ/lHnhvv8Q1YTpnfz9gA==}
+    dev: true
+
+  /@types/bcrypt/5.0.0:
+    resolution: {integrity: sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==}
+    dependencies:
+      '@types/node': 16.11.19
     dev: true
 
   /@types/istanbul-lib-coverage/2.0.3:
@@ -3314,6 +3324,14 @@ packages:
     engines: {node: '>=6.0.0'}
     dependencies:
       fast-diff: 1.2.0
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.1.4_prettier@2.5.1:
+    resolution: {integrity: sha512-kt3YFWqxcG9+bilBI0hPF7RjQZNtgBRvjJZGw6B2MNAjPqlfcYIiZnNaIEnq4XimKLTzZYxz6jQnUXmSQ/5njg==}
+    peerDependencies:
+      prettier: '>=2.2.0'
+    dependencies:
+      prettier: 2.5.1
     dev: true
 
   /prettier/2.5.1:

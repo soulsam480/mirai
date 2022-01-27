@@ -14,6 +14,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       </Head>
 
       <NavBar />
+
       <SideBar>
         <main className="p-3">{children}</main>
       </SideBar>

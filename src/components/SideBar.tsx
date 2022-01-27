@@ -8,7 +8,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
       <input id="mirai-drawer" type="checkbox" className="drawer-toggle" />
       <div className="flex flex-col items-center justify-center drawer-content">{children}</div>
       <div className="drawer-side">
-        <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden"></label>
+        <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
         <ul className="menu p-4 pt-0 overflow-y-auto bg-amber-50 lg:bg-transparent w-60 text-base-content border-r border-amber-200 space-y-2">
           <li>
             <button className="btn btn-secondary btn-sm">Action</button>

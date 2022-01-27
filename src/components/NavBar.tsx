@@ -46,7 +46,7 @@ export const NavBar: React.FC<Props> = () => {
                 <li>
                   <button
                     className="btn btn-sm btn-outline"
-                    onClick={() => signOut({ redirect: true, callbackUrl: 'http://localhost:3000/login' })}
+                    onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
                   >
                     Logout
                   </button>
