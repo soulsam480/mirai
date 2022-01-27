@@ -26,25 +26,40 @@ export const NavBar: React.FC<Props> = () => {
             </Link>
           </>
         ) : (
-          <div className="dropdown dropdown-end">
-            <button tabIndex={0} className="m-1 btn btn-sm btn-primary">
-              {userData.role} : {userData.name}
-            </button>
-            <ul tabIndex={0} className="p-2 shadow-lg menu dropdown-content bg-amber-50 rounded-box w-52 space-y-2">
-              <li>
-                <button className="btn btn-sm btn-outline">Settings</button>
-              </li>
+          <>
+            <div className="dropdown dropdown-end">
+              <button tabIndex={0} className="avatar placeholder">
+                <div className="bg-primary text-neutral rounded-full w-8 h-8">
+                  <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
+                </div>
+              </button>
+              <ul tabIndex={0} className="p-2 shadow-lg menu dropdown-content bg-amber-50 rounded-box w-52 space-y-2">
+                <li>
+                  <div className="text-sm">
+                    {userData.name} as <span className="font-semibold">{userData.role}</span>
+                  </div>{' '}
+                </li>
+                <li>
+                  <button className="btn btn-sm btn-outline">Settings</button>
+                </li>
 
-              <li>
-                <button
-                  className="btn btn-sm btn-outline"
-                  onClick={() => signOut({ redirect: true, callbackUrl: 'http://localhost:3000/login' })}
-                >
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
+                <li>
+                  <button
+                    className="btn btn-sm btn-outline"
+                    onClick={() => signOut({ redirect: true, callbackUrl: 'http://localhost:3000/login' })}
+                  >
+                    Logout
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <label htmlFor="mirai-drawer" className="drawer-button lg:hidden">
+                <IconLaBars className="text-3xl" />
+              </label>
+            </div>
+          </>
         )}
       </div>
     </div>

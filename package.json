@@ -15,7 +15,7 @@
     "start": "next start",
     "lint": "eslint src",
     "lint-fix": "yarn lint --fix",
-    "ts-node": "ts-node --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
+    "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "postinstall": "prisma generate",
     "fmt": "prettier --write {src,prisma}/**/*.{js,ts,tsx}"
   },
@@ -33,7 +33,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",
-    "@heroicons/react": "^1.0.5",
     "@hookform/resolvers": "^2.8.5",
     "@prisma/client": "^3.8.1",
     "@trpc/client": "^9.17.0",
@@ -56,6 +55,8 @@
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@iconify-json/la": "^1.0.1",
+    "@svgr/core": "^6.2.0",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.19",
     "@types/react": "^17.0.38",
@@ -75,7 +76,9 @@
     "prisma": "^3.8.1",
     "tailwindcss": "^3.0.15",
     "ts-node": "^10.3.0",
-    "typescript": "4.4.4"
+    "typescript": "4.4.4",
+    "unplugin-auto-import": "^0.5.11",
+    "unplugin-icons": "^0.13.0"
   },
   "publishConfig": {
     "access": "restricted"

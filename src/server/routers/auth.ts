@@ -130,7 +130,7 @@ export const authRouter = createRouter()
           code: 'UNAUTHORIZED',
         });
 
-      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.role, undefined, ctx.user.id);
+      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id);
 
       if (!account)
         throw new TRPCError({

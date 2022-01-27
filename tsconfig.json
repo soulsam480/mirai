@@ -23,8 +23,9 @@
       "components/*": ["components/*"],
       "server/*": ["server/*"],
       "utils/*": ["utils/*"]
-    }
+    },
+    "types": ["unplugin-icons/types/react"]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
