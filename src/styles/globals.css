@@ -14,5 +14,10 @@
 
 html,
 body {
-  @apply bg-amber-50;
+  @apply bg-amber-50 text-base;
+}
+
+.menu li > :where(a),
+.menu li > :where(span) {
+  @apply py-1 px-2;
 }

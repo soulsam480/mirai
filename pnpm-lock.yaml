@@ -2860,8 +2860,8 @@ packages:
       jose: 4.3.8
       oauth: 0.9.15
       openid-client: 5.1.2
-      preact: 10.6.4
-      preact-render-to-string: 5.1.19_preact@10.6.4
+      preact: 10.6.5
+      preact-render-to-string: 5.1.19_preact@10.6.5
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       uuid: 8.3.2
@@ -3301,17 +3301,17 @@ packages:
       source-map-js: 1.0.1
     dev: true
 
-  /preact-render-to-string/5.1.19_preact@10.6.4:
+  /preact-render-to-string/5.1.19_preact@10.6.5:
     resolution: {integrity: sha512-bj8sn/oytIKO6RtOGSS/1+5CrQyRSC99eLUnEVbqUa6MzJX5dYh7wu9bmT0d6lm/Vea21k9KhCQwvr2sYN3rrQ==}
     peerDependencies:
       preact: '>=10'
     dependencies:
-      preact: 10.6.4
+      preact: 10.6.5
       pretty-format: 3.8.0
     dev: false
 
-  /preact/10.6.4:
-    resolution: {integrity: sha512-WyosM7pxGcndU8hY0OQlLd54tOU+qmG45QXj2dAYrL11HoyU/EzOSTlpJsirbBr1QW7lICxSsVJJmcmUglovHQ==}
+  /preact/10.6.5:
+    resolution: {integrity: sha512-i+LXM6JiVjQXSt2jG2vZZFapGpCuk1fl8o6ii3G84MA3xgj686FKjs4JFDkmUVhtxyq21+4ay74zqPykz9hU6w==}
     dev: false
 
   /prelude-ls/1.2.1:

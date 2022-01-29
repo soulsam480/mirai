@@ -58,6 +58,8 @@ export function getServerSideAuthGuard(
   serverFn?: GetServerSideProps,
 ): GetServerSideProps {
   return async (ctx) => {
+    redirect = redirect || '/login';
+
     const user = await getSession({ req: ctx.req });
 
     if (!user || !role.includes(user.user.role)) {

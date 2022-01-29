@@ -11,7 +11,7 @@ export const NavBar: React.FC<Props> = () => {
   const [isLoggedIn] = useAtom(loggedInAtom);
 
   return (
-    <div className="navbar min-h-12 mb-2 rounded-none text-neutral">
+    <div className="navbar min-h-12 mb-2 rounded-none text-neutral border-b border-amber-200">
       <div className="flex-1 mx-2">
         <Link href="/">
           <a className="text-lg font-bold">Mirai</a>
@@ -33,12 +33,16 @@ export const NavBar: React.FC<Props> = () => {
                   <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
                 </div>
               </button>
-              <ul tabIndex={0} className="p-2 shadow-lg menu dropdown-content bg-amber-50 rounded-box w-52 space-y-2">
+              <ul
+                tabIndex={0}
+                className="p-2 shadow-lg menu dropdown-content bg-amber-50 border border-amber-200 rounded-box w-52 space-y-2"
+              >
                 <li>
                   <div className="text-sm">
                     {userData.name} as <span className="font-semibold">{userData.role}</span>
                   </div>{' '}
                 </li>
+
                 <li>
                   <button className="btn btn-sm btn-outline">Settings</button>
                 </li>
