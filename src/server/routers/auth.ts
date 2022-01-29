@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import { LoginSchema } from 'pages/login';
 import { createRouter } from 'server/createRouter';
 import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth';
 import { z } from 'zod';
@@ -53,10 +54,7 @@ export const authRouter = createRouter()
     },
   })
   .mutation('login', {
-    input: z.object({
-      email: z.string().email(),
-      password: z.string(),
-    }),
+    input: LoginSchema,
     async resolve({ ctx, input: { email, password } }) {
       const account = await ctx.prisma.account.findFirst({
         where: { email },

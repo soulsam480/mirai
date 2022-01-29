@@ -7,6 +7,10 @@ interface Props {}
 
 const ADMIN_SIDEBAR = [
   {
+    label: 'Home',
+    path: '/admin',
+  },
+  {
     label: 'Institutes',
     path: '/admin/institute',
   },
@@ -20,10 +24,10 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const [userData] = useAtom(userAtom);
 
   return (
-    <div className="drawer drawer-mobile h-52">
+    <div className="drawer drawer-mobile">
       <input id="mirai-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content">{children}</div>
-      <div className="drawer-side">
+      {children}
+      <div className="drawer-side min-h-[calc(100vh-57px)]">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
         <aside className="menu p-4 pt-0 overflow-y-auto bg-amber-50 lg:bg-transparent w-60 text-base-content border-r border-amber-200 space-y-1">
           {userData.role === 'ADMIN' &&

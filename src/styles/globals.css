@@ -21,3 +21,7 @@ body {
 .menu li > :where(span) {
   @apply py-1 px-2;
 }
+
+.file-input {
+  @apply block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 cursor-pointer file:cursor-pointer file:text-sm file:font-semibold file:bg-base-100  file:text-secondary hover:file:opacity-80;
+}

@@ -10,7 +10,7 @@ import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NavBar } from 'components/NavBar';
 
-const schema = z.object({
+export const LoginSchema = z.object({
   email: z.string().email().min(1, 'Email required'),
   password: z.string().min(1, 'Password required'),
 });
@@ -42,7 +42,7 @@ const Login: NextPageWithLayout = () => {
     email: string;
     password: string;
   }>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: '',
       password: '',

@@ -1,14 +1,10 @@
+import { createInstituteSchema } from 'pages/admin/institute/manage/[[...id]]';
 import { createRouter } from 'server/createRouter';
 import { z } from 'zod';
 
 export const accountRouter = createRouter()
   .mutation('create_institute', {
-    input: z.object({
-      code: z.string(),
-      name: z.string(),
-      status: z.enum(['ONBOARDED', 'INPROGRESS', 'PENDING']),
-      logo: z.string().optional(),
-    }),
+    input: createInstituteSchema,
     async resolve({ ctx, input }) {
       const institute = await ctx.prisma.institute.create({
         data: input,

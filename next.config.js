@@ -21,6 +21,7 @@ module.exports = {
         jsx: 'react',
         autoInstall: true,
         prefix: 'icon',
+        extension: 'jsx',
       }),
     );
 

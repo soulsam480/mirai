@@ -1,11 +1,20 @@
 import { AppLayout } from 'components/AppLayout';
+import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
 
 const Institutes: NextPageWithLayout = () => {
-  return <div>Institutes</div>;
+  return (
+    <div>
+      <div className="flex justify-end">
+        <Link href={'/admin/institute/manage'}>
+          <a className="btn btn-primary btn-sm">Create new</a>
+        </Link>
+      </div>
+    </div>
+  );
 };
 
 Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>;
