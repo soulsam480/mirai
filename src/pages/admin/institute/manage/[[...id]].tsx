@@ -3,12 +3,19 @@ import { AppLayout } from 'components/AppLayout';
 import { MInput } from 'components/lib/MInput';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getServerSideAuthGuard } from 'server/lib/auth';
+import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async (ctx) => {
+  console.log(ctx.query);
+
+  return {
+    props: {},
+  };
+});
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
@@ -23,6 +30,11 @@ const Institutes: NextPageWithLayout = () => {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
 
+  const inputFile = useRef<HTMLInputElement>(null);
+  const uploadFile = useRef<File | null>(null);
+
+  const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute']);
+
   const { register, handleSubmit, formState } = useForm<z.infer<typeof createInstituteSchema>>({
     resolver: zodResolver(createInstituteSchema),
     defaultValues: {
@@ -34,8 +46,25 @@ const Institutes: NextPageWithLayout = () => {
     shouldFocusError: true,
   });
 
-  function createInstitute() {
-    //
+  async function createInstitute(data: z.infer<typeof createInstituteSchema>) {
+    // async action
+    // get ID from response
+
+    try {
+      const resp = await createInstituteMut(data);
+
+      router.replace({
+        pathname: `/admin/manage/${resp.id}`,
+      });
+    } catch (error) {
+      // setError(error.)
+    }
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      uploadFile.current = e.target.files[0];
+    }
   }
 
   return (
@@ -75,7 +104,7 @@ const Institutes: NextPageWithLayout = () => {
         </label>
         <label className="block">
           <span className="sr-only">Choose institute logo</span>
-          <input type="file" className="file-input" />
+          <input type="file" className="file-input" multiple={false} onChange={handleFileChange} ref={inputFile} />
         </label>
 
         <div className="flex justify-end">

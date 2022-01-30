@@ -23,6 +23,7 @@ model Account {
   otp           String?
   otpExpiry     DateTime?
 
+  //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ
   role    Role
   isOwner Boolean @default(false)
 
