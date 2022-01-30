@@ -2,6 +2,7 @@
   "name": "mirai",
   "version": "0.0.0",
   "private": true,
+  "license": "GNU GPLv3",
   "scripts": {
     "build:1-migrate": "prisma migrate deploy",
     "build:2-build": "next build",
