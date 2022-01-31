@@ -10,8 +10,6 @@ import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async (ctx) => {
-  console.log(ctx.query);
-
   return {
     props: {},
   };
