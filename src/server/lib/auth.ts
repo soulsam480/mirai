@@ -78,7 +78,7 @@ export function getServerSideAuthGuard(
     }
 
     return (
-      (serverFn && (await serverFn(ctx))) || {
+      (serverFn && serverFn(ctx)) || {
         props: {},
       }
     );

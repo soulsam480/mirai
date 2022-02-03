@@ -1,11 +1,56 @@
+import { Institute, PrismaClient } from '@prisma/client';
 import { AppLayout } from 'components/AppLayout';
+import { Column, MTable } from 'components/lib/MTable';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async () => {
+  const client = new PrismaClient();
 
-const Institutes: NextPageWithLayout = () => {
+  const institutes = await client.institute.findMany();
+
+  client.$disconnect();
+
+  return {
+    props: {
+      institutes: institutes || [],
+    },
+  };
+});
+
+interface Props {
+  institutes: Institute[];
+}
+
+const columns: Column<Institute>[] = [
+  {
+    key: 'id',
+    label: 'ID',
+    headerClasses: '!bg-primary',
+    classes: 'bg-amber-100',
+  },
+  {
+    key: 'name',
+    label: 'Name',
+    headerClasses: '!bg-primary',
+    classes: 'bg-amber-100',
+  },
+  {
+    key: 'status',
+    label: 'Status',
+    headerClasses: '!bg-primary',
+    classes: 'bg-amber-100',
+  },
+  {
+    key: 'code',
+    label: 'Code',
+    headerClasses: '!bg-primary',
+    classes: 'bg-amber-100',
+  },
+];
+
+const Institutes: NextPageWithLayout<Props, any> = ({ institutes = [] }) => {
   return (
     <div>
       <div className="flex justify-end">
@@ -13,6 +58,8 @@ const Institutes: NextPageWithLayout = () => {
           <a className="btn btn-primary btn-sm">Create new</a>
         </Link>
       </div>
+
+      <MTable className="mt-4" columns={columns} rows={institutes} compact />
     </div>
   );
 };

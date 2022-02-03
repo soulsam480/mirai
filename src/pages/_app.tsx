@@ -13,7 +13,7 @@ import superjson from 'superjson';
 import { SessionProvider as NextAuthProvider } from 'next-auth/react';
 import { Auth } from 'components/Auth';
 
-export type NextPageWithLayout = NextPage & {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
 };
 
