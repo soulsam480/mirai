@@ -1,5 +1,7 @@
 import { Institute, PrismaClient } from '@prisma/client';
+import clsx from 'clsx';
 import { AppLayout } from 'components/AppLayout';
+import MLink from 'components/lib/MLink';
 import { Column, MTable } from 'components/lib/MTable';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
@@ -23,6 +25,19 @@ interface Props {
   institutes: Institute[];
 }
 
+function getStatusClass(status: Institute['status']) {
+  switch (status) {
+    case 'INPROGRESS':
+      return 'badge-info';
+
+    case 'ONBOARDED':
+      return 'badge-success';
+
+    case 'PENDING':
+      return 'badge-error';
+  }
+}
+
 const columns: Column<Institute>[] = [
   {
     key: 'id',
@@ -41,12 +56,28 @@ const columns: Column<Institute>[] = [
     label: 'Status',
     headerClasses: '!bg-primary',
     classes: 'bg-amber-100',
+    format: (row) => (
+      <>
+        <span className={clsx([getStatusClass(row.status), 'badge'])}> {row.status} </span>
+      </>
+    ),
   },
   {
     key: 'code',
     label: 'Code',
     headerClasses: '!bg-primary',
     classes: 'bg-amber-100',
+  },
+  {
+    key: '',
+    label: 'Edit',
+    headerClasses: '!bg-primary',
+    classes: 'bg-amber-100',
+    format: ({ id }) => (
+      <MLink href={`/admin/institute/manage/${id}`}>
+        <IconLaPenSquare className="text-lg" />
+      </MLink>
+    ),
   },
 ];
 

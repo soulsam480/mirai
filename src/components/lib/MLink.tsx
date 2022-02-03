@@ -7,12 +7,12 @@ interface Props {
   className?: string;
 }
 
-const MLink: React.FC<Props & LinkProps> = ({ href, children, ...rest }) => {
+const MLink: React.FC<Props & LinkProps> = ({ href, children, className, ...rest }) => {
   const { pathname } = useRouter();
 
   return (
     <Link href={href} {...rest}>
-      <a className={clsx([pathname === href ? 'active' : '', '!px-2 !py-1'])}> {children} </a>
+      <a className={clsx([pathname === href ? 'active' : '', className])}> {children} </a>
     </Link>
   );
 };

@@ -36,6 +36,7 @@ const Institutes: NextPageWithLayout = () => {
       name && setValue('name', name);
       status && setValue('status', status);
     },
+    refetchOnWindowFocus: false,
   });
 
   const [error, setError] = useState<string | null>(null);

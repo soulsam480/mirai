@@ -2,19 +2,30 @@ import clsx from 'clsx';
 import React, { HTMLProps } from 'react';
 
 interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
+  /** Table Schema */
   columns: Column[];
+  /** Table data/rows */
   rows: any[];
+  /** less padding tavle */
   compact?: boolean;
+  /** classes to apply on thead-> tr */
   headerClass?: string;
+  /** classes to apply on tbody -> tr */
   bodyRowClass?: string;
+  /** no data label slot */
   noDataLabel?: React.ReactNode;
 }
 
 export interface Column<R = any> {
+  /** property inside row that hold column data */
   key: string;
+  /** Column header label */
   label: string;
+  /** Column classes */
   classes?: string | ((row: R) => string);
+  /** classes to apply on column header , thead -> tr -> th */
   headerClasses?: string;
+  /** Custom formatter to format data before displaying */
   format?: (row: R) => React.ReactNode;
 }
 
