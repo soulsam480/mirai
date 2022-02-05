@@ -3,15 +3,13 @@ import { AppLayout } from 'components/AppLayout';
 import { MInput } from 'components/lib/MInput';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async (ctx) => {
-  console.log(ctx.query);
-
   return {
     props: {},
   };
@@ -28,6 +26,19 @@ export const createInstituteSchema = z.object({
 
 const Institutes: NextPageWithLayout = () => {
   const router = useRouter();
+
+  trpc.useQuery(['institute.get_institute', (router.query.id && +router.query.id[0]) || 0], {
+    enabled: !!router.query.id && !!router.query.id.length,
+    onSuccess(data) {
+      const { code, name, status } = data;
+
+      code && setValue('code', code);
+      name && setValue('name', name);
+      status && setValue('status', status);
+    },
+    refetchOnWindowFocus: false,
+  });
+
   const [error, setError] = useState<string | null>(null);
 
   const inputFile = useRef<HTMLInputElement>(null);
@@ -35,7 +46,7 @@ const Institutes: NextPageWithLayout = () => {
 
   const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute']);
 
-  const { register, handleSubmit, formState } = useForm<z.infer<typeof createInstituteSchema>>({
+  const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof createInstituteSchema>>({
     resolver: zodResolver(createInstituteSchema),
     defaultValues: {
       code: '',
@@ -54,7 +65,7 @@ const Institutes: NextPageWithLayout = () => {
       const resp = await createInstituteMut(data);
 
       router.replace({
-        pathname: `/admin/manage/${resp.id}`,
+        pathname: `/admin/institute/manage/${resp.id}`,
       });
     } catch (error) {
       // setError(error.)

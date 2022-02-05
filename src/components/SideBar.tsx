@@ -34,7 +34,9 @@ export const SideBar: React.FC<Props> = ({ children }) => {
             ADMIN_SIDEBAR.map((item, key) => {
               return (
                 <li key={key}>
-                  <MLink href={item.path}>{item.label}</MLink>
+                  <MLink className="!px-2 !py-1" href={item.path}>
+                    {item.label}
+                  </MLink>
                 </li>
               );
             })}

@@ -45,7 +45,7 @@ enum Role {
 }
 
 model Institute {
-  id     Int              @id @default(autoincrement())
+  id     Int              @id @default(autoincrement()) // auto generated
   code   String?
   name   String
   status OnboardingStatus @default(PENDING)
@@ -58,6 +58,7 @@ model Institute {
 
   account Account?
 
+  // auto generated
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -100,6 +101,8 @@ enum BatchDurationType {
 // }
 
 //TODO: add more details to student model
+// IGIT Sarang -> 170115282
+// code can ve igit_sarang_170115282
 model Student {
   id    Int     @id @default(autoincrement())
   code  String? @unique
