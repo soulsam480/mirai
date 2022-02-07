@@ -5,7 +5,7 @@ import { z } from 'zod';
 import React, { useState } from 'react';
 import { trpc } from 'utils/trpc';
 import { GetServerSideProps } from 'next';
-import { isInstituteRole } from 'utils/helpers';
+import { getUserHome, isInstituteRole } from 'utils/helpers';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NavBar } from 'components/NavBar';
@@ -21,8 +21,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (user) {
     return {
       redirect: {
-        destination:
-          user.user.role === 'ADMIN' ? '/admin' : isInstituteRole(user.user.role).is ? '/institute' : '/student',
+        destination: getUserHome(user.user.role),
         permanent: false,
       },
     };

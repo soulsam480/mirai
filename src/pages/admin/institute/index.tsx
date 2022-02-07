@@ -56,11 +56,7 @@ const columns: Column<Institute>[] = [
     label: 'Status',
     headerClasses: '!bg-primary',
     classes: 'bg-amber-100',
-    format: (row) => (
-      <>
-        <span className={clsx([getStatusClass(row.status), 'badge'])}> {row.status} </span>
-      </>
-    ),
+    format: (row) => <span className={clsx([getStatusClass(row.status), 'badge'])}> {row.status} </span>,
   },
   {
     key: 'code',

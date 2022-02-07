@@ -1,7 +1,25 @@
+import { GetServerSideProps } from 'next';
+import { Session } from 'next-auth';
+import { getSession } from 'next-auth/react';
 import Link from 'next/link';
+import { getUserHome } from 'utils/helpers';
 import { NextPageWithLayout } from './_app';
 
-const IndexPage: NextPageWithLayout = () => {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const user = await getSession({ req: ctx.req });
+
+  return {
+    props: {
+      user,
+    },
+  };
+};
+
+interface Props {
+  user: Session;
+}
+
+const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
   return (
     <div className="hero min-h-screen">
       <div className="absolute top-0 left-0 right-0 ">
@@ -13,9 +31,11 @@ const IndexPage: NextPageWithLayout = () => {
           </div>
           <div className="flex-none space-x-2">
             <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
-            <Link href="/login">
-              <a className="btn btn-sm btn-ghost hover:bg-primary btn-secondary">Login / Signup</a>
-            </Link>
+            {!user && (
+              <Link href="/login">
+                <a className="btn btn-sm sm:btn-md btn-secondary">Login / Signup</a>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -31,8 +51,8 @@ const IndexPage: NextPageWithLayout = () => {
           </p>
           <div className="flex space-x-2 justify-center">
             <button className="btn btn-sm sm:btn-md btn-primary">Contact sales</button>
-            <Link href="/login">
-              <a className="btn btn-sm sm:btn-md btn-secondary">Login / Signup</a>
+            <Link href={!user ? '/login' : getUserHome(user.user.role)}>
+              <a className="btn btn-sm sm:btn-md btn-secondary">{!user ? 'Login / Signup' : 'Go to home'}</a>
             </Link>
           </div>
         </div>

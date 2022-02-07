@@ -17,7 +17,7 @@ const cerateDepartmentSchema = z.object({
 export const instituteRouter = createRouter().query('get_institute', {
   input: z.number(),
   resolve: async ({ ctx, input }) => {
-    const instituteData = await ctx.prisma.institute.findFirst({ where: { id: input } });
+    const instituteData = await ctx.prisma.institute.findFirst({ where: { id: input }, include: { account: true } });
 
     if (!instituteData)
       throw new TRPCError({
