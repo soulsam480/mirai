@@ -86,41 +86,6 @@ export const authRouter = createRouter()
       };
     },
   })
-  // .query('refresh_token', {
-  //   async resolve({ ctx }) {
-  //     try {
-  //       const refreshToken = ctx.req.cookies['refresh-token'];
-
-  //       if (!refreshToken)
-  //         return {
-  //           accessToken: '',
-  //           refetch: false,
-  //         };
-
-  //       const payload = <JwtPayload>verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
-
-  //       const account = await ctx.prisma.account.findFirst({
-  //         where: { id: +payload.id },
-  //         select: { id: true, role: true },
-  //       });
-
-  //       if (!account)
-  //         return {
-  //           accessToken: '',
-  //           refetch: false,
-  //         };
-
-  //       const { accessToken, refreshToken: rtoken } = createTokens({ id: account.id, role: account.role });
-
-  //       ctx.res.setHeader('Set-Cookie', rtoken);
-  //     } catch (error) {
-  //       return {
-  //         accessToken: undefined,
-  //         refetch: false,
-  //       };
-  //     }
-  //   },
-  // })
   .query('account', {
     async resolve({ ctx }) {
       if (!ctx.user)

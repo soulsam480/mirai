@@ -6,14 +6,11 @@ import { NextPageWithLayout } from 'pages/_app';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { getServerSideAuthGuard } from 'server/lib/auth';
+import { copyToClip } from 'utils/helpers';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async (ctx) => {
-  return {
-    props: {},
-  };
-});
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
@@ -28,7 +25,7 @@ const Institutes: NextPageWithLayout = () => {
   const router = useRouter();
   const isEditMode = useMemo(() => !!router.query.id && !!router.query.id.length, [router.query]);
 
-  const { data: instituteData, error: getInstituteError } = trpc.useQuery(
+  const { error: getInstituteError, data: inistituteData } = trpc.useQuery(
     ['institute.get_institute', (router.query.id && +router.query.id[0]) || 0],
     {
       enabled: isEditMode,
@@ -57,7 +54,6 @@ const Institutes: NextPageWithLayout = () => {
   const uploadFile = useRef<File | null>(null);
 
   const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute']);
-  // const { mutateAsync: updateInstituteMut } = trpc.useMutation(['account.create_institute']);
 
   const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof createInstituteSchema>>({
     resolver: zodResolver(createInstituteSchema),
@@ -71,9 +67,6 @@ const Institutes: NextPageWithLayout = () => {
   });
 
   async function createInstitute(data: z.infer<typeof createInstituteSchema>) {
-    // async action
-    // get ID from response
-
     try {
       const resp = await createInstituteMut(data);
 
@@ -85,17 +78,39 @@ const Institutes: NextPageWithLayout = () => {
     }
   }
 
+  function updateInstitute(_data: z.infer<typeof createInstituteSchema>) {
+    console.log('TODO update');
+    //TODO: call update mutation here
+  }
+
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       uploadFile.current = e.target.files[0];
     }
   }
 
+  function exportSignupLink() {
+    if (!inistituteData) return '';
+
+    const { origin } = location;
+
+    const link = `${origin}/signup/${new URLSearchParams({
+      instituteId: String(inistituteData.id),
+      role: 'INSTITUTE',
+      name: inistituteData.name,
+    }).toString()}`;
+
+    copyToClip(link);
+  }
+
   return (
     <div>
       <div className="text-xl">Create new Institute</div>
       <div className="grid sm:grid-cols-2 grid-cols-1 sm:space-x-2">
-        <form className="form-control w-full sm:w-80" onSubmit={handleSubmit(createInstitute)}>
+        <form
+          className="form-control w-full sm:w-80"
+          onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
+        >
           {error && (
             <div className="alert alert-error py-2 text-sm">
               <div className="flex-1">
@@ -134,18 +149,21 @@ const Institutes: NextPageWithLayout = () => {
 
           <div className="flex justify-end space-x-2">
             <button type="submit" className="btn btn-sm btn-primary mt-5">
-              Create
+              {isEditMode ? 'Update' : 'Create'}
             </button>
-
-            {isEditMode && !instituteData?.account && (
-              <button type="submit" className="btn btn-sm btn-primary mt-5">
-                Connect account
+            {isEditMode && !inistituteData?.account && (
+              <button
+                type="button"
+                onClick={exportSignupLink}
+                className="btn btn-sm btn-primary mt-5"
+                title="Generate Signup link for institute"
+              >
+                {' '}
+                Copy Signup link
               </button>
             )}
           </div>
         </form>
-
-        <div></div>
       </div>
     </div>
   );

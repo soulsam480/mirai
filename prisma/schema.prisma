@@ -46,7 +46,7 @@ enum Role {
 
 model Institute {
   id     Int              @id @default(autoincrement()) // auto generated
-  code   String?
+  code   String?          @unique
   name   String
   status OnboardingStatus @default(PENDING)
   logo   String?

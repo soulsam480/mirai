@@ -11,3 +11,10 @@ export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' 
 export function getUserHome(role: Role) {
   return role === 'ADMIN' ? '/admin' : isInstituteRole(role).is ? '/institute' : '/student';
 }
+
+export async function copyToClip(value: string) {
+  const isSupported = Boolean(navigator && 'clipboard' in navigator);
+  if (isSupported && value != null) {
+    await navigator.clipboard.writeText(value);
+  }
+}
