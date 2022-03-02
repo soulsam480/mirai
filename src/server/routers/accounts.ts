@@ -1,3 +1,4 @@
+import { TRPCError } from '@trpc/server';
 import { createInstituteSchema } from 'pages/admin/institute/manage/[[...id]]';
 import { createStudentSchema } from 'pages/admin/student/manage/[[...id]]';
 import { createRouter } from 'server/createRouter';
@@ -6,6 +7,15 @@ export const accountRouter = createRouter()
   .mutation('create_institute', {
     input: createInstituteSchema,
     async resolve({ ctx, input }) {
+      const isDupId = await ctx.prisma.institute.findFirst({ where: { code: input.code }, select: { id: true } });
+
+      if (isDupId) {
+        throw new TRPCError({
+          message: 'Duplicate Institute code',
+          code: 'BAD_REQUEST',
+        });
+      }
+
       const institute = await ctx.prisma.institute.create({
         data: input,
       });

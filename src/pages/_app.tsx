@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../styles/globals.scss';
 
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
@@ -12,6 +12,7 @@ import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
 import { SessionProvider as NextAuthProvider } from 'next-auth/react';
 import { Auth } from 'components/Auth';
+import { JAlertGroup } from 'components/lib/MAlerts';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -28,6 +29,7 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
     <NextAuthProvider session={pageProps.session}>
       <Auth>
         <Component {...pageProps} />
+        {typeof window !== 'undefined' && <JAlertGroup />}
       </Auth>
     </NextAuthProvider>,
   );

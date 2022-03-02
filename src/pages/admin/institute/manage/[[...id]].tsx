@@ -9,6 +9,7 @@ import { getServerSideAuthGuard } from 'server/lib/auth';
 import { copyToClip } from 'utils/helpers';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
+import { useAlerts } from 'components/lib/store/alerts';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
 
@@ -24,6 +25,7 @@ export const createInstituteSchema = z.object({
 const Institutes: NextPageWithLayout = () => {
   const router = useRouter();
   const isEditMode = useMemo(() => !!router.query.id && !!router.query.id.length, [router.query]);
+  const [_, setAlert] = useAlerts();
 
   const { error: getInstituteError, data: inistituteData } = trpc.useQuery(
     ['institute.get_institute', (router.query.id && +router.query.id[0]) || 0],
@@ -48,12 +50,10 @@ const Institutes: NextPageWithLayout = () => {
     }
   }, [getInstituteError]);
 
-  const [error, setError] = useState<string | null>(null);
-
   const inputFile = useRef<HTMLInputElement>(null);
   const uploadFile = useRef<File | null>(null);
 
-  const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute']);
+  const { mutateAsync: createInstituteMut, error } = trpc.useMutation(['account.create_institute']);
 
   const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof createInstituteSchema>>({
     resolver: zodResolver(createInstituteSchema),
@@ -70,12 +70,15 @@ const Institutes: NextPageWithLayout = () => {
     try {
       const resp = await createInstituteMut(data);
 
+      setAlert({
+        message: 'Institute created successfully !',
+        type: 'success',
+      });
+
       router.replace({
         pathname: `/admin/institute/manage/${resp.id}`,
       });
-    } catch (error) {
-      // setError(error.)
-    }
+    } catch (_) {}
   }
 
   function updateInstitute(_data: z.infer<typeof createInstituteSchema>) {
@@ -103,6 +106,13 @@ const Institutes: NextPageWithLayout = () => {
     copyToClip(link);
   }
 
+  useEffect(() => {
+    setAlert({
+      message: error?.message || '',
+      type: 'danger',
+    });
+  }, [error]);
+
   return (
     <div>
       <div className="text-xl">Create new Institute</div>
@@ -111,14 +121,6 @@ const Institutes: NextPageWithLayout = () => {
           className="form-control w-full sm:w-80"
           onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
         >
-          {error && (
-            <div className="alert alert-error py-2 text-sm">
-              <div className="flex-1">
-                <label> {error} </label>
-              </div>
-            </div>
-          )}
-
           <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
           <MInput label="Code" {...register('code')} placeholder="Institute code" error={formState.errors.code} />
 
