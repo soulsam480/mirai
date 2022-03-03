@@ -16,8 +16,8 @@ export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
 export const createInstituteSchema = z.object({
-  code: z.string(),
-  name: z.string(),
+  code: z.string().min(1, "Code shouldn't be empty"),
+  name: z.string().min(1, "Name shouldn't be empty"),
   status: z.enum(['ONBOARDED', 'INPROGRESS', 'PENDING']),
   logo: z.string().optional(),
 });
@@ -103,14 +103,15 @@ const Institutes: NextPageWithLayout = () => {
       name: inistituteData.name,
     }).toString()}`;
 
-    copyToClip(link);
+    copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }));
   }
 
   useEffect(() => {
-    setAlert({
-      message: error?.message || '',
-      type: 'danger',
-    });
+    error &&
+      setAlert({
+        message: error.message || '',
+        type: 'danger',
+      });
   }, [error]);
 
   return (

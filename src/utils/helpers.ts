@@ -14,7 +14,8 @@ export function getUserHome(role: Role) {
 
 export async function copyToClip(value: string) {
   const isSupported = Boolean(navigator && 'clipboard' in navigator);
-  if (isSupported && value != null) {
-    await navigator.clipboard.writeText(value);
-  }
+
+  if (!isSupported) return Promise.reject();
+
+  navigator.clipboard.writeText(value).then(() => Promise.resolve());
 }

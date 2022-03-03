@@ -23,7 +23,7 @@ const alertsSub = atom<Alert[], Alert>(
       set(alertsBase, () => [...alerts]);
 
       clearTimeout(timeout);
-    }, 2000);
+    }, 2500);
   },
 );
 

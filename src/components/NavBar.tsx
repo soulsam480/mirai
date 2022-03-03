@@ -38,8 +38,11 @@ export const NavBar: React.FC<Props> = () => {
                 className="p-2 shadow-lg menu dropdown-content bg-amber-50 border border-amber-200 rounded-box w-52 space-y-2"
               >
                 <li>
-                  <div className="text-sm">
-                    {userData.name} as <span className="font-semibold">{userData.role}</span>
+                  <div className="text-sm p-1">
+                    <span className="font-semibold">
+                      {' '}
+                      {userData.name} ({userData.role})
+                    </span>
                   </div>{' '}
                 </li>
 
