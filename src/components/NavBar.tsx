@@ -47,16 +47,20 @@ export const NavBar: React.FC<Props> = () => {
                 </li>
 
                 <li>
-                  <button className="btn btn-sm btn-outline">Settings</button>
+                  <div className="p-0">
+                    <button className="btn btn-sm btn-outline btn-block">Settings</button>
+                  </div>{' '}
                 </li>
 
                 <li>
-                  <button
-                    className="btn btn-sm btn-outline"
-                    onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
-                  >
-                    Logout
-                  </button>
+                  <div className="p-0">
+                    <button
+                      className="btn btn-sm btn-outline btn-block"
+                      onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </li>
               </ul>
             </div>
