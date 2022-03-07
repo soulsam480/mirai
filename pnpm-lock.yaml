@@ -40,6 +40,7 @@ specifiers:
   prettier: ^2.5.1
   prettier-plugin-tailwindcss: ^0.1.8
   prisma: ^3.10.0
+  prisma-exclude: ^1.0.1
   react: ^17.0.2
   react-dom: ^17.0.2
   react-hook-form: ^7.27.1
@@ -102,6 +103,7 @@ devDependencies:
   prettier: 2.5.1
   prettier-plugin-tailwindcss: 0.1.8_prettier@2.5.1
   prisma: 3.10.0
+  prisma-exclude: 1.0.1_632d19b2c320f2a29a26a6816c10c91e
   rimraf: 3.0.2
   sass: 1.49.9
   tailwindcss: 3.0.23_4b9e11f8e85900587b5e2272c5d4c20c
@@ -3465,6 +3467,16 @@ packages:
   /pretty-format/3.8.0:
     resolution: {integrity: sha1-v77VbV6ad2ZF9LH/eqGjrE+jw4U=}
     dev: false
+
+  /prisma-exclude/1.0.1_632d19b2c320f2a29a26a6816c10c91e:
+    resolution: {integrity: sha512-A+sfrw8W/VYthrHKmPIoh3aLih9mvEEQxxq4P+q6ZzjTxAdRajEz9DYR9RMB92WGmlc3y3uQn+Z2UaiOvF8FcQ==}
+    peerDependencies:
+      '@prisma/client': ^3.10.0
+      prisma: ^3.10.0
+    dependencies:
+      '@prisma/client': 3.10.0_prisma@3.10.0
+      prisma: 3.10.0
+    dev: true
 
   /prisma/3.10.0:
     resolution: {integrity: sha512-dAld12vtwdz9Rz01nOjmnXe+vHana5PSog8t0XGgLemKsUVsaupYpr74AHaS3s78SaTS5s2HOghnJF+jn91ZrA==}

@@ -10,6 +10,8 @@ import { copyToClip } from 'utils/helpers';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 import { useAlerts } from 'components/lib/store/alerts';
+import { TRPCErrorType } from 'types';
+import { signupSchema } from 'pages/login';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
 
@@ -22,41 +24,54 @@ export const createInstituteSchema = z.object({
   logo: z.string().optional(),
 });
 
+const manageInstituteSchema = createInstituteSchema.merge(
+  signupSchema.pick({
+    email: true,
+  }),
+);
+
 const Institutes: NextPageWithLayout = () => {
   const router = useRouter();
   const isEditMode = useMemo(() => !!router.query.id && !!router.query.id.length, [router.query]);
   const [_, setAlert] = useAlerts();
+  const [globalError, setError] = useState<TRPCErrorType | null>(null);
 
-  const { error: getInstituteError, data: inistituteData } = trpc.useQuery(
+  const { data: inistituteData } = trpc.useQuery(
     ['institute.get_institute', (router.query.id && +router.query.id[0]) || 0],
     {
       enabled: isEditMode,
+      refetchOnWindowFocus: false,
+      retry: false,
       onSuccess(data) {
-        const { code, name, status } = data;
+        const { code, name, status, account } = data;
 
         code && setValue('code', code);
         name && setValue('name', name);
         status && setValue('status', status);
+        account && account.email && setValue('email', account.email);
       },
-      refetchOnWindowFocus: false,
+      onError(e) {
+        setError(e);
+
+        if (e?.data?.code === 'NOT_FOUND') {
+          router.push('/admin/institute');
+        }
+      },
     },
   );
-
-  useEffect(() => {
-    if (!getInstituteError) return;
-
-    if (getInstituteError?.data?.code === 'NOT_FOUND') {
-      router.push('/admin/institute');
-    }
-  }, [getInstituteError]);
 
   const inputFile = useRef<HTMLInputElement>(null);
   const uploadFile = useRef<File | null>(null);
 
-  const { mutateAsync: createInstituteMut, error } = trpc.useMutation(['account.create_institute']);
+  const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute'], {
+    onError: setError,
+  });
+  const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
+    onError: setError,
+  });
 
-  const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof createInstituteSchema>>({
-    resolver: zodResolver(createInstituteSchema),
+  const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageInstituteSchema>>({
+    resolver: zodResolver(manageInstituteSchema),
     defaultValues: {
       code: '',
       logo: '',
@@ -66,9 +81,11 @@ const Institutes: NextPageWithLayout = () => {
     shouldFocusError: true,
   });
 
-  async function createInstitute(data: z.infer<typeof createInstituteSchema>) {
+  async function createInstitute({ email, ...rest }: z.infer<typeof manageInstituteSchema>) {
     try {
-      const resp = await createInstituteMut(data);
+      const resp = await createInstituteMut(rest);
+
+      await createInstituteAccount({ role: 'INSTITUTE', email, instituteId: resp.id, name: rest.name });
 
       setAlert({
         message: 'Institute created successfully !',
@@ -81,7 +98,7 @@ const Institutes: NextPageWithLayout = () => {
     } catch (_) {}
   }
 
-  function updateInstitute(_data: z.infer<typeof createInstituteSchema>) {
+  function updateInstitute(_data: z.infer<typeof manageInstituteSchema>) {
     console.log('TODO update');
     //TODO: call update mutation here
   }
@@ -96,23 +113,28 @@ const Institutes: NextPageWithLayout = () => {
     if (!inistituteData) return '';
 
     const { origin } = location;
+    const { account } = inistituteData;
 
-    const link = `${origin}/signup/${new URLSearchParams({
-      instituteId: String(inistituteData.id),
-      role: 'INSTITUTE',
-      name: inistituteData.name,
+    if (!account) return;
+
+    const link = `${origin}/reset-password?${new URLSearchParams({
+      accountId: String(account.id),
+      token: account.accountToken || '',
     }).toString()}`;
 
     copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }));
   }
 
   useEffect(() => {
-    error &&
-      setAlert({
-        message: error.message || '',
-        type: 'danger',
-      });
-  }, [error]);
+    if (!globalError) return;
+
+    setAlert({
+      message: globalError.message,
+      type: 'danger',
+    });
+
+    setError(null);
+  }, [globalError]);
 
   return (
     <div>
@@ -123,6 +145,13 @@ const Institutes: NextPageWithLayout = () => {
           onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
         >
           <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
+          <MInput
+            disabled={inistituteData && inistituteData.status === 'INPROGRESS'}
+            label="Email"
+            {...register('email')}
+            placeholder="Institute Email"
+            error={formState.errors.email}
+          />
           <MInput label="Code" {...register('code')} placeholder="Institute code" error={formState.errors.code} />
 
           <label className="label">
@@ -154,7 +183,7 @@ const Institutes: NextPageWithLayout = () => {
             <button type="submit" className="btn btn-sm btn-primary mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
-            {isEditMode && !inistituteData?.account && (
+            {isEditMode && inistituteData?.status === 'PENDING' && (
               <button
                 type="button"
                 onClick={exportSignupLink}

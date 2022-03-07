@@ -22,6 +22,7 @@ model Account {
   emailToken    String?
   otp           String?
   otpExpiry     DateTime?
+  // use this for password reset op
   accountToken  String?
 
   //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ

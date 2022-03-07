@@ -1,19 +1,15 @@
 import { TRPCError } from '@trpc/server';
 import { nanoid } from 'nanoid';
-import { LoginSchema } from 'pages/login';
+import { LoginSchema, signupSchema } from 'pages/login';
 import { createRouter } from 'server/createRouter';
 import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth';
 import { z } from 'zod';
 
+export const accountRole = ['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN'];
+
 export const authRouter = createRouter()
   .mutation('sign_up', {
-    input: z.object({
-      email: z.string().email(),
-      role: z.enum(['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']),
-      instituteId: z.number().optional(),
-      studentId: z.number().optional(),
-      name: z.string().optional(),
-    }),
+    input: signupSchema,
     async resolve({ ctx, input }) {
       const { role, instituteId, studentId, ...rest } = input;
 
@@ -39,16 +35,16 @@ export const authRouter = createRouter()
       const account = await ctx.prisma.account.create({
         data: {
           ...rest,
-          emailToken: nanoid(),
+          accountToken: nanoid(),
           role,
-          instituteId: relID,
-          studentId: relID,
+          instituteId: ['INSTITUTE_MOD', 'INSTITUTE'].includes(role) ? relID : null,
+          studentId: role === 'STUDENT' ? relID : null,
           isOwner: role === 'INSTITUTE',
           emailVerified: false,
         },
       });
 
-      return account;
+      return { ...account, password: undefined };
     },
   })
   .mutation('add_password', {
@@ -60,16 +56,16 @@ export const authRouter = createRouter()
     async resolve({ input, ctx }) {
       const account = await ctx.prisma.account.findFirst({
         where: { id: input.accountId },
-        select: { accountToken: true, id: true },
+        select: { accountToken: true, id: true, instituteId: true },
       });
 
-      if (!account)
+      if (!account || !account.instituteId)
         throw new TRPCError({
           code: 'NOT_FOUND',
-          message: "Account doesn't exist",
+          message: "Account or Institute doesn't exist",
         });
 
-      const { accountToken } = account;
+      const { accountToken, instituteId } = account;
 
       if (accountToken !== input.token)
         throw new TRPCError({
@@ -81,6 +77,12 @@ export const authRouter = createRouter()
         where: { id: input.accountId },
         data: { password: await hashPass(input.password), accountToken: null },
       });
+
+      await ctx.prisma.institute.update({ where: { id: instituteId }, data: { status: 'INPROGRESS' } });
+
+      return {
+        status: 'success',
+      };
     },
   })
   .mutation('login', {
@@ -132,6 +134,31 @@ export const authRouter = createRouter()
         });
 
       return account;
+    },
+  })
+  .query('account_token', {
+    input: z.object({
+      accountId: z.number(),
+    }),
+    async resolve({ ctx, input }) {
+      const accountData = await ctx.prisma.account.findFirst({
+        where: { id: input.accountId },
+        select: { id: true, name: true },
+      });
+
+      if (!accountData)
+        throw new TRPCError({
+          message: 'Institute not found !',
+          code: 'NOT_FOUND',
+        });
+
+      const token = nanoid();
+
+      await ctx.prisma.account.update({ where: { id: input.accountId }, data: { accountToken: token } });
+
+      return {
+        token,
+      };
     },
   });
 //TODO: add otp login setup

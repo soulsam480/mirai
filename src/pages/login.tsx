@@ -15,6 +15,14 @@ export const LoginSchema = z.object({
   password: z.string().min(1, 'Password required'),
 });
 
+export const signupSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']),
+  instituteId: z.number().optional(),
+  studentId: z.number().optional(),
+  name: z.string().optional(),
+});
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req });
 
