@@ -17,11 +17,12 @@ model Account {
 
   //auth
   email         String
-  password      String
+  password      String?
   emailVerified Boolean   @default(false)
   emailToken    String?
   otp           String?
   otpExpiry     DateTime?
+  accountToken  String?
 
   //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ
   role    Role

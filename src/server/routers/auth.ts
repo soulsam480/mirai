@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server';
+import { nanoid } from 'nanoid';
 import { LoginSchema } from 'pages/login';
 import { createRouter } from 'server/createRouter';
 import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth';
@@ -11,11 +12,10 @@ export const authRouter = createRouter()
       role: z.enum(['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']),
       instituteId: z.number().optional(),
       studentId: z.number().optional(),
-      password: z.string(),
       name: z.string().optional(),
     }),
     async resolve({ ctx, input }) {
-      const { role, instituteId, studentId, password, ...rest } = input;
+      const { role, instituteId, studentId, ...rest } = input;
 
       if (['INSTITUTE_MOD', 'INSTITUTE'].includes(role) && !instituteId)
         throw new TRPCError({
@@ -36,21 +36,51 @@ export const authRouter = createRouter()
           ? (instituteId as number)
           : (studentId as number);
 
-      const hashedPass = await hashPass(password);
-
       const account = await ctx.prisma.account.create({
         data: {
           ...rest,
+          emailToken: nanoid(),
           role,
           instituteId: relID,
           studentId: relID,
-          password: hashedPass,
           isOwner: role === 'INSTITUTE',
           emailVerified: false,
         },
       });
 
       return account;
+    },
+  })
+  .mutation('add_password', {
+    input: z.object({
+      password: z.string().min(1),
+      accountId: z.number(),
+      token: z.string().min(1),
+    }),
+    async resolve({ input, ctx }) {
+      const account = await ctx.prisma.account.findFirst({
+        where: { id: input.accountId },
+        select: { accountToken: true, id: true },
+      });
+
+      if (!account)
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: "Account doesn't exist",
+        });
+
+      const { accountToken } = account;
+
+      if (accountToken !== input.token)
+        throw new TRPCError({
+          code: 'UNAUTHORIZED',
+          message: 'Failed to change password !',
+        });
+
+      await ctx.prisma.account.update({
+        where: { id: input.accountId },
+        data: { password: await hashPass(input.password), accountToken: null },
+      });
     },
   })
   .mutation('login', {
@@ -66,18 +96,18 @@ export const authRouter = createRouter()
           message: 'Account doeesn"t exist with the provided email',
         });
 
+      if (!account.password)
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Please add password to continue !',
+        });
+
       const isSamePassword = await comparePassword(password, account.password);
 
       if (!isSamePassword)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid email or password',
-        });
-
-      if (!account)
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'account data not found',
         });
 
       return {
