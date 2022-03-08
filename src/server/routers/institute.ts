@@ -21,7 +21,7 @@ export const instituteRouter = createRouter().query('get_institute', {
       where: { id: input },
       include: {
         account: {
-          select: ctx.prisma.$exclude('account', ['password']),
+          select: ctx.prisma.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
         },
       },
     });

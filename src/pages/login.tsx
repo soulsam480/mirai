@@ -5,7 +5,7 @@ import { z } from 'zod';
 import React, { useState } from 'react';
 import { trpc } from 'utils/trpc';
 import { GetServerSideProps } from 'next';
-import { getUserHome, isInstituteRole } from 'utils/helpers';
+import { getUserHome } from 'utils/helpers';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NavBar } from 'components/NavBar';
@@ -66,15 +66,14 @@ const Login: NextPageWithLayout = () => {
     });
 
     //@ts-expect-error bad lib types
-    if (status && status.error) {
+    if (status && status.error)
       //@ts-expect-error bad lib types
-      setError(status.error);
-
-      return;
-    }
+      return setError(status.error);
 
     utils.invalidateQueries(['auth.account']);
-    router.push('/admin');
+
+    //TODO: find a better way to do this LOL
+    router.reload();
   }
 
   return (

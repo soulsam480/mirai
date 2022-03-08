@@ -73,12 +73,12 @@ export const authRouter = createRouter()
           message: 'Failed to change password !',
         });
 
+      await ctx.prisma.institute.update({ where: { id: instituteId }, data: { status: 'INPROGRESS' } });
+
       await ctx.prisma.account.update({
         where: { id: input.accountId },
         data: { password: await hashPass(input.password), accountToken: null },
       });
-
-      await ctx.prisma.institute.update({ where: { id: instituteId }, data: { status: 'INPROGRESS' } });
 
       return {
         status: 'success',

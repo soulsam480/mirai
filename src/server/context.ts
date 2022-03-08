@@ -9,6 +9,8 @@ const prisma = withExclude(
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   }),
 );
+
+export type WithExcludeClient = typeof prisma;
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context
