@@ -47,7 +47,7 @@ export const authRouter = createRouter()
       return { ...account, password: undefined };
     },
   })
-  .mutation('add_password', {
+  .mutation('reset_password', {
     input: z.object({
       password: z.string().min(1),
       accountId: z.number(),
