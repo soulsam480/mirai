@@ -19,3 +19,20 @@ export async function copyToClip(value: string) {
 
   navigator.clipboard.writeText(value).then(() => Promise.resolve());
 }
+
+export function defineSidebar(base: string) {
+  const stack: Record<'path' | 'label', string>[] = [
+    {
+      label: 'Home',
+      path: base,
+    },
+  ];
+  return {
+    stack,
+    extend(entry: typeof stack) {
+      stack.push(...entry.map((e) => ({ ...e, path: base + e.path })));
+
+      return stack;
+    },
+  };
+}
