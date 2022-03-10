@@ -1,18 +1,16 @@
-import { Institute, PrismaClient } from '@prisma/client';
+import { Institute } from '@prisma/client';
 import clsx from 'clsx';
 import { AppLayout } from 'components/AppLayout';
 import MLink from 'components/lib/MLink';
 import { Column, MTable } from 'components/lib/MTable';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
+import { miraiClient } from 'server/context';
 import { getServerSideAuthGuard } from 'server/lib/auth';
+import IconLaPenSquare from '~icons/la/penSquare.jsx';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'], undefined, async () => {
-  const client = new PrismaClient();
-
-  const institutes = await client.institute.findMany();
-
-  client.$disconnect();
+  const institutes = await miraiClient.institute.findMany();
 
   return {
     props: {
@@ -70,7 +68,7 @@ const columns: Column<Institute>[] = [
     headerClasses: '!bg-primary',
     classes: 'bg-amber-100',
     format: ({ id }) => (
-      <MLink href={`/admin/institute/manage/${id}`}>
+      <MLink href={`/admin/institute/[instituteId]`} as={`/admin/institute/${id}`}>
         <IconLaPenSquare className="text-lg" />
       </MLink>
     ),
@@ -81,7 +79,7 @@ const Institutes: NextPageWithLayout<Props, any> = ({ institutes = [] }) => {
   return (
     <div>
       <div className="flex justify-end">
-        <Link href={'/admin/institute/manage'}>
+        <Link href={'/admin/institute/create'}>
           <a className="btn btn-primary btn-sm">Create new</a>
         </Link>
       </div>

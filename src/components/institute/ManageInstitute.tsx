@@ -1,19 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AppLayout } from 'components/AppLayout';
 import { MInput } from 'components/lib/MInput';
 import { useRouter } from 'next/router';
-import { NextPageWithLayout } from 'pages/_app';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { getServerSideAuthGuard } from 'server/lib/auth';
 import { copyToClip } from 'utils/helpers';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 import { useAlerts } from 'components/lib/store/alerts';
 import { TRPCErrorType } from 'types';
 import { signupSchema } from 'pages/login';
-
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+import { MDialog } from 'components/lib/MDialog';
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
@@ -30,14 +26,14 @@ const manageInstituteSchema = createInstituteSchema.merge(
   }),
 );
 
-const Institutes: NextPageWithLayout = () => {
+export const ManageInstitute: React.FC<{}> = () => {
   const router = useRouter();
-  const isEditMode = useMemo(() => !!router.query.id && !!router.query.id.length, [router.query]);
+  const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
   const [_, setAlert] = useAlerts();
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
 
   const { data: inistituteData } = trpc.useQuery(
-    ['institute.get_institute', (router.query.id && +router.query.id[0]) || 0],
+    ['institute.get_institute', (router.query.instituteId && +router.query.instituteId) || 0],
     {
       enabled: isEditMode,
       refetchOnWindowFocus: false,
@@ -93,7 +89,7 @@ const Institutes: NextPageWithLayout = () => {
       });
 
       router.replace({
-        pathname: `/admin/institute/manage/${resp.id}`,
+        pathname: `/admin/institute/${resp.id}`,
       });
     } catch (_) {}
   }
@@ -136,12 +132,19 @@ const Institutes: NextPageWithLayout = () => {
     setError(null);
   }, [globalError]);
 
+  useEffect(() => {
+    router.prefetch('/admin/institute');
+  }, []);
+
   return (
-    <div>
-      <div className="text-xl">Create new Institute</div>
-      <div className="grid sm:grid-cols-2 grid-cols-1 sm:space-x-2">
+    <MDialog show onClose={() => router.push('/admin/institute')}>
+      <div className="inline-block p-6 my-8 overflow-hidden align-middle  transition-all transform bg-amber-50 shadow-lg rounded-lg">
+        <div className="text-lg font-medium leading-6 text-gray-900">
+          {isEditMode ? `Manage ${inistituteData?.name}` : 'Create new Manage'}
+        </div>
+
         <form
-          className="form-control w-full sm:w-80"
+          className="form-control w-full sm:w-80 flex"
           onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
         >
           <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
@@ -197,10 +200,6 @@ const Institutes: NextPageWithLayout = () => {
           </div>
         </form>
       </div>
-    </div>
+    </MDialog>
   );
 };
-
-Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>;
-
-export default Institutes;

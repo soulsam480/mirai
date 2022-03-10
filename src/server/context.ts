@@ -4,13 +4,13 @@ import * as trpcNext from '@trpc/server/adapters/next';
 import { getSession } from 'next-auth/react';
 import { withExclude } from 'prisma-exclude';
 
-const prisma = withExclude(
+export const miraiClient = withExclude(
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   }),
 );
 
-export type WithExcludeClient = typeof prisma;
+export type WithExcludeClient = typeof miraiClient;
 /**
  * Creates context for an incoming request
  * @link https://trpc.io/docs/context
@@ -23,7 +23,7 @@ export const createContext = async ({ req, res }: trpcNext.CreateNextContextOpti
   return {
     req,
     res,
-    prisma,
+    prisma: miraiClient,
     user: session,
   };
 };
