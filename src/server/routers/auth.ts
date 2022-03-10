@@ -118,13 +118,18 @@ export const authRouter = createRouter()
       };
     },
   })
+  .middleware(({ ctx, next }) => {
+    if (!ctx.user)
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+      });
+
+    return next({
+      ctx: { ...ctx, user: ctx.user },
+    });
+  })
   .query('account', {
     async resolve({ ctx }) {
-      if (!ctx.user)
-        throw new TRPCError({
-          code: 'UNAUTHORIZED',
-        });
-
       const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id);
 
       if (!account)
