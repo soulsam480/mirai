@@ -45,7 +45,7 @@ export const MTable: React.FC<Props> = ({
         <thead>
           <tr className={headerClass}>
             {columns.map(({ key, label, headerClasses }) => (
-              <th key={key} className={headerClasses}>
+              <th key={key} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
                 {label}
               </th>
             ))}
@@ -66,7 +66,7 @@ export const MTable: React.FC<Props> = ({
             ))
           ) : (
             <tr>
-              <td colSpan={columns.length} className="font-normal bg-transparent ">
+              <td colSpan={columns.length} className="font-normal bg-transparent">
                 <div className="flex items-center">
                   {noDataLabel || (
                     <>
