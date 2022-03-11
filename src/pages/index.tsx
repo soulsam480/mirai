@@ -31,11 +31,11 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
           </div>
           <div className="flex-none space-x-2">
             <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
-            {!user && (
-              <Link href="/login">
-                <a className="btn btn-sm sm:btn-md btn-secondary">Login / Signup</a>
-              </Link>
-            )}
+            <Link href={!user ? '/login' : getUserHome(user.user.role)}>
+              <a className="btn btn-sm btn-ghost hover:bg-primary btn-primary">
+                {!user ? 'Login / Signup' : 'Go to home'}
+              </a>
+            </Link>
           </div>
         </div>
       </div>

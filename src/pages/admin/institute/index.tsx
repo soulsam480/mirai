@@ -89,7 +89,13 @@ const Institutes: NextPageWithLayout<Props, any> = ({ institutes = [] }) => {
         </Link>
       </div>
 
-      <MTable className="mt-4" columns={columns} rows={institutes} compact />
+      <MTable
+        className="mt-4"
+        columns={columns}
+        rows={institutes}
+        compact
+        noDataLabel={'No institutes were found! Add one to get started'}
+      />
 
       {/* contextual routing for instant feedback. Reloads will show actual page */}
       <MDialog show={!!router.query.instituteId} onClose={() => router.push('/admin/institute')}>

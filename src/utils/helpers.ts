@@ -29,8 +29,8 @@ export function defineSidebar(base: string) {
   ];
   return {
     stack,
-    extend(entry: typeof stack) {
-      stack.push(...entry.map((e) => ({ ...e, path: base + e.path })));
+    extend(entries: typeof stack) {
+      stack.push(...entries.map((e) => ({ ...e, path: base + e.path })));
 
       return stack;
     },

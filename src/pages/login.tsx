@@ -108,7 +108,7 @@ const Login: NextPageWithLayout = () => {
               <span className="label-text">Password</span>
             </label>
             <input
-              type="pawword"
+              type="password"
               placeholder="password"
               className="input input-bordered input-primary"
               {...register('password')}

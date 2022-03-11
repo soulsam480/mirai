@@ -3,7 +3,7 @@ import { compare, hash } from 'bcrypt';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { WithExcludeClient } from 'server/context';
-import { isInstituteRole } from '../../utils/helpers';
+import { getUserHome, isInstituteRole } from '../../utils/helpers';
 
 export type JwtPayload = {
   id: number;
@@ -60,18 +60,12 @@ export function getServerSideAuthGuard(
   return async (ctx) => {
     redirect = redirect || '/login';
 
-    const user = await getSession({ req: ctx.req });
+    const session = await getSession({ req: ctx.req });
 
-    if (!user || !role.includes(user.user.role)) {
+    if (!session || !role.includes(session.user.role)) {
       return {
         redirect: {
-          destination: !user
-            ? redirect
-            : user.user.role === 'ADMIN'
-            ? '/admin'
-            : isInstituteRole(user.user.role).is
-            ? '/institute'
-            : '/student',
+          destination: !session ? redirect : getUserHome(session.user.role),
           permanent: false,
         },
       };
