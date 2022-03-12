@@ -45,7 +45,7 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
           <h1 className="mb-6 sm:text-8xl text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-br from-primary-focus to-secondary">
             Hiring simplified for humans
           </h1>
-          <p className="mb-5">
+          <p className="mb-5 text-xl">
             Mirai makes it simple for both institutes and students with an amazing UI which looks good and esier to
             understand.
           </p>

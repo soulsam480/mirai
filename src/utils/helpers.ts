@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client';
+import { MLinkProps } from 'components/lib/MLink';
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
   return {
@@ -21,7 +22,7 @@ export async function copyToClip(value: string) {
 }
 
 export function defineSidebar(base: string) {
-  const stack: Record<'path' | 'label', string>[] = [
+  const stack: (Record<'path' | 'label', string> & { active?: MLinkProps['active'] })[] = [
     {
       label: 'Home',
       path: base,

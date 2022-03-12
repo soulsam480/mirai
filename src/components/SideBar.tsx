@@ -21,6 +21,7 @@ const sidebarConfig = {
     {
       label: 'Departments',
       path: '/department',
+      active: (path) => path.includes('/department'),
     },
     {
       label: 'Programs',
@@ -52,7 +53,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
             sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
               return (
                 <li key={key}>
-                  <MLink className="!px-2 !py-1" href={item.path}>
+                  <MLink className="!px-2 !py-1" href={item.path} active={item.active}>
                     {item.label}
                   </MLink>
                 </li>
