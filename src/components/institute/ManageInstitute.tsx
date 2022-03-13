@@ -61,6 +61,9 @@ export const ManageInstitute: React.FC<{}> = () => {
   const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute'], {
     onError: setError,
   });
+  const { mutateAsync: updateInstituteMut } = trpc.useMutation(['account.update_institute'], {
+    onError: setError,
+  });
   const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
     onError: setError,
   });
@@ -93,9 +96,14 @@ export const ManageInstitute: React.FC<{}> = () => {
     } catch (_) {}
   }
 
-  function updateInstitute(_data: z.infer<typeof manageInstituteSchema>) {
-    console.log('TODO update');
-    //TODO: call update mutation here
+  async function updateInstitute(_data: z.infer<typeof manageInstituteSchema>) {
+    try {
+      await updateInstituteMut({ ..._data, instituteId: Number(router.query.instituteId) });
+      setAlert({
+        message: 'Institute updated successfully !',
+        type: 'success',
+      });
+    } catch (_) {}
   }
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {

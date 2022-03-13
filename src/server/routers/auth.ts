@@ -69,7 +69,7 @@ export const authRouter = createRouter()
 
       if (accountToken !== input.token)
         throw new TRPCError({
-          code: 'UNAUTHORIZED',
+          code: 'BAD_REQUEST',
           message: 'Failed to change password !',
         });
 
