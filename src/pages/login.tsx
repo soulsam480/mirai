@@ -5,7 +5,7 @@ import { z } from 'zod';
 import React, { useState } from 'react';
 import { trpc } from 'utils/trpc';
 import { GetServerSideProps } from 'next';
-import { isInstituteRole } from 'utils/helpers';
+import { getUserHome } from 'utils/helpers';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NavBar } from 'components/NavBar';
@@ -15,14 +15,21 @@ export const LoginSchema = z.object({
   password: z.string().min(1, 'Password required'),
 });
 
+export const signupSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']),
+  instituteId: z.number().optional(),
+  studentId: z.number().optional(),
+  name: z.string().optional(),
+});
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req });
 
   if (user) {
     return {
       redirect: {
-        destination:
-          user.user.role === 'ADMIN' ? '/admin' : isInstituteRole(user.user.role).is ? '/institute' : '/student',
+        destination: getUserHome(user.user.role),
         permanent: false,
       },
     };
@@ -59,15 +66,14 @@ const Login: NextPageWithLayout = () => {
     });
 
     //@ts-expect-error bad lib types
-    if (status && status.error) {
+    if (status && status.error)
       //@ts-expect-error bad lib types
-      setError(status.error);
-
-      return;
-    }
+      return setError(status.error);
 
     utils.invalidateQueries(['auth.account']);
-    router.push('/admin');
+
+    //TODO: find a better way to do this LOL
+    router.reload();
   }
 
   return (
@@ -102,7 +108,7 @@ const Login: NextPageWithLayout = () => {
               <span className="label-text">Password</span>
             </label>
             <input
-              type="pawword"
+              type="password"
               placeholder="password"
               className="input input-bordered input-primary"
               {...register('password')}

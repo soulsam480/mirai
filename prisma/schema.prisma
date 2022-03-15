@@ -17,12 +17,15 @@ model Account {
 
   //auth
   email         String
-  password      String
+  password      String?
   emailVerified Boolean   @default(false)
   emailToken    String?
   otp           String?
   otpExpiry     DateTime?
+  // use this for password reset op
+  accountToken  String?
 
+  //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ
   role    Role
   isOwner Boolean @default(false)
 
@@ -44,8 +47,8 @@ enum Role {
 }
 
 model Institute {
-  id     Int              @id @default(autoincrement())
-  code   String?
+  id     Int              @id @default(autoincrement()) // auto generated
+  code   String?          @unique
   name   String
   status OnboardingStatus @default(PENDING)
   logo   String?
@@ -57,6 +60,7 @@ model Institute {
 
   account Account?
 
+  // auto generated
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -99,6 +103,8 @@ enum BatchDurationType {
 // }
 
 //TODO: add more details to student model
+// IGIT Sarang -> 170115282
+// code can ve igit_sarang_170115282
 model Student {
   id    Int     @id @default(autoincrement())
   code  String? @unique

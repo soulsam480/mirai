@@ -40,9 +40,7 @@ export default NextAuth({
       },
       type: 'credentials',
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) {
-          throw new Error('Email or password is missing');
-        }
+        if (!credentials?.email || !credentials.password) throw new Error('Email or password is missing');
 
         const prisma = new PrismaClient();
 
@@ -51,17 +49,13 @@ export default NextAuth({
           select: { password: true, role: true, id: true },
         });
 
-        if (!user) {
-          prisma.$disconnect();
-          throw new Error('No account was found with the email');
-        }
+        prisma.$disconnect();
+
+        if (!user || !user.password) throw new Error('No account was found with the email');
 
         const isSamePassword = await comparePassword(credentials.password, user.password);
 
-        if (!isSamePassword) {
-          prisma.$disconnect();
-          throw new Error('Email or password is incorrect !');
-        }
+        if (!isSamePassword) throw new Error('Email or password is incorrect !');
 
         return {
           email: credentials?.email,

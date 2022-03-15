@@ -38,22 +38,29 @@ export const NavBar: React.FC<Props> = () => {
                 className="p-2 shadow-lg menu dropdown-content bg-amber-50 border border-amber-200 rounded-box w-52 space-y-2"
               >
                 <li>
-                  <div className="text-sm">
-                    {userData.name} as <span className="font-semibold">{userData.role}</span>
+                  <div className="text-sm p-1">
+                    <span className="font-semibold">
+                      {' '}
+                      {userData.name} ({userData.role})
+                    </span>
                   </div>{' '}
                 </li>
 
                 <li>
-                  <button className="btn btn-sm btn-outline">Settings</button>
+                  <div className="p-0">
+                    <button className="btn btn-sm btn-outline btn-block">Settings</button>
+                  </div>{' '}
                 </li>
 
                 <li>
-                  <button
-                    className="btn btn-sm btn-outline"
-                    onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
-                  >
-                    Logout
-                  </button>
+                  <div className="p-0">
+                    <button
+                      className="btn btn-sm btn-outline btn-block"
+                      onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </li>
               </ul>
             </div>

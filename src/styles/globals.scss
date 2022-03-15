@@ -15,13 +15,42 @@
 html,
 body {
   @apply bg-amber-50 text-base;
-}
-
-.menu li > :where(a),
-.menu li > :where(span) {
-  @apply py-1 px-2;
+  font-family: 'Nunito', sans-serif;
 }
 
 .file-input {
   @apply block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 cursor-pointer file:cursor-pointer file:text-sm file:font-semibold file:bg-base-100  file:text-secondary hover:file:opacity-80;
+}
+
+.j-alert {
+  @apply py-3 self-center;
+
+  &__content {
+    @apply flex items-center space-x-2 text-white text-sm font-bold px-4 py-2 rounded-md shadow-md z-50;
+  }
+
+  &--enter,
+  &--leave {
+    transition: all 0.5s ease-in-out;
+  }
+
+  &--enter {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  &--leave {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  &--enter-active {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  &--leave-active {
+    opacity: 0;
+    transform: translateY(30px);
+  }
 }

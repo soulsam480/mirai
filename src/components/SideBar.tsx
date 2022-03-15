@@ -1,24 +1,43 @@
 import { useAtom } from 'jotai';
 import React from 'react';
 import { userAtom } from 'stores/user';
+import { defineSidebar } from 'utils/helpers';
 import MLink from './lib/MLink';
 
 interface Props {}
 
-const ADMIN_SIDEBAR = [
-  {
-    label: 'Home',
-    path: '/admin',
-  },
-  {
-    label: 'Institutes',
-    path: '/admin/institute',
-  },
-  {
-    label: 'Students',
-    path: '/admin/student',
-  },
-];
+const sidebarConfig = {
+  ADMIN: defineSidebar('/admin').extend([
+    {
+      label: 'Institutes',
+      path: '/institute',
+    },
+    {
+      label: 'Students',
+      path: '/student',
+    },
+  ]),
+  INSTITUTE: defineSidebar('/institute').extend([
+    {
+      label: 'Departments',
+      path: '/department',
+      active: (path) => path.includes('/department'),
+    },
+    {
+      label: 'Programs',
+      path: '/program',
+    },
+    {
+      label: 'Batches',
+      path: '/batch',
+    },
+    {
+      label: 'Students',
+      path: '/student',
+    },
+  ]),
+  STUDENT: [],
+};
 
 export const SideBar: React.FC<Props> = ({ children }) => {
   const [userData] = useAtom(userAtom);
@@ -30,11 +49,13 @@ export const SideBar: React.FC<Props> = ({ children }) => {
       <div className="drawer-side min-h-[calc(100vh-57px)]">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
         <aside className="menu p-4 pt-0 overflow-y-auto bg-amber-50 lg:bg-transparent w-60 text-base-content border-r border-amber-200 space-y-1">
-          {userData.role === 'ADMIN' &&
-            ADMIN_SIDEBAR.map((item, key) => {
+          {userData.role &&
+            sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
               return (
                 <li key={key}>
-                  <MLink href={item.path}>{item.label}</MLink>
+                  <MLink className="!px-2 !py-1" href={item.path} active={item.active}>
+                    {item.label}
+                  </MLink>
                 </li>
               );
             })}

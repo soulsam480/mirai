@@ -22,7 +22,8 @@
       "stores/*": ["stores/*"],
       "components/*": ["components/*"],
       "server/*": ["server/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["utils/*"],
+      "types/*": ["types/*"]
     },
     "types": ["unplugin-icons/types/react"]
   },

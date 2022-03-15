@@ -2,7 +2,8 @@ import { PrismaClient, Role } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { isInstituteRole } from '../../utils/helpers';
+import { WithExcludeClient } from 'server/context';
+import { getUserHome, isInstituteRole } from '../../utils/helpers';
 
 export type JwtPayload = {
   id: number;
@@ -18,15 +19,7 @@ export async function hashPass(password: string) {
   return await hash(password, parseInt(process.env.HASH as string));
 }
 
-export function prismaQueryHelper(
-  client: PrismaClient<
-    {
-      log: ('query' | 'warn' | 'error')[];
-    },
-    never,
-    false
-  >,
-) {
+export function prismaQueryHelper(client: WithExcludeClient) {
   return {
     async getAccount(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN', email?: string, id?: number) {
       let account;
@@ -37,12 +30,19 @@ export function prismaQueryHelper(
           include: { tenant: true },
         });
       } else if (isInstituteRole(role).is) {
-        account = await client.account.findFirst({ where: { email, id }, include: { owner: true } });
+        account = await client.account.findFirst({
+          where: { email, id },
+          select: {
+            owner: true,
+            ...client.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
+          },
+        });
       } else {
-        account = await client.account.findFirst({ where: { email, id } });
+        account = await client.account.findFirst({
+          where: { email, id },
+          select: client.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
+        });
       }
-
-      account?.password && (account.password = undefined as any);
 
       return account;
     },
@@ -60,25 +60,19 @@ export function getServerSideAuthGuard(
   return async (ctx) => {
     redirect = redirect || '/login';
 
-    const user = await getSession({ req: ctx.req });
+    const session = await getSession({ req: ctx.req });
 
-    if (!user || !role.includes(user.user.role)) {
+    if (!session || !role.includes(session.user.role)) {
       return {
         redirect: {
-          destination: !user
-            ? redirect
-            : user.user.role === 'ADMIN'
-            ? '/admin'
-            : isInstituteRole(user.user.role).is
-            ? '/institute'
-            : '/student',
+          destination: !session ? redirect : getUserHome(session.user.role),
           permanent: false,
         },
       };
     }
 
     return (
-      (serverFn && (await serverFn(ctx))) || {
+      (serverFn && serverFn(ctx)) || {
         props: {},
       }
     );
