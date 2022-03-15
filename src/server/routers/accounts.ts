@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { createInstituteSchema } from 'components/institute/ManageInstitute';
 // import { createStudentSchema } from 'pages/admin/student/manage/[[...id]]';
 import { createRouter } from 'server/createRouter';
+import { z } from 'zod';
 
 export const accountRouter = createRouter()
   .middleware(({ ctx, next }) => {
@@ -31,6 +32,16 @@ export const accountRouter = createRouter()
       });
 
       return institute;
+    },
+  })
+  .mutation('update_institute', {
+    input: createInstituteSchema.merge(z.object({ instituteId: z.number() })),
+    async resolve({ ctx, input }) {
+      const { instituteId, ...data } = input;
+      await ctx.prisma.institute.update({
+        where: { id: input.instituteId },
+        data,
+      });
     },
   });
 // .mutation('create_student', {
