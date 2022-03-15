@@ -27,6 +27,7 @@ const manageInstituteSchema = createInstituteSchema.merge(
 
 export const ManageInstitute: React.FC<{}> = () => {
   const router = useRouter();
+  const utils = trpc.useContext();
   const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
   const [_, setAlert] = useAlerts();
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
@@ -63,6 +64,10 @@ export const ManageInstitute: React.FC<{}> = () => {
   });
   const { mutateAsync: updateInstituteMut } = trpc.useMutation(['account.update_institute'], {
     onError: setError,
+    onSuccess() {
+      // refetch stale query
+      utils.invalidateQueries(['institute.get_institute']);
+    },
   });
   const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
     onError: setError,
@@ -96,9 +101,11 @@ export const ManageInstitute: React.FC<{}> = () => {
     } catch (_) {}
   }
 
-  async function updateInstitute(_data: z.infer<typeof manageInstituteSchema>) {
+  async function updateInstitute(data: z.infer<typeof manageInstituteSchema>) {
+    //TODO: add logo upload here
     try {
-      await updateInstituteMut({ ..._data, instituteId: Number(router.query.instituteId) });
+      await updateInstituteMut({ ...data, instituteId: Number(router.query.instituteId) });
+
       setAlert({
         message: 'Institute updated successfully !',
         type: 'success',
@@ -106,6 +113,7 @@ export const ManageInstitute: React.FC<{}> = () => {
     } catch (_) {}
   }
 
+  //TODO: logo upload
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files) {
       uploadFile.current = e.target.files[0];
@@ -157,13 +165,19 @@ export const ManageInstitute: React.FC<{}> = () => {
       >
         <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
         <MInput
-          disabled={inistituteData && inistituteData.status === 'INPROGRESS'}
+          disabled={inistituteData && inistituteData.status !== 'PENDING'}
           label="Email"
           {...register('email')}
           placeholder="Institute Email"
           error={formState.errors.email}
         />
-        <MInput label="Code" {...register('code')} placeholder="Institute code" error={formState.errors.code} />
+        <MInput
+          disabled={inistituteData && !!inistituteData.status}
+          label="Code"
+          {...register('code')}
+          placeholder="Institute code"
+          error={formState.errors.code}
+        />
 
         <label className="label">
           <span className="label-text">Onboarding status</span>
