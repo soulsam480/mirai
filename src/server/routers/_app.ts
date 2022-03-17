@@ -5,6 +5,7 @@ import superjson from 'superjson';
 import { createRouter } from '../createRouter';
 import { accountRouter } from './accounts';
 import { authRouter } from './auth';
+import { departmentRouter } from './departments';
 import { instituteRouter } from './institute';
 
 /**
@@ -26,5 +27,6 @@ export const appRouter = createRouter()
   // .formatError(({ shape, error }) => { })
   .merge('account.', accountRouter)
   .merge('auth.', authRouter)
-  .merge('institute.', instituteRouter);
+  .merge('institute.', instituteRouter)
+  .merge('department.', departmentRouter);
 export type AppRouter = typeof appRouter;
