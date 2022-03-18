@@ -19,7 +19,8 @@
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "postinstall": "prisma generate",
     "fmt": "prettier --write {src,prisma}/**/*.{js,ts,tsx}",
-    "clear": "rimraf .next"
+    "clear": "rimraf .next",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "prisma": {
     "seed": "yarn ts-node prisma/seed.ts"

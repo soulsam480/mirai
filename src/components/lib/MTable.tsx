@@ -1,5 +1,8 @@
-import clsx from 'clsx';
 import React, { HTMLProps } from 'react';
+import clsx from 'clsx';
+import MSpinner from 'lib/MSpinner';
+
+//todo: improve rendering perf. by using memos
 
 interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   /** Table Schema */
@@ -14,6 +17,8 @@ interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   bodyRowClass?: string;
   /** no data label slot */
   noDataLabel?: React.ReactNode;
+  /** is table data loading */
+  loading?: boolean;
 }
 
 export interface Column<R = any> {
@@ -37,6 +42,7 @@ export const MTable: React.FC<Props> = ({
   headerClass,
   bodyRowClass,
   noDataLabel,
+  loading = false,
   ...rest
 }) => {
   return (
@@ -53,7 +59,7 @@ export const MTable: React.FC<Props> = ({
         </thead>
 
         <tbody>
-          {!!rows.length ? (
+          {loading === false && !!rows.length ? (
             rows.map((row, i) => (
               <tr key={i} className={bodyRowClass}>
                 {columns.map(({ key, format, classes }) => (
@@ -67,14 +73,20 @@ export const MTable: React.FC<Props> = ({
           ) : (
             <tr>
               <td colSpan={columns.length} className="font-normal bg-transparent">
-                <div className="flex items-center">
-                  {noDataLabel || (
-                    <>
-                      <IconLaExclamationTriangle className="text-lg" />
-                      <span className="ml-1 text-base">No data found !</span>
-                    </>
-                  )}
-                </div>
+                {loading === true ? (
+                  <div className="flex items-center space-x-2">
+                    <MSpinner size="20px" /> <span>Loading entries...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center">
+                    {noDataLabel || (
+                      <>
+                        <IconLaExclamationTriangle className="text-lg" />
+                        <span className="ml-1 text-base">No data found !</span>
+                      </>
+                    )}
+                  </div>
+                )}
               </td>
             </tr>
           )}

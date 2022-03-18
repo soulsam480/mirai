@@ -8,7 +8,7 @@ import { GetServerSideProps } from 'next';
 import { getUserHome } from 'utils/helpers';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { NavBar } from 'components/NavBar';
+import { NavBar } from 'components/globals/NavBar';
 
 export const LoginSchema = z.object({
   email: z.string().email().min(1, 'Email required'),

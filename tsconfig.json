@@ -23,7 +23,8 @@
       "components/*": ["components/*"],
       "server/*": ["server/*"],
       "utils/*": ["utils/*"],
-      "types/*": ["types/*"]
+      "types/*": ["types/*"],
+      "lib/*": ["components/lib/*"]
     },
     "types": ["unplugin-icons/types/react"]
   },

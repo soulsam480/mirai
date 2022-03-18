@@ -1,4 +1,4 @@
-import { AppLayout } from 'components/AppLayout';
+import { AppLayout } from 'components/globals/AppLayout';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
 import { getServerSideAuthGuard } from 'server/lib/auth';

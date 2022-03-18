@@ -3,7 +3,6 @@ import '../styles/globals.scss';
 import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
 import { loggerLink } from '@trpc/client/links/loggerLink';
 import { withTRPC } from '@trpc/next';
-import { DefaultLayout } from 'components/DefaultLayout';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { AppType } from 'next/dist/shared/lib/utils';
@@ -11,8 +10,9 @@ import { ReactElement, ReactNode } from 'react';
 import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
 import { SessionProvider as NextAuthProvider } from 'next-auth/react';
-import { Auth } from 'components/Auth';
 import { JAlertGroup } from 'components/lib/MAlerts';
+import { DefaultLayout } from 'components/globals/DefaultLayout';
+import { Auth } from 'components/globals/Auth';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -87,6 +87,14 @@ export default withTRPC<AppRouter>({
       //     authorization: !!token ? `Bearer ${token}` : undefined,
       //   };
       // },
+      queryClientConfig: {
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            retry: false,
+          },
+        },
+      },
     };
   },
   /**
