@@ -8,7 +8,7 @@ import { z } from 'zod';
  * create batches
  */
 
-const cerateDepartmentSchema = z.object({
+const createDepartmentSchema = z.object({
   name: z.string(),
   inCharge: z.string().optional(),
   instituteId: z.number(),
