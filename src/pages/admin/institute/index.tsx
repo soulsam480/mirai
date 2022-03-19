@@ -10,6 +10,7 @@ import { useAlerts } from 'components/lib/store/alerts';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
+import { useMemo } from 'react';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { loggedInAtom } from 'stores/user';
 import { trpc } from 'utils/trpc';
@@ -32,49 +33,52 @@ function getStatusClass(status: Institute['status']) {
   }
 }
 
-const columns: Column<Institute>[] = [
-  {
-    key: 'id',
-    label: 'ID',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-  },
-  {
-    key: 'name',
-    label: 'Name',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-  },
-  {
-    key: 'status',
-    label: 'Status',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-    format: (row) => <span className={clsx([getStatusClass(row.status), 'badge'])}>{row.status}</span>,
-  },
-  {
-    key: 'code',
-    label: 'Code',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-  },
-  {
-    key: '',
-    label: 'Edit',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-    format: ({ id }) => (
-      <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
-        <IconLaPenSquare className="text-lg" />
-      </MLink>
-    ),
-  },
-];
-
 const Institutes: NextPageWithLayout<Props, any> = () => {
   const router = useRouter();
   const [_, setAlert] = useAlerts();
   const [isLoggedIn] = useAtom(loggedInAtom);
+
+  const columns = useMemo<Column<Institute>[]>(
+    () => [
+      {
+        field: 'id',
+        label: 'ID',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+      },
+      {
+        field: 'name',
+        label: 'Name',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+      },
+      {
+        field: 'status',
+        label: 'Status',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+        format: (row) => <span className={clsx([getStatusClass(row.status), 'badge'])}>{row.status}</span>,
+      },
+      {
+        field: 'code',
+        label: 'Code',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+      },
+      {
+        field: '',
+        label: 'Edit',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+        format: ({ id }) => (
+          <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
+            <IconLaPenSquare className="text-lg" />
+          </MLink>
+        ),
+      },
+    ],
+    [],
+  );
 
   const { data: institutes = [], isLoading } = trpc.useQuery(['institute.get_all'], {
     //todo: kind of a bug, find ways to fix it

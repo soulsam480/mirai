@@ -5,6 +5,7 @@ import { miraiClient } from 'server/context';
 import { Department } from '@prisma/client';
 import { Column, MTable } from 'components/lib/MTable';
 import PageLayout from 'components/globals/PageLayout';
+import { useMemo } from 'react';
 
 //TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'], undefined, async () => {
@@ -18,41 +19,44 @@ export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUT
   };
 });
 
-const columns: Column<Department>[] = [
-  {
-    key: 'id',
-    label: 'ID',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-  },
-  {
-    key: 'name',
-    label: 'Name',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-  },
-  {
-    key: 'inCharge',
-    label: 'In charge',
-    headerClasses: '!bg-primary',
-    classes: 'bg-amber-100',
-    format: ({ inCharge }) => <>{inCharge || '-'}</>,
-  },
-  //TODO: add edit setup
-  //   {
-  //     key: '',
-  //     label: 'Edit',
-  //     headerClasses: '!bg-primary',
-  //     classes: 'bg-amber-100',
-  //     format: ({ id }) => (
-  //       <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
-  //         <IconLaPenSquare className="text-lg" />
-  //       </MLink>
-  //     ),
-  //   },
-];
-
 const Departments: NextPageWithLayout<{ departments: Department[] }, any> = ({ departments = [] }) => {
+  const columns = useMemo<Column<Department>[]>(
+    () => [
+      {
+        field: 'id',
+        label: 'ID',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+      },
+      {
+        field: 'name',
+        label: 'Name',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+      },
+      {
+        field: 'inCharge',
+        label: 'In charge',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+        format: ({ inCharge }) => <>{inCharge || '-'}</>,
+      },
+      //TODO: add edit setup
+      //   {
+      //     key: '',
+      //     label: 'Edit',
+      //     headerClasses: '!bg-primary',
+      //     classes: 'bg-amber-100',
+      //     format: ({ id }) => (
+      //       <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
+      //         <IconLaPenSquare className="text-lg" />
+      //       </MLink>
+      //     ),
+      //   },
+    ],
+    [],
+  );
+
   return (
     <PageLayout.PageWrapper>
       <PageLayout.PageHeader
