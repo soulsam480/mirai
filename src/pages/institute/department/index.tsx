@@ -1,13 +1,14 @@
-import { AppLayout } from 'components/AppLayout';
+import { AppLayout } from 'components/globals/AppLayout';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { NextPageWithLayout } from 'pages/_app';
 import { miraiClient } from 'server/context';
 import { Department } from '@prisma/client';
 import { Column, MTable } from 'components/lib/MTable';
-import Link from 'next/link';
+import PageLayout from 'components/globals/PageLayout';
 
 //TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'], undefined, async () => {
+  //todo: replace this with trpc query for caching
   const departments = await miraiClient.department.findMany();
 
   return {
@@ -53,12 +54,12 @@ const columns: Column<Department>[] = [
 
 const Departments: NextPageWithLayout<{ departments: Department[] }, any> = ({ departments = [] }) => {
   return (
-    <div>
-      <div className="flex justify-end">
-        <Link href={'/institute/department/create'}>
-          <a className="btn btn-primary btn-sm">Create new</a>
-        </Link>
-      </div>
+    <PageLayout.PageWrapper>
+      <PageLayout.PageHeader
+        createActionUrl="/institute/department/create"
+        createLabel="Create new"
+        headerLabel="Departments"
+      />
 
       <MTable
         className="mt-4"
@@ -67,7 +68,7 @@ const Departments: NextPageWithLayout<{ departments: Department[] }, any> = ({ d
         compact
         noDataLabel={'No departments were found !'}
       />
-    </div>
+    </PageLayout.PageWrapper>
   );
 };
 

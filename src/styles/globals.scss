@@ -18,6 +18,10 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 
+.dialog-content {
+  @apply inline-block p-6 my-8 overflow-hidden align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
+}
+
 .file-input {
   @apply block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 cursor-pointer file:cursor-pointer file:text-sm file:font-semibold file:bg-base-100  file:text-secondary hover:file:opacity-80;
 }
@@ -52,5 +56,39 @@ body {
   &--leave-active {
     opacity: 0;
     transform: translateY(30px);
+  }
+}
+
+.j-spinner {
+  @apply origin-center align-middle;
+  animation: rotate 2s linear infinite;
+
+  &__path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: path-dash 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes path-dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dasharray: 89, 200;
+    stroke-dashoffset: -124px;
   }
 }
