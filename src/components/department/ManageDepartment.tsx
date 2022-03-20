@@ -71,9 +71,10 @@ export const ManageDepartment: React.FC<{}> = () => {
     shouldFocusError: true,
   });
 
-  async function createDepartment(data: z.infer<typeof manageDepartmentSchema>) {
+  async function createDepartment(data: z.infer<typeof createDepartmentSchema>) {
     try {
       const resp = await createDepartmentMut(data);
+      console.log('data: ', data);
 
       setAlert({
         message: 'Department created successfully !',
@@ -114,18 +115,14 @@ export const ManageDepartment: React.FC<{}> = () => {
         onSubmit={handleSubmit(isEditMode ? updateDepartment : createDepartment)}
       >
         <MInput label="Name" {...register('name')} placeholder="Department name" error={formState.errors.name} />
-        <label className="label">
-          {formState.errors.name && <span className="label-text-alt"> {formState.errors.name} </span>}{' '}
-        </label>{' '}
+
         <MInput
           label="In charge"
           {...register('inCharge')}
           placeholder="Department incharge"
           error={formState.errors.inCharge}
         />
-        <label className="label">
-          {formState.errors.inCharge && <span className="label-text-alt"> {formState.errors.inCharge} </span>}{' '}
-        </label>
+
         <div className="flex justify-end space-x-2">
           <button
             type="button"
