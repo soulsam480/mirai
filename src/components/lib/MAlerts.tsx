@@ -9,7 +9,7 @@ import IconLaWindowClose from '~icons/la/window-close.jsx';
 import { Alert, useAlerts } from 'components/lib/store/alerts';
 import { useMounted } from 'utils/hooks';
 
-export const JAlert: React.FC<Alert> = ({ type, message }) => {
+export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   const bgColor = useMemo(() => {
     switch (type) {
       case 'success':
@@ -50,11 +50,13 @@ export const JAlert: React.FC<Alert> = ({ type, message }) => {
       </div>
     </div>
   );
-};
+});
+
+MAlert.displayName = 'JAlert';
 
 interface AlertGroupProps {}
 
-export const JAlertGroup: React.FC<AlertGroupProps> = () => {
+export const MAlertGroup: React.FC<AlertGroupProps> = () => {
   const [alerts] = useAlerts();
   const mounted = useMounted();
 
@@ -71,7 +73,7 @@ export const JAlertGroup: React.FC<AlertGroupProps> = () => {
                 leaveFrom="j-alert--leave-active"
                 className="j-alert"
               >
-                <JAlert {...alert} />
+                <MAlert {...alert} />
               </Transition.Child>
             ))}
           </Transition>

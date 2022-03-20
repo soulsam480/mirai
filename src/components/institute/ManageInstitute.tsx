@@ -9,6 +9,7 @@ import { z } from 'zod';
 import { useAlerts } from 'components/lib/store/alerts';
 import { TRPCErrorType } from 'types';
 import { signupSchema } from 'pages/login';
+import { useLoader } from 'components/lib/store/loader';
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
@@ -28,9 +29,11 @@ const manageInstituteSchema = createInstituteSchema.merge(
 export const ManageInstitute: React.FC<{}> = () => {
   const router = useRouter();
   const utils = trpc.useContext();
-  const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
   const [_, setAlert] = useAlerts();
+  const loader = useLoader();
+
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
+  const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
 
   const { data: inistituteData } = trpc.useQuery(
     ['institute.get', (router.query.instituteId && +router.query.instituteId) || 0],
@@ -66,7 +69,7 @@ export const ManageInstitute: React.FC<{}> = () => {
     onError: setError,
     onSuccess() {
       // refetch stale query
-      utils.invalidateQueries(['institute.get']);
+      utils.invalidateQueries(['institute.get_all']);
     },
   });
   const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
@@ -86,6 +89,8 @@ export const ManageInstitute: React.FC<{}> = () => {
 
   async function createInstitute({ email, ...rest }: z.infer<typeof manageInstituteSchema>) {
     try {
+      loader.show();
+
       const resp = await createInstituteMut(rest);
 
       await createInstituteAccount({ role: 'INSTITUTE', email, instituteId: resp.id, name: rest.name });
@@ -95,22 +100,30 @@ export const ManageInstitute: React.FC<{}> = () => {
         type: 'success',
       });
 
-      router.replace({
-        pathname: `/admin/institute/${resp.id}`,
-      });
-    } catch (_) {}
+      router.push(`/admin/institute/${resp.id}`);
+    } catch (_) {
+    } finally {
+      loader.hide();
+    }
   }
 
   async function updateInstitute(data: z.infer<typeof manageInstituteSchema>) {
     //TODO: add logo upload here
     try {
+      loader.show();
+
       await updateInstituteMut({ ...data, instituteId: Number(router.query.instituteId) });
 
       setAlert({
         message: 'Institute updated successfully !',
         type: 'success',
       });
-    } catch (_) {}
+
+      router.push('/admin/institute');
+    } catch (_) {
+    } finally {
+      loader.hide();
+    }
   }
 
   //TODO: logo upload
