@@ -23,7 +23,7 @@ export const ManageDepartment: React.FC<{}> = () => {
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const utils = trpc.useContext();
 
-  const { data: departmentData } = trpc.useQuery(
+  trpc.useQuery(
     [
       'department.get',
       {

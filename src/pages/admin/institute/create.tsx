@@ -1,4 +1,4 @@
-import { AppLayout } from 'components/AppLayout';
+import { AppLayout } from 'components/globals/AppLayout';
 import { NextPageWithLayout } from 'pages/_app';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { ManageInstitute } from 'components/institute/ManageInstitute';
@@ -17,7 +17,7 @@ const CreateInstitute: NextPageWithLayout = () => {
 
   return (
     <MDialog show onClose={() => router.push('/admin/institute')}>
-      <div className="inline-block p-6 my-8 overflow-hidden align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg">
+      <div className="dialog-content">
         <ManageInstitute />
       </div>
     </MDialog>

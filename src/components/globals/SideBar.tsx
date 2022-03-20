@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import React from 'react';
 import { userAtom } from 'stores/user';
 import { defineSidebar } from 'utils/helpers';
-import MLink from './lib/MLink';
+import MLink from 'lib/MLink';
 
 interface Props {}
 

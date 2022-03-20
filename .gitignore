@@ -42,3 +42,6 @@ prisma/_sqlite/migrations
 # testing
 playwright/videos
 playwright/screenshots
+
+
+tmp/*

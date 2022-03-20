@@ -32,7 +32,7 @@ export const ManageInstitute: React.FC<{}> = () => {
   const [_, setAlert] = useAlerts();
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
 
-  const { data: inistituteData } = trpc.useQuery(['institute.get_institute', +(router.query.instituteId || '')], {
+  const { data: inistituteData } = trpc.useQuery(['institute.get', +(router.query.instituteId || '')], {
     enabled: isEditMode,
     refetchOnWindowFocus: false,
     retry: false,
@@ -63,7 +63,7 @@ export const ManageInstitute: React.FC<{}> = () => {
     onError: setError,
     onSuccess() {
       // refetch stale query
-      utils.invalidateQueries(['institute.get_institute']);
+      utils.invalidateQueries(['institute.get']);
     },
   });
   const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {

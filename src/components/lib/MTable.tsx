@@ -1,5 +1,8 @@
+import React, { createContext, HTMLProps, useContext, useMemo } from 'react';
 import clsx from 'clsx';
-import React, { HTMLProps } from 'react';
+import MSpinner from 'lib/MSpinner';
+
+// TODO: sort, filer and search
 
 interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   /** Table Schema */
@@ -14,11 +17,13 @@ interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   bodyRowClass?: string;
   /** no data label slot */
   noDataLabel?: React.ReactNode;
+  /** is table data loading */
+  loading?: boolean;
 }
 
 export interface Column<R = any> {
   /** property inside row that hold column data */
-  key: string;
+  field: string;
   /** Column header label */
   label: string;
   /** Column classes */
@@ -29,6 +34,54 @@ export interface Column<R = any> {
   format?: (row: R) => React.ReactNode;
 }
 
+interface TableContextType extends Pick<Props, 'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading'> {}
+
+const TableContext = createContext<TableContextType>(undefined as any);
+
+function useTableContext() {
+  const ctx = useContext(TableContext);
+
+  if (!ctx) throw new Error('Context not provided');
+
+  return ctx;
+}
+
+interface MRowProps extends HTMLProps<HTMLTableRowElement> {
+  row: any;
+}
+
+const MTableRow = React.memo<MRowProps>(({ row, children, ...rest }) => {
+  const { bodyRowClass, columns } = useTableContext();
+
+  return (
+    <tr className={bodyRowClass} {...rest}>
+      {columns.map((column) => (
+        <MTableColumn {...column} row={row} key={column.field} />
+      ))}
+    </tr>
+  );
+});
+
+MTableRow.displayName = 'MTableRow';
+
+interface MTableColumnProps extends Column, Omit<HTMLProps<HTMLTableCellElement>, 'label'> {
+  row: any;
+}
+
+const MTableColumn = React.memo<MTableColumnProps>(
+  ({ classes, row, format, field, headerClasses: _headerClasses, label: _label, ...rest }) => {
+    const tdVal = useMemo(() => (format ? format(row) : row[field]), [format, field, row]);
+
+    return (
+      <td className={classes ? (typeof classes === 'string' ? classes : classes(row)) : ''} {...rest}>
+        {tdVal}
+      </td>
+    );
+  },
+);
+
+MTableColumn.displayName = 'MTableColumn';
+
 export const MTable: React.FC<Props> = ({
   rows,
   columns,
@@ -37,49 +90,49 @@ export const MTable: React.FC<Props> = ({
   headerClass,
   bodyRowClass,
   noDataLabel,
+  loading = false,
   ...rest
 }) => {
   return (
-    <div className={clsx(['overflow-x-auto', className])} {...rest}>
-      <table className={clsx(['table w-full', compact && 'table-compact'])}>
-        <thead>
-          <tr className={headerClass}>
-            {columns.map(({ key, label, headerClasses }) => (
-              <th key={key} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-
-        <tbody>
-          {!!rows.length ? (
-            rows.map((row, i) => (
-              <tr key={i} className={bodyRowClass}>
-                {columns.map(({ key, format, classes }) => (
-                  <td key={key} className={classes ? (typeof classes === 'string' ? classes : classes(row)) : ''}>
-                    {' '}
-                    {format ? format(row) : row[key]}{' '}
-                  </td>
-                ))}
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={columns.length} className="font-normal bg-transparent">
-                <div className="flex items-center">
-                  {noDataLabel || (
-                    <>
-                      <IconLaExclamationTriangle className="text-lg" />
-                      <span className="ml-1 text-base">No data found !</span>
-                    </>
-                  )}
-                </div>
-              </td>
+    <TableContext.Provider value={{ rows, columns, headerClass, bodyRowClass, loading }}>
+      <div className={clsx(['overflow-x-auto', className])} {...rest}>
+        <table className={clsx(['table w-full', compact && 'table-compact'])}>
+          <thead>
+            <tr className={headerClass}>
+              {columns.map(({ field: key, label, headerClasses }) => (
+                <th key={key} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
+                  {label}
+                </th>
+              ))}
             </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+
+          <tbody>
+            {loading === false && !!rows.length ? (
+              rows.map((row, i) => <MTableRow row={row} key={i} />)
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="font-normal bg-transparent">
+                  {loading === true ? (
+                    <div className="flex items-center space-x-2">
+                      <MSpinner size="20px" /> <span>Loading entries...</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center">
+                      {noDataLabel || (
+                        <>
+                          <IconLaExclamationTriangle className="text-lg" />
+                          <span className="ml-1 text-base">No data found !</span>
+                        </>
+                      )}
+                    </div>
+                  )}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </TableContext.Provider>
   );
 };
