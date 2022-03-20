@@ -1,12 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { createRouter } from 'server/createRouter';
+import { createDepartmentSchema } from './../../components/department/ManageDepartment';
 import { z } from 'zod';
-
-const createDepartmentSchema = z.object({
-  name: z.string(),
-  inCharge: z.string().optional(),
-  instituteId: z.number().optional(),
-});
 
 export const departmentRouter = createRouter()
   .mutation('create', {

@@ -18,7 +18,7 @@ export const accountRouter = createRouter()
   .mutation('create_institute', {
     input: createInstituteSchema,
     async resolve({ ctx, input }) {
-      const isDupId = await ctx.prisma.institute.findFirst({ where: { code: input.code }, select: { id: true } }); //TODO: doubt
+      const isDupId = await ctx.prisma.institute.findFirst({ where: { code: input.code }, select: { id: true } });
 
       if (isDupId) {
         throw new TRPCError({
