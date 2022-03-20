@@ -1,25 +1,25 @@
 import { AppLayout } from 'components/globals/AppLayout';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { NextPageWithLayout } from 'pages/_app';
-import { miraiClient } from 'server/db';
 import { Department } from '@prisma/client';
 import { Column, MTable } from 'components/lib/MTable';
 import PageLayout from 'components/globals/PageLayout';
 import { useMemo } from 'react';
+import { trpc } from 'utils/trpc';
+import { loggedInAtom, userAtom } from 'stores/user';
+import { useAtomValue } from 'jotai';
 
 //TODO: add support for admin view
-export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'], undefined, async () => {
-  //todo: replace this with trpc query for caching
-  const departments = await miraiClient.department.findMany();
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
 
-  return {
-    props: {
-      departments: departments || [],
-    },
-  };
-});
+const Departments: NextPageWithLayout = () => {
+  const userData = useAtomValue(userAtom);
+  const isLoggedIn = useAtomValue(loggedInAtom);
 
-const Departments: NextPageWithLayout<{ departments: Department[] }, any> = ({ departments = [] }) => {
+  const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
+    enabled: isLoggedIn,
+  });
+
   const columns = useMemo<Column<Department>[]>(
     () => [
       {

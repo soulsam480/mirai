@@ -7,7 +7,7 @@ import { MDialog } from 'components/lib/MDialog';
 import MLink from 'components/lib/MLink';
 import { Column, MTable } from 'components/lib/MTable';
 import { useAlerts } from 'components/lib/store/alerts';
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { useMemo } from 'react';
@@ -36,7 +36,7 @@ function getStatusClass(status: Institute['status']) {
 const Institutes: NextPageWithLayout<Props, any> = () => {
   const router = useRouter();
   const [_, setAlert] = useAlerts();
-  const [isLoggedIn] = useAtom(loggedInAtom);
+  const isLoggedIn = useAtomValue(loggedInAtom);
 
   const columns = useMemo<Column<Institute>[]>(
     () => [

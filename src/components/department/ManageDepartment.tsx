@@ -7,9 +7,11 @@ import { MInput } from 'components/lib/MInput';
 import { trpc } from 'utils/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { userAtom } from 'stores/user';
+import { useAtomValue } from 'jotai';
 
 export const createDepartmentSchema = z.object({
-  name: z.string().min(1, "Name shouldn't be empty"),
+  name: z.string().min(1, "Department name shouldn't be empty"),
   inCharge: z.string().optional(),
   instituteId: z.number(),
 });
@@ -22,13 +24,15 @@ export const ManageDepartment: React.FC<{}> = () => {
   const isEditMode = useMemo(() => !!router.query.departmentId && !!router.query.departmentId.length, [router.query]);
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const utils = trpc.useContext();
+  const userData = useAtomValue(userAtom);
 
   trpc.useQuery(
     [
       'department.get',
       {
         departmentId: +(router.query.departmentId || ''),
-        instituteId: +(router.query.instituteId || ''),
+        // institute ID will be here 100%
+        instituteId: userData.instituteId as number,
       },
     ],
     {
@@ -62,8 +66,8 @@ export const ManageDepartment: React.FC<{}> = () => {
     },
   });
 
-  const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageDepartmentSchema>>({
-    resolver: zodResolver(manageDepartmentSchema.omit({ instituteId: true })),
+  const { register, handleSubmit, formState, setValue } = useForm({
+    resolver: zodResolver(createDepartmentSchema.omit({ instituteId: true })),
     defaultValues: {
       name: '',
       inCharge: '',
@@ -71,15 +75,15 @@ export const ManageDepartment: React.FC<{}> = () => {
     shouldFocusError: true,
   });
 
-  async function createDepartment(data: z.infer<typeof createDepartmentSchema>) {
+  async function createDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
     try {
-      const resp = await createDepartmentMut(data);
-      console.log('data: ', data);
+      const resp = await createDepartmentMut({ ...data, instituteId: userData.instituteId as number });
 
       setAlert({
         message: 'Department created successfully !',
         type: 'success',
       });
+
       router.replace({
         pathname: `/institute/department/${resp.id}`,
       });
@@ -117,8 +121,8 @@ export const ManageDepartment: React.FC<{}> = () => {
         <MInput label="Name" {...register('name')} placeholder="Department name" error={formState.errors.name} />
 
         <MInput
-          label="In charge"
           {...register('inCharge')}
+          label="In charge"
           placeholder="Department incharge"
           error={formState.errors.inCharge}
         />

@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai';
+import { useAtomValue } from 'jotai';
 import React from 'react';
 import { userAtom } from 'stores/user';
 import { defineSidebar } from 'utils/helpers';
@@ -40,7 +40,7 @@ const sidebarConfig = {
 };
 
 export const SideBar: React.FC<Props> = ({ children }) => {
-  const [userData] = useAtom(userAtom);
+  const userData = useAtomValue(userAtom);
 
   return (
     <div className="drawer drawer-mobile">

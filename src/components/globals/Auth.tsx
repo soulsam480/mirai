@@ -1,4 +1,4 @@
-import { useAtom } from 'jotai';
+import { useSetAtom } from 'jotai';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { userAtom } from 'stores/user';
@@ -7,7 +7,7 @@ import { trpc } from 'utils/trpc';
 interface Props {}
 
 export const Auth: React.FC<Props> = ({ children }) => {
-  const [_, setUser] = useAtom(userAtom);
+  const setUser = useSetAtom(userAtom);
 
   const { data } = useSession();
 
