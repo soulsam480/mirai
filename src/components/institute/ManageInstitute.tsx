@@ -32,29 +32,26 @@ export const ManageInstitute: React.FC<{}> = () => {
   const [_, setAlert] = useAlerts();
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
 
-  const { data: inistituteData } = trpc.useQuery(
-    ['institute.get_institute', (router.query.instituteId && +router.query.instituteId) || 0],
-    {
-      enabled: isEditMode,
-      refetchOnWindowFocus: false,
-      retry: false,
-      onSuccess(data) {
-        const { code, name, status, account } = data;
+  const { data: inistituteData } = trpc.useQuery(['institute.get_institute', +(router.query.instituteId || '')], {
+    enabled: isEditMode,
+    refetchOnWindowFocus: false,
+    retry: false,
+    onSuccess(data) {
+      const { code, name, status, account } = data;
 
-        code && setValue('code', code);
-        name && setValue('name', name);
-        status && setValue('status', status);
-        account && account.email && setValue('email', account.email);
-      },
-      onError(e) {
-        setError(e);
-
-        if (e?.data?.code === 'NOT_FOUND') {
-          router.push('/admin/institute');
-        }
-      },
+      code && setValue('code', code);
+      name && setValue('name', name);
+      status && setValue('status', status);
+      account && account.email && setValue('email', account.email);
     },
-  );
+    onError(e) {
+      setError(e);
+
+      if (e?.data?.code === 'NOT_FOUND') {
+        router.push('/admin/institute');
+      }
+    },
+  });
 
   const inputFile = useRef<HTMLInputElement>(null);
   const uploadFile = useRef<File | null>(null);

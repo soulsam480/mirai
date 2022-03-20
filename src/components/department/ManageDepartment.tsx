@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 export const createDepartmentSchema = z.object({
   name: z.string().min(1, "Name shouldn't be empty"),
   inCharge: z.string().optional(),
-  instituteId: z.number().optional(),
+  instituteId: z.number(),
 });
 
 const manageDepartmentSchema = createDepartmentSchema.extend({ id: z.number() });
@@ -27,8 +27,8 @@ export const ManageDepartment: React.FC<{}> = () => {
     [
       'department.get',
       {
-        departmentId: (router.query.departmentId && +router.query.departmentId) || 0,
-        instituteId: (router.query.instituteId && +router.query.instituteId) || 0,
+        departmentId: +(router.query.departmentId || ''),
+        instituteId: +(router.query.instituteId || ''),
       },
     ],
     {
@@ -36,9 +36,8 @@ export const ManageDepartment: React.FC<{}> = () => {
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess(data) {
-        const { instituteId, inCharge, name } = data;
+        const { inCharge, name } = data;
 
-        instituteId && setValue('instituteId', instituteId);
         name && setValue('name', name);
         inCharge && setValue('inCharge', inCharge);
       },
@@ -64,11 +63,10 @@ export const ManageDepartment: React.FC<{}> = () => {
   });
 
   const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageDepartmentSchema>>({
-    resolver: zodResolver(manageDepartmentSchema),
+    resolver: zodResolver(manageDepartmentSchema.omit({ instituteId: true })),
     defaultValues: {
       name: '',
       inCharge: '',
-      instituteId: undefined,
     },
     shouldFocusError: true,
   });
@@ -113,7 +111,7 @@ export const ManageDepartment: React.FC<{}> = () => {
       </div>
       <form
         className="form-control w-full sm:w-80 flex"
-        onSubmit={() => handleSubmit(isEditMode ? updateDepartment : createDepartment)}
+        onSubmit={handleSubmit(isEditMode ? updateDepartment : createDepartment)}
       >
         <MInput label="Name" {...register('name')} placeholder="Department name" error={formState.errors.name} />
         <label className="label">
