@@ -2,7 +2,7 @@ import { PrismaClient, Role } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { WithExcludeClient } from 'server/context';
+import { WithExcludeClient } from 'server/db';
 import { getUserHome, isInstituteRole } from '../../utils/helpers';
 
 export type JwtPayload = {
