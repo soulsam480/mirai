@@ -75,13 +75,27 @@ export function useCourse() {
     },
   });
 
+  const create = trpc.useMutation(['course.create'], {
+    onSuccess() {
+      utils.invalidateQueries(['course.getAll']);
+
+      setAlert({
+        type: 'success',
+        message: 'Course created',
+      });
+
+      router.push('/institute/course');
+    },
+  });
+
   const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading]);
 
   useEffect(() => setLoader(loading), [loading]);
 
   return {
+    course,
+    create,
     update,
     isLoading: isLoading || update.isLoading,
-    course,
   };
 }

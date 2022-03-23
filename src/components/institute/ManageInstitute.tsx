@@ -4,12 +4,10 @@ import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { copyToClip } from 'utils/helpers';
-import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 import { useAlert } from 'components/lib/store/alerts';
 import { TRPCErrorType } from 'types';
 import { signupSchema } from 'pages/login';
-import { useLoader } from 'components/lib/store/loader';
 import { useInstitute } from 'contexts/useInstitute';
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
@@ -21,7 +19,7 @@ export const createInstituteSchema = z.object({
   logo: z.string().optional(),
 });
 
-const manageInstituteSchema = createInstituteSchema.merge(
+export const manageInstituteSchema = createInstituteSchema.merge(
   signupSchema.pick({
     email: true,
   }),
@@ -30,12 +28,15 @@ const manageInstituteSchema = createInstituteSchema.merge(
 export const ManageInstitute: React.FC<{}> = () => {
   const router = useRouter();
   const setAlert = useAlert();
-  const loader = useLoader();
 
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
 
-  const { institute: inistituteData, update } = useInstitute({
+  const {
+    institute: inistituteData,
+    update,
+    create,
+  } = useInstitute({
     onSuccess(data) {
       const { code, name, status, account } = data;
       code && setValue('code', code);
@@ -55,14 +56,6 @@ export const ManageInstitute: React.FC<{}> = () => {
   const inputFile = useRef<HTMLInputElement>(null);
   const uploadFile = useRef<File | null>(null);
 
-  const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute'], {
-    onError: setError,
-  });
-
-  const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
-    onError: setError,
-  });
-
   const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageInstituteSchema>>({
     resolver: zodResolver(manageInstituteSchema),
     defaultValues: {
@@ -74,24 +67,8 @@ export const ManageInstitute: React.FC<{}> = () => {
     shouldFocusError: true,
   });
 
-  async function createInstitute({ email, ...rest }: z.infer<typeof manageInstituteSchema>) {
-    try {
-      loader.show();
-
-      const resp = await createInstituteMut(rest);
-
-      await createInstituteAccount({ role: 'INSTITUTE', email, instituteId: resp.id, name: rest.name });
-
-      setAlert({
-        message: 'Institute created successfully !',
-        type: 'success',
-      });
-
-      router.push(`/admin/institute/${resp.id}`);
-    } catch (_) {
-    } finally {
-      loader.hide();
-    }
+  async function createInstitute(data: z.infer<typeof manageInstituteSchema>) {
+    await create(data);
   }
 
   async function updateInstitute(data: z.infer<typeof manageInstituteSchema>) {
@@ -138,14 +115,14 @@ export const ManageInstitute: React.FC<{}> = () => {
       <div className="text-lg font-medium leading-6 text-gray-900">
         {isEditMode ? (
           <>
-            Manage <span className="text-primary font-bold">{inistituteData?.name}</span>
+            Manage <span className="font-bold text-primary">{inistituteData?.name}</span>
           </>
         ) : (
           'Create new institute'
         )}
       </div>
       <form
-        className="form-control w-full sm:w-80 flex"
+        className="flex w-full form-control sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
       >
         <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
@@ -193,19 +170,19 @@ export const ManageInstitute: React.FC<{}> = () => {
           <button
             type="button"
             onClick={() => router.push('/admin/institute')}
-            className="btn btn-sm btn-secondary mt-5"
+            className="mt-5 btn btn-sm btn-secondary"
           >
             Cancel{' '}
           </button>
 
-          <button type="submit" className="btn btn-sm btn-primary mt-5">
+          <button type="submit" className="mt-5 btn btn-sm btn-primary">
             {isEditMode ? 'Update' : 'Create'}
           </button>
           {isEditMode && inistituteData?.status === 'PENDING' && (
             <button
               type="button"
               onClick={exportSignupLink}
-              className="btn btn-sm btn-primary mt-5"
+              className="mt-5 btn btn-sm btn-primary"
               title="Generate Signup link for institute"
             >
               {' '}

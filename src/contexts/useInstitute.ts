@@ -1,3 +1,4 @@
+import { manageInstituteSchema } from 'components/institute/ManageInstitute';
 import { useAlert } from 'components/lib/store/alerts';
 import { loaderAtom } from 'components/lib/store/loader';
 import { useAtomValue, useSetAtom } from 'jotai';
@@ -8,6 +9,7 @@ import { QueryOptions } from 'types';
 import { getUserHome } from 'utils/helpers';
 import { useStrictQueryCheck } from 'utils/hooks';
 import { trpc } from 'utils/trpc';
+import { z } from 'zod';
 
 export function useInstitutes() {
   const userData = useUser();
@@ -29,7 +31,6 @@ export function useInstitutes() {
   };
 }
 
-//TODO: create
 export function useInstitute(opts?: QueryOptions<'institute.get'>) {
   const router = useRouter();
   const setAlert = useAlert();
@@ -41,6 +42,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     key: 'instituteId',
     redirect: '/admin/institute',
     message: 'Institute ID was not found !',
+    skipPath: '/admin/institute/create',
   });
 
   const { data: institute, isLoading } = trpc.useQuery(['institute.get', +(router.query.instituteId as string)], {
@@ -55,6 +57,30 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     enabled: isLoggedIn && isQuery,
   });
 
+  const signUp = trpc.useMutation(['auth.sign_up'], {
+    onError: opts?.onError,
+    onSuccess({ instituteId }) {
+      if (instituteId == null) return;
+
+      setAlert({
+        message: 'Institute created successfully !',
+        type: 'success',
+      });
+
+      router.push(`/admin/institute/${instituteId}`);
+    },
+  });
+
+  const createInstitute = trpc.useMutation(['account.create_institute'], {
+    onError: opts?.onError,
+  });
+
+  async function create({ email, ...rest }: z.infer<typeof manageInstituteSchema>) {
+    const { id: instituteId } = await createInstitute.mutateAsync(rest);
+
+    signUp.mutate({ role: 'INSTITUTE', email, instituteId, name: rest.name });
+  }
+
   const update = trpc.useMutation(['account.update_institute'], {
     onSuccess() {
       utils.invalidateQueries(['institute.get_all']);
@@ -68,13 +94,17 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     },
   });
 
-  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading]);
+  const loading = useMemo(
+    () => isLoading || update.isLoading || signUp.isLoading || createInstitute.isLoading,
+    [isLoading, update.isLoading, signUp.isLoading, createInstitute.isLoading],
+  );
 
   useEffect(() => setLoader(loading), [loading]);
 
   return {
     update,
-    isLoading: isLoading || update.isLoading,
+    isLoading: loading,
     institute,
+    create,
   };
 }

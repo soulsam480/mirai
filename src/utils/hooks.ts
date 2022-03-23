@@ -14,13 +14,21 @@ export function useMounted() {
 }
 
 interface QueryConfig {
+  /** query name */
   key: string;
+  /** redirect to ? */
   redirect: string;
+  /** error message */
   message: string;
+  /** Skip checking on a pathname */
+  skipPath?: string;
 }
 
-export function useStrictQueryCheck({ key, redirect, message }: QueryConfig) {
-  const { query, push } = useRouter();
+/**
+ * Check for a query param strictly and redirect if it's not there
+ */
+export function useStrictQueryCheck({ key, redirect, message, skipPath: skip }: QueryConfig) {
+  const { query, push, pathname } = useRouter();
   const setAlert = useAlert();
 
   const isQuery = useMemo(() => {
@@ -30,6 +38,8 @@ export function useStrictQueryCheck({ key, redirect, message }: QueryConfig) {
   }, [query]);
 
   useEffect(() => {
+    if (skip !== undefined && pathname === skip) return;
+
     const queryVal = query[key];
 
     if (queryVal === undefined || isNaN(+queryVal)) {
