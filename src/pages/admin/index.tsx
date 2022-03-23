@@ -1,13 +1,13 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import { NextPageWithLayout } from 'pages/_app';
-import { getServerSideAuthGuard } from 'server/lib/auth';
+import { AppLayout } from 'components/globals/AppLayout'
+import { NextPageWithLayout } from 'pages/_app'
+import { getServerSideAuthGuard } from 'server/lib/auth'
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
 const Admin: NextPageWithLayout = () => {
-  return <div>Admin</div>;
-};
+  return <div>Admin</div>
+}
 
-Admin.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Admin.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Admin;
+export default Admin

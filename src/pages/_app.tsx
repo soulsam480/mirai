@@ -1,29 +1,29 @@
-import '../styles/globals.scss';
+import '../styles/globals.scss'
 
-import { httpBatchLink } from '@trpc/client/links/httpBatchLink';
-import { loggerLink } from '@trpc/client/links/loggerLink';
-import { withTRPC } from '@trpc/next';
-import { NextPage } from 'next';
-import { AppProps } from 'next/app';
-import { AppType } from 'next/dist/shared/lib/utils';
-import { ReactElement, ReactNode } from 'react';
-import { AppRouter } from 'server/routers/_app';
-import superjson from 'superjson';
-import { MAlertGroup } from 'components/lib/MAlerts';
-import { DefaultLayout } from 'components/globals/DefaultLayout';
-import { AppProviders } from 'contexts/appProviders';
-import { MLoader } from 'components/lib/MLoader';
+import { httpBatchLink } from '@trpc/client/links/httpBatchLink'
+import { loggerLink } from '@trpc/client/links/loggerLink'
+import { withTRPC } from '@trpc/next'
+import { NextPage } from 'next'
+import { AppProps } from 'next/app'
+import { AppType } from 'next/dist/shared/lib/utils'
+import { ReactElement, ReactNode } from 'react'
+import { AppRouter } from 'server/routers/_app'
+import superjson from 'superjson'
+import { MAlertGroup } from 'components/lib/MAlerts'
+import { DefaultLayout } from 'components/globals/DefaultLayout'
+import { AppProviders } from 'contexts/appProviders'
+import { MLoader } from 'components/lib/MLoader'
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode;
-};
+export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
-};
+  Component: NextPageWithLayout
+}
 
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
-  const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
+  const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
   return getLayout(
     <AppProviders pageProps={pageProps}>
@@ -35,25 +35,25 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
         </>
       )}
     </AppProviders>,
-  );
-}) as AppType;
+  )
+}) as AppType
 
 function getBaseUrl() {
   if (typeof window !== 'undefined') {
-    return '';
+    return ''
   }
   // reference for vercel.com
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.VERCEL_URL !== undefined) {
+    return `https://${process.env.VERCEL_URL}`
   }
 
   // // reference for render.com
-  if (process.env.RENDER_INTERNAL_HOSTNAME) {
-    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT}`;
+  if (process.env.RENDER_INTERNAL_HOSTNAME !== undefined) {
+    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT ?? 3000}`
   }
 
   // assume localhost
-  return `http://localhost:${process.env.PORT ?? 3000}`;
+  return `http://localhost:${process.env.PORT ?? 3000}`
 }
 
 export default withTRPC<AppRouter>({
@@ -98,7 +98,7 @@ export default withTRPC<AppRouter>({
           },
         },
       },
-    };
+    }
   },
   /**
    * @link https://trpc.io/docs/ssr
@@ -108,15 +108,15 @@ export default withTRPC<AppRouter>({
    * Set headers or status code when doing SSR
    */
   responseMeta({ clientErrors }) {
-    if (clientErrors.length) {
+    if (clientErrors.length > 0) {
       // propagate http first error from API calls
       return {
         status: clientErrors[0].data?.httpStatus ?? 500,
-      };
+      }
     }
 
     // for app caching with SSR see https://trpc.io/docs/caching
 
-    return {};
+    return {}
   },
-})(MyApp);
+})(MyApp)

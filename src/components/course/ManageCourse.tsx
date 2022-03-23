@@ -1,5 +1,5 @@
-import React from 'react';
-import { z } from 'zod';
+import React from 'react'
+import { z } from 'zod'
 
 interface Props {}
 
@@ -17,8 +17,8 @@ export const createCourseSchema = z.object({
   scoreType: z.enum(['CGPA', 'PERCENTAGE']),
   programDurationType: z.enum(['SEMESTER', 'YEAR']),
   programLevel: z.enum(['UG', 'PG', 'PHD']),
-});
+})
 
 export const ManageCourse: React.FC<Props> = () => {
-  return <div></div>;
-};
+  return <div></div>
+}

@@ -1,10 +1,12 @@
-import Head from 'next/head';
-import { ReactNode } from 'react';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { NavBar } from './NavBar';
-import { SideBar } from './SideBar';
+import Head from 'next/head'
+import { ReactNode } from 'react'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { NavBar } from './NavBar'
+import { SideBar } from './SideBar'
 
-type AppLayoutProps = { children: ReactNode };
+interface AppLayoutProps {
+  children: ReactNode
+}
 
 export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
@@ -21,5 +23,5 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 
       {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}
     </>
-  );
-};
+  )
+}

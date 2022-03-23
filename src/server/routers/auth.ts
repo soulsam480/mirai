@@ -1,36 +1,36 @@
-import { TRPCError } from '@trpc/server';
-import { nanoid } from 'nanoid';
-import { LoginSchema, signupSchema } from 'pages/login';
-import { createRouter } from 'server/createRouter';
-import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth';
-import { z } from 'zod';
+import { TRPCError } from '@trpc/server'
+import { nanoid } from 'nanoid'
+import { LoginSchema, signupSchema } from 'pages/login'
+import { createRouter } from 'server/createRouter'
+import { comparePassword, hashPass, prismaQueryHelper } from 'server/lib/auth'
+import { z } from 'zod'
 
-export const accountRole = ['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN'];
+export const accountRole = ['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']
 
 export const authRouter = createRouter()
   .mutation('sign_up', {
     input: signupSchema,
     async resolve({ ctx, input }) {
-      const { role, instituteId, studentId, ...rest } = input;
+      const { role, instituteId, studentId, ...rest } = input
 
-      if (['INSTITUTE_MOD', 'INSTITUTE'].includes(role) && !instituteId)
+      if (['INSTITUTE_MOD', 'INSTITUTE'].includes(role) && instituteId === undefined)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Missing institute Id for account',
-        });
+        })
 
-      if (role === 'STUDENT' && !studentId)
+      if (role === 'STUDENT' && studentId === undefined)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Missing student Id for account',
-        });
+        })
 
       const relID =
         role === 'ADMIN'
           ? null
           : ['INSTITUTE_MOD', 'INSTITUTE'].includes(role)
           ? (instituteId as number)
-          : (studentId as number);
+          : (studentId as number)
 
       const account = await ctx.prisma.account.create({
         data: {
@@ -42,9 +42,9 @@ export const authRouter = createRouter()
           isOwner: role === 'INSTITUTE',
           emailVerified: false,
         },
-      });
+      })
 
-      return { ...account, password: undefined };
+      return { ...account, password: undefined }
     },
   })
   .mutation('reset_password', {
@@ -57,32 +57,32 @@ export const authRouter = createRouter()
       const account = await ctx.prisma.account.findFirst({
         where: { id: input.accountId },
         select: { accountToken: true, id: true, instituteId: true },
-      });
+      })
 
-      if (!account || !account.instituteId)
+      if (account == null || account.instituteId === undefined)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: "Account or Institute doesn't exist",
-        });
+        })
 
-      const { accountToken, instituteId } = account;
+      const { accountToken, instituteId } = account
 
-      if (accountToken !== input.token)
+      if (account === null || instituteId === null || accountToken !== input.token)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Failed to change password !',
-        });
+        })
 
-      await ctx.prisma.institute.update({ where: { id: instituteId }, data: { status: 'INPROGRESS' } });
+      await ctx.prisma.institute.update({ where: { id: instituteId }, data: { status: 'INPROGRESS' } })
 
       await ctx.prisma.account.update({
         where: { id: input.accountId },
         data: { password: await hashPass(input.password), accountToken: null },
-      });
+      })
 
       return {
         status: 'success',
-      };
+      }
     },
   })
   .mutation('login', {
@@ -90,55 +90,55 @@ export const authRouter = createRouter()
     async resolve({ ctx, input: { email, password } }) {
       const account = await ctx.prisma.account.findFirst({
         where: { email },
-      });
+      })
 
-      if (!account)
+      if (account == null)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Account doeesn"t exist with the provided email',
-        });
+        })
 
-      if (!account.password)
+      if (account.password === null)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Please add password to continue !',
-        });
+        })
 
-      const isSamePassword = await comparePassword(password, account.password);
+      const isSamePassword = await comparePassword(password, account.password)
 
       if (!isSamePassword)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid email or password',
-        });
+        })
 
       return {
         ...account,
         password: undefined,
-      };
+      }
     },
   })
-  .middleware(({ ctx, next }) => {
-    if (!ctx.user)
+  .middleware(async ({ ctx, next }) => {
+    if (ctx.user == null)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
-      });
+      })
 
-    return next({
+    return await next({
       ctx: { ...ctx, user: ctx.user },
-    });
+    })
   })
   .query('account', {
     async resolve({ ctx }) {
-      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id);
+      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id)
 
-      if (!account)
+      if (account == null)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'User account data not found',
-        });
+        })
 
-      return account;
+      return account
     },
   })
   .query('account_token', {
@@ -149,24 +149,24 @@ export const authRouter = createRouter()
       const accountData = await ctx.prisma.account.findFirst({
         where: { id: input.accountId },
         select: { id: true, name: true },
-      });
+      })
 
-      if (!accountData)
+      if (accountData == null)
         throw new TRPCError({
           message: 'Institute not found !',
           code: 'NOT_FOUND',
-        });
+        })
 
-      const token = nanoid();
+      const token = nanoid()
 
-      await ctx.prisma.account.update({ where: { id: input.accountId }, data: { accountToken: token } });
+      await ctx.prisma.account.update({ where: { id: input.accountId }, data: { accountToken: token } })
 
       return {
         token,
-      };
+      }
     },
-  });
-//TODO: add otp login setup
+  })
+// TODO: add otp login setup
 // .mutation('login', {
 //   input: z.object({
 //     email: z.string().email(),

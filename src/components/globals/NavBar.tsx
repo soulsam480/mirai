@@ -1,14 +1,14 @@
-import { useAtomValue } from 'jotai';
-import { signOut } from 'next-auth/react';
-import Link from 'next/link';
-import React from 'react';
-import { loggedInAtom, useUser } from 'stores/user';
+import { useAtomValue } from 'jotai'
+import { signOut } from 'next-auth/react'
+import Link from 'next/link'
+import React from 'react'
+import { loggedInAtom, useUser } from 'stores/user'
 
 interface Props {}
 
 export const NavBar: React.FC<Props> = () => {
-  const userData = useUser();
-  const isLoggedIn = useAtomValue(loggedInAtom);
+  const userData = useUser()
+  const isLoggedIn = useAtomValue(loggedInAtom)
 
   return (
     <div className="navbar min-h-12 mb-2 rounded-none text-neutral border-b border-amber-200">
@@ -56,7 +56,7 @@ export const NavBar: React.FC<Props> = () => {
                   <div className="p-0">
                     <button
                       className="btn btn-sm btn-outline btn-block"
-                      onClick={() => signOut({ redirect: true, callbackUrl: '/login' })}
+                      onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                     >
                       Logout
                     </button>
@@ -74,5 +74,5 @@ export const NavBar: React.FC<Props> = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,8 +1,7 @@
-import { useAtomValue } from 'jotai';
-import React from 'react';
-import { useUser } from 'stores/user';
-import { defineSidebar } from 'utils/helpers';
-import MLink from 'lib/MLink';
+import React from 'react'
+import { useUser } from 'stores/user'
+import { defineSidebar } from 'utils/helpers'
+import MLink from 'lib/MLink'
 
 interface Props {}
 
@@ -37,10 +36,10 @@ const sidebarConfig = {
     },
   ]),
   STUDENT: [],
-};
+}
 
 export const SideBar: React.FC<Props> = ({ children }) => {
-  const userData = useUser();
+  const userData = useUser()
 
   return (
     <div className="drawer drawer-mobile">
@@ -48,8 +47,8 @@ export const SideBar: React.FC<Props> = ({ children }) => {
       {children}
       <div className="drawer-side min-h-[calc(100vh-57px)]">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
-        <aside className="menu p-4 pt-0 overflow-y-auto bg-amber-50 lg:bg-transparent w-60 text-base-content border-r border-amber-200 space-y-1">
-          {userData.role &&
+        <aside className="p-4 pt-0 space-y-1 overflow-y-auto border-r menu bg-amber-50 lg:bg-transparent w-60 text-base-content border-amber-200">
+          {userData.role !== undefined &&
             sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
               return (
                 <li key={key}>
@@ -57,10 +56,10 @@ export const SideBar: React.FC<Props> = ({ children }) => {
                     {item.label}
                   </MLink>
                 </li>
-              );
+              )
             })}
         </aside>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -1,9 +1,9 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import Link from 'next/link';
-import { NextPageWithLayout } from 'pages/_app';
-import { getServerSideAuthGuard } from 'server/lib/auth';
+import { AppLayout } from 'components/globals/AppLayout'
+import Link from 'next/link'
+import { NextPageWithLayout } from 'pages/_app'
+import { getServerSideAuthGuard } from 'server/lib/auth'
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
 const Institutes: NextPageWithLayout = () => {
   return (
@@ -14,9 +14,9 @@ const Institutes: NextPageWithLayout = () => {
         </Link>
       </div>
     </div>
-  );
-};
+  )
+}
 
-Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Institutes;
+export default Institutes
