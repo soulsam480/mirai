@@ -1,4 +1,4 @@
-import { useAlerts } from 'components/lib/store/alerts';
+import { useAlert } from 'components/lib/store/alerts';
 import { useRouter } from 'next/router';
 import { useState, useMemo, useEffect } from 'react';
 import { TRPCErrorType } from 'types';
@@ -7,8 +7,7 @@ import { MInput } from 'components/lib/MInput';
 import { trpc } from 'utils/trpc';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { userAtom } from 'stores/user';
-import { useAtomValue } from 'jotai';
+import { useUser } from 'stores/user';
 
 export const createDepartmentSchema = z.object({
   name: z.string().min(1, "Department name shouldn't be empty"),
@@ -20,11 +19,11 @@ const manageDepartmentSchema = createDepartmentSchema.extend({ id: z.number() })
 
 export const ManageDepartment: React.FC<{}> = () => {
   const router = useRouter();
-  const [_, setAlert] = useAlerts();
+  const setAlert = useAlert();
   const isEditMode = useMemo(() => !!router.query.departmentId && !!router.query.departmentId.length, [router.query]);
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const utils = trpc.useContext();
-  const userData = useAtomValue(userAtom);
+  const userData = useUser();
 
   trpc.useQuery(
     [

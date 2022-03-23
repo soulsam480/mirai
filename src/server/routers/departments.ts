@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server';
 import { createRouter } from 'server/createRouter';
-import { createDepartmentSchema } from './../../components/department/ManageDepartment';
+import { createDepartmentSchema } from 'components/department/ManageDepartment';
 import { z } from 'zod';
 
 export const departmentRouter = createRouter()

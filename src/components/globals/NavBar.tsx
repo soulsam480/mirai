@@ -2,12 +2,12 @@ import { useAtomValue } from 'jotai';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
-import { loggedInAtom, userAtom } from 'stores/user';
+import { loggedInAtom, useUser } from 'stores/user';
 
 interface Props {}
 
 export const NavBar: React.FC<Props> = () => {
-  const userData = useAtomValue(userAtom);
+  const userData = useUser();
   const isLoggedIn = useAtomValue(loggedInAtom);
 
   return (

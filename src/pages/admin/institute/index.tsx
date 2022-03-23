@@ -6,14 +6,11 @@ import { ManageInstitute } from 'components/institute/ManageInstitute';
 import { MDialog } from 'components/lib/MDialog';
 import MLink from 'components/lib/MLink';
 import { Column, MTable } from 'components/lib/MTable';
-import { useAlerts } from 'components/lib/store/alerts';
-import { useAtomValue } from 'jotai';
+import { useInstitutes } from 'contexts/useInstitute';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { useMemo } from 'react';
 import { getServerSideAuthGuard } from 'server/lib/auth';
-import { loggedInAtom } from 'stores/user';
-import { trpc } from 'utils/trpc';
 import IconLaPenSquare from '~icons/la/penSquare.jsx';
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
@@ -35,8 +32,7 @@ function getStatusClass(status: Institute['status']) {
 
 const Institutes: NextPageWithLayout<Props, any> = () => {
   const router = useRouter();
-  const [_, setAlert] = useAlerts();
-  const isLoggedIn = useAtomValue(loggedInAtom);
+  const { isLoading, institutes } = useInstitutes();
 
   const columns = useMemo<Column<Institute>[]>(
     () => [
@@ -79,14 +75,6 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
     ],
     [],
   );
-
-  const { data: institutes = [], isLoading } = trpc.useQuery(['institute.get_all'], {
-    //todo: kind of a bug, find ways to fix it
-    enabled: isLoggedIn,
-    onError(e) {
-      setAlert({ type: 'danger', message: e.message });
-    },
-  });
 
   return (
     <PageLayout.PageWrapper>

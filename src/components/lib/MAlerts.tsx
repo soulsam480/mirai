@@ -6,8 +6,9 @@ import IconLaInfoCircle from '~icons/la/info-circle.jsx';
 import IconLaCheckCircleSolid from '~icons/la/check-circle-solid.jsx';
 import IconLaExclamationCircle from '~icons/la/exclamation-circle.jsx';
 import IconLaWindowClose from '~icons/la/window-close.jsx';
-import { Alert, useAlerts } from 'components/lib/store/alerts';
+import { Alert, alertsSubAtom } from 'components/lib/store/alerts';
 import { useMounted } from 'utils/hooks';
+import { useAtomValue } from 'jotai';
 
 export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   const bgColor = useMemo(() => {
@@ -57,7 +58,7 @@ MAlert.displayName = 'JAlert';
 interface AlertGroupProps {}
 
 export const MAlertGroup: React.FC<AlertGroupProps> = () => {
-  const [alerts] = useAlerts();
+  const alerts = useAtomValue(alertsSubAtom);
   const mounted = useMounted();
 
   return mounted

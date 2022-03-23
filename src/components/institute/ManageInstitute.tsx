@@ -6,10 +6,11 @@ import { useForm } from 'react-hook-form';
 import { copyToClip } from 'utils/helpers';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
-import { useAlerts } from 'components/lib/store/alerts';
+import { useAlert } from 'components/lib/store/alerts';
 import { TRPCErrorType } from 'types';
 import { signupSchema } from 'pages/login';
 import { useLoader } from 'components/lib/store/loader';
+import { useInstitute } from 'contexts/useInstitute';
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
 
@@ -28,20 +29,15 @@ const manageInstituteSchema = createInstituteSchema.merge(
 
 export const ManageInstitute: React.FC<{}> = () => {
   const router = useRouter();
-  const utils = trpc.useContext();
-  const [_, setAlert] = useAlerts();
+  const setAlert = useAlert();
   const loader = useLoader();
 
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
 
-  const { data: inistituteData } = trpc.useQuery(['institute.get', +(router.query.instituteId || '')], {
-    enabled: isEditMode,
-    refetchOnWindowFocus: false,
-    retry: false,
+  const { institute: inistituteData, update } = useInstitute({
     onSuccess(data) {
       const { code, name, status, account } = data;
-
       code && setValue('code', code);
       name && setValue('name', name);
       status && setValue('status', status);
@@ -62,13 +58,7 @@ export const ManageInstitute: React.FC<{}> = () => {
   const { mutateAsync: createInstituteMut } = trpc.useMutation(['account.create_institute'], {
     onError: setError,
   });
-  const { mutateAsync: updateInstituteMut } = trpc.useMutation(['account.update_institute'], {
-    onError: setError,
-    onSuccess() {
-      // refetch stale query
-      utils.invalidateQueries(['institute.get_all']);
-    },
-  });
+
   const { mutateAsync: createInstituteAccount } = trpc.useMutation(['auth.sign_up'], {
     onError: setError,
   });
@@ -105,22 +95,7 @@ export const ManageInstitute: React.FC<{}> = () => {
   }
 
   async function updateInstitute(data: z.infer<typeof manageInstituteSchema>) {
-    //TODO: add logo upload here
-    try {
-      loader.show();
-
-      await updateInstituteMut({ ...data, instituteId: Number(router.query.instituteId) });
-
-      setAlert({
-        message: 'Institute updated successfully !',
-        type: 'success',
-      });
-
-      router.push('/admin/institute');
-    } catch (_) {
-    } finally {
-      loader.hide();
-    }
+    update.mutate({ ...data, instituteId: Number(router.query.instituteId) });
   }
 
   //TODO: logo upload

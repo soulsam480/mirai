@@ -6,14 +6,14 @@ import { Column, MTable } from 'components/lib/MTable';
 import PageLayout from 'components/globals/PageLayout';
 import { useMemo } from 'react';
 import { trpc } from 'utils/trpc';
-import { loggedInAtom, userAtom } from 'stores/user';
+import { loggedInAtom, useUser } from 'stores/user';
 import { useAtomValue } from 'jotai';
 
 //TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
 
 const Departments: NextPageWithLayout = () => {
-  const userData = useAtomValue(userAtom);
+  const userData = useUser();
   const isLoggedIn = useAtomValue(loggedInAtom);
 
   const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {

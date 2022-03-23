@@ -3,6 +3,7 @@ import { compare, hash } from 'bcrypt';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { WithExcludeClient } from 'server/db';
+import { User } from 'stores/user';
 import { getUserHome, isInstituteRole } from '../../utils/helpers';
 
 export type JwtPayload = {
@@ -22,7 +23,7 @@ export async function hashPass(password: string) {
 export function prismaQueryHelper(client: WithExcludeClient) {
   return {
     async getAccount(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN', email?: string, id?: number) {
-      let account;
+      let account: any;
 
       if (role === 'STUDENT') {
         account = await client.account.findFirst({
@@ -44,7 +45,7 @@ export function prismaQueryHelper(client: WithExcludeClient) {
         });
       }
 
-      return account;
+      return account as User;
     },
   };
 }

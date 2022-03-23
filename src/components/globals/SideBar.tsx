@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
 import React from 'react';
-import { userAtom } from 'stores/user';
+import { useUser } from 'stores/user';
 import { defineSidebar } from 'utils/helpers';
 import MLink from 'lib/MLink';
 
@@ -24,8 +24,8 @@ const sidebarConfig = {
       active: (path) => path.includes('/department'),
     },
     {
-      label: 'Programs',
-      path: '/program',
+      label: 'Courses',
+      path: '/course',
     },
     {
       label: 'Batches',
@@ -40,7 +40,7 @@ const sidebarConfig = {
 };
 
 export const SideBar: React.FC<Props> = ({ children }) => {
-  const userData = useAtomValue(userAtom);
+  const userData = useUser();
 
   return (
     <div className="drawer drawer-mobile">

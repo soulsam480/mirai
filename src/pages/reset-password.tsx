@@ -1,5 +1,5 @@
 import { MInput } from 'components/lib/MInput';
-import { useAlerts } from 'components/lib/store/alerts';
+import { useAlert } from 'components/lib/store/alerts';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -30,7 +30,7 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
   });
 
   const { query, push } = useRouter();
-  const [_, setAlert] = useAlerts();
+  const setAlert = useAlert();
 
   const { mutateAsync: resetPassword } = trpc.useMutation(['auth.reset_password'], {
     onError(e) {

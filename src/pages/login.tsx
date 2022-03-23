@@ -9,6 +9,7 @@ import { getUserHome } from 'utils/helpers';
 import { getSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { NavBar } from 'components/globals/NavBar';
+import { useLoader } from 'components/lib/store/loader';
 
 export const LoginSchema = z.object({
   email: z.string().email().min(1, 'Email required'),
@@ -44,6 +45,7 @@ const Login: NextPageWithLayout = () => {
   const utils = trpc.useContext();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
+  const loader = useLoader();
 
   const { register, handleSubmit, formState } = useForm<{
     email: string;
@@ -60,6 +62,8 @@ const Login: NextPageWithLayout = () => {
   async function userLogin(data: { email: string; password: string }) {
     setError(null);
 
+    loader.show();
+
     const status = await signIn('credentials', {
       redirect: false,
       ...data,
@@ -71,6 +75,8 @@ const Login: NextPageWithLayout = () => {
       return setError(status.error);
 
     utils.invalidateQueries(['auth.account']);
+
+    loader.hide();
 
     //TODO: find a better way to do this LOL
     router.reload();

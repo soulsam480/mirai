@@ -1,4 +1,4 @@
-import { atom, useAtom } from 'jotai';
+import { atom, useSetAtom } from 'jotai';
 
 export interface Alert {
   message: string;
@@ -9,7 +9,7 @@ export interface Alert {
 let alertsIdx = 0;
 
 const alertsBase = atom<Alert[]>([]);
-const alertsSub = atom<Alert[], Alert>(
+export const alertsSubAtom = atom<Alert[], Alert>(
   (get) => get(alertsBase),
   (get, set, update) => {
     alertsIdx++;
@@ -27,6 +27,6 @@ const alertsSub = atom<Alert[], Alert>(
   },
 );
 
-export function useAlerts() {
-  return useAtom(alertsSub);
+export function useAlert() {
+  return useSetAtom(alertsSubAtom);
 }
