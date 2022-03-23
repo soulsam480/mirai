@@ -9,10 +9,10 @@ import { AppType } from 'next/dist/shared/lib/utils';
 import { ReactElement, ReactNode } from 'react';
 import { AppRouter } from 'server/routers/_app';
 import superjson from 'superjson';
-import { SessionProvider as NextAuthProvider } from 'next-auth/react';
-import { JAlertGroup } from 'components/lib/MAlerts';
+import { MAlertGroup } from 'components/lib/MAlerts';
 import { DefaultLayout } from 'components/globals/DefaultLayout';
-import { Auth } from 'components/globals/Auth';
+import { AppProviders } from 'contexts/appProviders';
+import { MLoader } from 'components/lib/MLoader';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -26,12 +26,15 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
   return getLayout(
-    <NextAuthProvider session={pageProps.session}>
-      <Auth>
-        <Component {...pageProps} />
-        {typeof window !== 'undefined' && <JAlertGroup />}
-      </Auth>
-    </NextAuthProvider>,
+    <AppProviders pageProps={pageProps}>
+      <Component {...pageProps} />
+      {typeof window !== 'undefined' && (
+        <>
+          <MLoader />
+          <MAlertGroup />
+        </>
+      )}
+    </AppProviders>,
   );
 }) as AppType;
 
