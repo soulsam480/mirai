@@ -24,7 +24,8 @@
       "server/*": ["server/*"],
       "utils/*": ["utils/*"],
       "types/*": ["types/*"],
-      "lib/*": ["components/lib/*"]
+      "lib/*": ["components/lib/*"],
+      "contexts/*": ["contexts/*"]
     },
     "types": ["unplugin-icons/types/react"]
   },

@@ -32,6 +32,12 @@ const { withSuperjson } = require('next-superjson');
 module.exports = withSuperjson()({
   reactStrictMode: true,
   webpack(config) {
+    // if (!isServer) {
+    //   config.node = {
+    //     fs: 'empty',
+    //   };
+    // }
+
     config.plugins.push(
       require('unplugin-auto-import/webpack')({
         resolvers: [
