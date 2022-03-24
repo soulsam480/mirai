@@ -1,19 +1,20 @@
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { NextPageWithLayout } from './_app';
-import { z } from 'zod';
-import React, { useState } from 'react';
-import { trpc } from 'utils/trpc';
-import { GetServerSideProps } from 'next';
-import { getUserHome } from 'utils/helpers';
-import { getSession, signIn } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { NavBar } from 'components/globals/NavBar';
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { NextPageWithLayout } from './_app'
+import { z } from 'zod'
+import React, { useState } from 'react'
+import { trpc } from 'utils/trpc'
+import { GetServerSideProps } from 'next'
+import { getUserHome } from 'utils/helpers'
+import { getSession, signIn } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { NavBar } from 'components/globals/NavBar'
+import { useLoader } from 'components/lib/store/loader'
 
 export const LoginSchema = z.object({
   email: z.string().email().min(1, 'Email required'),
   password: z.string().min(1, 'Password required'),
-});
+})
 
 export const signupSchema = z.object({
   email: z.string().email(),
@@ -21,33 +22,34 @@ export const signupSchema = z.object({
   instituteId: z.number().optional(),
   studentId: z.number().optional(),
   name: z.string().optional(),
-});
+})
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const user = await getSession({ req: ctx.req });
+  const user = await getSession({ req: ctx.req })
 
-  if (user) {
+  if (user?.user !== undefined) {
     return {
       redirect: {
-        destination: getUserHome(user.user.role),
+        destination: getUserHome(user?.user.role),
         permanent: false,
       },
-    };
+    }
   }
 
   return {
     props: {},
-  };
-};
+  }
+}
 
 const Login: NextPageWithLayout = () => {
-  const utils = trpc.useContext();
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
+  const utils = trpc.useContext()
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const loader = useLoader()
 
   const { register, handleSubmit, formState } = useForm<{
-    email: string;
-    password: string;
+    email: string
+    password: string
   }>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -55,25 +57,30 @@ const Login: NextPageWithLayout = () => {
       password: '',
     },
     shouldFocusError: true,
-  });
+  })
 
   async function userLogin(data: { email: string; password: string }) {
-    setError(null);
+    setError(null)
+
+    loader.show()
 
     const status = await signIn('credentials', {
       redirect: false,
       ...data,
-    });
+    })
 
-    //@ts-expect-error bad lib types
+    // @ts-expect-error bad lib types
+    // eslint-disable-next-line
     if (status && status.error)
-      //@ts-expect-error bad lib types
-      return setError(status.error);
+      // @ts-expect-error bad lib types
+      return setError(status.error)
 
-    utils.invalidateQueries(['auth.account']);
+    void utils.invalidateQueries(['auth.account'])
 
-    //TODO: find a better way to do this LOL
-    router.reload();
+    loader.hide()
+
+    // TODO: find a better way to do this LOL
+    router.reload()
   }
 
   return (
@@ -81,10 +88,10 @@ const Login: NextPageWithLayout = () => {
       <NavBar />
       <div className="flex justify-center">
         <div className="w-full sm:max-w-md">
-          <form className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
-            <div className="text-xl mb-4">Login</div>
-            {error && (
-              <div className="alert alert-error py-2 text-sm">
+          <form className="w-full form-control" onSubmit={handleSubmit(userLogin)}>
+            <div className="mb-4 text-xl">Login</div>
+            {error !== null && (
+              <div className="py-2 text-sm alert alert-error">
                 <div className="flex-1">
                   <label> {error} </label>
                 </div>
@@ -101,7 +108,9 @@ const Login: NextPageWithLayout = () => {
               {...register('email')}
             />
             <label className="label">
-              {formState.errors?.email && <span className="label-text-alt"> {formState.errors.email.message} </span>}{' '}
+              {formState.errors?.email !== undefined && (
+                <span className="label-text-alt"> {formState.errors.email.message} </span>
+              )}{' '}
             </label>
 
             <label className="label">
@@ -114,19 +123,19 @@ const Login: NextPageWithLayout = () => {
               {...register('password')}
             />
             <label className="label">
-              {formState.errors?.password && (
+              {formState.errors?.password !== undefined && (
                 <span className="label-text-alt"> {formState.errors.password?.message} </span>
               )}{' '}
             </label>
 
-            <button type="submit" className="btn btn-block btn-primary mt-5">
+            <button type="submit" className="mt-5 btn btn-block btn-primary">
               Submit
             </button>
           </form>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

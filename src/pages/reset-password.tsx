@@ -1,23 +1,23 @@
-import { MInput } from 'components/lib/MInput';
-import { useAlerts } from 'components/lib/store/alerts';
-import { GetServerSideProps } from 'next';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { trpc } from 'utils/trpc';
-import { NextPageWithLayout } from './_app';
+import { MInput } from 'components/lib/MInput'
+import { useAlert } from 'components/lib/store/alerts'
+import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { trpc } from 'utils/trpc'
+import { NextPageWithLayout } from './_app'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   return {
     props: {
-      disabled: !query.accountId || !query.token,
+      disabled: query.accountId === undefined || query.token === undefined,
     },
-  };
-};
+  }
+}
 
 interface passwordResetSchema {
-  password: string;
-  confirmPassword: string;
+  password: string
+  confirmPassword: string
 }
 
 const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) => {
@@ -27,37 +27,37 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
       confirmPassword: '',
     },
     shouldFocusError: true,
-  });
+  })
 
-  const { query, push } = useRouter();
-  const [_, setAlert] = useAlerts();
+  const { query, push } = useRouter()
+  const setAlert = useAlert()
 
   const { mutateAsync: resetPassword } = trpc.useMutation(['auth.reset_password'], {
     onError(e) {
       setAlert({
         type: 'danger',
         message: e.message,
-      });
+      })
     },
-  });
+  })
 
   async function handleResetPassword(val: passwordResetSchema) {
-    const { accountId, token } = query;
-    if (!accountId || !token) return;
+    const { accountId, token } = query
+    if (accountId === undefined || token === undefined) return
 
     try {
       await resetPassword({
         password: val.password,
         accountId: parseInt(accountId as string),
         token: token as string,
-      });
+      })
 
       setAlert({
         type: 'success',
         message: 'Password reset successful !',
-      });
+      })
 
-      push('/login');
+      void push('/login')
     } catch (_) {}
   }
 
@@ -66,15 +66,15 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
       setAlert({
         type: 'danger',
         message: 'Invalid password reset link',
-      });
+      })
     }
-  }, [disabled]);
+  }, [disabled, setAlert])
 
   return (
     <div className="flex justify-center min-h-screen py-10">
       <div className="w-full sm:max-w-md">
-        <form className="form-control w-full" onSubmit={handleSubmit(handleResetPassword)}>
-          <div className="text-xl mb-4">Reset password</div>
+        <form className="w-full form-control" onSubmit={handleSubmit(handleResetPassword)}>
+          <div className="mb-4 text-xl">Reset password</div>
 
           <MInput
             label="Password"
@@ -105,13 +105,13 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
             error={formState.errors.confirmPassword}
           />
 
-          <button type="submit" className="btn btn-block btn-primary mt-5" disabled={disabled}>
+          <button type="submit" className="mt-5 btn btn-block btn-primary" disabled={disabled}>
             Submit
           </button>
         </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword

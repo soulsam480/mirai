@@ -2,19 +2,19 @@
  * Use this for listing and data rep. pages
  */
 
-import Link from 'next/link';
-import React, { HTMLProps } from 'react';
+import Link from 'next/link'
+import React, { HTMLProps } from 'react'
 
 interface PageWrapperProps extends HTMLProps<HTMLDivElement> {}
 
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, ...rest }) => {
-  return <div {...rest}> {children} </div>;
-};
+  return <div {...rest}> {children} </div>
+}
 
 interface PageHeaderProps extends HTMLProps<HTMLDivElement> {
-  createActionUrl: string;
-  createLabel: string;
-  headerLabel?: string;
+  createActionUrl: string
+  createLabel: string
+  headerLabel?: string
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, headerLabel, ...props }) => {
@@ -26,8 +26,8 @@ const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, h
         <a className="btn btn-primary btn-sm"> {createLabel} </a>
       </Link>
     </div>
-  );
-};
+  )
+}
 
-//todo: add footer and content
-export default { PageHeader, PageWrapper };
+// todo: add footer and content
+export default { PageHeader, PageWrapper }

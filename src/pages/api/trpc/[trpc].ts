@@ -1,9 +1,9 @@
 /**
  * This file contains tRPC's HTTP response handler
  */
-import * as trpcNext from '@trpc/server/adapters/next';
-import { appRouter } from 'server/routers/_app';
-import { createContext } from 'server/context';
+import * as trpcNext from '@trpc/server/adapters/next'
+import { appRouter } from 'server/routers/_app'
+import { createContext } from 'server/context'
 
 export default trpcNext.createNextApiHandler({
   router: appRouter,
@@ -17,7 +17,8 @@ export default trpcNext.createNextApiHandler({
   onError({ error }) {
     if (error.code === 'INTERNAL_SERVER_ERROR') {
       // send to bug reporting
-      console.error('Something went wrong', error);
+      // eslint-disable-next-line no-console
+      console.error('Something went wrong', error)
     }
   },
   /**
@@ -32,4 +33,4 @@ export default trpcNext.createNextApiHandler({
   // responseMeta() {
   //   // ...
   // },
-});
+})

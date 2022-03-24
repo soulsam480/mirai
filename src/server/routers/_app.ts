@@ -1,12 +1,13 @@
 /**
  * This file contains the root router of your tRPC-backend
  */
-import superjson from 'superjson';
-import { createRouter } from '../createRouter';
-import { accountRouter } from './accounts';
-import { authRouter } from './auth';
-import { departmentRouter } from './departments';
-import { instituteRouter } from './institute';
+import superjson from 'superjson'
+import { createRouter } from '../createRouter'
+import { accountRouter } from './accounts'
+import { authRouter } from './auth'
+import { courseRouter } from './course'
+import { departmentRouter } from './departments'
+import { instituteRouter } from './institute'
 
 /**
  * Create your application's root router
@@ -28,5 +29,6 @@ export const appRouter = createRouter()
   .merge('account.', accountRouter)
   .merge('auth.', authRouter)
   .merge('institute.', instituteRouter)
-  .merge('department.', departmentRouter);
-export type AppRouter = typeof appRouter;
+  .merge('department.', departmentRouter)
+  .merge('course.', courseRouter)
+export type AppRouter = typeof appRouter

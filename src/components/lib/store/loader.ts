@@ -1,18 +1,18 @@
-import { atom, useSetAtom } from 'jotai';
+import { atom, useSetAtom } from 'jotai'
 
-export const loaderAtom = atom(false);
+export const loaderAtom = atom(false)
 
 export function useLoader() {
-  const setLoader = useSetAtom(loaderAtom);
+  const setLoader = useSetAtom(loaderAtom)
 
   return {
     /** Show the loader */
     show() {
-      setLoader(true);
+      setLoader(true)
     },
     /** Hide the loader */
     hide() {
-      setLoader(false);
+      setLoader(false)
     },
-  };
+  }
 }

@@ -1,32 +1,32 @@
-import { atom, useAtom } from 'jotai';
+import { atom, useSetAtom } from 'jotai'
 
 export interface Alert {
-  message: string;
-  id?: number;
-  type?: 'success' | 'danger' | 'warning';
+  message: string
+  id?: number
+  type?: 'success' | 'danger' | 'warning'
 }
 
-let alertsIdx = 0;
+let alertsIdx = 0
 
-const alertsBase = atom<Alert[]>([]);
-const alertsSub = atom<Alert[], Alert>(
+const alertsBase = atom<Alert[]>([])
+export const alertsSubAtom = atom<Alert[], Alert>(
   (get) => get(alertsBase),
   (get, set, update) => {
-    alertsIdx++;
+    alertsIdx++
 
-    set(alertsBase, () => [...get(alertsBase), { ...(update as Alert), id: alertsIdx }]);
+    set(alertsBase, () => [...get(alertsBase), { ...update, id: alertsIdx }])
 
     const timeout = setTimeout(() => {
-      const alerts = get(alertsBase);
-      alerts.shift();
+      const alerts = get(alertsBase)
+      alerts.shift()
 
-      set(alertsBase, () => [...alerts]);
+      set(alertsBase, () => [...alerts])
 
-      clearTimeout(timeout);
-    }, 2500);
+      clearTimeout(timeout)
+    }, 2500)
   },
-);
+)
 
-export function useAlerts() {
-  return useAtom(alertsSub);
+export function useAlert() {
+  return useSetAtom(alertsSubAtom)
 }

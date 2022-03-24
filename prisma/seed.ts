@@ -4,9 +4,9 @@
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
 
-import { PrismaClient } from '@prisma/client';
-import { hashPass } from '../src/server/lib/auth';
-const prisma = new PrismaClient();
+import { PrismaClient } from '@prisma/client'
+import { hashPass } from '../src/server/lib/auth'
+const prisma = new PrismaClient()
 
 async function main() {
   await prisma.account.upsert({
@@ -20,14 +20,15 @@ async function main() {
       name: 'Sambit Sahoo',
     },
     update: {},
-  });
+  })
 }
 
 main()
   .catch((e) => {
-    console.error(e);
-    process.exit(1);
+    // eslint-disable-next-line no-console
+    console.error(e)
+    process.exit(1)
   })
   .finally(async () => {
-    await prisma.$disconnect();
-  });
+    await prisma.$disconnect()
+  })

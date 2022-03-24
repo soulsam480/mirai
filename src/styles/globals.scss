@@ -20,6 +20,7 @@ body {
 
 .dialog-content {
   @apply inline-block p-6 my-8 overflow-hidden align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
+  @apply w-[90%] sm:w-auto;
 }
 
 .file-input {
@@ -90,5 +91,21 @@ body {
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -124px;
+  }
+}
+
+.m-select {
+  &__btn {
+    @apply flex-grow border bg-base-100 rounded-btn border-primary;
+    @apply border-opacity-100 border-primary py-[5px] px-3 text-left text-sm;
+
+    &:focus {
+      outline: 2px solid hsl(var(--p));
+      outline-offset: 2px;
+    }
+  }
+
+  &__options {
+    @apply absolute z-30 w-full py-1 mt-10 overflow-auto text-sm bg-gray-100 rounded-md shadow-lg max-h-60 focus:outline-none;
   }
 }

@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import { comparePassword } from 'server/lib/auth';
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import { miraiClient } from 'server/db'
+import { comparePassword } from 'server/lib/auth'
 
-const secret = process.env.ACCESS_TOKEN_SECRET;
+const secret = process.env.ACCESS_TOKEN_SECRET
 
 export default NextAuth({
   session: {
@@ -15,20 +15,21 @@ export default NextAuth({
   },
   callbacks: {
     jwt: ({ token, user }) => {
-      if (user) {
-        token.id = user.id;
-        token.role = user.role;
+      if (user !== undefined) {
+        token.id = user.id
+        token.role = user.role
       }
 
-      return token;
+      return token
     },
     session: ({ session, token }) => {
-      if (token) {
-        session.user.id = token.id;
-        session.user.role = token.role;
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (token !== undefined) {
+        session.user.id = token.id
+        session.user.role = token.role
       }
 
-      return session;
+      return session
     },
   },
   providers: [
@@ -40,30 +41,30 @@ export default NextAuth({
       },
       type: 'credentials',
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) throw new Error('Email or password is missing');
+        if (credentials === undefined || credentials.email.length === 0 || credentials?.password.length === 0)
+          throw new Error('Email or password is missing')
 
-        const prisma = new PrismaClient();
-
-        const user = await prisma.account.findFirst({
-          where: { email: credentials.email },
+        const user = await miraiClient.account.findFirst({
+          where: { email: credentials?.email },
           select: { password: true, role: true, id: true },
-        });
+        })
 
-        prisma.$disconnect();
+        void miraiClient.$disconnect()
 
-        if (!user || !user.password) throw new Error('No account was found with the email');
+        if (user == null || user.password === null || user.password?.length === 0)
+          throw new Error('No account was found with the email')
 
-        const isSamePassword = await comparePassword(credentials.password, user.password);
+        const isSamePassword = await comparePassword(credentials.password, user.password)
 
-        if (!isSamePassword) throw new Error('Email or password is incorrect !');
+        if (!isSamePassword) throw new Error('Email or password is incorrect !')
 
         return {
-          email: credentials?.email,
+          email: credentials.email,
           role: user.role,
           id: user.id,
-        };
+        }
       },
     }),
   ],
   debug: process.env.NODE_ENV !== 'production',
-});
+})

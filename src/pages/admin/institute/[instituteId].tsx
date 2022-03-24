@@ -1,14 +1,14 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import { NextPageWithLayout } from 'pages/_app';
-import { getServerSideAuthGuard } from 'server/lib/auth';
-import { ManageInstitute } from 'components/institute/ManageInstitute';
+import { AppLayout } from 'components/globals/AppLayout'
+import { NextPageWithLayout } from 'pages/_app'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import { ManageInstitute } from 'components/institute/ManageInstitute'
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
 const Institute: NextPageWithLayout = () => {
-  return <ManageInstitute />;
-};
+  return <ManageInstitute />
+}
 
-Institute.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Institute.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Institute;
+export default Institute

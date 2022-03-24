@@ -1,9 +1,9 @@
-import React from 'react';
-import { SessionProvider as NextAuthProvider } from 'next-auth/react';
-import { CurrentAccountProvider } from 'contexts/currenctAccountProvider';
+import React from 'react'
+import { SessionProvider as NextAuthProvider } from 'next-auth/react'
+import { CurrentAccountProvider } from 'contexts/currenctAccountProvider'
 
 interface Props {
-  pageProps: any;
+  pageProps: any
 }
 
 export const AppProviders: React.FC<Props> = ({ pageProps, children }) => {
@@ -11,5 +11,5 @@ export const AppProviders: React.FC<Props> = ({ pageProps, children }) => {
     <NextAuthProvider session={pageProps.session}>
       <CurrentAccountProvider>{children}</CurrentAccountProvider>
     </NextAuthProvider>
-  );
-};
+  )
+}

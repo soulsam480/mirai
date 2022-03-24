@@ -1,30 +1,24 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import { getServerSideAuthGuard } from 'server/lib/auth';
-import { NextPageWithLayout } from 'pages/_app';
-import { Department } from '@prisma/client';
-import { Column, MTable } from 'components/lib/MTable';
-import PageLayout from 'components/globals/PageLayout';
-import { useMemo } from 'react';
-import { trpc } from 'utils/trpc';
-import { loggedInAtom, userAtom } from 'stores/user';
-import { useAtomValue } from 'jotai';
-import MLink from 'components/lib/MLink';
-import { MDialog } from 'components/lib/MDialog';
-import { useRouter } from 'next/router';
-import { ManageDepartment } from 'components/department/ManageDepartment';
+import { AppLayout } from 'components/globals/AppLayout'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import { NextPageWithLayout } from 'pages/_app'
+import { Department } from '@prisma/client'
+import { Column, MTable } from 'components/lib/MTable'
+import PageLayout from 'components/globals/PageLayout'
+import { useMemo } from 'react'
+import MLink from 'components/lib/MLink'
+import { MDialog } from 'components/lib/MDialog'
+import { useRouter } from 'next/router'
+import { ManageDepartment } from 'components/department/ManageDepartment'
+import { useDepartments } from 'contexts/useDepartment'
 
-//TODO: add support for admin view
-export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
+// TODO: add support for admin view
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const Departments: NextPageWithLayout = () => {
-  const userData = useAtomValue(userAtom);
-  const isLoggedIn = useAtomValue(loggedInAtom);
-  const router = useRouter();
-  const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
-    enabled: isLoggedIn,
-  });
+  const router = useRouter()
+  const { departments, isLoading } = useDepartments()
 
-  const columns = useMemo<Column<Department>[]>(
+  const columns = useMemo<Array<Column<Department>>>(
     () => [
       {
         field: 'id',
@@ -43,7 +37,7 @@ const Departments: NextPageWithLayout = () => {
         label: 'In charge',
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
-        format: ({ inCharge }) => <>{inCharge || '-'}</>,
+        format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
       {
         field: 'edit',
@@ -58,7 +52,7 @@ const Departments: NextPageWithLayout = () => {
       },
     ],
     [],
-  );
+  )
 
   return (
     <PageLayout.PageWrapper>
@@ -74,18 +68,22 @@ const Departments: NextPageWithLayout = () => {
         rows={departments}
         compact
         noDataLabel={'No departments were found !'}
+        loading={isLoading}
       />
 
-      <MDialog show={!!router.query.departmentId} onClose={() => router.push('/institute/department')}>
+      <MDialog
+        show={router.query.departmentId !== undefined}
+        onClose={async () => await router.push('/institute/department')}
+      >
         {/* //todo: again this is a bug, fix this */}
         <div className="dialog-content">
           <ManageDepartment />
         </div>
       </MDialog>
     </PageLayout.PageWrapper>
-  );
-};
+  )
+}
 
-Departments.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Departments.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Departments;
+export default Departments

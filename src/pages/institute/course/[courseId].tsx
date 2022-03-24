@@ -1,14 +1,14 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { NextPageWithLayout } from 'pages/_app'
-import { ManageDepartment } from 'components/department/ManageDepartment'
+import { ManageCourse } from 'components/course/ManageCourse'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
-const Department: NextPageWithLayout = () => {
-  return <ManageDepartment />
+const UpdateCourse: NextPageWithLayout = () => {
+  return <ManageCourse />
 }
 
-Department.getLayout = (page) => <AppLayout>{page}</AppLayout>
+UpdateCourse.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Department
+export default UpdateCourse
