@@ -1,11 +1,12 @@
 import { AppLayout } from 'components/globals/AppLayout';
 import { getServerSideAuthGuard } from 'server/lib/auth';
 import { NextPageWithLayout } from 'pages/_app';
+import { ManageDepartment } from 'components/department/ManageDepartment';
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
 
 const Department: NextPageWithLayout = () => {
-  return <div>Department info</div>;
+  return <ManageDepartment />;
 };
 
 Department.getLayout = (page) => <AppLayout>{page}</AppLayout>;

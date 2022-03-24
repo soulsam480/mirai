@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { userAtom } from 'stores/user';
 import { useAtomValue } from 'jotai';
+import { useLoader } from 'components/lib/store/loader';
 
 export const createDepartmentSchema = z.object({
   name: z.string().min(1, "Department name shouldn't be empty"),
@@ -25,6 +26,7 @@ export const ManageDepartment: React.FC<{}> = () => {
   const [globalError, setError] = useState<TRPCErrorType | null>(null);
   const utils = trpc.useContext();
   const userData = useAtomValue(userAtom);
+  const loader = useLoader();
 
   trpc.useQuery(
     [
@@ -62,7 +64,7 @@ export const ManageDepartment: React.FC<{}> = () => {
   const { mutateAsync: updateDepartmentMut } = trpc.useMutation(['department.update'], {
     onError: setError,
     onSuccess() {
-      utils.invalidateQueries(['department.get']);
+      utils.invalidateQueries(['department.getAll']);
     },
   });
 
@@ -90,7 +92,27 @@ export const ManageDepartment: React.FC<{}> = () => {
     } catch (_) {}
   }
 
-  async function updateDepartment() {}
+  async function updateDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
+    try {
+      loader.show();
+
+      await updateDepartmentMut({
+        ...data,
+        id: Number(router.query.departmentId),
+        instituteId: userData.instituteId as number,
+      });
+
+      setAlert({
+        message: 'Institute updated successfully !',
+        type: 'success',
+      });
+
+      router.push('/institute/department');
+    } catch (_) {
+    } finally {
+      loader.hide();
+    }
+  }
 
   useEffect(() => {
     if (!globalError) return;

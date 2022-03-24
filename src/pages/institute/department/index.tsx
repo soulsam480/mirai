@@ -8,6 +8,10 @@ import { useMemo } from 'react';
 import { trpc } from 'utils/trpc';
 import { loggedInAtom, userAtom } from 'stores/user';
 import { useAtomValue } from 'jotai';
+import MLink from 'components/lib/MLink';
+import { MDialog } from 'components/lib/MDialog';
+import { useRouter } from 'next/router';
+import { ManageDepartment } from 'components/department/ManageDepartment';
 
 //TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
@@ -15,7 +19,7 @@ export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUT
 const Departments: NextPageWithLayout = () => {
   const userData = useAtomValue(userAtom);
   const isLoggedIn = useAtomValue(loggedInAtom);
-
+  const router = useRouter();
   const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
     enabled: isLoggedIn,
   });
@@ -41,18 +45,17 @@ const Departments: NextPageWithLayout = () => {
         classes: 'bg-amber-100',
         format: ({ inCharge }) => <>{inCharge || '-'}</>,
       },
-      //TODO: add edit setup
-      //   {
-      //     key: '',
-      //     label: 'Edit',
-      //     headerClasses: '!bg-primary',
-      //     classes: 'bg-amber-100',
-      //     format: ({ id }) => (
-      //       <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
-      //         <IconLaPenSquare className="text-lg" />
-      //       </MLink>
-      //     ),
-      //   },
+      {
+        field: 'edit',
+        label: 'Edit',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+        format: ({ id }) => (
+          <MLink href={`/institute/department?departmentId=${id}`} as={`/institute/department/${id}`}>
+            <IconLaPenSquare className="text-lg" />
+          </MLink>
+        ),
+      },
     ],
     [],
   );
@@ -72,6 +75,13 @@ const Departments: NextPageWithLayout = () => {
         compact
         noDataLabel={'No departments were found !'}
       />
+
+      <MDialog show={!!router.query.departmentId} onClose={() => router.push('/institute/department')}>
+        {/* //todo: again this is a bug, fix this */}
+        <div className="dialog-content">
+          <ManageDepartment />
+        </div>
+      </MDialog>
     </PageLayout.PageWrapper>
   );
 };
