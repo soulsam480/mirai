@@ -7,6 +7,10 @@ import PageLayout from 'components/globals/PageLayout'
 import { useMemo } from 'react'
 import { trpc } from 'utils/trpc'
 import { loggedInAtom, useUser } from 'stores/user'
+import MLink from 'components/lib/MLink'
+import { MDialog } from 'components/lib/MDialog'
+import { useRouter } from 'next/router'
+import { ManageDepartment } from 'components/department/ManageDepartment'
 import { useAtomValue } from 'jotai'
 
 // TODO: add support for admin view
@@ -15,6 +19,7 @@ export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUT
 const Departments: NextPageWithLayout = () => {
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
+  const router = useRouter()
 
   const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
     enabled: isLoggedIn,
@@ -53,6 +58,17 @@ const Departments: NextPageWithLayout = () => {
       //       </MLink>
       //     ),
       //   },
+      {
+        field: 'edit',
+        label: 'Edit',
+        headerClasses: '!bg-primary',
+        classes: 'bg-amber-100',
+        format: ({ id }) => (
+          <MLink href={`/institute/department?departmentId=${id}`} as={`/institute/department/${id}`}>
+            <IconLaPenSquare className="text-lg" />
+          </MLink>
+        ),
+      },
     ],
     [],
   )
@@ -72,6 +88,16 @@ const Departments: NextPageWithLayout = () => {
         compact
         noDataLabel={'No departments were found !'}
       />
+
+      <MDialog
+        show={router.query.departmentId !== undefined}
+        onClose={async () => await router.push('/institute/department')}
+      >
+        {/* //todo: again this is a bug, fix this */}
+        <div className="dialog-content">
+          <ManageDepartment />
+        </div>
+      </MDialog>
     </PageLayout.PageWrapper>
   )
 }

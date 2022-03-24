@@ -8,6 +8,7 @@ import { trpc } from 'utils/trpc'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useUser } from 'stores/user'
+import { useLoader } from 'components/lib/store/loader'
 
 export const createDepartmentSchema = z.object({
   name: z.string().min(1, "Department name shouldn't be empty"),
@@ -20,13 +21,15 @@ const _manageDepartmentSchema = createDepartmentSchema.extend({ id: z.number() }
 export const ManageDepartment: React.FC<any> = () => {
   const router = useRouter()
   const setAlert = useAlert()
+  const utils = trpc.useContext()
+  const userData = useUser()
+  const loader = useLoader()
+
+  const [globalError, setError] = useState<TRPCErrorType | null>(null)
   const isEditMode = useMemo(
     () => router.query.departmentId !== undefined && router.query.departmentId.length > 0,
     [router.query],
   )
-  const [globalError, setError] = useState<TRPCErrorType | null>(null)
-  const utils = trpc.useContext()
-  const userData = useUser()
 
   trpc.useQuery(
     [
@@ -61,10 +64,10 @@ export const ManageDepartment: React.FC<any> = () => {
     onError: setError,
   })
 
-  const { mutateAsync: _updateDepartmentMut } = trpc.useMutation(['department.update'], {
+  const { mutateAsync: updateDepartmentMut } = trpc.useMutation(['department.update'], {
     onError: setError,
     onSuccess() {
-      void utils.invalidateQueries(['department.get'])
+      void utils.invalidateQueries(['department.getAll'])
     },
   })
 
@@ -92,8 +95,26 @@ export const ManageDepartment: React.FC<any> = () => {
     } catch (_) {}
   }
 
-  async function updateDepartment() {
-    //
+  async function updateDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
+    try {
+      loader.show()
+
+      await updateDepartmentMut({
+        ...data,
+        id: Number(router.query.departmentId),
+        instituteId: userData.instituteId as number,
+      })
+
+      setAlert({
+        message: 'Institute updated successfully !',
+        type: 'success',
+      })
+
+      void router.push('/institute/department')
+    } catch (_) {
+    } finally {
+      loader.hide()
+    }
   }
 
   useEffect(() => {
