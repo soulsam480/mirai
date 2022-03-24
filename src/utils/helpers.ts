@@ -37,3 +37,7 @@ export function defineSidebar(base: string) {
     },
   }
 }
+
+export function isSafeVal(val: any) {
+  return typeof val === 'string' || typeof val === 'number'
+}

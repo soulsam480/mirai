@@ -9,12 +9,12 @@ interface Props extends HTMLProps<HTMLInputElement> {
 
 export const MInput = React.forwardRef<HTMLInputElement, Props>(({ error, label, ...rest }, ref) => {
   return (
-    <>
+    <div className="flex flex-col">
       <label className="label">
         <span className="label-text">{label}</span>
       </label>
-      <input className={clsx(['input input-bordered input-primary input-sm', rest.className])} {...rest} ref={ref} />
+      <input className={clsx(['input input-bordered input-primary input-sm ', rest.className])} {...rest} ref={ref} />
       <label className="label">{error != null && <span className="label-text-alt"> {error.message} </span>} </label>
-    </>
+    </div>
   )
 })

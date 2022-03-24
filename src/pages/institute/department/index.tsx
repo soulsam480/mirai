@@ -5,25 +5,18 @@ import { Department } from '@prisma/client'
 import { Column, MTable } from 'components/lib/MTable'
 import PageLayout from 'components/globals/PageLayout'
 import { useMemo } from 'react'
-import { trpc } from 'utils/trpc'
-import { loggedInAtom, useUser } from 'stores/user'
 import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
 import { ManageDepartment } from 'components/department/ManageDepartment'
-import { useAtomValue } from 'jotai'
+import { useDepartments } from 'contexts/useDepartment'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const Departments: NextPageWithLayout = () => {
-  const userData = useUser()
-  const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
-
-  const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
-    enabled: isLoggedIn,
-  })
+  const { departments, isLoading } = useDepartments()
 
   const columns = useMemo<Array<Column<Department>>>(
     () => [
@@ -46,18 +39,6 @@ const Departments: NextPageWithLayout = () => {
         classes: 'bg-amber-100',
         format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
-      // TODO: add edit setup
-      //   {
-      //     key: '',
-      //     label: 'Edit',
-      //     headerClasses: '!bg-primary',
-      //     classes: 'bg-amber-100',
-      //     format: ({ id }) => (
-      //       <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
-      //         <IconLaPenSquare className="text-lg" />
-      //       </MLink>
-      //     ),
-      //   },
       {
         field: 'edit',
         label: 'Edit',
@@ -87,6 +68,7 @@ const Departments: NextPageWithLayout = () => {
         rows={departments}
         compact
         noDataLabel={'No departments were found !'}
+        loading={isLoading}
       />
 
       <MDialog

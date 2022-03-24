@@ -16,6 +16,7 @@ class DBClient {
     )
 
     clients++
+    // eslint-disable-next-line no-console
     console.log('clients', clients)
 
     return this.client

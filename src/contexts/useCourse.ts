@@ -4,6 +4,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { loggedInAtom, useUser } from 'stores/user'
+import { QueryOptions } from 'types'
 import { getUserHome } from 'utils/helpers'
 import { useStrictQueryCheck } from 'utils/hooks'
 import { trpc } from 'utils/trpc'
@@ -28,7 +29,9 @@ export function useCourses() {
   }
 }
 
-export function useCourse() {
+export function useCourse(opts?: QueryOptions<'course.get'>) {
+  opts = opts ?? {}
+
   const router = useRouter()
   const setAlert = useAlert()
   const userData = useUser()
@@ -40,6 +43,7 @@ export function useCourse() {
     key: 'courseId',
     redirect: '/institute/course',
     message: 'Course ID was not found !',
+    skipPath: '/institute/course/create',
   })
 
   const { data: course, isLoading } = trpc.useQuery(
@@ -51,7 +55,6 @@ export function useCourse() {
       },
     ],
     {
-      enabled: isLoggedIn && isQuery,
       onError(e) {
         if (e.data?.code === 'NOT_FOUND') {
           setAlert({ type: 'danger', message: 'Course not found' })
@@ -59,6 +62,8 @@ export function useCourse() {
           void router.push('/institute/course')
         }
       },
+      ...opts,
+      enabled: isLoggedIn && isQuery,
     },
   )
 

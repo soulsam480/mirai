@@ -55,8 +55,8 @@ const MTableRow = React.memo<MRowProps>(({ row, children: _children, ...rest }) 
 
   return (
     <tr className={bodyRowClass} {...rest}>
-      {columns.map((column) => (
-        <MTableColumn {...column} row={row} key={column.field} />
+      {columns.map((column, i) => (
+        <MTableColumn {...column} row={row} key={i} />
       ))}
     </tr>
   )
@@ -99,8 +99,8 @@ export const MTable: React.FC<Props> = ({
         <table className={clsx(['table w-full', compact && 'table-compact'])}>
           <thead>
             <tr className={headerClass}>
-              {columns.map(({ field: key, label, headerClasses }) => (
-                <th key={key} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
+              {columns.map(({ label, headerClasses }, i) => (
+                <th key={i} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
                   {label}
                 </th>
               ))}

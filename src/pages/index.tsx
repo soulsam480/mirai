@@ -20,7 +20,6 @@ interface Props {
 }
 
 const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
-  console.log(user)
   return (
     <div className="min-h-screen hero">
       <div className="absolute top-0 left-0 right-0 ">
@@ -65,29 +64,3 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
 }
 
 export default IndexPage
-
-/**
- * If you want to statically render this page
- * - Export `appRouter` & `createContext` from [trpc].ts
- * - Make the `opts` object optional on `createContext()`
- *
- * @Link https://trpc.io/docs/ssg
- */
-// export const getStaticProps = async (
-//   context: GetStaticPropsContext<{ filter: string }>,
-// ) => {
-//   const ssg = createSSGHelpers({
-//     router: appRouter,
-//     ctx: await createContext(),
-//   });
-//
-//   await ssg.fetchQuery('post.all');
-//
-//   return {
-//     props: {
-//       trpcState: ssg.dehydrate(),
-//       filter: context.params?.filter ?? 'all',
-//     },
-//     revalidate: 1,
-//   };
-// };

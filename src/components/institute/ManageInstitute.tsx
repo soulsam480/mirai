@@ -1,14 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MInput } from 'components/lib/MInput'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { copyToClip } from 'utils/helpers'
 import { z } from 'zod'
 import { useAlert } from 'components/lib/store/alerts'
-import { TRPCErrorType } from 'types'
-import { signupSchema } from 'pages/login'
 import { useInstitute } from 'contexts/useInstitute'
+import { useGlobalError } from 'utils/hooks'
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING']
 
@@ -19,17 +18,13 @@ export const createInstituteSchema = z.object({
   logo: z.string().optional(),
 })
 
-export const manageInstituteSchema = createInstituteSchema.merge(
-  signupSchema.pick({
-    email: true,
-  }),
-)
+export const manageInstituteSchema = createInstituteSchema.extend({ email: z.string().email() })
 
 export const ManageInstitute: React.FC<any> = () => {
   const router = useRouter()
   const setAlert = useAlert()
 
-  const [globalError, setError] = useState<TRPCErrorType | null>(null)
+  const setError = useGlobalError()
   const isEditMode = useMemo(
     () => router.query.instituteId !== undefined && router.query.instituteId.length > 0,
     [router.query],
@@ -101,17 +96,6 @@ export const ManageInstitute: React.FC<any> = () => {
 
     void copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
   }
-
-  useEffect(() => {
-    if (globalError == null) return
-
-    setAlert({
-      message: globalError.message,
-      type: 'danger',
-    })
-
-    setError(null)
-  }, [globalError, setAlert])
 
   return (
     <>

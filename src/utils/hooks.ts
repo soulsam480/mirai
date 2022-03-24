@@ -1,6 +1,7 @@
 import { useAlert } from 'components/lib/store/alerts'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
+import { TRPCErrorType } from 'types'
 
 export function useMounted() {
   const [mounted, setMounted] = useState(false)
@@ -54,4 +55,22 @@ export function useStrictQueryCheck({ key, redirect, message, skipPath: skip }: 
   }, [])
 
   return { isQuery }
+}
+
+export function useGlobalError() {
+  const setAlert = useAlert()
+  const [globalError, setError] = useState<TRPCErrorType | null>(null)
+
+  useEffect(() => {
+    if (globalError == null) return
+
+    setAlert({
+      message: globalError.message,
+      type: 'danger',
+    })
+
+    setError(null)
+  }, [globalError, setAlert])
+
+  return setError
 }

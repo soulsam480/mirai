@@ -42,10 +42,10 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
 
   return (
-    <div className="drawer drawer-mobile">
+    <div className="drawer drawer-mobile sm:drawer-side !h-[calc(100vh-57px)]">
       <input id="mirai-drawer" type="checkbox" className="drawer-toggle" />
       {children}
-      <div className="drawer-side min-h-[calc(100vh-57px)]">
+      <div className="drawer-side ">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
         <aside className="p-4 pt-0 space-y-1 overflow-y-auto border-r menu bg-amber-50 lg:bg-transparent w-60 text-base-content border-amber-200">
           {userData.role !== undefined &&
