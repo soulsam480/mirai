@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client'
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { miraiClient } from 'server/db'
 import { comparePassword } from 'server/lib/auth'
 
 const secret = process.env.ACCESS_TOKEN_SECRET
@@ -15,7 +15,7 @@ export default NextAuth({
   },
   callbacks: {
     jwt: ({ token, user }) => {
-      if (user != null) {
+      if (user !== undefined) {
         token.id = user.id
         token.role = user.role
       }
@@ -24,7 +24,7 @@ export default NextAuth({
     },
     session: ({ session, token }) => {
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (token) {
+      if (token !== undefined) {
         session.user.id = token.id
         session.user.role = token.role
       }
@@ -44,24 +44,22 @@ export default NextAuth({
         if (credentials === undefined || credentials.email.length === 0 || credentials?.password.length === 0)
           throw new Error('Email or password is missing')
 
-        const prisma = new PrismaClient()
-
-        const user = await prisma.account.findFirst({
+        const user = await miraiClient.account.findFirst({
           where: { email: credentials?.email },
           select: { password: true, role: true, id: true },
         })
 
-        await prisma.$disconnect()
+        void miraiClient.$disconnect()
 
         if (user == null || user.password === null || user.password?.length === 0)
           throw new Error('No account was found with the email')
 
-        const isSamePassword = await comparePassword(credentials.password, user?.password)
+        const isSamePassword = await comparePassword(credentials.password, user.password)
 
         if (!isSamePassword) throw new Error('Email or password is incorrect !')
 
         return {
-          email: credentials?.email,
+          email: credentials.email,
           role: user.role,
           id: user.id,
         }

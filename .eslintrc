@@ -41,7 +41,7 @@
       }
     ],
     "react/jsx-no-undef": [
-      1,
+      0,
       {
         "allowGlobals": true
       }

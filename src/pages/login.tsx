@@ -27,10 +27,10 @@ export const signupSchema = z.object({
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req })
 
-  if (user != null) {
+  if (user?.user !== undefined) {
     return {
       redirect: {
-        destination: getUserHome(user.user.role),
+        destination: getUserHome(user?.user.role),
         permanent: false,
       },
     }
@@ -70,7 +70,8 @@ const Login: NextPageWithLayout = () => {
     })
 
     // @ts-expect-error bad lib types
-    if (status?.error !== undefined && status.error.length > 0)
+    // eslint-disable-next-line
+    if (status && status.error)
       // @ts-expect-error bad lib types
       return setError(status.error)
 

@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { withExclude } from 'prisma-exclude'
 
+let clients = 0
 // eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class DBClient {
   static client: ReturnType<typeof withExclude>
@@ -13,6 +14,9 @@ class DBClient {
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
       }),
     )
+
+    clients++
+    console.log('clients', clients)
 
     return this.client
   }
