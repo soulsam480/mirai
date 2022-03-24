@@ -1,26 +1,26 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import { getServerSideAuthGuard } from 'server/lib/auth';
-import { NextPageWithLayout } from 'pages/_app';
-import { Department } from '@prisma/client';
-import { Column, MTable } from 'components/lib/MTable';
-import PageLayout from 'components/globals/PageLayout';
-import { useMemo } from 'react';
-import { trpc } from 'utils/trpc';
-import { loggedInAtom, useUser } from 'stores/user';
-import { useAtomValue } from 'jotai';
+import { AppLayout } from 'components/globals/AppLayout'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import { NextPageWithLayout } from 'pages/_app'
+import { Department } from '@prisma/client'
+import { Column, MTable } from 'components/lib/MTable'
+import PageLayout from 'components/globals/PageLayout'
+import { useMemo } from 'react'
+import { trpc } from 'utils/trpc'
+import { loggedInAtom, useUser } from 'stores/user'
+import { useAtomValue } from 'jotai'
 
-//TODO: add support for admin view
-export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
+// TODO: add support for admin view
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const Departments: NextPageWithLayout = () => {
-  const userData = useUser();
-  const isLoggedIn = useAtomValue(loggedInAtom);
+  const userData = useUser()
+  const isLoggedIn = useAtomValue(loggedInAtom)
 
   const { data: departments = [] } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
     enabled: isLoggedIn,
-  });
+  })
 
-  const columns = useMemo<Column<Department>[]>(
+  const columns = useMemo<Array<Column<Department>>>(
     () => [
       {
         field: 'id',
@@ -39,9 +39,9 @@ const Departments: NextPageWithLayout = () => {
         label: 'In charge',
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
-        format: ({ inCharge }) => <>{inCharge || '-'}</>,
+        format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
-      //TODO: add edit setup
+      // TODO: add edit setup
       //   {
       //     key: '',
       //     label: 'Edit',
@@ -55,7 +55,7 @@ const Departments: NextPageWithLayout = () => {
       //   },
     ],
     [],
-  );
+  )
 
   return (
     <PageLayout.PageWrapper>
@@ -73,9 +73,9 @@ const Departments: NextPageWithLayout = () => {
         noDataLabel={'No departments were found !'}
       />
     </PageLayout.PageWrapper>
-  );
-};
+  )
+}
 
-Departments.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Departments.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Departments;
+export default Departments

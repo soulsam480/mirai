@@ -1,18 +1,18 @@
-import { AppLayout } from 'components/globals/AppLayout';
-import { getServerSideAuthGuard } from 'server/lib/auth';
-import { NextPageWithLayout } from 'pages/_app';
-import { useCourses } from 'contexts/useCourse';
-import PageLayout from 'components/globals/PageLayout';
-import { Column, MTable } from 'components/lib/MTable';
-import { useMemo } from 'react';
-import { Course } from '@prisma/client';
+import { AppLayout } from 'components/globals/AppLayout'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import { NextPageWithLayout } from 'pages/_app'
+import { useCourses } from 'contexts/useCourse'
+import PageLayout from 'components/globals/PageLayout'
+import { Column, MTable } from 'components/lib/MTable'
+import { useMemo } from 'react'
+import { Course } from '@prisma/client'
 
-export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD']);
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const ProgramListing: NextPageWithLayout = () => {
-  const { courses, isLoading } = useCourses();
+  const { courses, isLoading } = useCourses()
 
-  const columns = useMemo<Column<Course & { department: { name: string } }>[]>(
+  const columns = useMemo<Array<Column<Course & { department: { name: string } }>>>(
     () => [
       {
         field: 'id',
@@ -41,7 +41,7 @@ const ProgramListing: NextPageWithLayout = () => {
       },
     ],
     [],
-  );
+  )
 
   return (
     <PageLayout.PageWrapper>
@@ -60,9 +60,9 @@ const ProgramListing: NextPageWithLayout = () => {
         loading={isLoading}
       />
     </PageLayout.PageWrapper>
-  );
-};
+  )
+}
 
-ProgramListing.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+ProgramListing.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default ProgramListing;
+export default ProgramListing

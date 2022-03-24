@@ -1,22 +1,27 @@
-import { PrismaClient } from '@prisma/client';
-import { withExclude } from 'prisma-exclude';
+import { PrismaClient } from '@prisma/client'
+import { withExclude } from 'prisma-exclude'
 
+let clients = 0
+// eslint-disable-next-line @typescript-eslint/no-extraneous-class
 class DBClient {
-  static client: ReturnType<typeof withExclude>;
+  static client: ReturnType<typeof withExclude>
 
   static getClient() {
-    if (this.client) return this.client;
+    if (this.client !== undefined) return this.client
 
     this.client = withExclude(
       new PrismaClient({
         log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
       }),
-    );
+    )
 
-    return this.client;
+    clients++
+    console.log('clients', clients)
+
+    return this.client
   }
 }
 
-export const miraiClient = DBClient.getClient();
+export const miraiClient = DBClient.getClient()
 
-export type WithExcludeClient = typeof miraiClient;
+export type WithExcludeClient = typeof miraiClient

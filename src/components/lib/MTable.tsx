@@ -1,57 +1,57 @@
-import React, { createContext, HTMLProps, useContext, useMemo } from 'react';
-import clsx from 'clsx';
-import MSpinner from 'lib/MSpinner';
+import React, { createContext, HTMLProps, useContext, useMemo } from 'react'
+import clsx from 'clsx'
+import MSpinner from 'lib/MSpinner'
 
 // TODO: sort, filer and search
 
 interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   /** Table Schema */
-  columns: Column[];
+  columns: Column[]
   /** Table data/rows */
-  rows: any[];
+  rows: any[]
   /** less padding tavle */
-  compact?: boolean;
+  compact?: boolean
   /** classes to apply on thead-> tr */
-  headerClass?: string;
+  headerClass?: string
   /** classes to apply on tbody -> tr */
-  bodyRowClass?: string;
+  bodyRowClass?: string
   /** no data label slot */
-  noDataLabel?: React.ReactNode;
+  noDataLabel?: React.ReactNode
   /** is table data loading */
-  loading?: boolean;
+  loading?: boolean
 }
 
 export interface Column<R = any> {
   /** property inside row that hold column data */
-  field: string;
+  field: string
   /** Column header label */
-  label: string;
+  label: string
   /** Column classes */
-  classes?: string | ((row: R) => string);
+  classes?: string | ((row: R) => string)
   /** classes to apply on column header , thead -> tr -> th */
-  headerClasses?: string;
+  headerClasses?: string
   /** Custom formatter to format data before displaying */
-  format?: (row: R) => React.ReactNode;
+  format?: (row: R) => React.ReactNode
 }
 
 interface TableContextType extends Pick<Props, 'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading'> {}
 
-const TableContext = createContext<TableContextType>(undefined as any);
+const TableContext = createContext<TableContextType | undefined>(undefined)
 
 function useTableContext() {
-  const ctx = useContext(TableContext);
+  const ctx = useContext(TableContext)
 
-  if (!ctx) throw new Error('Context not provided');
+  if (ctx === undefined) throw new Error('Context not provided')
 
-  return ctx;
+  return ctx
 }
 
 interface MRowProps extends HTMLProps<HTMLTableRowElement> {
-  row: any;
+  row: any
 }
 
-const MTableRow = React.memo<MRowProps>(({ row, children, ...rest }) => {
-  const { bodyRowClass, columns } = useTableContext();
+const MTableRow = React.memo<MRowProps>(({ row, children: _children, ...rest }) => {
+  const { bodyRowClass, columns } = useTableContext()
 
   return (
     <tr className={bodyRowClass} {...rest}>
@@ -59,34 +59,34 @@ const MTableRow = React.memo<MRowProps>(({ row, children, ...rest }) => {
         <MTableColumn {...column} row={row} key={column.field} />
       ))}
     </tr>
-  );
-});
+  )
+})
 
-MTableRow.displayName = 'MTableRow';
+MTableRow.displayName = 'MTableRow'
 
 interface MTableColumnProps extends Column, Omit<HTMLProps<HTMLTableCellElement>, 'label'> {
-  row: any;
+  row: any
 }
 
 const MTableColumn = React.memo<MTableColumnProps>(
   ({ classes, row, format, field, headerClasses: _headerClasses, label: _label, ...rest }) => {
-    const tdVal = useMemo(() => (format ? format(row) : row[field]), [format, field, row]);
+    const tdVal = useMemo(() => (format != null ? format(row) : row[field]), [format, field, row])
 
     return (
-      <td className={classes ? (typeof classes === 'string' ? classes : classes(row)) : ''} {...rest}>
+      <td className={classes !== undefined ? (typeof classes === 'string' ? classes : classes(row)) : ''} {...rest}>
         {tdVal}
       </td>
-    );
+    )
   },
-);
+)
 
-MTableColumn.displayName = 'MTableColumn';
+MTableColumn.displayName = 'MTableColumn'
 
 export const MTable: React.FC<Props> = ({
   rows,
   columns,
   className,
-  compact,
+  compact = false,
   headerClass,
   bodyRowClass,
   noDataLabel,
@@ -108,18 +108,18 @@ export const MTable: React.FC<Props> = ({
           </thead>
 
           <tbody>
-            {loading === false && !!rows.length ? (
+            {!loading && !(rows.length === 0) ? (
               rows.map((row, i) => <MTableRow row={row} key={i} />)
             ) : (
               <tr>
                 <td colSpan={columns.length} className="font-normal bg-transparent">
-                  {loading === true ? (
+                  {loading ? (
                     <div className="flex items-center space-x-2">
                       <MSpinner size="20px" /> <span>Loading entries...</span>
                     </div>
                   ) : (
                     <div className="flex items-center">
-                      {noDataLabel || (
+                      {noDataLabel ?? (
                         <>
                           <IconLaExclamationTriangle className="text-lg" />
                           <span className="ml-1 text-base">No data found !</span>
@@ -134,5 +134,5 @@ export const MTable: React.FC<Props> = ({
         </table>
       </div>
     </TableContext.Provider>
-  );
-};
+  )
+}

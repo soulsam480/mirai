@@ -1,7 +1,7 @@
-import { TRPCError } from '@trpc/server';
-import { createRouter } from 'server/createRouter';
-import { createDepartmentSchema } from 'components/department/ManageDepartment';
-import { z } from 'zod';
+import { TRPCError } from '@trpc/server'
+import { createRouter } from 'server/createRouter'
+import { createDepartmentSchema } from 'components/department/ManageDepartment'
+import { z } from 'zod'
 
 export const departmentRouter = createRouter()
   .mutation('create', {
@@ -9,28 +9,28 @@ export const departmentRouter = createRouter()
     async resolve({ ctx, input }) {
       const department = await ctx.prisma.department.create({
         data: input,
-      });
+      })
 
-      return department;
+      return department
     },
   })
   .mutation('update', {
     input: createDepartmentSchema.extend({ id: z.number() }),
     async resolve({ ctx, input }) {
-      const { id, ...data } = input;
+      const { id, ...data } = input
 
       await ctx.prisma.department.update({
         where: { id },
         data,
-      });
+      })
     },
   })
   .query('getAll', {
     input: z.number(),
     async resolve({ ctx, input }) {
-      const departments = await ctx.prisma.department.findMany({ where: { instituteId: input } });
+      const departments = await ctx.prisma.department.findMany({ where: { instituteId: input } })
 
-      return departments;
+      return departments
     },
   })
   .query('get', {
@@ -41,15 +41,15 @@ export const departmentRouter = createRouter()
     async resolve({ ctx, input }) {
       const department = await ctx.prisma.department.findFirst({
         where: { id: input.departmentId, instituteId: input.instituteId },
-      });
+      })
 
-      if (!department) {
+      if (department === null) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Department not found !',
-        });
+        })
       }
 
-      return department;
+      return department
     },
-  });
+  })

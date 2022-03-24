@@ -1,40 +1,40 @@
-import { Institute } from '@prisma/client';
-import clsx from 'clsx';
-import { AppLayout } from 'components/globals/AppLayout';
-import PageLayout from 'components/globals/PageLayout';
-import { ManageInstitute } from 'components/institute/ManageInstitute';
-import { MDialog } from 'components/lib/MDialog';
-import MLink from 'components/lib/MLink';
-import { Column, MTable } from 'components/lib/MTable';
-import { useInstitutes } from 'contexts/useInstitute';
-import { useRouter } from 'next/router';
-import { NextPageWithLayout } from 'pages/_app';
-import { useMemo } from 'react';
-import { getServerSideAuthGuard } from 'server/lib/auth';
-import IconLaPenSquare from '~icons/la/penSquare.jsx';
+import { Institute } from '@prisma/client'
+import clsx from 'clsx'
+import { AppLayout } from 'components/globals/AppLayout'
+import PageLayout from 'components/globals/PageLayout'
+import { ManageInstitute } from 'components/institute/ManageInstitute'
+import { MDialog } from 'components/lib/MDialog'
+import MLink from 'components/lib/MLink'
+import { Column, MTable } from 'components/lib/MTable'
+import { useInstitutes } from 'contexts/useInstitute'
+import { useRouter } from 'next/router'
+import { NextPageWithLayout } from 'pages/_app'
+import { useMemo } from 'react'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import IconLaPenSquare from '~icons/la/penSquare.jsx'
 
-export const getServerSideProps = getServerSideAuthGuard(['ADMIN']);
+export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
 interface Props {}
 
 function getStatusClass(status: Institute['status']) {
   switch (status) {
     case 'INPROGRESS':
-      return 'badge-info';
+      return 'badge-info'
 
     case 'ONBOARDED':
-      return 'badge-success';
+      return 'badge-success'
 
     case 'PENDING':
-      return 'badge-error';
+      return 'badge-error'
   }
 }
 
 const Institutes: NextPageWithLayout<Props, any> = () => {
-  const router = useRouter();
-  const { isLoading, institutes } = useInstitutes();
+  const router = useRouter()
+  const { isLoading, institutes } = useInstitutes()
 
-  const columns = useMemo<Column<Institute>[]>(
+  const columns = useMemo<Array<Column<Institute>>>(
     () => [
       {
         field: 'id',
@@ -74,7 +74,7 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
       },
     ],
     [],
-  );
+  )
 
   return (
     <PageLayout.PageWrapper>
@@ -94,16 +94,19 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
       />
 
       {/* contextual routing for instant feedback. Reloads will show actual page */}
-      <MDialog show={!!router.query.instituteId} onClose={() => router.push('/admin/institute')}>
+      <MDialog
+        show={router.query.instituteId !== undefined}
+        onClose={async () => await router.push('/admin/institute')}
+      >
         {/* //todo: again this is a bug, fix this */}
         <div className="dialog-content">
           <ManageInstitute />
         </div>
       </MDialog>
     </PageLayout.PageWrapper>
-  );
-};
+  )
+}
 
-Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>;
+Institutes.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default Institutes;
+export default Institutes

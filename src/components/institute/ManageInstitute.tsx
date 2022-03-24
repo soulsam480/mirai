@@ -1,60 +1,64 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { MInput } from 'components/lib/MInput';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { copyToClip } from 'utils/helpers';
-import { z } from 'zod';
-import { useAlert } from 'components/lib/store/alerts';
-import { TRPCErrorType } from 'types';
-import { signupSchema } from 'pages/login';
-import { useInstitute } from 'contexts/useInstitute';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { MInput } from 'components/lib/MInput'
+import { useRouter } from 'next/router'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { copyToClip } from 'utils/helpers'
+import { z } from 'zod'
+import { useAlert } from 'components/lib/store/alerts'
+import { TRPCErrorType } from 'types'
+import { signupSchema } from 'pages/login'
+import { useInstitute } from 'contexts/useInstitute'
 
-const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING'];
+const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING']
 
 export const createInstituteSchema = z.object({
   code: z.string().min(1, "Code shouldn't be empty"),
   name: z.string().min(1, "Name shouldn't be empty"),
   status: z.enum(['ONBOARDED', 'INPROGRESS', 'PENDING']),
   logo: z.string().optional(),
-});
+})
 
 export const manageInstituteSchema = createInstituteSchema.merge(
   signupSchema.pick({
     email: true,
   }),
-);
+)
 
-export const ManageInstitute: React.FC<{}> = () => {
-  const router = useRouter();
-  const setAlert = useAlert();
+export const ManageInstitute: React.FC<any> = () => {
+  const router = useRouter()
+  const setAlert = useAlert()
 
-  const [globalError, setError] = useState<TRPCErrorType | null>(null);
-  const isEditMode = useMemo(() => !!router.query.instituteId && !!router.query.instituteId.length, [router.query]);
+  const [globalError, setError] = useState<TRPCErrorType | null>(null)
+  const isEditMode = useMemo(
+    () => router.query.instituteId !== undefined && router.query.instituteId.length > 0,
+    [router.query],
+  )
 
   const {
-    institute: inistituteData,
+    institute: instituteData,
     update,
     create,
   } = useInstitute({
     onSuccess(data) {
-      const { code, name, status, account } = data;
-      code && setValue('code', code);
-      name && setValue('name', name);
-      status && setValue('status', status);
-      account && account.email && setValue('email', account.email);
+      const { code, name, status, account } = data
+      code !== null && setValue('code', code)
+      name !== null && setValue('name', name)
+      status !== null && setValue('status', status)
+      // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
+      account !== null && account.email !== null && setValue('email', account.email)
     },
     onError(e) {
-      setError(e);
+      setError(e)
 
       if (e?.data?.code === 'NOT_FOUND') {
-        router.push('/admin/institute');
+        void router.push('/admin/institute')
       }
     },
-  });
+  })
 
-  const inputFile = useRef<HTMLInputElement>(null);
-  const uploadFile = useRef<File | null>(null);
+  const inputFile = useRef<HTMLInputElement>(null)
+  const uploadFile = useRef<File | null>(null)
 
   const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageInstituteSchema>>({
     resolver: zodResolver(manageInstituteSchema),
@@ -65,49 +69,49 @@ export const ManageInstitute: React.FC<{}> = () => {
       status: 'PENDING',
     },
     shouldFocusError: true,
-  });
+  })
 
   async function createInstitute(data: z.infer<typeof manageInstituteSchema>) {
-    await create(data);
+    await create(data)
   }
 
   async function updateInstitute(data: z.infer<typeof manageInstituteSchema>) {
-    update.mutate({ ...data, instituteId: Number(router.query.instituteId) });
+    update.mutate({ ...data, instituteId: Number(router.query.instituteId) })
   }
 
-  //TODO: logo upload
+  // TODO: logo upload
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      uploadFile.current = e.target.files[0];
+    if (e.target.files != null) {
+      uploadFile.current = e.target.files[0]
     }
   }
 
   function exportSignupLink() {
-    if (!inistituteData) return '';
+    if (instituteData == null) return ''
 
-    const { origin } = location;
-    const { account } = inistituteData;
+    const { origin } = location
+    const { account } = instituteData
 
-    if (!account) return;
+    if (account == null) return
 
     const link = `${origin}/reset-password?${new URLSearchParams({
       accountId: String(account.id),
-      token: account.accountToken || '',
-    }).toString()}`;
+      token: account.accountToken ?? '',
+    }).toString()}`
 
-    copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }));
+    void copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
   }
 
   useEffect(() => {
-    if (!globalError) return;
+    if (globalError == null) return
 
     setAlert({
       message: globalError.message,
       type: 'danger',
-    });
+    })
 
-    setError(null);
-  }, [globalError]);
+    setError(null)
+  }, [globalError, setAlert])
 
   return (
     <>
@@ -115,7 +119,7 @@ export const ManageInstitute: React.FC<{}> = () => {
       <div className="text-lg font-medium leading-6 text-gray-900">
         {isEditMode ? (
           <>
-            Manage <span className="font-bold text-primary">{inistituteData?.name}</span>
+            Manage <span className="font-bold text-primary">{instituteData?.name}</span>
           </>
         ) : (
           'Create new institute'
@@ -127,14 +131,14 @@ export const ManageInstitute: React.FC<{}> = () => {
       >
         <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
         <MInput
-          disabled={inistituteData && inistituteData.status !== 'PENDING'}
+          disabled={instituteData != null && instituteData.status !== 'PENDING'}
           label="Email"
           {...register('email')}
           placeholder="Institute Email"
           error={formState.errors.email}
         />
         <MInput
-          disabled={inistituteData && !!inistituteData.status}
+          disabled={instituteData?.status !== null}
           label="Code"
           {...register('code')}
           placeholder="Institute code"
@@ -151,11 +155,13 @@ export const ManageInstitute: React.FC<{}> = () => {
                 {' '}
                 {val}{' '}
               </option>
-            );
+            )
           })}
         </select>
         <label className="label">
-          {formState.errors.status && <span className="label-text-alt"> {formState.errors.status.message} </span>}{' '}
+          {formState.errors.status != null && (
+            <span className="label-text-alt"> {formState.errors.status.message} </span>
+          )}{' '}
         </label>
 
         <label className="label">
@@ -169,7 +175,7 @@ export const ManageInstitute: React.FC<{}> = () => {
         <div className="flex justify-end space-x-2">
           <button
             type="button"
-            onClick={() => router.push('/admin/institute')}
+            onClick={async () => await router.push('/admin/institute')}
             className="mt-5 btn btn-sm btn-secondary"
           >
             Cancel{' '}
@@ -178,7 +184,7 @@ export const ManageInstitute: React.FC<{}> = () => {
           <button type="submit" className="mt-5 btn btn-sm btn-primary">
             {isEditMode ? 'Update' : 'Create'}
           </button>
-          {isEditMode && inistituteData?.status === 'PENDING' && (
+          {isEditMode && instituteData?.status === 'PENDING' && (
             <button
               type="button"
               onClick={exportSignupLink}
@@ -192,5 +198,5 @@ export const ManageInstitute: React.FC<{}> = () => {
         </div>
       </form>
     </>
-  );
-};
+  )
+}
