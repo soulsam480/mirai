@@ -1,7 +1,7 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { NextPageWithLayout } from 'pages/_app'
-import { useCourses } from 'contexts/useCourse'
+import { useCourses } from 'contexts'
 import PageLayout from 'components/globals/PageLayout'
 import { Column, MTable } from 'components/lib/MTable'
 import { useMemo } from 'react'

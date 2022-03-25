@@ -9,7 +9,7 @@ import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
 import { ManageDepartment } from 'components/department/ManageDepartment'
-import { useDepartments } from 'contexts/useDepartment'
+import { useDepartments } from 'contexts'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])

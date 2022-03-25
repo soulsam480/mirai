@@ -11,7 +11,7 @@ import { AppRouter } from 'server/routers/_app'
 import superjson from 'superjson'
 import { MAlertGroup } from 'components/lib/MAlerts'
 import { DefaultLayout } from 'components/globals/DefaultLayout'
-import { AppProviders } from 'contexts/appProviders'
+import { AppProviders } from 'contexts'
 import { MLoader } from 'components/lib/MLoader'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {

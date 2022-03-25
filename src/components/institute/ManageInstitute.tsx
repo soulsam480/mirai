@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { copyToClip } from 'utils/helpers'
 import { z } from 'zod'
 import { useAlert } from 'components/lib/store/alerts'
-import { useInstitute } from 'contexts/useInstitute'
+import { useInstitute } from 'contexts'
 import { useGlobalError } from 'utils/hooks'
 
 const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING']

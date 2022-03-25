@@ -1,6 +1,6 @@
 import React from 'react'
 import { SessionProvider as NextAuthProvider } from 'next-auth/react'
-import { CurrentAccountProvider } from 'contexts/currenctAccountProvider'
+import { CurrentAccountProvider } from 'contexts'
 
 interface Props {
   pageProps: any
