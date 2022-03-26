@@ -122,7 +122,7 @@ export const ManageInstitute: React.FC<any> = () => {
           error={formState.errors.email}
         />
         <MInput
-          disabled={instituteData?.status !== null}
+          disabled={isEditMode && instituteData?.status !== null}
           label="Code"
           {...register('code')}
           placeholder="Institute code"
