@@ -4,11 +4,10 @@ import { useState, useMemo, useEffect } from 'react'
 import { TRPCErrorType } from 'types'
 import { z } from 'zod'
 import { MInput } from 'components/lib/MInput'
-import { trpc } from 'utils/trpc'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useUser } from 'stores/user'
-import { useLoader } from 'components/lib/store/loader'
+import { useDepartment } from 'contexts'
 
 export const createDepartmentSchema = z.object({
   name: z.string().min(1, "Department name shouldn't be empty"),
@@ -16,14 +15,10 @@ export const createDepartmentSchema = z.object({
   instituteId: z.number(),
 })
 
-const _manageDepartmentSchema = createDepartmentSchema.extend({ id: z.number() })
-
 export const ManageDepartment: React.FC<any> = () => {
   const router = useRouter()
   const setAlert = useAlert()
-  const utils = trpc.useContext()
   const userData = useUser()
-  const loader = useLoader()
 
   const [globalError, setError] = useState<TRPCErrorType | null>(null)
   const isEditMode = useMemo(
@@ -31,43 +26,19 @@ export const ManageDepartment: React.FC<any> = () => {
     [router.query],
   )
 
-  trpc.useQuery(
-    [
-      'department.get',
-      {
-        departmentId: +(router.query.departmentId ?? ''),
-        // institute ID will be here 100%
-        instituteId: userData.instituteId as number,
-      },
-    ],
-    {
-      enabled: isEditMode,
-      refetchOnWindowFocus: false,
-      retry: false,
-      onSuccess(data) {
-        const { inCharge, name } = data
+  const { department, update, create } = useDepartment({
+    onSuccess(data) {
+      const { inCharge, name } = data
 
-        name !== null && setValue('name', name)
-        inCharge !== null && setValue('inCharge', inCharge)
-      },
-      onError(e) {
-        setError(e)
-
-        if (e?.data?.code === 'NOT_FOUND') {
-          void router.push('/institute/department')
-        }
-      },
+      name !== null && setValue('name', name)
+      inCharge !== null && setValue('inCharge', inCharge)
     },
-  )
+    onError(e) {
+      setError(e)
 
-  const { mutateAsync: createDepartmentMut } = trpc.useMutation(['department.create'], {
-    onError: setError,
-  })
-
-  const { mutateAsync: updateDepartmentMut } = trpc.useMutation(['department.update'], {
-    onError: setError,
-    onSuccess() {
-      void utils.invalidateQueries(['department.getAll'])
+      if (e?.data?.code === 'NOT_FOUND') {
+        void router.push('/institute/department')
+      }
     },
   })
 
@@ -81,40 +52,11 @@ export const ManageDepartment: React.FC<any> = () => {
   })
 
   async function createDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
-    try {
-      const resp = await createDepartmentMut({ ...data, instituteId: userData.instituteId as number })
-
-      setAlert({
-        message: 'Department created successfully !',
-        type: 'success',
-      })
-
-      void router.replace({
-        pathname: `/institute/department/${resp.id}`,
-      })
-    } catch (_) {}
+    await create.mutate({ ...data, instituteId: Number(userData.instituteId) })
   }
 
   async function updateDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
-    try {
-      loader.show()
-
-      await updateDepartmentMut({
-        ...data,
-        id: Number(router.query.departmentId),
-        instituteId: userData.instituteId as number,
-      })
-
-      setAlert({
-        message: 'Institute updated successfully !',
-        type: 'success',
-      })
-
-      void router.push('/institute/department')
-    } catch (_) {
-    } finally {
-      loader.hide()
-    }
+    await update.mutate({ ...data, id: Number(router.query.departmentId), instituteId: userData.instituteId as number })
   }
 
   useEffect(() => {
@@ -133,7 +75,7 @@ export const ManageDepartment: React.FC<any> = () => {
       <div className="text-lg font-medium leading-6 text-gray-900">
         {isEditMode ? (
           <>
-            Manage <span className="font-bold text-primary">{''}</span>
+            Manage <span className="font-bold text-primary">{department?.name}</span>
           </>
         ) : (
           'Create new department'
