@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "newLine": "lf",
+    "lib": ["esnext"],
+    "baseUrl": "./src",
+    "paths": {
+      "lib": ["lib"],
+      "rpc/*": ["rpc/*"],
+      "db": ["db"]
+    }
+  },
+  "include": ["src/**/*.ts"]
+}

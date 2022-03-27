@@ -1,0 +1,66 @@
+{
+  "name": "@mirai/app",
+  "version": "0.0.0",
+  "private": true,
+  "license": "GNU GPLv3",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "require": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "dx": "run-s clear dev",
+    "start": "next start",
+    "clear": "rimraf .next",
+    "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir tmp/tsc-output"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.5.0",
+    "@hookform/resolvers": "^2.8.8",
+    "@prisma/client": "*",
+    "@trpc/client": "^9.20.3",
+    "@trpc/next": "^9.20.3",
+    "@trpc/react": "^9.20.3",
+    "@trpc/server": "*",
+    "clsx": "^1.1.1",
+    "daisyui": "^2.12.0",
+    "dayjs": "^1.11.0",
+    "jotai": "^1.6.1",
+    "lodash": "^4.17.21",
+    "next": "^12.1.0",
+    "next-auth": "^4.3.1",
+    "next-compose-plugins": "^2.2.1",
+    "next-http-proxy-middleware": "^1.2.4",
+    "next-transpile-modules": "^9.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.28.1",
+    "react-query": "^3.34.16",
+    "superjson": "^1.8.1"
+  },
+  "devDependencies": {
+    "@iconify-json/la": "^1.1.1",
+    "@svgr/core": "^6.2.1",
+    "@types/jest": "^27.4.1",
+    "@types/lodash": "^4.14.180",
+    "@types/react": "^17.0.42",
+    "@types/react-dom": "^17.0.14",
+    "autoprefixer": "^10.4.4",
+    "babel-plugin-superjson-next": "^0.4.3",
+    "next-superjson": "^0.0.2",
+    "postcss": "^8.4.12",
+    "prettier-plugin-tailwindcss": "^0.1.8",
+    "sass": "^1.49.9",
+    "tailwindcss": "^3.0.23",
+    "unplugin-auto-import": "^0.6.6",
+    "unplugin-icons": "^0.14.0"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

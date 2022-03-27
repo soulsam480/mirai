@@ -1,0 +1,23 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "baseUrl": "./src",
+    "incremental": true,
+    "module": "esnext",
+    "target": "es5",
+    "paths": {
+      "pages/*": ["pages/*"],
+      "stores/*": ["stores/*"],
+      "components/*": ["components/*"],
+      "server/*": ["server/*"],
+      "utils/*": ["utils/*"],
+      "types": ["types"],
+      "lib/*": ["components/lib/*"],
+      "contexts": ["contexts"]
+    },
+    "types": ["unplugin-icons/types/react"]
+  },
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
+}
