@@ -93,7 +93,7 @@ export const ManageCourse: React.FC<Props> = () => {
   function submitHandler(data: Omit<z.infer<typeof createCourseSchema>, 'instituteId'>) {
     isEditMode
       ? update.mutate({
-          ...omit(data, ['departmentId', 'instituteId']),
+          ...omit(data, ['instituteId']),
           id: +(router.query.courseId as string),
         })
       : create.mutate({
@@ -161,6 +161,7 @@ export const ManageCourse: React.FC<Props> = () => {
                 placeholder="Course duration"
                 error={formState.errors.programDuration}
                 type="number"
+                min={0}
               />
 
               <MSelect

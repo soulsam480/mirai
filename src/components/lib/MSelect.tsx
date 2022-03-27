@@ -22,9 +22,10 @@ export interface MSelectProps {
   options: Option[]
   error?: FieldError
   optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
+  noDataLabel?: React.ReactNode
 }
 
-export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], optionSlot, error }) => {
+export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], optionSlot, error, noDataLabel }) => {
   const { control } = useFormContext()
   const {
     field: { onChange, value },
@@ -59,30 +60,39 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
 
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
             <Listbox.Options className="m-select__options">
-              {/* //TODO: no options label */}
-              {options.map((option) => (
+              {options.length > 0 ? (
+                options.map((option) => (
+                  <Listbox.Option
+                    key={option.label}
+                    value={option}
+                    className={({ active }) =>
+                      clsx(['px-3 py-[6px] text-left rounded-sm cursor-pointer', active && 'bg-amber-200'])
+                    }
+                  >
+                    {(slotCtx) =>
+                      optionSlot?.({ option, slotCtx: { ...slotCtx, selected: value.value === option.value } }) ?? (
+                        <span
+                          className={
+                            (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
+                              ? 'text-amber-700'
+                              : ''
+                          }
+                        >
+                          {option.label}
+                        </span>
+                      )
+                    }
+                  </Listbox.Option>
+                ))
+              ) : (
                 <Listbox.Option
-                  key={option.label}
-                  value={option}
-                  className={({ active }) =>
-                    clsx(['px-3 py-[6px] text-left rounded-sm cursor-pointer', active && 'bg-amber-200'])
-                  }
+                  value={''}
+                  className="px-3 flex space-x-2 items-center font-medium py-[6px] text-left rounded-sm cursor-not-allowed"
+                  disabled
                 >
-                  {(slotCtx) =>
-                    optionSlot?.({ option, slotCtx: { ...slotCtx, selected: value.value === option.value } }) ?? (
-                      <span
-                        className={
-                          (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
-                            ? 'text-amber-700'
-                            : ''
-                        }
-                      >
-                        {option.label}
-                      </span>
-                    )
-                  }
+                  <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
                 </Listbox.Option>
-              ))}
+              )}
             </Listbox.Options>
           </Transition>
         </div>

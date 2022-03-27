@@ -63,7 +63,7 @@ export const MAlertGroup: React.FC<AlertGroupProps> = () => {
 
   return mounted
     ? createPortal(
-        <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 list-group z-50">
+        <div className="fixed top-0 left-1/2 transform -translate-x-1/2 list-group z-50">
           <Transition is="div" className="flex flex-col justify-center items-center" show={!(alerts.length === 0)}>
             {alerts.map((alert) => (
               <Transition.Child

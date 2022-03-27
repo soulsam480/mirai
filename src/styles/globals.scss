@@ -19,7 +19,7 @@ body {
 }
 
 .dialog-content {
-  @apply inline-block p-6 my-8 overflow-hidden align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
+  @apply inline-block p-6 my-8  align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
   @apply w-[90%] sm:w-auto;
 }
 
@@ -41,7 +41,7 @@ body {
 
   &--enter {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(-30px);
   }
 
   &--leave {
@@ -56,7 +56,7 @@ body {
 
   &--leave-active {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(-30px);
   }
 }
 

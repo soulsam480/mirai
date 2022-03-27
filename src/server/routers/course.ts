@@ -24,7 +24,7 @@ export const courseRouter = createRouter()
     },
   })
   .mutation('update', {
-    input: createCourseSchema.partial().extend({ id: z.number() }).omit({ departmentId: true, instituteId: true }),
+    input: createCourseSchema.partial().extend({ id: z.number() }).omit({ instituteId: true }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input
 
