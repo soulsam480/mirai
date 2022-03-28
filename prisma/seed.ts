@@ -5,10 +5,13 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { hashPass } from '../src/server/lib/auth'
+import { hashPass } from '@mirai/api'
 const prisma = new PrismaClient()
 
 async function main() {
+  const password = await hashPass('sambit')
+  console.log('seed-password', password)
+
   await prisma.account.upsert({
     where: {
       id: 1,
