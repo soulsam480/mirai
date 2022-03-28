@@ -9,11 +9,15 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "yarn prisma migrate dev --schema=../prisma/schema.prisma",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "ts-node-dev --respawn --transpile-only --rs --watch src ./src/app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --rs --pretty --watch src ./src/app.ts",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
-    "build-1": "prisma migrate deploy",
-    "postinstall": "prisma generate --schema=../prisma/schema.prisma"
+    "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
+    "build-2": "rimraf dist && tsup",
+    "copy-prisma": "node copy.js",
+    "build": "run-s build-* copy-prisma",
+    "postinstall": "prisma generate --schema=../prisma/schema.prisma",
+    "start": "node dist/index.js"
   },
   "prisma": {
     "seed": "yarn ts-node ../prisma/seed.ts"
@@ -36,7 +40,9 @@
     "tsconfig-paths": "^3.14.1"
   },
   "devDependencies": {
+    "@mirai/app": "workspace:*",
     "@types/bcrypt": "^5.0.0",
-    "ts-node-dev": "^1.1.8"
+    "ts-node-dev": "^1.1.8",
+    "tsup": "^5.12.1"
   }
 }

@@ -4,7 +4,10 @@
     "target": "es2018",
     "module": "commonjs",
     "newLine": "lf",
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "outDir": "dist",
+    "sourceMap": true,
+    "baseUrl": "."
   },
-  "include": ["**/*.ts"]
+  "include": ["src/**/*.ts"]
 }

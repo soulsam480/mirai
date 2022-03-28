@@ -47,11 +47,11 @@ export const ManageDepartment: React.FC<any> = () => {
   })
 
   async function createDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
-    await create.mutate({ ...data, instituteId: Number(userData.instituteId) })
+    create.mutate({ ...data, instituteId: Number(userData.instituteId) })
   }
 
   async function updateDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
-    await update.mutate({ ...data, id: Number(router.query.departmentId), instituteId: userData.instituteId as number })
+    update.mutate({ ...data, id: Number(router.query.departmentId), instituteId: userData.instituteId as number })
   }
 
   useEffect(() => {
@@ -67,19 +67,20 @@ export const ManageDepartment: React.FC<any> = () => {
 
   return (
     <>
-      <div className="text-lg font-medium leading-6 text-gray-900">
-        {isEditMode ? (
-          <>
-            Manage <span className="font-bold text-primary">{department?.name}</span>
-          </>
-        ) : (
-          'Create new department'
-        )}
-      </div>
       <form
-        className="flex w-full form-control sm:w-80"
+        className="flex form-control sm:w-80 sm:max-w-80"
         onSubmit={handleSubmit(isEditMode ? updateDepartment : createDepartment)}
       >
+        <div className="text-lg font-medium leading-6 text-gray-900">
+          {isEditMode ? (
+            <>
+              Manage <span className="font-bold text-primary">{department?.name}</span>
+            </>
+          ) : (
+            'Create new department'
+          )}
+        </div>
+
         <MInput label="Name" {...register('name')} placeholder="Department name" error={formState.errors.name} />
 
         <MInput
