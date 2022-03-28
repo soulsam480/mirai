@@ -1,9 +1,9 @@
-import { manageInstituteSchema } from 'components/institute/ManageInstitute'
 import { useAlert } from 'components/lib/store/alerts'
 import { loaderAtom } from 'components/lib/store/loader'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
+import { manageInstituteSchema } from 'schemas'
 import { loggedInAtom, useUser } from 'stores/user'
 import { QueryOptions } from 'types'
 import { getUserHome } from 'utils/helpers'
@@ -69,7 +69,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
         type: 'success',
       })
 
-      void router.push(`/admin/institute/${instituteId}`)
+      void router.push(`/admin/institute/${instituteId as number}`)
     },
   })
 

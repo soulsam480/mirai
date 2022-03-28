@@ -2,8 +2,18 @@ import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { createDepartmentSchema } from '@mirai/app'
 import { z } from 'zod'
+import { isInstituteRole } from 'lib'
 
 export const departmentRouter = createRouter()
+  .middleware(async ({ ctx, next }) => {
+    if (ctx.user == null || isInstituteRole(ctx.user.user.role).is === false)
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+    return await next({
+      // might seem dumb, but it's done like this to keep TS happy
+      ctx: { ...ctx, user: ctx.user },
+    })
+  })
   .mutation('create', {
     input: createDepartmentSchema,
     async resolve({ ctx, input }) {

@@ -39,3 +39,11 @@ export const createDepartmentSchema = z.object({
   inCharge: z.string().optional(),
   instituteId: z.number(),
 })
+
+export const createBatchSchema = z.object({
+  name: z.string(),
+  instituteId: z.number(),
+  duration: z.string(),
+  durationType: z.enum(['YEAR', 'MONTH', 'WEEK', 'DAY']),
+  status: z.enum(['ACTIVE', 'INACTIVE']),
+})

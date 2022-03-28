@@ -13,5 +13,6 @@
     "jsx": "preserve",
     "useUnknownInCatchVariables": false
   },
+  // "include": ["**/**/*.{ts,js,tsx,jsx,d.ts}"],
   "exclude": ["node_modules"]
 }

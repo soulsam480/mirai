@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "description": "University placement platform",
   "scripts": {
-    "lint": "eslint src --no-cache",
+    "lint": "eslint **/{src,prisma}/**/*.{js,ts,tsx} --no-cache",
     "lint-fix": "yarn lint --fix",
-    "fmt": "prettier --write {src,prisma}/**/*.{js,ts,tsx}",
+    "fmt": "prettier --write **/{src,prisma}/**/*.{js,ts,tsx}",
     "dev:app": "pnpm run --filter @mirai/app dx",
     "dev:api": "pnpm run --filter @mirai/api dx",
     "dev": "concurrently --kill-others-on-fail \"pnpm run dev:app\"  \"pnpm run dev:api\"",
-    "db-nuke": "pnpm run --filter @mirai/api db-nuke"
+    "db-nuke": "pnpm run --filter @mirai/api db-nuke",
+    "typecheck": "tsc --noEmit --skipLibCheck --pretty --p tsconfig.json"
   },
   "dependencies": {
     "zod": "^3.14.2",

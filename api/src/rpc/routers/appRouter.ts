@@ -6,7 +6,7 @@ import { createRouter } from 'rpc/createRouter'
 import { accountRouter } from './accounts'
 import { authRouter } from './auth'
 import { courseRouter } from './course'
-import { departmentRouter } from './departments'
+import { departmentRouter } from './department'
 import { instituteRouter } from './institute'
 
 /**
