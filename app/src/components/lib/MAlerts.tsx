@@ -61,7 +61,7 @@ export const MAlertGroup: React.FC<AlertGroupProps> = () => {
   const alerts = useAtomValue(alertsSubAtom)
   const mounted = useMounted()
 
-  return mounted
+  return mounted === true
     ? createPortal(
         <div className="fixed top-0 z-50 transform -translate-x-1/2 left-1/2 list-group">
           <Transition is="div" className="flex flex-col items-center justify-center" show={!(alerts.length === 0)}>

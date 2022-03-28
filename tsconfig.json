@@ -13,5 +13,6 @@
     "jsx": "preserve",
     "useUnknownInCatchVariables": false
   },
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"],
+  "exclude": ["node_modules", ".next", "out"]
 }

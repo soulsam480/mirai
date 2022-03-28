@@ -67,7 +67,7 @@ const ProgramListing: NextPageWithLayout = () => {
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
         format: ({ id }) => (
-          <MLink href={`/institute/course?courseId=${id}`} as={`/institute/course/${id}`}>
+          <MLink href={`/institute/course?courseId=${id as number}`} as={`/institute/course/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
           </MLink>
         ),

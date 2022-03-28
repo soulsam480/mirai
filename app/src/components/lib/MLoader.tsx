@@ -11,7 +11,7 @@ export const MLoader: React.FC<Props> = () => {
 
   return createPortal(
     <>
-      {isLoader && (
+      {isLoader === true && (
         <div id="loader-root" className="absolute z-[10000] inset-0 bg-amber-50 flex items-center justify-center">
           <MSpinner size="100px" thickness={4} />
         </div>

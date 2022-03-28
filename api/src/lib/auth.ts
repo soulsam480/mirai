@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
-import { WithExcludeClient } from 'db'
+import { WithExcludeClient } from '../db'
 // don't make it an alias, the seed command will fail
 import { getEnv, isInstituteRole } from '../lib/helpers'
 

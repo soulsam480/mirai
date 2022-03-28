@@ -6,9 +6,9 @@ import { join } from 'path'
 import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload'
 import fastify, { FastifyPluginAsync } from 'fastify'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
-import { appRouter } from 'rpc/routers/appRouter'
+import { appRouter } from './rpc/routers/appRouter'
 import fp from 'fastify-plugin'
-import { createContext } from 'rpc/context'
+import { createContext } from './rpc/context'
 
 dotenv.config({ path: join(__dirname, '../.env') })
 

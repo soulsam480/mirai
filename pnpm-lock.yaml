@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@mirai/api': workspace:*
+      '@mirai/app': workspace:*
       '@prisma/client': ^3.11.0
       '@trpc/client': ^9.20.3
       '@types/node': ^17.0.23
@@ -32,6 +33,7 @@ importers:
       zod: ^3.14.2
     dependencies:
       '@mirai/api': link:api
+      '@mirai/app': link:app
       '@prisma/client': 3.11.0
       '@trpc/client': 9.20.3
       cross-env: 7.0.3
@@ -61,7 +63,6 @@ importers:
 
   api:
     specifiers:
-      '@mirai/app': workspace:*
       '@trpc/server': ^9.20.3
       '@types/bcrypt': ^5.0.0
       bcrypt: ^5.0.1
@@ -77,7 +78,6 @@ importers:
       ts-node-dev: ^1.1.8
       tsconfig-paths: ^3.14.1
     dependencies:
-      '@mirai/app': link:../app
       '@trpc/server': 9.20.3
       bcrypt: 5.0.1
       dotenv: 16.0.0

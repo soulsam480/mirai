@@ -2,20 +2,14 @@
   "name": "@mirai/api",
   "version": "0.0.0",
   "description": "",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
-    }
-  },
+  "main": "src/index.ts",
+  "module": "src/index.ts",
   "scripts": {
     "db-up": "docker-compose up -d",
     "db-seed": "prisma db seed",
     "db-migrate-dev": "yarn prisma migrate dev --schema=../prisma/schema.prisma",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "ts-node-dev --respawn --transpile-only --clear --rs --watch src ./src/app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --rs --watch src ./src/app.ts",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "build-1": "prisma migrate deploy",
@@ -28,7 +22,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mirai/app": "workspace:*",
     "@trpc/server": "^9.20.3",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",

@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "description": "University placement platform",
   "scripts": {
-    "lint": "eslint src --no-cache",
+    "lint": "eslint **/{src,prisma}/**/*.{js,ts,tsx}",
     "lint-fix": "yarn lint --fix",
-    "fmt": "prettier --write {src,prisma}/**/*.{js,ts,tsx}",
+    "fmt": "prettier --write **/{src,prisma}/**/*.{js,ts,tsx}",
     "dev:app": "pnpm run --filter @mirai/app dx",
     "dev:api": "pnpm run --filter @mirai/api dx",
     "dev": "concurrently --kill-others-on-fail \"pnpm run dev:app\"  \"pnpm run dev:api\"",
@@ -17,7 +17,8 @@
     "rimraf": "^3.0.2",
     "@trpc/client": "^9.20.3",
     "@prisma/client": "^3.11.0",
-    "@mirai/api": "workspace:*"
+    "@mirai/api": "workspace:*",
+    "@mirai/app": "workspace:*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.16.0",

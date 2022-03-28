@@ -63,7 +63,7 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn && isQuery,
+      enabled: isLoggedIn === true && isQuery,
     },
   )
 
@@ -92,7 +92,7 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
       void router.push('/institute/department')
     },
   })
-  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
   useEffect(() => setLoader(loading), [loading, setLoader])
 
   return {

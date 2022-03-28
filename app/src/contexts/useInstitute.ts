@@ -1,4 +1,4 @@
-import { manageInstituteSchema } from 'components/institute/ManageInstitute'
+import { manageInstituteSchema } from 'schemas'
 import { useAlert } from 'components/lib/store/alerts'
 import { loaderAtom } from 'components/lib/store/loader'
 import { useAtomValue, useSetAtom } from 'jotai'
@@ -56,20 +56,20 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
       }
     },
     ...opts,
-    enabled: isLoggedIn && isQuery,
+    enabled: isLoggedIn === true && isQuery,
   })
 
   const signUp = trpc.useMutation(['auth.sign_up'], {
     onError: opts?.onError,
     onSuccess({ instituteId }) {
-      if (instituteId == null) return
+      if (instituteId === null) return
 
       setAlert({
         message: 'Institute created successfully !',
         type: 'success',
       })
 
-      void router.push(`/admin/institute/${instituteId}`)
+      void router.push(`/admin/institute/${instituteId as number}`)
     },
   })
 
@@ -97,7 +97,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
   })
 
   const loading = useMemo(
-    () => isLoading || update.isLoading || signUp.isLoading || createInstitute.isLoading,
+    () => isLoading === true || update.isLoading || signUp.isLoading || createInstitute.isLoading,
     [isLoading, update.isLoading, signUp.isLoading, createInstitute.isLoading],
   )
 

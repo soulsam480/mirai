@@ -45,7 +45,10 @@ const Departments: NextPageWithLayout = () => {
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
         format: ({ id }) => (
-          <MLink href={`/institute/department?departmentId=${id}`} as={`/institute/department/${id}`}>
+          <MLink
+            href={`/institute/department?departmentId=${id as number}`}
+            as={`/institute/department/${id as number}`}
+          >
             <IconLaPenSquare className="text-lg" />
           </MLink>
         ),

@@ -67,7 +67,7 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
         format: ({ id }) => (
-          <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
+          <MLink href={`/admin/institute?instituteId=${id as number}`} as={`/admin/institute/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
           </MLink>
         ),

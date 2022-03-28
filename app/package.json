@@ -3,21 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "license": "GNU GPLv3",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
-    }
-  },
+  "main": "src/index.ts",
+  "module": "src/index.ts",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "dx": "run-s clear dev",
     "start": "next start",
     "clear": "rimraf .next",
-    "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir tmp/tsc-output"
+    "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir ../temp/tsc-output"
   },
   "dependencies": {
     "@headlessui/react": "^1.5.0",

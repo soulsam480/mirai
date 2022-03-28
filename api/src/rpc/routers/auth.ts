@@ -2,8 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { nanoid } from 'nanoid'
 import { LoginSchema, signupSchema } from '@mirai/app'
 import { z } from 'zod'
-import { createRouter } from 'rpc/createRouter'
-import { comparePassword, hashPass, prismaQueryHelper } from 'lib'
+import { createRouter } from '../createRouter'
+import { comparePassword, hashPass, prismaQueryHelper } from '../../lib'
 
 export const accountRole = ['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']
 
@@ -59,7 +59,7 @@ export const authRouter = createRouter()
         select: { accountToken: true, id: true, instituteId: true },
       })
 
-      if (account == null || account.instituteId === undefined)
+      if (account === null || account.instituteId === undefined)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: "Account or Institute doesn't exist",
@@ -92,7 +92,7 @@ export const authRouter = createRouter()
         where: { email },
       })
 
-      if (account == null)
+      if (account === null)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Account doeesn"t exist with the provided email',
@@ -106,7 +106,7 @@ export const authRouter = createRouter()
 
       const isSamePassword = await comparePassword(password, account.password)
 
-      if (isSamePassword === false)
+      if (isSamePassword)
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Invalid email or password',
@@ -119,7 +119,7 @@ export const authRouter = createRouter()
     },
   })
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user == null)
+    if (ctx.user === null)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })
@@ -134,7 +134,7 @@ export const authRouter = createRouter()
     async resolve({ ctx }) {
       const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id)
 
-      if (account == null)
+      if (account === null)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'User account data not found',
@@ -153,7 +153,7 @@ export const authRouter = createRouter()
         select: { id: true, name: true },
       })
 
-      if (accountData == null)
+      if (accountData === null)
         throw new TRPCError({
           message: 'Institute not found !',
           code: 'NOT_FOUND',

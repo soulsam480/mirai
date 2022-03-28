@@ -37,11 +37,11 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
   const optionFromValue = useMemo(() => {
     if (value === undefined) return 'Select'
 
-    const selectedOption = options.find((v) => v.value === (isSafeVal(value) ? value : value.value ?? ''))
+    const selectedOption = options.find((v) => v.value === (isSafeVal(value) === true ? value : value.value ?? ''))
 
     if (selectedOption !== undefined) return selectedOption
 
-    if (isSafeVal(value)) return value
+    if (isSafeVal(value) === true) return value
 
     return 'Unknown value'
   }, [value, options])
@@ -55,7 +55,7 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
       <Listbox value={value} onChange={(option) => onChange(option.value)}>
         <div className="relative flex">
           <Listbox.Button className="m-select__btn">
-            {isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.label}
+            {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
           </Listbox.Button>
 
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
@@ -73,7 +73,8 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
                       optionSlot?.({ option, slotCtx: { ...slotCtx, selected: value.value === option.value } }) ?? (
                         <span
                           className={
-                            (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
+                            (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) ===
+                            option.value
                               ? 'text-amber-700'
                               : ''
                           }
@@ -97,7 +98,9 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
           </Transition>
         </div>
       </Listbox>
-      <label className="label">{error != null && <span className="label-text-alt"> {error.message} </span>} </label>
+      <label className="label">
+        {error !== undefined && <span className="label-text-alt"> {error.message} </span>}{' '}
+      </label>
     </div>
   )
 }
