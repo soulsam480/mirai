@@ -9,15 +9,15 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "yarn prisma migrate dev --schema=../prisma/schema.prisma",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "ts-node-dev --respawn --transpile-only --rs --pretty --watch src ./src/app.ts",
+    "dev": "vite",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
-    "build-2": "rimraf dist && tsup",
+    "build-2": "VITE_ENV=prod vite build",
     "copy-prisma": "node copy.js",
     "build": "run-s build-* copy-prisma",
     "postinstall": "prisma generate --schema=../prisma/schema.prisma",
-    "start": "node dist/index.js"
+    "start": "node dist/app.js"
   },
   "prisma": {
     "seed": "yarn ts-node ../prisma/seed.ts"
@@ -29,6 +29,7 @@
     "@trpc/server": "^9.20.3",
     "bcrypt": "^5.0.1",
     "dotenv": "^16.0.0",
+    "events": "^3.3.0",
     "fastify": "^3.0.0",
     "fastify-autoload": "^3.10.0",
     "fastify-cli": "^2.15.0",
@@ -37,12 +38,13 @@
     "prisma": "^3.11.0",
     "prisma-exclude": "^1.0.1",
     "superjson": "^1.8.1",
-    "tsconfig-paths": "^3.14.1"
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@mirai/app": "workspace:*",
+    "@swc/core": "^1.2.161",
     "@types/bcrypt": "^5.0.0",
-    "ts-node-dev": "^1.1.8",
-    "tsup": "^5.12.1"
+    "vite": "^2.8.6",
+    "vite-plugin-node": "^0.0.19"
   }
 }

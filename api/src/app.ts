@@ -1,41 +1,14 @@
-/* eslint-disable import/first */
-require('tsconfig-paths/register')
-
 import dotenv from 'dotenv'
-import { join } from 'path'
-import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload'
-import fastify, { FastifyPluginAsync } from 'fastify'
+import { join, dirname } from 'path'
+import fastify from 'fastify'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './rpc/routers/appRouter'
 import fp from 'fastify-plugin'
 import { createContext } from './rpc/context'
+import { fileURLToPath } from 'url'
 
-dotenv.config({ path: join(__dirname, '../.env') })
-
-export type AppOptions = {
-  // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>
-
-const app: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void> => {
-  // Place here your custom code!
-
-  // Do not touch the following lines
-
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
-    options: opts,
-  })
-
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  // void fastify.register(AutoLoad, {
-  //   dir: join(__dirname, 'routes'),
-  //   options: opts,
-  // })
-}
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: join(_dirname, '../.env') })
 
 export interface ServerOptions {
   dev?: boolean
@@ -45,7 +18,7 @@ export interface ServerOptions {
 
 export function createServer(opts: ServerOptions) {
   const dev = opts.dev ?? true
-  const port = opts.port ?? 3000
+  const port = opts.port ?? 4002
   const prefix = opts.prefix ?? '/trpc'
   const server = fastify({ logger: dev })
 
@@ -54,13 +27,10 @@ export function createServer(opts: ServerOptions) {
     trpcOptions: { router: appRouter, createContext },
   })
 
-  void app(server, {})
-
   server.get('/', async () => {
     return { hello: 'world' }
   })
 
-  const stop = async () => await server.close()
   const start = async () => {
     try {
       await server.listen(port)
@@ -71,11 +41,11 @@ export function createServer(opts: ServerOptions) {
     }
   }
 
-  return { server, start, stop }
+  if (import.meta.env.VITE_ENV === 'prod') {
+    void start()
+  }
+
+  return server
 }
 
-const { start } = createServer({
-  port: 4002,
-})
-
-void start()
+export const viteNodeApp = createServer({})
