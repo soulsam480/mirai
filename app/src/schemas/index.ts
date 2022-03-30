@@ -41,7 +41,7 @@ export const createDepartmentSchema = z.object({
 })
 
 export const createBatchSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1, "Department name shouldn't be empty"),
   instituteId: z.number(),
   duration: z.string(),
   durationType: z.enum(['YEAR', 'MONTH', 'WEEK', 'DAY']),

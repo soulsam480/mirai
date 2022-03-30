@@ -7,6 +7,7 @@ import { loggedInAtom, useUser } from 'stores/user'
 import { trpc } from 'utils/trpc'
 import { loaderAtom } from 'components/lib/store/loader'
 import { useStrictQueryCheck } from 'utils/hooks'
+import { QueryOptions } from 'types'
 
 export function useBatches() {
   const userData = useUser()

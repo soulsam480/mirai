@@ -1,13 +1,12 @@
 import { TRPCError } from '@trpc/server'
 import { createBatchSchema } from '@mirai/app'
-import { isInstituteRole } from 'lib'
-import { createRouter } from 'rpc/createRouter'
+import { isInstituteRole } from '../../lib'
+import { createRouter } from '../createRouter'
 import { z } from 'zod'
 
 export const batchRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user == null || isInstituteRole(ctx.user.user.role).is === false)
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (ctx.user == null || !isInstituteRole(ctx.user.user.role).is) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     const newCtx = await next({
       // might seem dumb, but it's done like this to keep TS happy

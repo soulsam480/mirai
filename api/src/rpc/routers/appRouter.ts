@@ -1,3 +1,4 @@
+import { batchRouter } from './batch'
 /**
  * This file contains the root router of your tRPC-backend
  */
@@ -31,5 +32,6 @@ export const appRouter = createRouter()
   .merge('institute.', instituteRouter)
   .merge('department.', departmentRouter)
   .merge('course.', courseRouter)
+  .merge('batch.', batchRouter)
 
 export type AppRouter = typeof appRouter

@@ -10,7 +10,7 @@
     "dev": "next dev",
     "dx": "run-s clear dev",
     "start": "next start",
-    "clear": "rimraf .next",
+    "clear": "rimraf dist",
     "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir ../temp/tsc-output"
   },
   "dependencies": {
