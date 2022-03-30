@@ -1,4 +1,4 @@
-import { Account } from '@prisma/client'
+import type { Account } from '@prisma/client'
 
 declare module 'next-auth' {
   /**

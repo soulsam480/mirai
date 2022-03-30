@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import type { Role } from '@prisma/client'
 import { MLinkProps } from 'components/lib/MLink'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {

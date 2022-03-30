@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import type { Role } from '@prisma/client'
 import { GetServerSideProps } from 'next'
 import { getSession } from 'next-auth/react'
 import { getUserHome } from 'utils/helpers'
