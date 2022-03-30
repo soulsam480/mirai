@@ -3,11 +3,8 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "newLine": "lf",
-    "lib": ["esnext"],
-    "outDir": "dist",
-    "sourceMap": true,
-    "baseUrl": "."
+    "lib": ["esnext"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

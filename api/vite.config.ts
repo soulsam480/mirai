@@ -9,6 +9,9 @@ export default defineConfig({
       tsCompiler: 'esbuild',
     }),
   ],
+  build: {
+    minify: 'terser',
+  },
   server: {
     port: 4002,
   },

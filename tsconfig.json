@@ -14,5 +14,5 @@
     "useUnknownInCatchVariables": false
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"],
-  "exclude": ["node_modules", ".next", "out"]
+  "exclude": ["**/node_modules", "**/.next", "out", "**/dist"]
 }

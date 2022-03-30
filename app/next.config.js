@@ -38,4 +38,5 @@ module.exports = withPlugins([withSuperjson, withTM], {
 
     return config
   },
+  distDir: 'dist',
 })
