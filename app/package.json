@@ -21,6 +21,7 @@
     "@trpc/next": "^9.20.3",
     "@trpc/react": "^9.20.3",
     "@trpc/server": "*",
+    "axios": "^0.26.1",
     "clsx": "^1.1.1",
     "daisyui": "^2.13.4",
     "dayjs": "^1.11.0",

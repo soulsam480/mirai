@@ -71,6 +71,7 @@ importers:
       dotenv: ^16.0.0
       events: ^3.3.0
       fastify: ^3.0.0
+      fastify-autoload: ^3.11.0
       fastify-cli: ^2.15.0
       fastify-plugin: ^3.0.0
       fastify-sensible: ^3.1.2
@@ -86,6 +87,7 @@ importers:
       dotenv: 16.0.0
       events: 3.3.0
       fastify: 3.27.4
+      fastify-autoload: 3.11.0
       fastify-cli: 2.15.0
       fastify-plugin: 3.0.1
       fastify-sensible: 3.1.2
@@ -116,6 +118,7 @@ importers:
       '@types/react': ^17.0.43
       '@types/react-dom': ^17.0.14
       autoprefixer: ^10.4.4
+      axios: ^0.26.1
       babel-plugin-superjson-next: ^0.4.3
       clsx: ^1.1.1
       daisyui: ^2.13.4
@@ -147,6 +150,7 @@ importers:
       '@trpc/next': 9.20.3_803b432a391c9da6241ffc0d378a3341
       '@trpc/react': 9.20.3_fe00f1de0c8137b8d6f96cea05d48e2b
       '@trpc/server': 9.20.3
+      axios: 0.26.1
       clsx: 1.1.1
       daisyui: 2.13.4_bdaceb00f796c0c549cd3844d4c4fef2
       dayjs: 1.11.0
@@ -1621,6 +1625,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.14.9
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /axobject-query/2.2.0:
     resolution: {integrity: sha512-Td525n+iPOOyUQIeBfcASuG6uJsDOITl7Mds5gFyerkWiX7qhUTdYUBlSgNMyVqtSJqwpt1kXGLdUt6SykLMRA==}
     dev: true
@@ -3034,6 +3046,13 @@ packages:
 
   /fast-safe-stringify/2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+    dev: false
+
+  /fastify-autoload/3.11.0:
+    resolution: {integrity: sha512-vxinYqk5hc1drINce1/c5kRHWMH4Rj8GzR2Ka40yg8qCasqyRTyt4lXl1WvgR4WDrOTtkr1d6R/Sd4s3k6zy9w==}
+    dependencies:
+      pkg-up: 3.1.0
+      semver: 7.3.5
     dev: false
 
   /fastify-cli/2.15.0:

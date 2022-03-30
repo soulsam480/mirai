@@ -1,4 +1,4 @@
-import { Institute } from '@prisma/client'
+import type { Institute } from '@prisma/client'
 import clsx from 'clsx'
 import { AppLayout } from 'components/globals/AppLayout'
 import PageLayout from 'components/globals/PageLayout'

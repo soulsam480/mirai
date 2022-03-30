@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { comparePassword, miraiClient } from '@mirai/api'
+import { authorizeUser } from 'api'
+import { AxiosError } from 'axios'
 
 const secret = process.env.ACCESS_TOKEN_SECRET
 
@@ -43,22 +44,16 @@ export default NextAuth({
         if (credentials === undefined || credentials.email.length === 0 || credentials?.password.length === 0)
           throw new Error('Email or password is missing')
 
-        const user = await miraiClient.account.findFirst({
-          where: { email: credentials?.email },
-          select: { password: true, role: true, id: true },
-        })
+        const { email, password } = credentials
 
-        if (user == null || user.password === null || user.password?.length === 0)
-          throw new Error('No account was found with the email')
+        try {
+          const { data } = await authorizeUser({ email, password })
 
-        const isSamePassword = await comparePassword(credentials.password, user.password)
+          return data
+        } catch (error) {
+          const { response } = error as AxiosError
 
-        if (!isSamePassword) throw new Error('Email or password is incorrect !')
-
-        return {
-          email: credentials.email,
-          role: user.role,
-          id: user.id,
+          throw new Error(response?.data ?? 'Unable to authorize user')
         }
       },
     }),
