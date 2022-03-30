@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { createRouter } from 'rpc/createRouter'
+import { createRouter } from '../createRouter'
 import { z } from 'zod'
 
 export const instituteRouter = createRouter()

@@ -19,7 +19,7 @@ export const NavBar: React.FC<Props> = () => {
           </Link>
         </div>
         <div className="flex-none space-x-2">
-          {!isLoggedIn ? (
+          {isLoggedIn === false ? (
             <>
               <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
               <Link href="/login">

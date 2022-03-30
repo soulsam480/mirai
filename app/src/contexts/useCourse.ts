@@ -63,7 +63,7 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn && isQuery,
+      enabled: isLoggedIn === true && isQuery,
     },
   )
 
@@ -93,7 +93,7 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     },
   })
 
-  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
 
   useEffect(() => setLoader(loading), [loading, setLoader])
 
@@ -101,6 +101,6 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     course,
     create,
     update,
-    isLoading: isLoading || update.isLoading,
+    isLoading: isLoading === true || update.isLoading,
   }
 }

@@ -1,12 +1,12 @@
 import { TRPCError } from '@trpc/server'
 // import { createStudentSchema } from 'pages/admin/student/manage/[[...id]]';
-import { createRouter } from 'rpc/createRouter'
+import { createRouter } from '../createRouter'
 import { z } from 'zod'
 import { createInstituteSchema } from '@mirai/app'
 
 export const accountRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user == null || ctx.user.user.role !== 'ADMIN')
+    if (ctx.user === null || ctx.user.user.role !== 'ADMIN')
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })

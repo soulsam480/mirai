@@ -2,7 +2,7 @@
  * This file contains the root router of your tRPC-backend
  */
 import superjson from 'superjson'
-import { createRouter } from 'rpc/createRouter'
+import { createRouter } from '../createRouter'
 import { accountRouter } from './accounts'
 import { authRouter } from './auth'
 import { courseRouter } from './course'

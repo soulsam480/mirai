@@ -1,81 +1,47 @@
-/* eslint-disable import/first */
-require('tsconfig-paths/register')
-
 import dotenv from 'dotenv'
-import { join } from 'path'
-import AutoLoad, { AutoloadPluginOptions } from 'fastify-autoload'
-import fastify, { FastifyPluginAsync } from 'fastify'
-import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
-import { appRouter } from 'rpc/routers/appRouter'
+import { join, dirname } from 'path'
+import fastify from 'fastify'
 import fp from 'fastify-plugin'
-import { createContext } from 'rpc/context'
+import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 
-dotenv.config({ path: join(__dirname, '../.env') })
+import { appRouter } from './rpc/routers/appRouter'
+import { createContext } from './rpc/context'
+import { fileURLToPath } from 'url'
+import { getEnv } from './lib'
 
-export type AppOptions = {
-  // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>
+const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
+dotenv.config({ path: join(_dirname, '../.env') })
 
-const app: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void> => {
-  // Place here your custom code!
-
-  // Do not touch the following lines
-
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  void fastify.register(AutoLoad, {
-    dir: join(__dirname, 'plugins'),
-    options: opts,
-  })
-
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  // void fastify.register(AutoLoad, {
-  //   dir: join(__dirname, 'routes'),
-  //   options: opts,
-  // })
-}
-
-export interface ServerOptions {
-  dev?: boolean
-  port?: number
-  prefix?: string
-}
-
-export function createServer(opts: ServerOptions) {
-  const dev = opts.dev ?? true
-  const port = opts.port ?? 3000
-  const prefix = opts.prefix ?? '/trpc'
+export function createServer() {
+  const dev = getEnv('NODE_ENV') !== 'production' ?? true
+  const port = getEnv('PORT') !== undefined ? Number(getEnv('PORT')) : 4002
   const server = fastify({ logger: dev })
 
   void server.register(fp(fastifyTRPCPlugin), {
-    prefix,
+    prefix: '/trpc',
     trpcOptions: { router: appRouter, createContext },
   })
-
-  void app(server, {})
 
   server.get('/', async () => {
     return { hello: 'world' }
   })
 
-  const stop = async () => await server.close()
   const start = async () => {
     try {
       await server.listen(port)
-      console.log('listening on port', port)
+      // eslint-disable-next-line no-console
+      console.log('listening at', `http://localhost:${port}`)
     } catch (err) {
       server.log.error(err)
       process.exit(1)
     }
   }
 
-  return { server, start, stop }
+  if (getEnv('NODE_ENV') === 'production') {
+    void start()
+  }
+
+  return server
 }
 
-const { start } = createServer({
-  port: 4002,
-})
-
-void start()
+export const viteNodeApp = createServer()

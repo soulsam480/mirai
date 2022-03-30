@@ -12,10 +12,10 @@ export function getUserHome(role: Role) {
   return role === 'ADMIN' ? '/admin' : isInstituteRole(role).is ? '/institute' : '/student'
 }
 
-export function getEnv(key: string) {
+export function getEnv(key: string, strict = false) {
   const val = process.env[key]
 
-  if (val === undefined) throw new Error(`${key} env variable was not provided`)
+  if (strict && val === undefined) throw new Error(`env var ${key} is not defined`)
 
   return val
 }

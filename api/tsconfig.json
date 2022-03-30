@@ -3,14 +3,8 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "newLine": "lf",
-    "lib": ["esnext"],
-    "baseUrl": "./src",
-    "paths": {
-      "lib": ["lib"],
-      "rpc/*": ["rpc/*"],
-      "db": ["db"]
-    }
+    "lib": ["esnext"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }

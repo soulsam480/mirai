@@ -111,7 +111,7 @@ export const ManageCourse: React.FC<Props> = () => {
       </div>
 
       <FormProvider {...form}>
-        <form className="flex w-full form-control sm:w-[700px]" onSubmit={handleSubmit(submitHandler)}>
+        <form className="flex w-full form-control sm:w-[700px] sm:max-w-[700px]" onSubmit={handleSubmit(submitHandler)}>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
             <div>
               <MInput
