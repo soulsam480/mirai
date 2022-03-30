@@ -28,6 +28,7 @@ interface QueryConfig {
 /**
  * Check for a query param strictly and redirect if it's not there
  */
+// TODO: change this to useStrictIdCheck
 export function useStrictQueryCheck({ key, redirect, message, skipPath: skip }: QueryConfig) {
   const { query, push, pathname } = useRouter()
   const setAlert = useAlert()
@@ -73,4 +74,17 @@ export function useGlobalError() {
   }, [globalError, setAlert])
 
   return setError
+}
+
+export function useQuery(key: string) {
+  const { query } = useRouter()
+
+  const queryVal = useMemo(() => query[key] as string | undefined, [query, key])
+
+  const isQuery = useMemo(() => Boolean(queryVal), [queryVal])
+
+  return {
+    queryVal,
+    isQuery,
+  }
 }

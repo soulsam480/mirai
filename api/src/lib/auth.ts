@@ -15,7 +15,7 @@ export async function comparePassword(password: string, hashedPass: string) {
 }
 
 export async function hashPass(password: string) {
-  return await hash(password, parseInt(getEnv('HASH')))
+  return await hash(password, parseInt(getEnv('HASH') ?? ''))
 }
 
 export function prismaQueryHelper(client: WithExcludeClient) {
