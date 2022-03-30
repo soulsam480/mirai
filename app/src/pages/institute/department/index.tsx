@@ -1,7 +1,7 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { NextPageWithLayout } from 'pages/_app'
-import { Department } from '@prisma/client'
+import type { Department } from '@prisma/client'
 import { Column, MTable } from 'components/lib/MTable'
 import PageLayout from 'components/globals/PageLayout'
 import { useMemo } from 'react'

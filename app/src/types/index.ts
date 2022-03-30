@@ -1,7 +1,7 @@
 import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
 import { AnyRouter, inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
-import { AppRouter } from '@mirai/api'
+import type { AppRouter } from '@mirai/api'
 
 export type TRPCErrorType = TRPCClientErrorLike<AnyRouter>
 

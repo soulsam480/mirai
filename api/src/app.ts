@@ -8,6 +8,7 @@ import { appRouter } from './rpc/routers/appRouter'
 import { createContext } from './rpc/context'
 import { fileURLToPath } from 'url'
 import { getEnv } from './lib'
+import { registerRoutes } from './routes'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
 dotenv.config({ path: join(_dirname, '../.env') })
@@ -22,8 +23,10 @@ export function createServer() {
     trpcOptions: { router: appRouter, createContext },
   })
 
+  void registerRoutes(server)
+
   server.get('/', async () => {
-    return { hello: 'world' }
+    return "This is Mirai's API"
   })
 
   const start = async () => {
