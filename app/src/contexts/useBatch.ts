@@ -58,7 +58,7 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn && isQuery,
+      enabled: isLoggedIn === true && isQuery,
     },
   )
 
@@ -86,7 +86,7 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
     },
   })
 
-  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
   useEffect(() => setLoader(loading), [loading, setLoader])
 
   return {

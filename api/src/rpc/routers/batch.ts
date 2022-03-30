@@ -21,6 +21,7 @@ export const batchRouter = createRouter()
       const batch = await ctx.prisma.batch.create({
         data: input,
       })
+
       return batch
     },
   })
@@ -28,6 +29,7 @@ export const batchRouter = createRouter()
     input: createBatchSchema.extend({ id: z.number() }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input
+
       await ctx.prisma.batch.update({
         where: { id },
         data,
@@ -40,6 +42,7 @@ export const batchRouter = createRouter()
       const batches = await ctx.prisma.batch.findMany({
         where: { instituteId: input },
       })
+
       return batches
     },
   })
@@ -55,6 +58,7 @@ export const batchRouter = createRouter()
           instituteId: input.instituteId,
         },
       })
+
       if (batch === null) {
         throw new TRPCError({
           code: 'NOT_FOUND',

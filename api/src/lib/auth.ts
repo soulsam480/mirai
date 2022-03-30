@@ -1,3 +1,7 @@
+/**
+ * ! Avoid exporting from this module to not have client side runtime errors
+ */
+
 import { Role } from '@prisma/client'
 import { compare, hash } from 'bcrypt'
 import { WithExcludeClient } from '../db'
