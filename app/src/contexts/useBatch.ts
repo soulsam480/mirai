@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useAlert } from 'components/lib/store/alerts'
-import { getUserHome } from '@mirai/api'
+import { getUserHome } from 'utils/helpers'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { loggedInAtom, useUser } from 'stores/user'

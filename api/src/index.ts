@@ -4,7 +4,6 @@
  */
 
 export type { AppRouter } from './rpc/routers/appRouter'
-export { getUserHome, isInstituteRole } from './lib/helpers'
 export type { SessionUser } from './rpc/context'
 export * from './types/payloads'
 export * from './types/response'
