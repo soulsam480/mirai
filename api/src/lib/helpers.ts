@@ -1,4 +1,5 @@
 import { Role } from '@prisma/client'
+import pino from 'pino'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
   return {
@@ -19,3 +20,10 @@ export function getEnv(key: string, strict = false) {
 
   return val
 }
+
+const transport = pino.transport({
+  target: 'pino-pretty',
+  options: { colorize: true },
+})
+
+export const logger = pino(transport)

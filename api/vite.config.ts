@@ -16,6 +16,6 @@ export default defineConfig({
     port: 4002,
   },
   optimizeDeps: {
-    exclude: ['bcrypt'],
+    exclude: ['bcrypt', 'pino'],
   },
 })

@@ -7,7 +7,7 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './rpc/routers/appRouter'
 import { createContext } from './rpc/context'
 import { fileURLToPath } from 'url'
-import { getEnv } from './lib'
+import { getEnv, logger } from './lib'
 import { registerRoutes } from './routes'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
@@ -16,7 +16,11 @@ dotenv.config({ path: join(_dirname, '../.env') })
 export function createServer() {
   const dev = getEnv('NODE_ENV') !== 'production' ?? true
   const port = getEnv('PORT') !== undefined ? Number(getEnv('PORT')) : 4002
-  const server = fastify({ logger: dev })
+  const server = fastify({
+    logger: dev && {
+      prettyPrint: true,
+    },
+  })
 
   void server.register(fp(fastifyTRPCPlugin), {
     prefix: '/trpc',
@@ -33,7 +37,7 @@ export function createServer() {
     try {
       await server.listen(port)
       // eslint-disable-next-line no-console
-      console.log('listening at', `http://localhost:${port}`)
+      console.log('listening at', logger.info(`http://localhost:${port}`))
     } catch (err) {
       server.log.error(err)
       process.exit(1)
