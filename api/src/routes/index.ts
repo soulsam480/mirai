@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { FastifyInstance } from 'fastify'
+import { logger } from '../lib'
 
 export async function registerRoutes(app: FastifyInstance) {
   // @ts-expect-error bad lib types
@@ -9,11 +10,11 @@ export async function registerRoutes(app: FastifyInstance) {
     const { router, prefix } = descriptors
 
     if (router === undefined)
-      return console.error(`\n [Mirai error] Please export router as [router] from module ${path}. \n`)
+      return logger.error(`\n [Mirai error] Please export router as [router] from module ${path}. \n`)
     if (typeof router !== 'function')
-      return console.error(`\n [Mirai error] Router export from ${path} is not a function. \n`)
+      return logger.error(`\n [Mirai error] Router export from ${path} is not a function. \n`)
 
-    console.info(`\n Registering router ${path} with prefix ${(prefix as string) ?? 'nill'} \n`)
+    logger.info(`\n Registering router ${path} with prefix ${(prefix as string) ?? 'nill'} \n`)
 
     void app.register(router, { prefix })
   })
