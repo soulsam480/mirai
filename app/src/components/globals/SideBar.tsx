@@ -35,7 +35,20 @@ const sidebarConfig = {
       path: '/student',
     },
   ]),
-  STUDENT: [],
+  STUDENT: defineSidebar('/student').extend([
+    {
+      label: 'Profile',
+      path: '/profile',
+    },
+    {
+      label: 'My Applications',
+      path: '/applications',
+    },
+    {
+      label: 'Opportunities',
+      path: '/opportunities',
+    },
+  ]),
 }
 
 export const SideBar: React.FC<Props> = ({ children }) => {
@@ -48,16 +61,22 @@ export const SideBar: React.FC<Props> = ({ children }) => {
       <div className="drawer-side ">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
         <aside className="p-4 pt-0 space-y-1 overflow-y-auto border-r menu bg-amber-50 lg:bg-transparent w-60 text-base-content border-amber-200">
-          {userData.role !== undefined &&
-            sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
-              return (
-                <li key={key}>
-                  <MLink className="!px-2 !py-1" href={item.path} active={item.active}>
-                    {item.label}
-                  </MLink>
-                </li>
-              )
-            })}
+          {userData.role !== undefined && (
+            <>
+              <li className="!hover:bg-transparent font-semibold p-1 mb-1 text-sm border-b border-amber-200 text-ellipsis">
+                {userData.name ?? userData.email ?? 'User'} ({userData.role})
+              </li>
+              {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
+                return (
+                  <li key={key}>
+                    <MLink className="!px-2 !py-1" href={item.path} active={item.active}>
+                      {item.label}
+                    </MLink>
+                  </li>
+                )
+              })}
+            </>
+          )}
         </aside>
       </div>
     </div>
