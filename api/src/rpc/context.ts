@@ -2,13 +2,6 @@ import { Account } from '@prisma/client'
 import * as trpc from '@trpc/server'
 import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify'
 import { miraiClient } from '../db'
-// TODO: session
-// import { getSession } from 'next-auth/react'
-
-/**
- * Creates context for an incoming request
- * @link https://trpc.io/docs/context
- */
 
 export interface SessionUser {
   user: Pick<Account, 'email' | 'id' | 'role'>

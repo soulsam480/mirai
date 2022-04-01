@@ -1,7 +1,9 @@
-export * from './lib'
-export * from './db'
+/**
+ * ! Avoid exporting any unused server code to not have client side runtime errors
+ * ! don't export bscrpt related code
+ */
 
-export * from './rpc/routers/appRouter'
+export type { AppRouter } from './rpc/routers/appRouter'
 export type { SessionUser } from './rpc/context'
 export * from './types/payloads'
 export * from './types/response'

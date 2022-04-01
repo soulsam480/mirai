@@ -5,7 +5,7 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { hashPass } from '@mirai/api'
+import { hashPass } from '../api/src/lib'
 const prisma = new PrismaClient()
 
 async function main() {
