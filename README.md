@@ -16,11 +16,31 @@
 
 ### Stack
 - Nextjs
-- tRpc
 - Next-Auth
-- PostgreSQL
-- Prisma
 - Tailwind
 - Typescript
 - HeadlessUI
 - DaisyUI
+
+### Arch
+A monorepo of `app` and `api` using pnpm workspaces
+
+__FE__
+- Nextjs
+- Next-Auth
+- Tailwind
+- Typescript
+- HeadlessUI
+- DaisyUI
+
+__BE__
+- tRpc
+- PostgreSQL
+- Prisma
+- fastify
+
+### Dev
+- clone
+- `pnpm install`
+- ask for `.env` vars
+- `pnpm run dev`
