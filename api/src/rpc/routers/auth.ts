@@ -37,6 +37,7 @@ export const authRouter = createRouter()
           ...rest,
           accountToken: nanoid(),
           role,
+          // TODO: check owner relation
           instituteId: ['INSTITUTE_MOD', 'INSTITUTE'].includes(role) ? relID : null,
           studentId: role === 'STUDENT' ? relID : null,
           isOwner: role === 'INSTITUTE',
