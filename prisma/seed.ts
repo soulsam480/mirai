@@ -150,7 +150,7 @@ async function studentSeed({
   })
 
   await prisma.account.upsert({
-    where: { id: 3 },
+    where: { studentId },
     create: {
       email: 'sambit@gmail.com',
       password: await hashPass('sambit'),

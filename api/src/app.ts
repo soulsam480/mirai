@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import { join, dirname } from 'path'
 import fastify from 'fastify'
-import fp from 'fastify-plugin'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 
 import { appRouter } from './rpc/routers/appRouter'
@@ -22,7 +21,7 @@ export function createServer() {
     },
   })
 
-  void server.register(fp(fastifyTRPCPlugin), {
+  void server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
     trpcOptions: { router: appRouter, createContext },
   })

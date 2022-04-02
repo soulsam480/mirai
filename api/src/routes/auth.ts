@@ -5,8 +5,6 @@ import { LoginPayload } from '../types/payloads'
 
 export const router: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
   fastify.post<{ Body: LoginPayload }>('/', async ({ body }, reply) => {
-    body = typeof body === 'string' ? JSON.parse(body) : body
-
     const { email, password } = body
 
     const user = await miraiClient.account.findFirst({

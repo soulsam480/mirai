@@ -18,7 +18,7 @@
     "@mirai/api": "workspace:*",
     "@mirai/app": "workspace:*",
     "@prisma/client": "^3.11.1",
-    "@trpc/client": "^9.20.3",
+    "@trpc/client": "^9.21.0",
     "cross-env": "^7.0.3",
     "rimraf": "^3.0.2",
     "zod": "^3.14.3"
@@ -29,7 +29,7 @@
     "@typescript-eslint/parser": "^5.17.0",
     "concurrently": "^7.0.0",
     "eslint": "^8.12.0",
-    "eslint-config-next": "^12.1.2",
+    "eslint-config-next": "^12.1.4",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-config-standard-with-typescript": "^21.0.1",
