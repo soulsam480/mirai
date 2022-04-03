@@ -3,7 +3,7 @@
  * ! don't export bscrpt related code
  */
 
-export type { AppRouter } from './rpc/routers/appRouter'
+export type { AppRouter } from './rpc/routers/_appRouter'
 export type { SessionUser } from './rpc/context'
 export * from './types/payloads'
 export * from './types/response'

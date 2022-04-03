@@ -3,7 +3,7 @@ import { join, dirname } from 'path'
 import fastify from 'fastify'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 
-import { appRouter } from './rpc/routers/appRouter'
+import { appRouter } from './rpc/routers/_appRouter'
 import { createContext } from './rpc/context'
 import { fileURLToPath } from 'url'
 import { getEnv, logger } from './lib'
