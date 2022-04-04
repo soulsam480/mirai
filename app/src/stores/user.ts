@@ -9,6 +9,7 @@ export type User = Omit<
 >
 
 export const userAtom = atom<User | null>(null)
+userAtom.debugLabel = 'userAtom'
 
 export function useUser() {
   const userData = useAtomValue(userAtom)
@@ -20,3 +21,4 @@ export function useUser() {
 }
 
 export const loggedInAtom = atom((get) => get(userAtom) !== null)
+loggedInAtom.debugLabel = 'loggedInAtom'

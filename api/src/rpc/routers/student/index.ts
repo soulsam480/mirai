@@ -1,4 +1,5 @@
 import { TRPCError } from '@trpc/server'
+import { z } from 'zod'
 import { createRouter } from '../../createRouter'
 import { experienceRouter } from './experience'
 
@@ -16,5 +17,23 @@ export const studentRouter = createRouter()
     })
 
     return nextCtx
+  })
+  .query('get', {
+    input: z.number(),
+    async resolve({ ctx, input }) {
+      const studentData = await ctx.prisma.student.findFirst({
+        where: { id: input },
+        include: {
+          basics: true,
+          certifications: true,
+          education: true,
+          experience: true,
+          projects: true,
+          score: true,
+        },
+      })
+
+      return studentData
+    },
   })
   .merge('experience.', experienceRouter)

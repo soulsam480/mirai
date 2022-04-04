@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import React, { useEffect, useMemo } from 'react'
 import { userAtom } from 'stores/user'
 import { trpc } from 'utils/trpc'
+import { useAtomsDevtools } from 'jotai/devtools'
 
 interface Props {}
 
@@ -28,6 +29,11 @@ export const CurrentAccountProvider: React.FC<Props> = ({ children }) => {
   })
 
   useEffect(() => setLoader(isLoading), [isLoading, setLoader])
+
+  if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useAtomsDevtools('Mirai')
+  }
 
   return <>{children}</>
 }
