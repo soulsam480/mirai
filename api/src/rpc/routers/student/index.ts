@@ -1,6 +1,8 @@
+import { basicsRouter } from './basics'
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../../createRouter'
 import { experienceRouter } from './experience'
+import { scoreRouter } from './score'
 
 export const studentRouter = createRouter()
   // TODO: add logic for student-student queries, where a student shouldn't be
@@ -17,4 +19,6 @@ export const studentRouter = createRouter()
 
     return nextCtx
   })
+  .merge('basics.', basicsRouter)
+  .merge('score.', scoreRouter)
   .merge('experience.', experienceRouter)
