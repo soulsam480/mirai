@@ -74,9 +74,6 @@ export const createStudentScoreSchema = z.object({
   backlogDetails: z.string().min(1, 'Please mention backlog details'),
   scores: z.string().min(1, 'Scores are required'),
   courseStartedAt: z.date({ required_error: 'Course start date is required' }),
-  verified: z.boolean({ required_error: 'Please mention if student is verified or not' }),
-  verifiedOn: z.date(),
-  verifiedBy: z.string(),
 })
 
 export const createStudentEducationSchema = z.object({
@@ -92,10 +89,7 @@ export const createStudentEducationSchema = z.object({
   scoreType: z.enum(['PERCENTAGE', 'CGPA', 'GRADES']),
   startedAt: z.date({ required_error: 'Start date is required' }),
   endedAt: z.date(),
-  isOnGoing: z.boolean({ required_error: 'Please mention if current program is ongoing or not' }),
-  verified: z.boolean({ required_error: 'Please mention if student is verified or not' }),
-  verifiedOn: z.date(),
-  verifiedBy: z.string(),
+  isOnGoing: z.boolean(),
 })
 
 export const createExperienceSchema = z.object({

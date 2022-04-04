@@ -20,15 +20,23 @@ export const educationRouter = createRouter()
       return educationDetails
     },
   })
-  .mutation('manage', {
+  .mutation('create', {
     input: createStudentEducationSchema,
     async resolve({ ctx, input }) {
-      const { studentId, ...data } = input
+      const result = await ctx.prisma.studentEducation.createMany({
+        data: input,
+      })
 
-      const result = await ctx.prisma.studentEducation.upsert({
-        where: { id: studentId }, // todo: id should be studentId
-        create: input,
-        update: data,
+      return result
+    },
+  })
+  .mutation('update', {
+    input: createStudentEducationSchema.extend({ id: z.number() }),
+    async resolve({ ctx, input }) {
+      const { id, ...data } = input
+      const result = await ctx.prisma.studentEducation.update({
+        where: { id },
+        data,
       })
 
       return result
