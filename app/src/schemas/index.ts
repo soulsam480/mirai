@@ -79,6 +79,25 @@ export const createStudentScoreSchema = z.object({
   verifiedBy: z.string(),
 })
 
+export const createStudentEducationSchema = z.object({
+  studentId: z.number().min(1, 'Student ID is required'),
+  school: z.string().min(1, 'School is required'),
+  program: z.string().min(1, 'Program is required'),
+  board: z.string().min(1, 'Board is required'),
+  specialization: z.string().min(1, 'Specialization is required'),
+  type: z.string().min(1, 'Type is required'),
+  notes: z.string().min(1, 'Notes is required'),
+  score: z.string().min(1, 'Score is required'),
+  scorePercentage: z.string().min(1, 'ScorePercentage is required'),
+  scoreType: z.enum(['PERCENTAGE', 'CGPA', 'GRADES']),
+  startedAt: z.date({ required_error: 'Start date is required' }),
+  endedAt: z.date(),
+  isOnGoing: z.boolean({ required_error: 'Please mention if current program is ongoing or not' }),
+  verified: z.boolean({ required_error: 'Please mention if student is verified or not' }),
+  verifiedOn: z.date(),
+  verifiedBy: z.string(),
+})
+
 export const createExperienceSchema = z.object({
   company: z.string().min(1, 'Company is required'),
   title: z.string().min(1, 'Title is required'),

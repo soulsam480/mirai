@@ -203,7 +203,7 @@ model StudentEducation {
   id Int @id @default(autoincrement())
 
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  studentId Int
+  studentId Int     @unique
 
   school          String
   program         String
