@@ -37,7 +37,11 @@ const Batches: NextPageWithLayout = () => {
         label: 'Duration',
         headerClasses: '!bg-primary',
         classes: 'bg-amber-100',
-        // format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
+        format: ({ duration, durationType }) => (
+          <>
+            {duration} <span className="text-xs"> ({durationType}) </span>{' '}
+          </>
+        ),
       },
       {
         field: 'status',
