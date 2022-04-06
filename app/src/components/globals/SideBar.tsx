@@ -51,6 +51,8 @@ const sidebarConfig = {
   ]),
 }
 
+// TODO: refactor to separate user state from page lgic to avoid re-renders
+
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
 
