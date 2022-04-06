@@ -34,4 +34,6 @@ MSpinner.defaultProps = {
   thickness: 5,
 }
 
+MSpinner.displayName = 'MSpinner'
+
 export default MSpinner

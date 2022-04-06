@@ -1,5 +1,5 @@
 import { AppLayout } from 'components/globals/AppLayout'
-import { WorkExperience } from 'components/student/profile/WorkExperience'
+import { WorkExperience } from 'components/student/profile/workExperience'
 import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
 import { useStudent } from 'contexts/student'

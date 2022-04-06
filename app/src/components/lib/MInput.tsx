@@ -8,26 +8,30 @@ interface Props extends HTMLProps<HTMLInputElement> {
   as?: 'input' | 'textarea'
 }
 
-export const MInput = React.forwardRef<HTMLInputElement, Props>(({ error, label, as = 'input', ...rest }, ref) => {
-  const RenderInput = as
+export const MInput = React.forwardRef<HTMLInputElement, Props>(
+  ({ error, label, as: RenderInput = 'input', ...rest }, ref) => {
+    return (
+      <div className="flex flex-col">
+        <label className="label">
+          <span className="label-text">{label}</span>
+        </label>
+        <RenderInput
+          className={clsx([
+            RenderInput === 'input'
+              ? 'input input-bordered input-primary input-sm'
+              : 'textarea textarea-bordered textarea-primary',
+            rest.className,
+          ])}
+          {...rest}
+          // @ts-expect-error bad types
+          ref={ref}
+        />
+        <label className="label">
+          {error !== undefined && error !== null && <span className="label-text-alt"> {error.message} </span>}{' '}
+        </label>
+      </div>
+    )
+  },
+)
 
-  return (
-    <div className="flex flex-col">
-      <label className="label">
-        <span className="label-text">{label}</span>
-      </label>
-      <RenderInput
-        className={clsx([
-          as === 'input'
-            ? 'input input-bordered input-primary input-sm'
-            : 'textarea textarea-bordered textarea-primary',
-          rest.className,
-        ])}
-        {...rest}
-        // @ts-expect-error bad types
-        ref={ref}
-      />
-      <label className="label">{error != null && <span className="label-text-alt"> {error.message} </span>} </label>
-    </div>
-  )
-})
+MInput.displayName = 'MInput'

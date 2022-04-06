@@ -51,3 +51,7 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
 }
 
 // TODO: add useStudents for listing
+
+// * Keep it at the bottom
+
+export * from './experience'

@@ -12,6 +12,7 @@ importers:
       '@typescript-eslint/parser': ^5.18.0
       concurrently: ^7.1.0
       cross-env: ^7.0.3
+      dayjs: ^1.11.0
       eslint: ^8.12.0
       eslint-config-next: ^12.1.4
       eslint-config-prettier: ^8.5.0
@@ -35,6 +36,7 @@ importers:
       '@mirai/app': link:app
       '@prisma/client': 3.11.1
       cross-env: 7.0.3
+      dayjs: 1.11.0
       rimraf: 3.0.2
       zod: 3.14.3
     devDependencies:
@@ -111,6 +113,7 @@ importers:
       '@iconify-json/la': ^1.1.1
       '@prisma/client': '*'
       '@svgr/core': ^6.2.1
+      '@tailwindcss/typography': ^0.5.2
       '@trpc/client': ^9.21.0
       '@trpc/next': ^9.21.0
       '@trpc/react': ^9.21.0
@@ -124,7 +127,6 @@ importers:
       babel-plugin-superjson-next: ^0.4.3
       clsx: ^1.1.1
       daisyui: ^2.13.6
-      dayjs: ^1.11.0
       jotai: ^1.6.1
       lodash: ^4.17.21
       next: ^12.1.4
@@ -155,7 +157,6 @@ importers:
       axios: 0.26.1
       clsx: 1.1.1
       daisyui: 2.13.6_bdaceb00f796c0c549cd3844d4c4fef2
-      dayjs: 1.11.0
       jotai: 1.6.1_react-query@3.34.19+react@17.0.2
       lodash: 4.17.21
       next: 12.1.4_1d117d1b6790c5e23a772164b3a3d4fc
@@ -171,6 +172,7 @@ importers:
     devDependencies:
       '@iconify-json/la': 1.1.1
       '@svgr/core': 6.2.1
+      '@tailwindcss/typography': 0.5.2_tailwindcss@3.0.23
       '@types/jest': 27.4.1
       '@types/lodash': 4.14.181
       '@types/react': 17.0.43
@@ -994,6 +996,17 @@ packages:
       '@swc/core-win32-arm64-msvc': 1.2.162
       '@swc/core-win32-ia32-msvc': 1.2.162
       '@swc/core-win32-x64-msvc': 1.2.162
+    dev: true
+
+  /@tailwindcss/typography/0.5.2_tailwindcss@3.0.23:
+    resolution: {integrity: sha512-coq8DBABRPFcVhVIk6IbKyyHUt7YTEC/C992tatFB+yEx5WGBQrCgsSFjxHUr8AWXphWckadVJbominEduYBqw==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1 || insiders'
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      tailwindcss: 3.0.23_b89136460714832cdda11d1e9d57d1ff
     dev: true
 
   /@trpc/client/9.21.0_@trpc+server@9.21.0:
@@ -3939,9 +3952,17 @@ packages:
       p-locate: 5.0.0
     dev: true
 
+  /lodash.castarray/4.4.0:
+    resolution: {integrity: sha1-wCUTUV4wna3dTCTGDP3c9ZdtkRU=}
+    dev: true
+
   /lodash.clonedeep/4.5.0:
     resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
     dev: false
+
+  /lodash.isplainobject/4.0.6:
+    resolution: {integrity: sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs=}
+    dev: true
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}

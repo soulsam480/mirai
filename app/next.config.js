@@ -23,6 +23,10 @@ module.exports = withPlugins([withSuperjson, withTM], {
             extension: 'jsx',
           }),
         ],
+        eslintrc: {
+          enabled: true,
+          filepath: '../.eslintrc-auto-import.json',
+        },
       }),
     )
 

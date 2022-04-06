@@ -51,3 +51,5 @@ export const MDialog: React.FC<Props> = ({ show, children, onClose }) => {
     </Transition>
   )
 }
+
+MDialog.displayName = 'MDialog'

@@ -136,3 +136,5 @@ export const MTable: React.FC<Props> = ({
     </TableContext.Provider>
   )
 }
+
+MTable.displayName = 'MTable'

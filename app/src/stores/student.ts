@@ -1,4 +1,4 @@
-import {
+import type {
   StudentBasics,
   StudentScore,
   StudentEducation,
@@ -8,7 +8,7 @@ import {
   Student,
 } from '@prisma/client'
 import { atom } from 'jotai'
-import { OverWrite } from 'types'
+import type { OverWrite } from 'types'
 
 export interface StudentValueType {
   basics: StudentBasics | null

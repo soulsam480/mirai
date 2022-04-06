@@ -1,5 +1,6 @@
 import type { Role } from '@prisma/client'
 import { MLinkProps } from 'components/lib/MLink'
+import dayjs from 'dayjs'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
   return {
@@ -40,4 +41,9 @@ export function defineSidebar(base: string) {
 
 export function isSafeVal(val: any) {
   return typeof val === 'string' || typeof val === 'number'
+}
+
+export function formatDate(date: string | Date | null | undefined, format = 'MMM YYYY') {
+  if (date === null || date === undefined) return ''
+  return dayjs(date).format(format)
 }

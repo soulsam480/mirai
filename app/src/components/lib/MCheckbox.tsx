@@ -16,7 +16,7 @@ export const MCheckbox: React.FC<Props> = ({ error, label, name, control }) => {
       render={({ field: { onChange, ref, value, onBlur } }) => {
         return (
           <div className="flex flex-col">
-            <label className="label cursor-pointer">
+            <label className="cursor-pointer label">
               <span className="label-text">{label}</span>
               <input
                 type="checkbox"
@@ -38,3 +38,5 @@ export const MCheckbox: React.FC<Props> = ({ error, label, name, control }) => {
     />
   )
 }
+
+MCheckbox.displayName = 'MCheckbox'

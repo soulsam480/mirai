@@ -53,7 +53,7 @@ export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   )
 })
 
-MAlert.displayName = 'JAlert'
+MAlert.displayName = 'MAlert'
 
 interface AlertGroupProps {}
 
@@ -83,3 +83,5 @@ export const MAlertGroup: React.FC<AlertGroupProps> = () => {
       )
     : null
 }
+
+MAlertGroup.displayName = 'MAlertGroup'

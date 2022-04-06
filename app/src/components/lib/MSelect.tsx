@@ -35,7 +35,7 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
   })
 
   const optionFromValue = useMemo(() => {
-    if (value === undefined) return 'Select'
+    if (value === undefined || value === '') return 'Select'
 
     const selectedOption = options.find((v) => v.value === (isSafeVal(value) === true ? value : value.value ?? ''))
 
@@ -66,7 +66,7 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
                     key={option.label}
                     value={option}
                     className={({ active }) =>
-                      clsx(['px-3 py-[6px] text-left rounded-sm cursor-pointer', active && 'bg-amber-200'])
+                      clsx(['px-3 py-[6px] text-left rounded-sm cursor-pointer break-words', active && 'bg-amber-200'])
                     }
                   >
                     {(slotCtx) =>
@@ -104,3 +104,5 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
     </div>
   )
 }
+
+MSelect.displayName = 'MSelect'
