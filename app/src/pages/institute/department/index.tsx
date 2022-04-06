@@ -78,10 +78,7 @@ const Departments: NextPageWithLayout = () => {
         show={router.query.departmentId !== undefined}
         onClose={async () => await router.push('/institute/department')}
       >
-        {/* //todo: again this is a bug, fix this */}
-        <div className="dialog-content">
-          <ManageDepartment />
-        </div>
+        <ManageDepartment />
       </MDialog>
     </PageLayout.PageWrapper>
   )

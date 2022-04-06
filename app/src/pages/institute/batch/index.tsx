@@ -75,10 +75,7 @@ const Batches: NextPageWithLayout = () => {
       />
 
       <MDialog show={router.query.batchId !== undefined} onClose={async () => await router.push('/institute/batch')}>
-        {/* //todo: again this is a bug, fix this */}
-        <div className="dialog-content">
-          <ManageBatch />
-        </div>
+        <ManageBatch />
       </MDialog>
     </PageLayout.PageWrapper>
   )

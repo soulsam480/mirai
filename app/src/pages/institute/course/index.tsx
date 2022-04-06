@@ -95,10 +95,7 @@ const ProgramListing: NextPageWithLayout = () => {
 
       {/* contextual routing for instant feedback. Reloads will show actual page */}
       <MDialog show={router.query.courseId !== undefined} onClose={async () => await router.push('/institute/course')}>
-        {/* //todo: again this is a bug, fix this */}
-        <div className="dialog-content">
-          <ManageCourse />
-        </div>
+        <ManageCourse />
       </MDialog>
     </PageLayout.PageWrapper>
   )

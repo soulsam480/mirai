@@ -6,6 +6,14 @@ interface Props {
   onClose: (val: boolean) => void
 }
 
+const DialogContent = React.forwardRef<HTMLDivElement, any>(({ children }, ref) => {
+  return (
+    <div className="dialog-content" ref={ref}>
+      {children}
+    </div>
+  )
+})
+
 export const MDialog: React.FC<Props> = ({ show, children, onClose }) => {
   return (
     <Transition appear show={show} as={Fragment}>
@@ -36,7 +44,7 @@ export const MDialog: React.FC<Props> = ({ show, children, onClose }) => {
             leaveFrom="opacity-100 scale-100"
             leaveTo="opacity-0 scale-95"
           >
-            {children}
+            <DialogContent>{children}</DialogContent>
           </Transition.Child>
         </div>
       </Dialog>

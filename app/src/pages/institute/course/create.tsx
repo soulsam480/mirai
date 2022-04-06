@@ -12,9 +12,7 @@ const CreateCourse: NextPageWithLayout = () => {
 
   return (
     <MDialog show onClose={async () => await router.push('/institute/course')}>
-      <div className="dialog-content">
-        <ManageCourse />
-      </div>
+      <ManageCourse />
     </MDialog>
   )
 }
