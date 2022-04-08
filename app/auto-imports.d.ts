@@ -2,6 +2,6 @@
 // We suggest you to commit this file into source control
 declare global {
   const IconLaBars: typeof import('~icons/la/bars.jsx')['default']
-  const IconLaExclamationTriangle: typeof import('~icons/la/exclamation-triangle.jsx')['default']
+  const IconLaExclamationCircle: typeof import('~icons/la/exclamation-circle.jsx')['default']
 }
 export {}

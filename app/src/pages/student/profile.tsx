@@ -1,4 +1,5 @@
 import { AppLayout } from 'components/globals/AppLayout'
+import { Basics } from 'components/student/profile/Basics'
 import { WorkExperience } from 'components/student/profile/WorkExperience'
 import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
@@ -15,6 +16,7 @@ const StudentProfile: NextPageWithLayout = () => {
     <div className="flex space-x-2">
       <div className="flex-grow">
         <ProfileSection>
+          <Basics />
           <WorkExperience />
         </ProfileSection>
       </div>
