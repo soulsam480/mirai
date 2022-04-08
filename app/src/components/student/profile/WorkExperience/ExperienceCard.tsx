@@ -36,8 +36,10 @@ export const ExperienceCard = React.memo<Props>(({ experience, onClick }) => {
             <IconLaCalendar />
           </MIcon>
           <span className="text-xs">
-            From {formatDate(experience.startedAt)} <span className="mx-0.5">to&nbsp;</span>
-            {experience.isOngoing && experience.endedAt === null ? 'Present' : formatDate(experience.endedAt)}
+            {formatDate(experience.startedAt)} <span className="mx-0.5">to&nbsp;</span>
+            {experience.isOngoing && (experience.endedAt === null || experience.endedAt === undefined)
+              ? 'Present'
+              : formatDate(experience.endedAt)}
           </span>
         </div>
         <span>.</span>

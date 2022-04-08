@@ -6,8 +6,10 @@ import { MDialog } from 'components/lib/MDialog'
 import { MInput } from 'components/lib/MInput'
 import { MSelect } from 'components/lib/MSelect'
 import { useExperience } from 'contexts/student'
+import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
-import React, { useState } from 'react'
+import {} from 'lodash'
+import React, { useEffect, useState } from 'react'
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { createExperienceSchema } from 'schemas'
 import { studentExperienceAtom } from 'stores/student'
@@ -56,6 +58,7 @@ export const WorkExperience: React.FC<Props> = () => {
     handleSubmit,
     reset,
     setValue,
+    setError,
   } = form
 
   const isOngoingVal = useWatch({
@@ -63,7 +66,33 @@ export const WorkExperience: React.FC<Props> = () => {
     name: 'isOngoing',
   })
 
+  useEffect(() => {
+    isOngoingVal === true && setValue('endedAt', '')
+  }, [isOngoingVal, setValue])
+
+  function validateEndedAt(val: z.infer<typeof createExperienceSchema>) {
+    const { endedAt, startedAt, isOngoing } = val
+
+    if (isOngoing === true) return true
+
+    if (endedAt === undefined || endedAt.length === 0) {
+      setError('endedAt', { message: 'Ended at is required' })
+
+      return false
+    }
+
+    if (startedAt?.length > 0 && !dayjs(startedAt).isBefore(dayjs(endedAt))) {
+      setError('endedAt', { message: "Ended at can't be before Started at" })
+
+      return false
+    }
+
+    return true
+  }
+
   async function submitHandler(val: z.infer<typeof createExperienceSchema>, createExp: boolean) {
+    if (!validateEndedAt(val)) return
+
     if (createExp && userData.studentId !== null) {
       await create({
         ...val,
