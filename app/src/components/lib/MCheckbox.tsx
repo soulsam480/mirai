@@ -1,18 +1,20 @@
 import React from 'react'
-import { Control, Controller, FieldError } from 'react-hook-form'
+import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
 
 interface Props {
   error?: FieldError
   label: string
   name: string
-  control: Control<any, any>
+  control?: Control<any, any>
 }
 
-export const MCheckbox: React.FC<Props> = ({ error, label, name, control }) => {
+export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _control }) => {
+  const { control } = useFormContext()
+
   return (
     <Controller
       name={name}
-      control={control}
+      control={_control ?? control}
       render={({ field: { onChange, ref, value, onBlur } }) => {
         return (
           <div className="flex flex-col">

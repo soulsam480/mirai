@@ -3,14 +3,14 @@ import type { StudentWorkExperience } from '@prisma/client'
 import clsx from 'clsx'
 import { MCheckbox } from 'components/lib/MCheckbox'
 import { MDialog } from 'components/lib/MDialog'
+import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
 import { MSelect } from 'components/lib/MSelect'
 import { useExperience } from 'contexts/student'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
-import {} from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { createExperienceSchema } from 'schemas'
 import { studentExperienceAtom } from 'stores/student'
 import { useUser } from 'stores/user'
@@ -163,97 +163,76 @@ export const WorkExperience: React.FC<Props> = () => {
         }}
       >
         <div className="flex flex-col gap-2">
-          <FormProvider {...form}>
-            <form
-              onSubmit={handleSubmit((data) => {
-                void submitHandler(data, selectedExperience === null)
-              })}
-            >
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <div>
-                  <MInput
-                    {...register('company')}
-                    error={errors.company}
-                    label="Company / Institute name"
-                    name="company"
-                    placeholder="Acme Inc."
-                  />
+          <MForm
+            form={form}
+            onSubmit={handleSubmit((data) => {
+              void submitHandler(data, selectedExperience === null)
+            })}
+          >
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <div>
+                <MInput
+                  {...register('company')}
+                  error={errors.company}
+                  label="Company / Institute name"
+                  name="company"
+                  placeholder="Acme Inc."
+                />
 
-                  <MInput
-                    {...register('title')}
-                    error={errors.title}
-                    label="Title / Designation"
-                    name="title"
-                    placeholder="Business analyst"
-                  />
+                <MInput
+                  {...register('title')}
+                  error={errors.title}
+                  label="Title / Designation"
+                  name="title"
+                  placeholder="Business analyst"
+                />
 
-                  <MInput
-                    {...register('location')}
-                    error={errors.location}
-                    label="Location"
-                    name="location"
-                    placeholder="Location"
-                  />
+                <MInput
+                  {...register('location')}
+                  error={errors.location}
+                  label="Location"
+                  name="location"
+                  placeholder="Location"
+                />
 
-                  <MInput
-                    error={errors.startedAt}
-                    {...register('startedAt')}
-                    name="startedAt"
-                    label="Started at"
-                    type="date"
-                  />
+                <MInput
+                  error={errors.startedAt}
+                  {...register('startedAt')}
+                  name="startedAt"
+                  label="Started at"
+                  type="date"
+                />
 
-                  <MCheckbox
-                    control={control}
-                    error={errors.isOngoing}
-                    name="isOngoing"
-                    label="I currently work here"
-                  />
-                </div>
-
-                <div>
-                  <MSelect
-                    error={errors.companySector}
-                    label="Company sector"
-                    name="companySector"
-                    options={COMPANY_TYPE_OPTIONS}
-                  />
-
-                  <MSelect error={errors.stipend} label="Stipend" name="stipend" options={STIPEND_OPTIONS} />
-
-                  <MSelect error={errors.jobType} label="Position type" name="jobType" options={JOB_TYPE} />
-
-                  {isOngoingVal === false && (
-                    // TODO: enforce required when true
-                    <MInput
-                      error={errors.endedAt}
-                      {...register('endedAt')}
-                      name="endedAt"
-                      label="Ended at"
-                      type="date"
-                    />
-                  )}
-
-                  <MCheckbox
-                    control={control}
-                    error={errors.isCurriculum}
-                    name="isCurriculum"
-                    label="Included in curriculam"
-                  />
-                </div>
+                <MCheckbox error={errors.isOngoing} name="isOngoing" label="I currently work here" />
               </div>
 
-              <MInput {...register('notes')} error={errors.notes} as="textarea" label="Description" name="notes" />
-              <div className="text-right">
-                <button
-                  type="submit"
-                  className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}
-                >
-                  Save
-                </button>
+              <div>
+                <MSelect
+                  error={errors.companySector}
+                  label="Company sector"
+                  name="companySector"
+                  options={COMPANY_TYPE_OPTIONS}
+                />
+
+                <MSelect error={errors.stipend} label="Stipend" name="stipend" options={STIPEND_OPTIONS} />
+
+                <MSelect error={errors.jobType} label="Position type" name="jobType" options={JOB_TYPE} />
+
+                {isOngoingVal === false && (
+                  <MInput error={errors.endedAt} {...register('endedAt')} name="endedAt" label="Ended at" type="date" />
+                )}
+
+                <MCheckbox error={errors.isCurriculum} name="isCurriculum" label="Included in curriculam" />
               </div>
-            </form>
-          </FormProvider>
+            </div>
+
+            <MInput {...register('notes')} error={errors.notes} as="textarea" label="Description" name="notes" />
+            <div className="text-right">
+              <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
+                Save
+              </button>
+            </div>
+          </MForm>
         </div>
       </MDialog>
     </div>
