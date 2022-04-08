@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react'
 import React, { Fragment } from 'react'
 
-interface Props {
+export interface Props {
   show: boolean
   onClose: (val: boolean) => void
 }

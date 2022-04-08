@@ -1,4 +1,5 @@
 import { createExperienceSchema } from '@mirai/app'
+import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'
 
@@ -28,5 +29,15 @@ export const experienceRouter = createRouter()
       })
 
       return experienceData
+    },
+  })
+  .mutation('remove', {
+    input: z.number(),
+    async resolve({ ctx, input }) {
+      try {
+        await ctx.prisma.studentWorkExperience.delete({ where: { id: input } })
+      } catch (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Unable to delete experience' })
+      }
     },
   })

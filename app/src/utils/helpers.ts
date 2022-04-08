@@ -1,5 +1,5 @@
 import type { Role } from '@prisma/client'
-import { MLinkProps } from 'components/lib/MLink'
+import type { MLinkProps } from 'components/lib/MLink'
 import dayjs from 'dayjs'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
@@ -46,4 +46,24 @@ export function isSafeVal(val: any) {
 export function formatDate(date: string | Date | null | undefined, format = 'MMM YYYY') {
   if (date === null || date === undefined) return ''
   return dayjs(date).format(format)
+}
+
+// ! Server only
+export function getBaseUrl(): string {
+  if (typeof window !== 'undefined') {
+    return ''
+  }
+
+  // reference for vercel.com
+  if (process.env.VERCEL_URL !== undefined) {
+    return `https://${process.env.VERCEL_URL}`
+  }
+
+  // reference for render.com
+  if (process.env.RENDER_INTERNAL_HOSTNAME !== undefined) {
+    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT ?? 3000}`
+  }
+
+  // assume localhost
+  return `http://localhost:${process.env.PORT ?? 3000}`
 }

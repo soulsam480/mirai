@@ -132,7 +132,7 @@ export const WorkExperience: React.FC<Props> = () => {
     setSelected(null)
   }
 
-  // TODO: add delete and document upload
+  // TODO: add document upload
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -148,7 +148,7 @@ export const WorkExperience: React.FC<Props> = () => {
       {workExperience.length > 0 ? (
         <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
           {workExperience.map((exp) => {
-            return <ExperienceCard experience={exp} key={exp.id} onClick={() => handleExperienceSelection(exp)} />
+            return <ExperienceCard experience={exp} key={exp.id} onEdit={() => handleExperienceSelection(exp)} />
           })}
         </div>
       ) : (
