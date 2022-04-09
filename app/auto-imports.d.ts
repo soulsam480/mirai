@@ -5,6 +5,7 @@ declare global {
   const IconLaBuilding: typeof import('~icons/la/building.jsx')['default']
   const IconLaCalendar: typeof import('~icons/la/calendar.jsx')['default']
   const IconLaCheckCircleSolid: typeof import('~icons/la/check-circle-solid.jsx')['default']
+  const IconLaChevronDown: typeof import('~icons/la/chevron-down.jsx')['default']
   const IconLaExclamationCircle: typeof import('~icons/la/exclamation-circle.jsx')['default']
   const IconLaMoneyBill: typeof import('~icons/la/money-bill.jsx')['default']
   const IconLaPenSquare: typeof import('~icons/la/pen-square.jsx')['default']

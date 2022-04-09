@@ -1,14 +1,10 @@
 import { Listbox, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import { Fragment, ReactElement, useMemo } from 'react'
-import { FieldError, useController, useFormContext } from 'react-hook-form'
+import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
+import type { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
-
-export interface Option {
-  label: string
-  value: any
-  meta?: any
-}
+import { MIcon } from './MIcon'
 
 interface RenderPropCtx {
   active: boolean
@@ -23,15 +19,27 @@ export interface MSelectProps {
   error?: FieldError
   optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
   noDataLabel?: React.ReactNode
+  control?: Control<any, any>
 }
 
-export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], optionSlot, error, noDataLabel }) => {
-  const { control } = useFormContext()
+export const MSelect: React.FC<MSelectProps> = ({
+  name,
+  label,
+  options = [],
+  optionSlot,
+  error: _error,
+  noDataLabel,
+  control,
+}) => {
+  const formCtx = useFormContext()
+  const _control = formCtx !== null ? formCtx.control : control
+
   const {
     field: { onChange, value },
+    fieldState: { error },
   } = useController({
     name,
-    control,
+    control: _control,
   })
 
   const optionFromValue = useMemo(() => {
@@ -46,6 +54,8 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
     return 'Unknown value'
   }, [value, options])
 
+  const fieldError = _error ?? error
+
   return (
     <div className="flex flex-col">
       <label className="label">
@@ -55,7 +65,19 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
       <Listbox value={value} onChange={(option) => onChange(option.value)}>
         <div className="relative flex">
           <Listbox.Button className="m-select__btn">
-            {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
+            {({ open }) => {
+              return (
+                <>
+                  <span className="flex-grow">
+                    {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
+                  </span>
+
+                  <MIcon className={clsx(['transition-all duration-300 flex-none', open && '-rotate-180'])}>
+                    <IconLaChevronDown />
+                  </MIcon>
+                </>
+              )
+            }}
           </Listbox.Button>
 
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
@@ -98,8 +120,9 @@ export const MSelect: React.FC<MSelectProps> = ({ name, label, options = [], opt
           </Transition>
         </div>
       </Listbox>
+
       <label className="label">
-        {error !== undefined && <span className="label-text-alt"> {error.message} </span>}{' '}
+        {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}{' '}
       </label>
     </div>
   )

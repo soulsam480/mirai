@@ -20,3 +20,9 @@ export type QueryOptions<
 > = UseTRPCQueryOptions<TPath, TQueryValues[TPath]['input'], TQueryValues[TPath]['output'], TError>
 
 export type OverWrite<T, K> = Omit<T, keyof K> & K
+
+export interface Option {
+  label: string
+  value: any
+  meta?: any
+}
