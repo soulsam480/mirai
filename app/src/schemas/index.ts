@@ -56,16 +56,16 @@ export const createExperienceSchema = z.object({
   type: z.string().min(1, 'Type is required'),
   jobType: z.string().min(1, 'Position type is required'),
   companySector: z.string().min(1, 'Company sector is required'),
-  stipend: z.string().optional(),
-  notes: z.string().optional(),
+  stipend: z.string().nullable(),
+  notes: z.string().nullable(),
   startedAt: z
     .string()
     .min(1, 'Started at is required')
     .transform((val) => dayjs(val).toISOString()),
   endedAt: z
     .string()
-    .optional()
-    .transform((val) => (val !== undefined && val.length > 0 ? dayjs(val).toISOString() : undefined)),
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
   isCurriculum: z.boolean(),
   isOngoing: z.boolean().optional(),
   studentId: z.number(),

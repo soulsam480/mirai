@@ -10,13 +10,15 @@ import { MSelect } from 'components/lib/MSelect'
 import { useExperience } from 'contexts/student'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
+import omit from 'lodash/omit'
 import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { createExperienceSchema } from 'schemas'
 import { studentExperienceAtom } from 'stores/student'
 import { useUser } from 'stores/user'
+import { OverWrite } from 'types'
 import { INDUSTRY_TYPES } from 'utils/constnts'
-import { formatDate } from 'utils/helpers'
+import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { ExperienceCard } from './ExperienceCard'
 
@@ -25,6 +27,11 @@ interface Props {}
 const JOB_TYPE = ['Internship', 'Full Time', 'Part Time', 'Others'].map((val) => ({ label: val, value: val }))
 const COMPANY_TYPE_OPTIONS = INDUSTRY_TYPES.map((val) => ({ label: val, value: val }))
 const STIPEND_OPTIONS = ['0-10K', '10-50K', '50K Plus'].map((value) => ({ label: value, value }))
+
+type StudentWorkExperienceDateStrings = Omit<
+  OverWrite<StudentWorkExperience, { startedAt: string; endedAt: string | null }>,
+  'verified' | 'verifiedBy' | 'verifiedOn'
+>
 
 export const WorkExperience: React.FC<Props> = () => {
   const workExperience = useAtomValue(studentExperienceAtom)
@@ -76,7 +83,7 @@ export const WorkExperience: React.FC<Props> = () => {
 
     if (isOngoing === true) return true
 
-    if (endedAt === undefined || endedAt.length === 0) {
+    if (endedAt === null || endedAt.length === 0) {
       setError('endedAt', { message: 'Ended at is required' })
 
       return false
@@ -105,8 +112,23 @@ export const WorkExperience: React.FC<Props> = () => {
     }
 
     if (!createExp && selectedExperience !== null) {
+      // TODO: simplify setup to only update diff
+      let currExp = workExperience.find(
+        ({ id }) => id === selectedExperience,
+      ) as unknown as StudentWorkExperienceDateStrings
+
+      currExp = omit(currExp, [
+        'verified',
+        'verifiedBy',
+        'verifiedOn',
+        'studentId',
+        'id',
+      ]) as StudentWorkExperienceDateStrings
+
+      const diff = getDiff(currExp, val)
+
       await update({
-        ...val,
+        ...diff,
         id: selectedExperience,
       })
 
@@ -170,6 +192,8 @@ export const WorkExperience: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 sm:w-[700px] sm:max-w-[700px]"
         >
+          <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
               <MInput

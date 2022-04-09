@@ -63,14 +63,18 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
           </span>
         </div>
 
-        <span>.</span>
+        {Boolean(experience.stipend) && (
+          <>
+            <span>.</span>
 
-        <div className="flex items-center gap-2">
-          <MIcon className="text-sm">
-            <IconLaMoneyBill />
-          </MIcon>
-          <span className="text-xs">{experience.stipend}</span>
-        </div>
+            <div className="flex items-center gap-2">
+              <MIcon className="text-sm">
+                <IconLaMoneyBill />
+              </MIcon>
+              <span className="text-xs">{experience.stipend}</span>
+            </div>
+          </>
+        )}
       </div>
 
       <div className="flex justify-end gap-2">

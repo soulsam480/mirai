@@ -17,7 +17,7 @@ export const experienceRouter = createRouter()
     },
   })
   .mutation('update', {
-    input: createExperienceSchema.omit({ studentId: true }).extend({ id: z.number() }),
+    input: createExperienceSchema.omit({ studentId: true }).partial().extend({ id: z.number() }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input
 
@@ -39,5 +39,18 @@ export const experienceRouter = createRouter()
       } catch (error) {
         throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Unable to delete experience' })
       }
+    },
+  })
+  .query('get_all', {
+    input: z.number(),
+    async resolve({ ctx, input }) {
+      const experiences = await ctx.prisma.studentWorkExperience.findMany({
+        where: { studentId: input },
+        orderBy: {
+          startedAt: 'desc',
+        },
+      })
+
+      return experiences
     },
   })

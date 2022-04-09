@@ -1,6 +1,9 @@
 import type { Role } from '@prisma/client'
 import type { MLinkProps } from 'components/lib/MLink'
 import dayjs from 'dayjs'
+import type { NullToUndefined } from 'types'
+
+export const toString = (val: any) => Object.prototype.toString.call(val)
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
   return {
@@ -66,4 +69,69 @@ export function getBaseUrl(): string {
 
   // assume localhost
   return `http://localhost:${process.env.PORT ?? 3000}`
+}
+
+/**
+ * Get deep diff of objects
+ * @param toMatch base data
+ * @param newData new data
+ * @param asNullKeys convert `undefined` to `null`
+ * @returns diff
+ */
+export function getDiff<
+  T extends Record<string, any>,
+  U extends Array<keyof T> = never[],
+  V = U extends Array<infer W> ? W : never,
+>(
+  toMatch: T,
+  newData?: Partial<T>,
+  asNullKeys: U = [] as unknown as U,
+): { [X in keyof T]: X extends V ? T[X] | undefined | null : NullToUndefined<T[X]> | undefined } {
+  if (newData === undefined || newData === null) return {} as any
+
+  function compareValues(a: any, b: any) {
+    if (typeof a === 'boolean' || typeof b === 'boolean') return a === b
+
+    if (dayjs(a).isValid() || dayjs(b).isValid()) {
+      // check for dates
+      return formatDate(a, 'DD/MM/YYYY') === formatDate(b, 'DD/MM/YYYY')
+    }
+
+    return a === b
+  }
+
+  const result: any = {}
+
+  Object.keys(toMatch).forEach((key: keyof T) => {
+    const value = toMatch[key]
+    const newValue = newData[key]
+
+    if (Array.isArray(value) && Array.isArray(newValue)) {
+      // skip arrays and send new
+      result[key] = newValue
+    }
+
+    if (toString(value) === '[object Object]') {
+      // deep object check
+      const odiff = getDiff(value, newValue)
+
+      if (Object.keys(odiff).length > 0) {
+        result[key] = odiff as any
+
+        return
+      }
+    }
+
+    if (compareValues(newValue, value) || newValue === '') return
+
+    if (newValue === undefined && asNullKeys.includes(key)) {
+      result[key] = null
+
+      return
+    }
+
+    result[key] = newValue
+  })
+
+  return result
 }

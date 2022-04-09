@@ -1,10 +1,14 @@
 import { useAlert } from 'components/lib/store/alerts'
+import { useSetAtom } from 'jotai'
+import { studentExperienceAtom } from 'stores/student'
+import { useUser } from 'stores/user'
 import { TRPCErrorType } from 'types'
 import { trpc, trpcClient } from 'utils/trpc'
 
 export function useExperience() {
   const setAlert = useAlert()
-  const utils = trpc.useContext()
+  const userData = useUser()
+  const setExperiences = useSetAtom(studentExperienceAtom)
 
   const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.experience.create'], {
     onError() {
@@ -19,7 +23,7 @@ export function useExperience() {
         message: 'Experience created successfully !',
       })
 
-      utils.invalidateQueries(['student.get'])
+      void invalidate()
     },
   })
 
@@ -36,7 +40,7 @@ export function useExperience() {
         message: 'Experience updated successfully !',
       })
 
-      utils.invalidateQueries(['student.get'])
+      void invalidate()
     },
   })
 
@@ -49,7 +53,7 @@ export function useExperience() {
         message: 'Experience removed successfully !',
       })
 
-      utils.invalidateQueries(['student.get'])
+      void invalidate()
     } catch (error) {
       const { message } = error as TRPCErrorType
       setAlert({
@@ -59,10 +63,19 @@ export function useExperience() {
     }
   }
 
+  async function invalidate() {
+    if (userData.studentId === null) return
+
+    const data = await trpcClient.query('student.experience.get_all', userData.studentId)
+
+    void setExperiences(data)
+  }
+
   return {
     create,
     update,
     deleteExperience,
+    invalidate,
     isLoading: isCreateLoading === true || isUpdateLoading,
   }
 }
