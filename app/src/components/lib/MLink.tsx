@@ -23,4 +23,6 @@ const MLink: React.FC<MLinkProps & LinkProps> = ({ href, children, className, ac
   )
 }
 
+MLink.displayName = 'MLink'
+
 export default MLink

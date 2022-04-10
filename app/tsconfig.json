@@ -18,6 +18,6 @@
     },
     "types": ["unplugin-icons/types/react"]
   },
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "auto-imports.d.ts"],
   "exclude": ["node_modules", ".next", "dist"]
 }

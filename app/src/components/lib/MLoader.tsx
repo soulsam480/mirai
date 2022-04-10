@@ -20,3 +20,5 @@ export const MLoader: React.FC<Props> = () => {
     document.getElementById('__next') as HTMLDivElement,
   )
 }
+
+MLoader.displayName = 'MLoader'

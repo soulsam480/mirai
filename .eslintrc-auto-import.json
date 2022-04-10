@@ -1,0 +1,11 @@
+{
+  "globals": {
+    "IconLaBars": true,
+    "IconLaBuilding": true,
+    "IconLaCalendar": true,
+    "IconLaExclamationCircle": true,
+    "IconLaMoneyBill": true,
+    "IconLaPlusCircle": true,
+    "IconLaUserGraduate": true
+  }
+}

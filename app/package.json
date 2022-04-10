@@ -24,7 +24,6 @@
     "axios": "^0.26.1",
     "clsx": "^1.1.1",
     "daisyui": "^2.13.6",
-    "dayjs": "^1.11.0",
     "jotai": "^1.6.1",
     "lodash": "^4.17.21",
     "next": "^12.1.4",
@@ -41,6 +40,7 @@
   "devDependencies": {
     "@iconify-json/la": "^1.1.1",
     "@svgr/core": "^6.2.1",
+    "@tailwindcss/typography": "^0.5.2",
     "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.181",
     "@types/react": "^17.0.43",
