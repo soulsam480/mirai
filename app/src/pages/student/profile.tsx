@@ -1,6 +1,6 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { Basics } from 'components/student/profile/Basics'
-import { WorkExperience } from 'components/student/profile/workExperience'
+import { WorkExperience } from 'components/student/profile/WorkExperience'
 import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
 import { useStudent } from 'contexts/student'

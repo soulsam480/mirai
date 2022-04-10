@@ -1,6 +1,5 @@
+import dayjs from 'dayjs'
 import { z } from 'zod'
-
-const DATE_REGEX = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/
 
 export const createInstituteSchema = z.object({
   code: z.string().min(1, "Code shouldn't be empty"),
@@ -99,18 +98,16 @@ export const createExperienceSchema = z.object({
   type: z.string().min(1, 'Type is required'),
   jobType: z.string().min(1, 'Position type is required'),
   companySector: z.string().min(1, 'Company sector is required'),
-  stipend: z.string().optional(),
-  notes: z.string().optional(),
-  startedAt: z.string().regex(DATE_REGEX, 'Must be a valid date').min(1, 'Must be a valid date'),
+  stipend: z.string().nullable(),
+  notes: z.string().nullable(),
+  startedAt: z
+    .string()
+    .min(1, 'Started at is required')
+    .transform((val) => dayjs(val).toISOString()),
   endedAt: z
     .string()
-    .optional()
-    .refine(
-      (val) => {
-        return val === '' || DATE_REGEX.test(val as string)
-      },
-      { message: 'Must be a valid date' },
-    ),
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
   isCurriculum: z.boolean(),
   isOngoing: z.boolean().optional(),
   studentId: z.number(),

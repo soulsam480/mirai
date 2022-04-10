@@ -1,19 +1,24 @@
 import React from 'react'
-import { Control, Controller, FieldError } from 'react-hook-form'
+import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
 
 interface Props {
   error?: FieldError
   label: string
   name: string
-  control: Control<any, any>
+  control?: Control<any, any>
 }
 
-export const MCheckbox: React.FC<Props> = ({ error, label, name, control }) => {
+export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _control }) => {
+  const ctx = useFormContext()
+  const control = ctx !== null ? ctx.control : _control
+
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field: { onChange, ref, value, onBlur } }) => {
+      render={({ field: { onChange, ref, value, onBlur }, fieldState: { error: _error } }) => {
+        const fieldError = _error ?? error
+
         return (
           <div className="flex flex-col">
             <label className="cursor-pointer label">
@@ -29,8 +34,9 @@ export const MCheckbox: React.FC<Props> = ({ error, label, name, control }) => {
                 onBlur={onBlur}
               />
             </label>
+
             <label className="label">
-              {error != null && <span className="label-text-alt"> {error.message} </span>}{' '}
+              {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}{' '}
             </label>
           </div>
         )

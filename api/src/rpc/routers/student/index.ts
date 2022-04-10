@@ -31,7 +31,11 @@ export const studentRouter = createRouter()
           basics: true,
           certifications: true,
           education: true,
-          experience: true,
+          experience: {
+            orderBy: {
+              startedAt: 'desc',
+            },
+          },
           projects: true,
           score: true,
         },

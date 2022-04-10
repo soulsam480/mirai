@@ -96,7 +96,7 @@ body {
 
 .m-select {
   &__btn {
-    @apply flex-grow border bg-base-100 rounded-btn border-primary;
+    @apply flex-grow border bg-base-100 rounded-btn border-primary items-center flex;
     @apply border-opacity-100 border-primary py-[5px] px-3 text-left text-sm;
 
     &:focus {

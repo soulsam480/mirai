@@ -30,7 +30,10 @@ export function prismaQueryHelper(client: WithExcludeClient) {
       if (role === 'STUDENT') {
         account = await client.account.findFirst({
           where: { email, id },
-          include: { tenant: true },
+          select: {
+            tenant: true,
+            ...client.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
+          },
         })
       } else if (isInstituteRole(role).is) {
         account = await client.account.findFirst({

@@ -20,3 +20,10 @@ export type QueryOptions<
 > = UseTRPCQueryOptions<TPath, TQueryValues[TPath]['input'], TQueryValues[TPath]['output'], TError>
 
 export type OverWrite<T, K> = Omit<T, keyof K> & K
+export type NullToUndefined<T> = T extends null ? undefined : T
+
+export interface Option {
+  label: string
+  value: any
+  meta?: any
+}

@@ -1,6 +1,8 @@
 import React, { HTMLProps } from 'react'
 
-interface Props extends HTMLProps<HTMLSpanElement> {}
+interface Props extends HTMLProps<HTMLSpanElement> {
+  children: React.ReactNode
+}
 
 export const MIcon = React.forwardRef<HTMLSpanElement, Props>(({ children, ...rest }, ref) => {
   return (
