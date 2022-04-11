@@ -25,7 +25,7 @@ model Account {
   // use this for password reset op
   accountToken  String?
 
-  //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ
+  //TODO: make role an array see https://excalidraw.com/#json=LYBIWlYeJsErhnWtaUGdi,_dfsdpm3KIOU3HTb30eXXQ
   role    Role
   isOwner Boolean @default(false)
 
@@ -150,7 +150,7 @@ model StudentBasics {
   gender           String
   category         String
   mobileNumber     String
-  primaryEmail     String  @unique
+  primaryEmail     String  @unique // use from account also allow to edit
   secondaryEmail   String? @unique
   permanentAddress Json    @default("{}")
   currentAddress   Json    @default("{}")

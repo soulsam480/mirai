@@ -17,7 +17,7 @@ const Batch: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <MDialog show onClose={async () => await router.push('institute/batch')}>
+    <MDialog show onClose={async () => await router.push('/institute/batch')}>
       <ManageBatch />
     </MDialog>
   )
