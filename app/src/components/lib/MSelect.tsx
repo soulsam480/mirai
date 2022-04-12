@@ -20,6 +20,7 @@ export interface MSelectProps {
   optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
   noDataLabel?: React.ReactNode
   control?: Control<any, any>
+  disabled?: boolean
 }
 
 export const MSelect: React.FC<MSelectProps> = ({
@@ -30,6 +31,7 @@ export const MSelect: React.FC<MSelectProps> = ({
   error: _error,
   noDataLabel,
   control,
+  disabled,
 }) => {
   const formCtx = useFormContext()
   const _control = formCtx !== null ? formCtx.control : control
@@ -62,17 +64,23 @@ export const MSelect: React.FC<MSelectProps> = ({
         <span className="label-text"> {label} </span>
       </label>
 
-      <Listbox value={value} onChange={(option) => onChange(option.value)}>
+      <Listbox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
         <div className="relative flex">
           <Listbox.Button className="m-select__btn">
-            {({ open }) => {
+            {({ open, disabled }) => {
               return (
                 <>
                   <span className="flex-grow">
                     {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
                   </span>
 
-                  <MIcon className={clsx(['transition-all duration-300 flex-none', open && '-rotate-180'])}>
+                  <MIcon
+                    className={clsx([
+                      'transition-all duration-300 flex-none',
+                      open && '-rotate-180',
+                      disabled && 'text-base-300',
+                    ])}
+                  >
                     <IconLaChevronDown />
                   </MIcon>
                 </>
@@ -83,30 +91,38 @@ export const MSelect: React.FC<MSelectProps> = ({
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
             <Listbox.Options className="m-select__options">
               {options.length > 0 ? (
-                options.map((option) => (
-                  <Listbox.Option
-                    key={option.label}
-                    value={option}
-                    className={({ active }) =>
-                      clsx(['px-3 py-[6px] text-left rounded-sm cursor-pointer break-words', active && 'bg-amber-200'])
-                    }
-                  >
-                    {(slotCtx) =>
-                      optionSlot?.({ option, slotCtx: { ...slotCtx, selected: value.value === option.value } }) ?? (
-                        <span
-                          className={
-                            (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) ===
-                            option.value
-                              ? 'text-amber-700'
-                              : ''
-                          }
-                        >
-                          {option.label}
-                        </span>
-                      )
-                    }
-                  </Listbox.Option>
-                ))
+                options.map((option) => {
+                  const selected =
+                    (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) === option.value
+
+                  return (
+                    <Listbox.Option
+                      key={option.label}
+                      value={option}
+                      className={({ active }) =>
+                        clsx([
+                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words flex items-center gap-2',
+                          active && 'bg-amber-200',
+                        ])
+                      }
+                    >
+                      {(slotCtx) =>
+                        optionSlot?.({ option, slotCtx: { ...slotCtx, selected } }) ?? (
+                          <>
+                            {selected && (
+                              <MIcon className="text-amber-600">
+                                <IconLaCheckDouble />
+                              </MIcon>
+                            )}
+                            <span className={clsx([selected ? 'font-semibold text-amber-600' : '', 'flex-grow'])}>
+                              {option.label}
+                            </span>
+                          </>
+                        )
+                      }
+                    </Listbox.Option>
+                  )
+                })
               ) : (
                 <Listbox.Option
                   value={''}

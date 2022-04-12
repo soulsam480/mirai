@@ -1,59 +1,46 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import type { StudentWorkExperience } from '@prisma/client'
+import type { StudentProject } from '@prisma/client'
 import clsx from 'clsx'
 import { MCheckbox } from 'components/lib/MCheckbox'
 import { MDialog } from 'components/lib/MDialog'
 import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
-import { MSearch } from 'components/lib/MSearch'
-import { MSelect } from 'components/lib/MSelect'
-import { useExperience } from 'contexts/student'
+import { useProject } from 'contexts/student/projects'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
 import omit from 'lodash/omit'
 import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { createExperienceSchema } from 'schemas'
-import { studentExperienceAtom } from 'stores/student'
+import { createProjectSchema } from 'schemas'
+import { studentProjectsAtom } from 'stores/student'
 import { useUser } from 'stores/user'
 import { OverWrite } from 'types'
-import { INDUSTRY_TYPES } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
-import { ExperienceCard } from './ExperienceCard'
+import { ProjectCard } from './ProjectCard'
 
 interface Props {}
 
-const JOB_TYPE = ['Internship', 'Full Time', 'Part Time', 'Others'].map((val) => ({ label: val, value: val }))
-const COMPANY_TYPE_OPTIONS = INDUSTRY_TYPES.map((val) => ({ label: val, value: val }))
-const STIPEND_OPTIONS = ['0-10K', '10-50K', '50K Plus'].map((value) => ({ label: value, value }))
-
-type StudentWorkExperienceDateStrings = Omit<
-  OverWrite<StudentWorkExperience, { startedAt: string; endedAt: string | null }>,
+type StudentProjectDateStrings = Omit<
+  OverWrite<StudentProject, { startedAt: string; endedAt: string | null }>,
   'verified' | 'verifiedBy' | 'verifiedOn'
 >
 
-export const WorkExperience: React.FC<Props> = () => {
-  const workExperience = useAtomValue(studentExperienceAtom)
-  const { create, update, isLoading } = useExperience()
+export const Projects: React.FC<Props> = () => {
+  const projects = useAtomValue(studentProjectsAtom)
+  const { create, update, isLoading } = useProject()
   const userData = useUser()
 
-  const [selectedExperience, setSelected] = useState<number | null>(null)
+  const [selectedProject, setSelected] = useState<number | null>(null)
   const [isDialog, setDialog] = useState(false)
   const [isReadonly, setReadonly] = useState(false)
 
-  const form = useForm<z.infer<typeof createExperienceSchema>>({
-    resolver: zodResolver(createExperienceSchema.omit({ studentId: true })),
+  const form = useForm<z.infer<typeof createProjectSchema>>({
+    resolver: zodResolver(createProjectSchema.omit({ studentId: true })),
     defaultValues: {
-      company: '',
       title: '',
-      location: '',
-      type: 'NA',
-      jobType: '',
-      companySector: '',
-      stipend: '',
-      notes: '',
-      isCurriculum: true,
+      description: '',
+      domain: '',
       isOngoing: false,
       endedAt: undefined,
     },
@@ -79,7 +66,7 @@ export const WorkExperience: React.FC<Props> = () => {
     isOngoingVal === true && setValue('endedAt', '')
   }, [isOngoingVal, setValue])
 
-  function validateEndedAt(val: z.infer<typeof createExperienceSchema>) {
+  function validateEndedAt(val: z.infer<typeof createProjectSchema>) {
     const { endedAt, startedAt, isOngoing } = val
 
     if (isOngoing === true) return true
@@ -99,10 +86,10 @@ export const WorkExperience: React.FC<Props> = () => {
     return true
   }
 
-  async function submitHandler(val: z.infer<typeof createExperienceSchema>, createExp: boolean) {
+  async function submitHandler(val: z.infer<typeof createProjectSchema>, createProject: boolean) {
     if (!validateEndedAt(val)) return
 
-    if (createExp && userData.studentId !== null) {
+    if (createProject && userData.studentId !== null) {
       await create({
         ...val,
         studentId: userData.studentId,
@@ -112,25 +99,17 @@ export const WorkExperience: React.FC<Props> = () => {
       resetForm()
     }
 
-    if (!createExp && selectedExperience !== null) {
+    if (!createProject && selectedProject !== null) {
       // TODO: simplify setup to only update diff
-      let currExp = workExperience.find(
-        ({ id }) => id === selectedExperience,
-      ) as unknown as StudentWorkExperienceDateStrings
+      let currExp = projects.find(({ id }) => id === selectedProject) as unknown as StudentProjectDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentWorkExperienceDateStrings
+      currExp = omit(currExp, ['verified', 'verifiedBy', 'verifiedOn', 'studentId', 'id']) as StudentProjectDateStrings
 
       const diff = getDiff(currExp, val)
 
       await update({
         ...diff,
-        id: selectedExperience,
+        id: selectedProject,
       })
 
       setDialog(false)
@@ -138,10 +117,11 @@ export const WorkExperience: React.FC<Props> = () => {
     }
   }
 
-  function handleExperienceSelection({ studentId: _sid, id, ...rest }: StudentWorkExperience, readonly = false) {
+  function handleProjectSelection({ studentId: _sid, id, ...rest }: StudentProject, readOnly = false) {
     setSelected(id)
     setDialog(true)
-    readonly && setReadonly(true)
+
+    readOnly && setReadonly(true)
 
     Object.entries(rest).forEach(([key, value]) => {
       if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
@@ -155,35 +135,36 @@ export const WorkExperience: React.FC<Props> = () => {
   function resetForm() {
     reset()
     setSelected(null)
+    setReadonly(false)
   }
 
   // TODO: add document upload
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+        <div className="text-lg font-medium leading-6 text-gray-900">Projects</div>
         <button className="gap-2 flex-start btn btn-sm btn-secondary" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
-          <span>Add new Experience</span>
+          <span>Add new Project</span>
         </button>
       </div>
 
-      {workExperience.length > 0 ? (
+      {projects.length > 0 ? (
         <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
-          {workExperience.map((exp) => {
+          {projects.map((project) => {
             return (
-              <ExperienceCard
-                experience={exp}
-                key={exp.id}
-                onEdit={(readOnly) => handleExperienceSelection(exp, readOnly)}
+              <ProjectCard
+                project={project}
+                key={project.id}
+                onEdit={(readOnly) => handleProjectSelection(project, readOnly)}
               />
             )
           })}
         </div>
       ) : (
-        <h4> You have not added any experience yet !</h4>
+        <h4> You have not added any project yet !</h4>
       )}
 
       <MDialog
@@ -196,38 +177,20 @@ export const WorkExperience: React.FC<Props> = () => {
         <MForm
           form={form}
           onSubmit={handleSubmit((data) => {
-            void submitHandler(data, selectedExperience === null)
+            void submitHandler(data, selectedProject === null)
           })}
           className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+          <div className="text-lg font-medium leading-6 text-gray-900">Project</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
               <MInput
-                {...register('company')}
-                error={errors.company}
-                label="Company / Institute name"
-                name="company"
-                placeholder="Acme Inc."
-                disabled={isReadonly}
-              />
-
-              <MInput
                 {...register('title')}
                 error={errors.title}
-                label="Title / Designation"
+                label="Project title"
                 name="title"
-                placeholder="Business analyst"
-                disabled={isReadonly}
-              />
-
-              <MInput
-                {...register('location')}
-                error={errors.location}
-                label="Location"
-                name="location"
-                placeholder="Location"
+                placeholder="My awesome project"
                 disabled={isReadonly}
               />
 
@@ -239,37 +202,21 @@ export const WorkExperience: React.FC<Props> = () => {
                 type="date"
                 disabled={isReadonly}
               />
-
               <MCheckbox
                 error={errors.isOngoing}
                 name="isOngoing"
-                label="I currently work here"
+                label="I'm currently working on this project"
                 disabled={isReadonly}
               />
             </div>
 
             <div>
-              <MSearch
-                label="Company sector"
-                name="companySector"
-                options={COMPANY_TYPE_OPTIONS}
-                placeholder="Type to search.."
-                disabled={isReadonly}
-              />
-
-              <MSelect
-                error={errors.stipend}
-                label="Stipend"
-                name="stipend"
-                options={STIPEND_OPTIONS}
-                disabled={isReadonly}
-              />
-
-              <MSelect
-                error={errors.jobType}
-                label="Position type"
-                name="jobType"
-                options={JOB_TYPE}
+              <MInput
+                {...register('domain')}
+                error={errors.domain}
+                label="Project domain"
+                name="domain"
+                placeholder="Web development"
                 disabled={isReadonly}
               />
 
@@ -283,22 +230,15 @@ export const WorkExperience: React.FC<Props> = () => {
                   disabled={isReadonly}
                 />
               )}
-
-              <MCheckbox
-                error={errors.isCurriculum}
-                name="isCurriculum"
-                label="Included in curriculam"
-                disabled={isReadonly}
-              />
             </div>
           </div>
 
           <MInput
-            {...register('notes')}
-            error={errors.notes}
+            {...register('description')}
+            error={errors.description}
             as="textarea"
             label="Description"
-            name="notes"
+            name="description"
             disabled={isReadonly}
           />
 

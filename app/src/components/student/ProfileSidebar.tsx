@@ -4,6 +4,8 @@ import React from 'react'
 
 interface Props {}
 
+// TODO: scroll synced route change and navigation
+
 const STUDENT_PROFILE_SIDEBAR = [
   {
     label: 'Basics',
@@ -39,7 +41,7 @@ export const ProfileSidebar: React.FC<Props> = () => {
   const { pathname } = useRouter()
 
   return (
-    <ul className="menu menu-compact gap-1">
+    <ul className="gap-1 menu menu-compact">
       {STUDENT_PROFILE_SIDEBAR.map((section) => (
         <li key={section.anchor}>
           <MLink href={`${pathname}#${section.anchor}`} className="hover:rounded-md rounded-md !text-base">

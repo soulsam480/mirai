@@ -103,6 +103,10 @@ body {
       outline: 2px solid hsl(var(--p));
       outline-offset: 2px;
     }
+
+    &[disabled] {
+      @apply cursor-not-allowed border-base-200 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
+    }
   }
 
   &__options {

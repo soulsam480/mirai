@@ -1,4 +1,5 @@
 import { AppLayout } from 'components/globals/AppLayout'
+import { Projects } from 'components/student/profile/Project'
 import { WorkExperience } from 'components/student/profile/WorkExperience'
 import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
@@ -16,6 +17,10 @@ const StudentProfile: NextPageWithLayout = () => {
       <div className="flex-grow">
         <ProfileSection>
           <WorkExperience />
+        </ProfileSection>
+
+        <ProfileSection>
+          <Projects />
         </ProfileSection>
       </div>
       <div className="hidden max-h-screen px-1 overflow-y-auto rounded-md sm:sticky sm:top-0 sm:shadow sm:shadow-amber-200 w-60 sm:block">

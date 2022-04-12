@@ -1,14 +1,15 @@
-import React from 'react'
+import clsx from 'clsx'
+import React, { HTMLProps } from 'react'
 import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
 
-interface Props {
+interface Props extends Omit<HTMLProps<HTMLInputElement>, 'checked' | 'type' | 'onChange' | 'onBlur'> {
   error?: FieldError
   label: string
   name: string
   control?: Control<any, any>
 }
 
-export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _control }) => {
+export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _control, ...rest }) => {
   const ctx = useFormContext()
   const control = ctx !== null ? ctx.control : _control
 
@@ -21,11 +22,12 @@ export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _contr
 
         return (
           <div className="flex flex-col">
-            <label className="cursor-pointer label">
+            <label className={clsx(['label', rest.disabled === true ? 'cursor-not-allowed' : 'cursor-pointer'])}>
               <span className="label-text">{label}</span>
               <input
+                {...rest}
                 type="checkbox"
-                className="checkbox checkbox-primary checkbox-sm"
+                className={clsx(['checkbox checkbox-primary checkbox-sm', rest.className])}
                 checked={value}
                 onChange={(e) => {
                   onChange?.(e.target.checked as any)

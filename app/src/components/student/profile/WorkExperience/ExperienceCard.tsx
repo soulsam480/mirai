@@ -7,7 +7,7 @@ import { formatDate } from 'utils/helpers'
 
 interface Props {
   experience: StudentWorkExperience
-  onEdit: () => void
+  onEdit: (readOnly?: boolean) => void
 }
 
 export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
@@ -21,8 +21,7 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
         label={
           <>
             Remove experience{' '}
-            {experience.company?.length > 0 && <span className="font-semibold text-primary">{experience.company}</span>}{' '}
-            ?
+            {experience.company?.length > 0 && <span className="font-semibold">{experience.company}</span>} ?
           </>
         }
         onConfirm={async () => {
@@ -78,14 +77,14 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
       </div>
 
       <div className="flex justify-end gap-2">
-        <button className="items-center gap-1 text-base-content btn btn-link btn-xs" onClick={onEdit}>
+        {/* // TODO: read only mode */}
+        <button className="items-center gap-1 text-base-content btn btn-link btn-xs" onClick={() => onEdit()}>
           <MIcon>
             <IconLaPenSquare />
           </MIcon>
 
           <span>Edit</span>
         </button>
-
         <button className="items-center gap-1 text-error btn btn-link btn-xs" onClick={() => setDeleteDialog(true)}>
           <MIcon>
             <IconLaTrashAltSolid />

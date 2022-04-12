@@ -22,6 +22,7 @@ export interface MSearchProps {
   control?: Control<any, any>
   displayValue?: (option?: Option) => string
   placeholder?: string
+  disabled?: boolean
 }
 
 export const MSearch: React.FC<MSearchProps> = ({
@@ -34,6 +35,7 @@ export const MSearch: React.FC<MSearchProps> = ({
   options,
   optionSlot,
   placeholder,
+  disabled,
 }) => {
   const formCtx = useFormContext()
   const _control = formCtx !== null ? formCtx.control : control
@@ -84,7 +86,7 @@ export const MSearch: React.FC<MSearchProps> = ({
         <span className="label-text"> {label} </span>
       </label>
 
-      <Combobox value={value} onChange={(option) => onChange(option.value)}>
+      <Combobox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
         <div className="relative flex">
           <div className="relative flex items-center w-full">
             <Combobox.Input
@@ -98,9 +100,15 @@ export const MSearch: React.FC<MSearchProps> = ({
             />
 
             <Combobox.Button className="absolute inset-y-0 right-0 flex items-center float-none pr-2">
-              {({ open }) => {
+              {({ open, disabled }) => {
                 return (
-                  <MIcon className={clsx(['transition-all duration-300', open && '-rotate-180'])}>
+                  <MIcon
+                    className={clsx([
+                      'transition-all duration-300',
+                      open && '-rotate-180',
+                      disabled && 'text-base-300',
+                    ])}
+                  >
                     <IconLaChevronDown />
                   </MIcon>
                 )
@@ -135,14 +143,23 @@ export const MSearch: React.FC<MSearchProps> = ({
                       value={option}
                       className={({ active }) =>
                         clsx([
-                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words',
+                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words flex items-center gap-2',
                           active && 'bg-amber-200',
                         ])
                       }
                     >
                       {(slotCtx) =>
                         optionSlot?.({ option, slotCtx: { ...slotCtx, selected } }) ?? (
-                          <span className={selected ? 'text-amber-700' : ''}>{option.label}</span>
+                          <>
+                            {selected && (
+                              <MIcon className="text-amber-600">
+                                <IconLaCheckDouble />
+                              </MIcon>
+                            )}
+                            <span className={clsx([selected ? 'font-semibold text-amber-600' : '', 'flex-grow'])}>
+                              {option.label}
+                            </span>
+                          </>
                         )
                       }
                     </Combobox.Option>

@@ -3,13 +3,16 @@
     "IconLaBars": true,
     "IconLaBuilding": true,
     "IconLaCalendar": true,
+    "IconLaCheck": true,
     "IconLaCheckCircleSolid": true,
+    "IconLaCheckDouble": true,
     "IconLaChevronDown": true,
     "IconLaExclamationCircle": true,
-    "IconLaExclamationTriangle": true,
+    "IconLaFlask": true,
     "IconLaMoneyBill": true,
     "IconLaPenSquare": true,
     "IconLaPlusCircle": true,
+    "IconLaRocket": true,
     "IconLaTrashAltSolid": true,
     "IconLaUserGraduate": true
   }

@@ -70,3 +70,19 @@ export const createExperienceSchema = z.object({
   isOngoing: z.boolean().optional(),
   studentId: z.number(),
 })
+
+export const createProjectSchema = z.object({
+  title: z.string().min(1),
+  domain: z.string().min(1),
+  description: z.string().nullable(),
+  startedAt: z
+    .string()
+    .min(1, 'Started at is required')
+    .transform((val) => dayjs(val).toISOString()),
+  endedAt: z
+    .string()
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+  studentId: z.number(),
+  isOngoing: z.boolean().default(false).optional(),
+})

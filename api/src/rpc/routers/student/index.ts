@@ -2,6 +2,7 @@ import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'
 import { experienceRouter } from './experience'
+import { projectRouter } from './project'
 
 export const studentRouter = createRouter()
   // TODO: add logic for student-student queries, where a student shouldn't be
@@ -41,3 +42,4 @@ export const studentRouter = createRouter()
     },
   })
   .merge('experience.', experienceRouter)
+  .merge('project.', projectRouter)
