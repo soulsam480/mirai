@@ -167,13 +167,7 @@ export const Projects: React.FC<Props> = () => {
         <h4> You have not added any project yet !</h4>
       )}
 
-      <MDialog
-        show={isDialog}
-        onClose={() => {
-          setDialog(false)
-          resetForm()
-        }}
-      >
+      <MDialog show={isDialog} onClose={() => null} noEscape>
         <MForm
           form={form}
           onSubmit={handleSubmit((data) => {
@@ -243,7 +237,18 @@ export const Projects: React.FC<Props> = () => {
           />
 
           {!isReadonly && (
-            <div className="text-right">
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setDialog(false)
+                  resetForm()
+                }}
+                className="mt-5 btn btn-sm btn-primary btn-outline"
+              >
+                Cancel
+              </button>
+
               <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
                 Save
               </button>

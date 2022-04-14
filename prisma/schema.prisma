@@ -136,7 +136,7 @@ model Student {
   experience     StudentWorkExperience[]
   skills         Json                    @default("[]")
   projects       StudentProject[]
-  certifications StudentCeritification[]
+  certifications StudentCertification[]
 }
 
 model StudentBasics {
@@ -271,7 +271,7 @@ model StudentProject {
   verifiedBy String?
 }
 
-model StudentCeritification {
+model StudentCertification {
   id Int @id @default(autoincrement())
 
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)

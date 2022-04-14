@@ -1,6 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'
+import { certificationRouter } from './certifications'
 import { experienceRouter } from './experience'
 import { projectRouter } from './project'
 
@@ -41,5 +42,21 @@ export const studentRouter = createRouter()
       return studentData
     },
   })
+  .mutation('skills.update', {
+    input: z.object({
+      studentId: z.number(),
+      skills: z.array(z.any()),
+    }),
+    async resolve({ ctx, input: { skills, studentId } }) {
+      const skillData = await ctx.prisma.student.update({
+        where: { id: studentId },
+        data: { skills },
+        select: { skills: true },
+      })
+
+      return skillData
+    },
+  })
   .merge('experience.', experienceRouter)
   .merge('project.', projectRouter)
+  .merge('certification.', certificationRouter)

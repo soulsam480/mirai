@@ -21,6 +21,7 @@ export interface MSelectProps {
   noDataLabel?: React.ReactNode
   control?: Control<any, any>
   disabled?: boolean
+  reset?: boolean
 }
 
 export const MSelect: React.FC<MSelectProps> = ({
@@ -32,6 +33,7 @@ export const MSelect: React.FC<MSelectProps> = ({
   noDataLabel,
   control,
   disabled,
+  reset = false,
 }) => {
   const formCtx = useFormContext()
   const _control = formCtx !== null ? formCtx.control : control
@@ -44,8 +46,12 @@ export const MSelect: React.FC<MSelectProps> = ({
     control: _control,
   })
 
+  function isValue(val: null | string | undefined) {
+    return !(val === undefined || val === null || val === '')
+  }
+
   const optionFromValue = useMemo(() => {
-    if (value === undefined || value === '') return 'Select'
+    if (!isValue(value)) return 'Select'
 
     const selectedOption = options.find((v) => v.value === (isSafeVal(value) === true ? value : value.value ?? ''))
 
@@ -73,6 +79,23 @@ export const MSelect: React.FC<MSelectProps> = ({
                   <span className="flex-grow">
                     {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
                   </span>
+
+                  {reset && !disabled && isValue(value) && (
+                    <MIcon
+                      className={clsx([
+                        'absolute right-[30px] p-1 z-10 tooltip tooltip-secondary tooltip-left',
+                        disabled && 'text-base-300',
+                      ])}
+                      onClick={(e) => {
+                        e.stopPropagation()
+
+                        onChange('')
+                      }}
+                      data-tip="Reset value"
+                    >
+                      <IconLaUndoAlt />
+                    </MIcon>
+                  )}
 
                   <MIcon
                     className={clsx([

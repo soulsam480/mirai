@@ -4,6 +4,7 @@ import React, { Fragment } from 'react'
 export interface Props {
   show: boolean
   onClose: (val: boolean) => void
+  noEscape?: boolean
 }
 
 const DialogContent = React.forwardRef<HTMLDivElement, any>(({ children }, ref) => {
@@ -14,9 +15,9 @@ const DialogContent = React.forwardRef<HTMLDivElement, any>(({ children }, ref) 
   )
 })
 
-export const MDialog: React.FC<Props> = ({ show, children, onClose }) => {
+export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape }) => {
   return (
-    <Transition appear show={show} as={Fragment}>
+    <Transition appear show={show} as={Fragment} static={noEscape}>
       <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" onClose={onClose}>
         <div className="min-h-screen px-4 text-center">
           <Transition.Child

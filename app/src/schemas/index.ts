@@ -1,3 +1,4 @@
+import { StudentScoreType } from '@prisma/client'
 import dayjs from 'dayjs'
 import { z } from 'zod'
 
@@ -72,8 +73,8 @@ export const createExperienceSchema = z.object({
 })
 
 export const createProjectSchema = z.object({
-  title: z.string().min(1),
-  domain: z.string().min(1),
+  title: z.string().min(1, 'Required'),
+  domain: z.string().min(1, 'Required'),
   description: z.string().nullable(),
   startedAt: z
     .string()
@@ -85,4 +86,36 @@ export const createProjectSchema = z.object({
     .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
   studentId: z.number(),
   isOngoing: z.boolean().default(false).optional(),
+})
+
+export const createCertificationSchema = z.object({
+  name: z.string().min(1, 'Required'),
+  institute: z.string().min(1, 'Required'),
+  documentName: z.string().min(1),
+  subject: z.string().nullable(),
+  identificationNumber: z.string(),
+  score: z.string().nullable(),
+  description: z.string().nullable(),
+  scoreType: z
+    .string()
+    .nullable()
+    .transform((val) => (val !== null && val.trim()?.length === 0 ? null : (val as StudentScoreType | null)))
+    .refine(
+      (val) => (val !== null && val.length > 0 ? ['PERCENTAGE', 'CGPA', 'GRADES'].includes(val) : true),
+      'Score type is required !',
+    ),
+  date: z
+    .string()
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+  expiresAt: z
+    .string()
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+  studentId: z.number(),
+})
+
+export const createSkillSchema = z.object({
+  name: z.string().min(1, 'Skill name is required'),
+  score: z.enum(['Beginner', 'Intermediate', 'Expert']),
 })

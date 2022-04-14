@@ -55,3 +55,5 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
 // * Keep it at the bottom
 
 export * from './experience'
+export * from './certification'
+export * from './projects'
