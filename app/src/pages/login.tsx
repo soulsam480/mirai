@@ -94,7 +94,7 @@ const Login: NextPageWithLayout = () => {
             <input
               type="email"
               placeholder="john@doe.com"
-              className="input input-bordered input-primary"
+              className="input-bordered input-primary input"
               {...register('email')}
             />
             <label className="label">
@@ -109,7 +109,7 @@ const Login: NextPageWithLayout = () => {
             <input
               type="password"
               placeholder="password"
-              className="input input-bordered input-primary"
+              className="input-bordered input-primary input"
               {...register('password')}
             />
             <label className="label">

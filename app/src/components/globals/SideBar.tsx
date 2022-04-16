@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useUser } from 'stores/user'
 import { defineSidebar } from 'utils/helpers'
 import MLink from 'lib/MLink'
@@ -55,10 +55,15 @@ const sidebarConfig = {
 
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
+  const drawerRef = useRef<HTMLInputElement | null>(null)
+
+  function dismissDrawer() {
+    drawerRef.current !== null && (drawerRef.current.checked = false)
+  }
 
   return (
-    <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
-      <input id="mirai-drawer" type="checkbox" className="drawer-toggle" />
+    <div className="drawer-mobile drawer !h-[calc(100vh-57px)] sm:drawer-side">
+      <input id="mirai-drawer" type="checkbox" className="drawer-toggle" ref={drawerRef} />
       {children}
       <div className="drawer-side ">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
@@ -71,7 +76,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
                 return (
                   <li key={key}>
-                    <MLink className="!px-2 !py-1" href={item.path} active={item.active}>
+                    <MLink className="!px-2 !py-1" href={item.path} active={item.active} onClick={dismissDrawer}>
                       {item.label}
                     </MLink>
                   </li>

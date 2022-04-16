@@ -28,8 +28,8 @@ export const NavBar: React.FC<Props> = () => {
             </>
           ) : (
             <>
-              <div className="dropdown dropdown-end">
-                <button tabIndex={0} className="avatar placeholder">
+              <div className="dropdown-end dropdown">
+                <button tabIndex={0} className="placeholder avatar">
                   <div className="h-8 w-8 rounded-full bg-primary text-neutral">
                     <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
                   </div>
@@ -49,14 +49,14 @@ export const NavBar: React.FC<Props> = () => {
 
                   <li>
                     <div className="p-0">
-                      <button className="btn btn-outline btn-sm btn-block">Settings</button>
+                      <button className="btn-outline btn btn-block btn-sm">Settings</button>
                     </div>{' '}
                   </li>
 
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn btn-outline btn-sm btn-block"
+                        className="btn-outline btn btn-block btn-sm"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout

@@ -124,7 +124,7 @@ export const ManageInstitute: React.FC<any> = () => {
         <label className="label">
           <span className="label-text">Onboarding status</span>
         </label>
-        <select className="select select-bordered select-primary select-sm" {...register('status')}>
+        <select className="select-bordered select-primary select select-sm" {...register('status')}>
           {instituteStatus.map((val, key) => {
             return (
               <option key={key} value={val}>

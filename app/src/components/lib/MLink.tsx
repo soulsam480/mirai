@@ -3,12 +3,13 @@ import Link, { LinkProps } from 'next/link'
 import { useRouter } from 'next/router'
 import clsx from 'clsx'
 
-export interface MLinkProps {
+export interface MLinkProps extends LinkProps {
   className?: string
   active?: (pathname: string) => boolean
+  onClick?: () => void
 }
 
-const MLink: React.FC<MLinkProps & LinkProps> = ({ href, children, className, active, ...rest }) => {
+const MLink: React.FC<MLinkProps> = ({ href, children, className, active, onClick, ...rest }) => {
   const { pathname } = useRouter()
 
   const isActive = useMemo(
@@ -18,7 +19,9 @@ const MLink: React.FC<MLinkProps & LinkProps> = ({ href, children, className, ac
 
   return (
     <Link href={href} {...rest}>
-      <a className={clsx([isActive ? 'active' : '', className])}> {children} </a>
+      <a className={clsx([isActive ? 'active' : '', className])} onClick={onClick}>
+        {children}
+      </a>
     </Link>
   )
 }

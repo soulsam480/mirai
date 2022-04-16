@@ -14,6 +14,6 @@
     "useUnknownInCatchVariables": false,
     "downlevelIteration": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts", "prettier.config.cjs"],
   "exclude": ["**/node_modules", "**/.next", "out", "**/dist"]
 }

@@ -98,9 +98,9 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
 
       <Combobox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
         <div className="relative flex">
-          <div className="relative flex items-center w-full">
+          <div className="relative flex w-full items-center">
             <Combobox.Input
-              className="flex-grow input input-bordered input-primary input-sm"
+              className="input-bordered input-primary input input-sm flex-grow"
               displayValue={(val) => displayValue(extractOption(val))}
               onChange={(event) => setQuery(event.target.value)}
               autoComplete="off"

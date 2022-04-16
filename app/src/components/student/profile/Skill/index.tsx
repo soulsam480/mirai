@@ -133,24 +133,24 @@ export const Skills: React.FC<Props> = () => {
             />
           </div>
 
-          {!isReadonly && (
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setDialog(false)
-                  resetForm()
-                }}
-                className="btn btn-outline btn-primary btn-sm mt-5"
-              >
-                Cancel
-              </button>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDialog(false)
+                resetForm()
+              }}
+              className="btn-outline btn btn-primary btn-sm mt-5"
+            >
+              Cancel
+            </button>
 
+            {!isReadonly && (
               <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </MForm>
       </MDialog>
     </div>

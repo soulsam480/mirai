@@ -18,6 +18,7 @@ declare global {
   const IconLaShieldAlt: typeof import('~icons/la/shield-alt.jsx')['default']
   const IconLaTrashAltSolid: typeof import('~icons/la/trash-alt-solid.jsx')['default']
   const IconLaUndoAlt: typeof import('~icons/la/undo-alt.jsx')['default']
+  const IconLaUserCircle: typeof import('~icons/la/user-circle.jsx')['default']
   const IconLaUserGraduate: typeof import('~icons/la/user-graduate.jsx')['default']
 }
 export {}

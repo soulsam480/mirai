@@ -1,12 +1,13 @@
-import MLink from 'components/lib/MLink'
+import clsx from 'clsx'
 import { useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
 import React from 'react'
-import { activeProfileAtom } from 'stores/activeProfile'
+import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
 
-interface Props {}
-
-// TODO: scroll synced route change and navigation
+interface Props {
+  className?: string
+  onClick?: (anchor: SidebarTabs) => void
+  tabIndex?: number
+}
 
 const STUDENT_PROFILE_SIDEBAR = [
   {
@@ -39,21 +40,22 @@ const STUDENT_PROFILE_SIDEBAR = [
   },
 ]
 
-export const ProfileSidebar: React.FC<Props> = () => {
-  const { pathname } = useRouter()
+export const ProfileSidebar: React.FC<Props> = ({ className, onClick, tabIndex }) => {
   const activeTab = useAtomValue(activeProfileAtom)
 
   return (
-    <ul className="menu menu-compact gap-1">
+    <ul className={clsx(['menu menu-compact gap-1', className ?? ''])} tabIndex={tabIndex}>
       {STUDENT_PROFILE_SIDEBAR.map((section) => (
         <li key={section.anchor}>
-          <MLink
-            href={`${pathname}#${section.anchor}`}
-            className="rounded-md !text-base hover:rounded-md"
-            active={() => activeTab !== null && activeTab === section.anchor}
+          <button
+            className={clsx([
+              'rounded-md !text-base hover:rounded-md',
+              activeTab !== null && activeTab === section.anchor && 'active',
+            ])}
+            onClick={() => onClick?.(section.anchor as SidebarTabs)}
           >
             {section.label}
-          </MLink>
+          </button>
         </li>
       ))}
     </ul>

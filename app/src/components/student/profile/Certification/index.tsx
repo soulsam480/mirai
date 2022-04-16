@@ -227,7 +227,6 @@ export const Certifications: React.FC<Props> = () => {
                 error={errors.identificationNumber}
                 label="Identification number"
                 name="identificationNumber"
-                placeholder="WKBR2J3BJB234JR3"
                 disabled={isReadonly}
               />
 
@@ -253,24 +252,24 @@ export const Certifications: React.FC<Props> = () => {
             disabled={isReadonly}
           />
 
-          {!isReadonly && (
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setDialog(false)
-                  resetForm()
-                }}
-                className="btn btn-outline btn-primary btn-sm mt-5"
-              >
-                Cancel
-              </button>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDialog(false)
+                resetForm()
+              }}
+              className="btn-outline btn btn-primary btn-sm mt-5"
+            >
+              Cancel
+            </button>
 
+            {!isReadonly && (
               <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </MForm>
       </MDialog>
     </div>
