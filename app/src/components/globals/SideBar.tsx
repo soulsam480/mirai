@@ -57,15 +57,15 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
 
   return (
-    <div className="drawer drawer-mobile sm:drawer-side !h-[calc(100vh-57px)]">
+    <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
       <input id="mirai-drawer" type="checkbox" className="drawer-toggle" />
       {children}
       <div className="drawer-side ">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
-        <aside className="p-4 pt-0 space-y-1 overflow-y-auto border-r menu bg-amber-50 lg:bg-transparent w-60 text-base-content border-amber-200">
+        <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-amber-200 bg-amber-50 p-4 pt-0 text-base-content lg:bg-transparent">
           {userData.role !== undefined && (
             <>
-              <li className="!hover:bg-transparent font-semibold p-1 mb-1 text-sm border-b border-amber-200 text-ellipsis">
+              <li className="!hover:bg-transparent mb-1 text-ellipsis border-b border-amber-200 p-1 text-sm font-semibold">
                 {userData.name ?? userData.email ?? 'User'} ({userData.role})
               </li>
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {

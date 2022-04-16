@@ -11,9 +11,9 @@ export const NavBar: React.FC<Props> = () => {
   const isLoggedIn = useAtomValue(loggedInAtom)
 
   return (
-    <div className="sticky top-0 z-10 w-full mb-2 border-b text-neutral border-amber-200 bg-opacity-40 backdrop-blur">
-      <div className="navbar min-h-[0] !h-12">
-        <div className="flex-1 mx-2">
+    <div className="sticky top-0 z-10 mb-2 w-full border-b border-amber-200 bg-opacity-40 text-neutral backdrop-blur">
+      <div className="navbar !h-12 min-h-[0]">
+        <div className="mx-2 flex-1">
           <Link href="/">
             <a className="text-lg font-bold">Mirai</a>
           </Link>
@@ -21,22 +21,22 @@ export const NavBar: React.FC<Props> = () => {
         <div className="flex-none space-x-2">
           {isLoggedIn === false ? (
             <>
-              <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
+              <button className="btn btn-primary btn-ghost btn-sm hover:bg-primary">Contact sales</button>
               <Link href="/login">
-                <a className="btn btn-sm btn-ghost hover:bg-primary btn-secondary">Login / Signup</a>
+                <a className="btn btn-secondary btn-ghost btn-sm hover:bg-primary">Login / Signup</a>
               </Link>
             </>
           ) : (
             <>
               <div className="dropdown dropdown-end">
                 <button tabIndex={0} className="avatar placeholder">
-                  <div className="w-8 h-8 rounded-full bg-primary text-neutral">
+                  <div className="h-8 w-8 rounded-full bg-primary text-neutral">
                     <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
                   </div>
                 </button>
                 <ul
                   tabIndex={0}
-                  className="p-2 space-y-2 border shadow-lg menu dropdown-content bg-amber-50 border-amber-200 rounded-box w-52"
+                  className="dropdown-content menu rounded-box w-52 space-y-2 border border-amber-200 bg-amber-50 p-2 shadow-lg"
                 >
                   <li>
                     <div className="p-1 text-sm">
@@ -49,14 +49,14 @@ export const NavBar: React.FC<Props> = () => {
 
                   <li>
                     <div className="p-0">
-                      <button className="btn btn-sm btn-outline btn-block">Settings</button>
+                      <button className="btn btn-outline btn-sm btn-block">Settings</button>
                     </div>{' '}
                   </li>
 
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn btn-sm btn-outline btn-block"
+                        className="btn btn-outline btn-sm btn-block"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout

@@ -44,7 +44,7 @@ export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   }, [type])
 
   return (
-    <div className={clsx(['alert shadow p-2 text-base', bgColor])}>
+    <div className={clsx(['alert p-2 text-base shadow', bgColor])}>
       <div className="flex items-center space-x-2">
         {iconName}
         <span>{message}</span>
@@ -63,7 +63,7 @@ export const MAlertGroup: React.FC<AlertGroupProps> = () => {
 
   return mounted === true
     ? createPortal(
-        <div className="fixed top-0 z-50 transform -translate-x-1/2 left-1/2 list-group">
+        <div className="list-group fixed top-0 left-1/2 z-50 -translate-x-1/2 transform">
           <Transition is="div" className="flex flex-col items-center justify-center" show={!(alerts.length === 0)}>
             {alerts.map((alert) => (
               <Transition.Child

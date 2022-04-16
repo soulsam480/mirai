@@ -44,12 +44,12 @@ export const ProfileSidebar: React.FC<Props> = () => {
   const activeTab = useAtomValue(activeProfileAtom)
 
   return (
-    <ul className="gap-1 menu menu-compact">
+    <ul className="menu menu-compact gap-1">
       {STUDENT_PROFILE_SIDEBAR.map((section) => (
         <li key={section.anchor}>
           <MLink
             href={`${pathname}#${section.anchor}`}
-            className="hover:rounded-md rounded-md !text-base"
+            className="rounded-md !text-base hover:rounded-md"
             active={() => activeTab !== null && activeTab === section.anchor}
           >
             {section.label}

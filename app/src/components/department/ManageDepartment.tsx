@@ -68,7 +68,7 @@ export const ManageDepartment: React.FC<any> = () => {
   return (
     <>
       <form
-        className="flex form-control sm:w-80 sm:max-w-80"
+        className="sm:max-w-80 form-control flex sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateDepartment : createDepartment)}
       >
         <div className="text-lg font-medium leading-6 text-gray-900">
@@ -94,12 +94,12 @@ export const ManageDepartment: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/department')}
-            className="mt-5 btn btn-sm btn-secondary"
+            className="btn btn-secondary btn-sm mt-5"
           >
             Cancel{' '}
           </button>
 
-          <button type="submit" className="mt-5 btn btn-sm btn-primary">
+          <button type="submit" className="btn btn-primary btn-sm mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
         </div>

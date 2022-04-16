@@ -19,7 +19,7 @@ interface PageHeaderProps extends HTMLProps<HTMLDivElement> {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, headerLabel, ...props }) => {
   return (
-    <div className="flex justify-between items-center border-b border-amber-200 pb-4" {...props}>
+    <div className="flex items-center justify-between border-b border-amber-200 pb-4" {...props}>
       <div className="text-xl font-medium">{headerLabel}</div>
 
       <Link href={createActionUrl}>

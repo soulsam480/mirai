@@ -143,7 +143,7 @@ export const Projects: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6 text-gray-900">Projects</div>
-        <button className="gap-2 flex-start btn btn-sm btn-secondary" onClick={() => setDialog(true)}>
+        <button className="flex-start btn btn-secondary btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
@@ -152,7 +152,7 @@ export const Projects: React.FC<Props> = () => {
       </div>
 
       {projects.length > 0 ? (
-        <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
+        <div className="grid-col-1 grid gap-2 sm:grid-cols-2">
           {projects.map((project) => {
             return (
               <ProjectCard
@@ -244,12 +244,12 @@ export const Projects: React.FC<Props> = () => {
                   setDialog(false)
                   resetForm()
                 }}
-                className="mt-5 btn btn-sm btn-primary btn-outline"
+                className="btn btn-outline btn-primary btn-sm mt-5"
               >
                 Cancel
               </button>
 
-              <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             </div>

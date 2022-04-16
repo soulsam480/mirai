@@ -94,9 +94,9 @@ export const MSearch: React.FC<MSearchProps> = ({
 
       <Combobox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
         <div className="relative flex">
-          <div className="relative flex items-center w-full">
+          <div className="relative flex w-full items-center">
             <Combobox.Input
-              className="flex-grow input input-bordered input-primary input-sm"
+              className="input input-bordered input-primary input-sm flex-grow"
               displayValue={(val) => displayValue(extractOption(val))}
               onChange={(event) => setQuery(event.target.value)}
               autoComplete="off"
@@ -105,13 +105,16 @@ export const MSearch: React.FC<MSearchProps> = ({
               placeholder={placeholder}
             />
 
-            <Combobox.Button className="absolute right-0 flex items-center float-none mr-2 top-[0.25] bottom-[0.25] bg-base-100">
+            <Combobox.Button className="absolute right-0 top-[0.25] bottom-[0.25] float-none mr-2 flex items-center bg-base-100">
               {({ open, disabled }) => {
                 return (
                   <div className="relative flex items-center">
                     {reset && !disabled && isValue(value) && (
                       <MIcon
-                        className={clsx(['p-1 tooltip tooltip-secondary tooltip-left', disabled && 'text-base-300'])}
+                        className={clsx([
+                          'tooltip tooltip-left tooltip-secondary p-1',
+                          disabled && 'bg-base-200 text-base-300',
+                        ])}
                         onClick={(e) => {
                           e.stopPropagation()
 
@@ -127,7 +130,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                       className={clsx([
                         'transition-all duration-300',
                         open && '-rotate-180',
-                        disabled && 'text-base-300',
+                        disabled && 'bg-base-200 text-base-300',
                       ])}
                     >
                       <IconLaChevronDown />
@@ -149,7 +152,7 @@ export const MSearch: React.FC<MSearchProps> = ({
               {filteredOptions.length === 0 && query !== '' ? (
                 <Combobox.Option
                   value={''}
-                  className="px-3 flex space-x-2 items-center font-medium py-[6px] text-left rounded-sm cursor-not-allowed"
+                  className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
                   <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
@@ -165,7 +168,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                       value={option}
                       className={({ active }) =>
                         clsx([
-                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words flex items-center gap-2',
+                          'flex cursor-pointer items-center gap-2 break-words rounded-sm px-3 py-[6px] text-left',
                           active && 'bg-amber-200',
                         ])
                       }

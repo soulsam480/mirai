@@ -109,13 +109,13 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
               placeholder={placeholder}
             />
 
-            <Combobox.Button className="absolute right-0 flex items-center float-none mr-2 top-[0.25] bottom-[0.25] bg-base-100">
+            <Combobox.Button className="absolute right-0 top-[0.25] bottom-[0.25] float-none mr-2 flex items-center bg-base-100">
               {({ open, disabled }) => {
                 return (
                   <div className="relative flex items-center">
                     {reset && !disabled && isValue(value) && (
                       <MIcon
-                        className={clsx(['p-1 tooltip tooltip-secondary tooltip-left', disabled && 'text-base-300'])}
+                        className={clsx(['tooltip tooltip-left tooltip-secondary p-1', disabled && 'text-base-300'])}
                         onClick={(e) => {
                           e.stopPropagation()
 
@@ -153,7 +153,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
               {filteredOptions.length === 0 && query !== '' ? (
                 <Combobox.Option
                   value={''}
-                  className="px-3 flex space-x-2 items-center font-medium py-[6px] text-left rounded-sm cursor-not-allowed"
+                  className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
                   <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
@@ -169,7 +169,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
                       value={option}
                       className={({ active }) =>
                         clsx([
-                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words flex items-center gap-2',
+                          'flex cursor-pointer items-center gap-2 break-words rounded-sm px-3 py-[6px] text-left',
                           active && 'bg-amber-200',
                         ])
                       }

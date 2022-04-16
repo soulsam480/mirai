@@ -62,7 +62,7 @@ const StudentProfile: NextPageWithLayout = () => {
 
   return (
     <div className="flex items-start space-x-2">
-      <div className="flex flex-col flex-grow gap-2 mb-[100px]">
+      <div className="mb-[100px] flex flex-grow flex-col gap-2">
         <ProfileSection id="experience">
           <WorkExperience />
         </ProfileSection>
@@ -80,7 +80,7 @@ const StudentProfile: NextPageWithLayout = () => {
         </ProfileSection>
       </div>
 
-      <div className="hidden max-h-screen p-1 overflow-y-auto rounded-md sm:sticky sm:top-0 sm:shadow sm:shadow-amber-200 w-60 sm:block">
+      <div className="hidden max-h-screen w-60 overflow-y-auto rounded-md p-1 sm:sticky sm:top-0 sm:block sm:shadow sm:shadow-amber-200">
         <ProfileSidebar />
       </div>
     </div>
