@@ -2,9 +2,11 @@ import { basicsRouter } from './basics'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'
+import { certificationRouter } from './certifications'
 import { experienceRouter } from './experience'
 import { scoreRouter } from './score'
 import { educationRouter } from './education'
+import { projectRouter } from './project'
 
 export const studentRouter = createRouter()
   // TODO: add logic for student-student queries, where a student shouldn't be
@@ -48,3 +50,21 @@ export const studentRouter = createRouter()
   .merge('score.', scoreRouter)
   .merge('education.', educationRouter)
   .merge('experience.', experienceRouter)
+  .merge('project.', projectRouter)
+  .merge('certification.', certificationRouter)
+
+  .mutation('skills.update', {
+    input: z.object({
+      studentId: z.number(),
+      skills: z.array(z.any()),
+    }),
+    async resolve({ ctx, input: { skills, studentId } }) {
+      const skillData = await ctx.prisma.student.update({
+        where: { id: studentId },
+        data: { skills },
+        select: { skills: true },
+      })
+
+      return skillData
+    },
+  })

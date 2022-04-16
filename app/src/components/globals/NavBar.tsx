@@ -11,7 +11,7 @@ export const NavBar: React.FC<Props> = () => {
   const isLoggedIn = useAtomValue(loggedInAtom)
 
   return (
-    <div className="sticky top-0 z-30 w-full mb-2 border-b text-neutral border-amber-200 bg-opacity-40 backdrop-blur">
+    <div className="sticky top-0 z-10 w-full mb-2 border-b text-neutral border-amber-200 bg-opacity-40 backdrop-blur">
       <div className="navbar min-h-[0] !h-12">
         <div className="flex-1 mx-2">
           <Link href="/">

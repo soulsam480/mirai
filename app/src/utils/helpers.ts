@@ -89,11 +89,21 @@ export function getDiff<
 ): { [X in keyof T]: X extends V ? T[X] | undefined | null : NullToUndefined<T[X]> | undefined } {
   if (newData === undefined || newData === null) return {} as any
 
-  function compareValues(a: any, b: any) {
-    if (typeof a === 'boolean' || typeof b === 'boolean') return a === b
+  function safeParseToString(val: any) {
+    return toString(val) === '[object Date]' ? dayjs(val).toISOString() : val
+  }
 
-    if (dayjs(a).isValid() || dayjs(b).isValid()) {
-      // check for dates
+  function isISODateString(val: any) {
+    return dayjs(val).isValid() && dayjs(val).toISOString() === val
+  }
+
+  function compareValues(a: any, b: any) {
+    // if date make them strings
+    a = safeParseToString(a)
+    b = safeParseToString(b)
+
+    // check for ISO strings, then compare dates
+    if (isISODateString(a) || isISODateString(b)) {
       return formatDate(a, 'DD/MM/YYYY') === formatDate(b, 'DD/MM/YYYY')
     }
 
@@ -122,7 +132,8 @@ export function getDiff<
       }
     }
 
-    if (compareValues(newValue, value) || newValue === '') return
+    // if value's the same return
+    if (compareValues(newValue, value)) return
 
     if (newValue === undefined && asNullKeys.includes(key)) {
       result[key] = null

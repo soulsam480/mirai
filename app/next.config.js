@@ -2,8 +2,10 @@
 const { withSuperjson } = require('next-superjson')
 const withPlugins = require('next-compose-plugins')
 const withTM = require('next-transpile-modules')(['@mirai/api'], { debug: true })
+// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
-module.exports = withPlugins([withSuperjson, withTM], {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   webpack(config) {
     // if (!isServer) {
@@ -40,7 +42,12 @@ module.exports = withPlugins([withSuperjson, withTM], {
       }),
     )
 
+    // config.plugins.push(new ForkTsCheckerWebpackPlugin())
+
     return config
   },
+  swcMinify: true,
   distDir: 'dist',
-})
+}
+
+module.exports = withPlugins([withSuperjson, withTM], nextConfig)

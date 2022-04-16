@@ -1,3 +1,5 @@
+// TODO: finalize component
+
 import { Combobox, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { Fragment, ReactElement, useMemo, useState } from 'react'
@@ -6,13 +8,15 @@ import { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
 import { MIcon } from './MIcon'
 
+// TODO: uncontrolled
+
 interface RenderPropCtx {
   active: boolean
   selected: boolean
   disabled: boolean
 }
 
-export interface MSearchProps {
+export interface MMultiSelectProps {
   name: string
   label: string
   options: Option[]
@@ -26,7 +30,7 @@ export interface MSearchProps {
   reset?: boolean
 }
 
-export const MSearch: React.FC<MSearchProps> = ({
+export const MMultiSelect: React.FC<MMultiSelectProps> = ({
   name,
   control,
   error: _error,

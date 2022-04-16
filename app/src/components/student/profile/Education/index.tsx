@@ -1,61 +1,59 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import type { StudentWorkExperience } from '@prisma/client'
+import dayjs from 'dayjs'
 import clsx from 'clsx'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import type { StudentEducation } from '@prisma/client'
 import { MCheckbox } from 'components/lib/MCheckbox'
 import { MDialog } from 'components/lib/MDialog'
 import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
-import { MSearch } from 'components/lib/MSearch'
 import { MSelect } from 'components/lib/MSelect'
-import { useExperience } from 'contexts/student'
-import dayjs from 'dayjs'
+import { useEducation } from 'contexts/student/education'
 import { useAtomValue } from 'jotai'
-import omit from 'lodash/omit'
-import React, { useEffect, useState } from 'react'
+import { omit } from 'lodash'
+import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { createExperienceSchema } from 'schemas'
-import { studentExperienceAtom } from 'stores/student'
+import { createStudentEducationSchema } from 'schemas'
+import { studentEducationAtom } from 'stores/student'
 import { useUser } from 'stores/user'
 import { OverWrite } from 'types'
-import { INDUSTRY_TYPES } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
-import { z } from 'zod'
-import { ExperienceCard } from './ExperienceCard'
+import { EducationCard } from './EducationCard'
 
 interface Props {}
 
-const JOB_TYPE = ['Internship', 'Full Time', 'Part Time', 'Others'].map((val) => ({ label: val, value: val }))
-const COMPANY_TYPE_OPTIONS = INDUSTRY_TYPES.map((val) => ({ label: val, value: val }))
-const STIPEND_OPTIONS = ['0-10K', '10-50K', '50K Plus'].map((value) => ({ label: value, value }))
+const SCORE_TYPE = ['PERCENTAGE', 'CGPA', 'GRADES'].map((val) => ({ label: val, value: val }))
+const EDUCATION_TYPE = ['Full Time', 'Part Time', 'Correspondence', 'Others'].map((val) => ({ label: val, value: val }))
 
-type StudentWorkExperienceDateStrings = Omit<
-  OverWrite<StudentWorkExperience, { startedAt: string; endedAt: string | null }>,
+type StudentEducationDateStrings = Omit<
+  OverWrite<StudentEducation, { startedAt: string; endedAt: string | null }>,
   'verified' | 'verifiedBy' | 'verifiedOn'
 >
 
-export const WorkExperience: React.FC<Props> = () => {
-  const workExperience = useAtomValue(studentExperienceAtom)
-  const { create, update, isLoading } = useExperience()
+export const Education: React.FC<Props> = () => {
+  const education = useAtomValue(studentEducationAtom)
+  const { create, update, isLoading } = useEducation()
   const userData = useUser()
 
-  const [selectedExperience, setSelected] = useState<number | null>(null)
+  const [selectedEducation, setSelected] = useState<number | null>(null)
   const [isDialog, setDialog] = useState(false)
   const [isReadonly, setReadonly] = useState(false)
 
-  const form = useForm<z.infer<typeof createExperienceSchema>>({
-    resolver: zodResolver(createExperienceSchema.omit({ studentId: true })),
+  const form = useForm<z.infer<typeof createStudentEducationSchema>>({
+    resolver: zodResolver(createStudentEducationSchema.omit({ studentId: true })),
     defaultValues: {
-      company: '',
-      title: '',
-      location: '',
-      type: 'NA',
-      jobType: '',
-      companySector: '',
-      stipend: '',
+      school: '',
+      board: '',
+      program: '',
+      type: 'Full Time',
+      specialization: '',
+      scoreType: 'CGPA',
+      score: '',
+      scorePercentage: '',
       notes: '',
-      isCurriculum: true,
+      startedAt: undefined,
       isOngoing: false,
-      endedAt: undefined,
+      endedAt: null,
     },
     shouldFocusError: true,
   })
@@ -75,11 +73,25 @@ export const WorkExperience: React.FC<Props> = () => {
     name: 'isOngoing',
   })
 
+  const [edScoreType, score] = useWatch({
+    control,
+    name: ['scoreType', 'score'],
+  })
+
   useEffect(() => {
     isOngoingVal === true && setValue('endedAt', '')
   }, [isOngoingVal, setValue])
 
-  function validateEndedAt(val: z.infer<typeof createExperienceSchema>) {
+  useEffect(() => {
+    edScoreType === 'PERCENTAGE' && setValue('scorePercentage', score)
+  }, [edScoreType, setValue, score])
+
+  function resetForm() {
+    reset()
+    setSelected(null)
+  }
+
+  function validateEndedAt(val: z.infer<typeof createStudentEducationSchema>) {
     const { endedAt, startedAt, isOngoing } = val
 
     if (isOngoing === true) return true
@@ -99,10 +111,11 @@ export const WorkExperience: React.FC<Props> = () => {
     return true
   }
 
-  async function submitHandler(val: z.infer<typeof createExperienceSchema>, createExp: boolean) {
+  async function submitHandler(val: z.infer<typeof createStudentEducationSchema>, createEd: boolean) {
+    console.log(val)
     if (!validateEndedAt(val)) return
 
-    if (createExp && userData.studentId !== null) {
+    if (createEd && userData.studentId !== null) {
       await create({
         ...val,
         studentId: userData.studentId,
@@ -112,25 +125,17 @@ export const WorkExperience: React.FC<Props> = () => {
       resetForm()
     }
 
-    if (!createExp && selectedExperience !== null) {
+    if (!createEd && selectedEducation !== null) {
       // TODO: simplify setup to only update diff
-      let currExp = workExperience.find(
-        ({ id }) => id === selectedExperience,
-      ) as unknown as StudentWorkExperienceDateStrings
+      let currEd = education.find(({ id }) => id === selectedEducation) as unknown as StudentEducationDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentWorkExperienceDateStrings
+      currEd = omit(currEd, ['verified', 'verifiedBy', 'verifiedOn', 'studentId', 'id']) as StudentEducationDateStrings
 
-      const diff = getDiff(currExp, val)
+      const diff = getDiff(currEd, val)
 
       await update({
         ...diff,
-        id: selectedExperience,
+        id: selectedEducation,
       })
 
       setDialog(false)
@@ -138,7 +143,7 @@ export const WorkExperience: React.FC<Props> = () => {
     }
   }
 
-  function handleExperienceSelection({ studentId: _sid, id, ...rest }: StudentWorkExperience, readonly = false) {
+  function handleEducationSelection({ studentId: _sid, id, ...rest }: StudentEducation, readonly = false) {
     setSelected(id)
     setDialog(true)
     readonly && setReadonly(true)
@@ -152,76 +157,72 @@ export const WorkExperience: React.FC<Props> = () => {
     })
   }
 
-  function resetForm() {
-    reset()
-    setSelected(null)
-  }
-
-  // TODO: add document upload
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+        <div className="text-lg font-medium leading-6 text-gray-900">Student education</div>
         <button className="gap-2 flex-start btn btn-sm btn-secondary" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
-          <span>Add new Experience</span>
+          <span>Add new Education</span>
         </button>
       </div>
 
-      {workExperience.length > 0 ? (
+      {education.length > 0 ? (
         <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
-          {workExperience.map((exp) => {
-            return (
-              <ExperienceCard
-                experience={exp}
-                key={exp.id}
-                onEdit={(readOnly) => handleExperienceSelection(exp, readOnly)}
-              />
-            )
+          {education.map((edu) => {
+            return <EducationCard education={edu} key={edu.id} onEdit={() => handleEducationSelection(edu)} />
           })}
         </div>
       ) : (
         <h4> You have not added any experience yet !</h4>
       )}
 
-      <MDialog show={isDialog} onClose={() => null} noEscape>
+      <MDialog show={isDialog} onClose={() => null}>
         <MForm
           form={form}
           onSubmit={handleSubmit((data) => {
-            void submitHandler(data, selectedExperience === null)
+            void submitHandler(data, selectedEducation === null)
           })}
-          className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
+          className="flex flex-col gap-2 sm:w-[700px] sm:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+          <div className="text-lg font-medium leading-6 text-gray-900">Student Education</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
               <MInput
-                {...register('company')}
-                error={errors.company}
-                label="Company / Institute name"
-                name="company"
-                placeholder="Acme Inc."
+                {...register('school')}
+                error={errors.school}
+                label="School / Institute name"
+                name="school"
+                placeholder="St. Joseph's"
                 disabled={isReadonly}
               />
 
               <MInput
-                {...register('title')}
-                error={errors.title}
-                label="Title / Designation"
-                name="title"
-                placeholder="Business analyst"
+                {...register('program')}
+                error={errors.program}
+                label="Program/ Degree/ Certification"
+                name="program"
+                placeholder="10th"
+                disabled={isReadonly}
+              />
+
+              <MSelect
+                error={errors.type}
+                label="Education Type"
+                name="type"
+                options={EDUCATION_TYPE}
                 disabled={isReadonly}
               />
 
               <MInput
-                {...register('location')}
-                error={errors.location}
-                label="Location"
-                name="location"
-                placeholder="Location"
+                {...register('score')}
+                error={errors.score}
+                label="Score"
+                name="score"
+                placeholder="8.5 CGPA"
                 disabled={isReadonly}
               />
 
@@ -237,35 +238,44 @@ export const WorkExperience: React.FC<Props> = () => {
               <MCheckbox
                 error={errors.isOngoing}
                 name="isOngoing"
-                label="I currently work here"
+                label="I currently study here"
                 disabled={isReadonly}
               />
             </div>
-
             <div>
-              <MSearch
-                label="Company sector"
-                name="companySector"
-                options={COMPANY_TYPE_OPTIONS}
-                placeholder="Type to search.."
-                disabled={isReadonly}
-                reset
-              />
-
-              <MSelect
-                error={errors.stipend}
-                label="Stipend"
-                name="stipend"
-                options={STIPEND_OPTIONS}
+              <MInput
+                {...register('board')}
+                error={errors.board}
+                label="Board"
+                name="board"
+                placeholder="CBSE"
                 disabled={isReadonly}
               />
 
-              <MSelect
-                error={errors.jobType}
-                label="Position type"
-                name="jobType"
-                options={JOB_TYPE}
+              <MInput
+                {...register('specialization')}
+                error={errors.specialization}
+                label="Specialization"
+                name="specialization"
+                placeholder="PCMB"
                 disabled={isReadonly}
+              />
+
+              <MSelect
+                error={errors.scoreType}
+                label="Score Type"
+                name="scoreType"
+                options={SCORE_TYPE}
+                disabled={isReadonly}
+              />
+
+              <MInput
+                {...register('scorePercentage')}
+                error={errors.scorePercentage}
+                label="Score Percentage"
+                name="scorePercentage"
+                placeholder="78%"
+                disabled={isReadonly || edScoreType === 'PERCENTAGE'}
               />
 
               {isOngoingVal === false && (
@@ -278,24 +288,10 @@ export const WorkExperience: React.FC<Props> = () => {
                   disabled={isReadonly}
                 />
               )}
-
-              <MCheckbox
-                error={errors.isCurriculum}
-                name="isCurriculum"
-                label="Included in curriculam"
-                disabled={isReadonly}
-              />
             </div>
           </div>
 
-          <MInput
-            {...register('notes')}
-            error={errors.notes}
-            as="textarea"
-            label="Description"
-            name="notes"
-            disabled={isReadonly}
-          />
+          <MInput {...register('notes')} error={errors.notes} as="textarea" label="Description" name="notes" />
 
           {!isReadonly && (
             <div className="flex justify-end gap-2">

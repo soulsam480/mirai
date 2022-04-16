@@ -4,22 +4,6 @@ import { z } from 'zod'
 import { createRouter } from '../../createRouter'
 
 export const educationRouter = createRouter()
-  .query('get', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      const educationDetails = await ctx.prisma.studentEducation.findFirst({
-        where: { studentId: input },
-      })
-
-      if (educationDetails === null) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Student education details not found !',
-        })
-      }
-      return educationDetails
-    },
-  })
   .mutation('create', {
     input: createStudentEducationSchema,
     async resolve({ ctx, input }) {
@@ -31,7 +15,7 @@ export const educationRouter = createRouter()
     },
   })
   .mutation('update', {
-    input: createStudentEducationSchema.extend({ id: z.number() }),
+    input: createStudentEducationSchema.omit({ studentId: true }).partial().extend({ id: z.number() }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input
       const result = await ctx.prisma.studentEducation.update({
@@ -40,5 +24,31 @@ export const educationRouter = createRouter()
       })
 
       return result
+    },
+  })
+  .mutation('remove', {
+    input: z.number(),
+    async resolve({ ctx, input }) {
+      try {
+        await ctx.prisma.studentEducation.delete({ where: { id: input } })
+      } catch (error) {
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Unable to delete experience' })
+      }
+    },
+  })
+  .query('get_all', {
+    input: z.number(),
+    async resolve({ ctx, input }) {
+      const educationDetails = await ctx.prisma.studentEducation.findMany({
+        where: { studentId: input },
+      })
+
+      if (educationDetails === null) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Student education details not found !',
+        })
+      }
+      return educationDetails
     },
   })

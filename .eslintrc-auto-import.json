@@ -1,15 +1,24 @@
 {
   "globals": {
     "IconLaBars": true,
+    "IconLaBookReader": true,
     "IconLaBuilding": true,
     "IconLaCalendar": true,
     "IconLaCheckCircleSolid": true,
+    "IconLaCheckDouble": true,
     "IconLaChevronDown": true,
     "IconLaExclamationCircle": true,
+    "IconLaFlask": true,
+    "IconLaGraduationCap": true,
+    "IconLaHotel": true,
     "IconLaMoneyBill": true,
     "IconLaPenSquare": true,
     "IconLaPlusCircle": true,
+    "IconLaRocket": true,
+    "IconLaRulerCombined": true,
+    "IconLaShieldAlt": true,
     "IconLaTrashAltSolid": true,
+    "IconLaUndoAlt": true,
     "IconLaUserGraduate": true
   }
 }

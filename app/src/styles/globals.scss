@@ -18,6 +18,10 @@ body {
   font-family: 'Nunito', sans-serif;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
 .dialog-content {
   @apply inline-block p-6 my-8  align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
   @apply w-[90%] sm:w-auto;
@@ -97,11 +101,15 @@ body {
 .m-select {
   &__btn {
     @apply flex-grow border bg-base-100 rounded-btn border-primary items-center flex;
-    @apply border-opacity-100 border-primary py-[5px] px-3 text-left text-sm;
+    @apply border-opacity-100 border-primary py-[5px] px-3 text-left text-sm relative;
 
     &:focus {
       outline: 2px solid hsl(var(--p));
       outline-offset: 2px;
+    }
+
+    &[disabled] {
+      @apply cursor-not-allowed border-base-200 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
     }
   }
 
