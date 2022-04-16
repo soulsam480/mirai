@@ -2,7 +2,8 @@
  * Use this for listing and data rep. pages
  */
 
-import Link from 'next/link'
+import { MIcon } from 'components/lib/MIcon'
+import MLink from 'components/lib/MLink'
 import React, { HTMLProps } from 'react'
 
 interface PageWrapperProps extends HTMLProps<HTMLDivElement> {}
@@ -22,9 +23,14 @@ const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, h
     <div className="flex items-center justify-between border-b border-amber-200 pb-4" {...props}>
       <div className="text-xl font-medium">{headerLabel}</div>
 
-      <Link href={createActionUrl}>
-        <a className="btn btn-primary btn-sm"> {createLabel} </a>
-      </Link>
+      <MLink href={createActionUrl}>
+        <a className="btn btn-primary btn-sm flex items-center gap-2">
+          <MIcon>
+            <IconLaPlusCircle />
+          </MIcon>
+          <span>{createLabel}</span>
+        </a>
+      </MLink>
     </div>
   )
 }

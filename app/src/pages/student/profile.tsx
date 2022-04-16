@@ -10,7 +10,7 @@ import { getServerSideAuthGuard } from 'server/lib/auth'
 import type { NextPageWithLayout } from '../_app'
 import { useEvent } from 'react-use'
 import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useSetAtom } from 'jotai'
 import { MIcon } from 'components/lib/MIcon'
 import debounce from 'lodash/debounce'
@@ -21,6 +21,10 @@ const StudentProfile: NextPageWithLayout = () => {
   useStudent()
 
   const setActiveTab = useSetAtom(activeProfileAtom)
+
+  useEffect(() => {
+    void setActiveTab(null)
+  })
 
   const debouncedHandler = useCallback(
     () =>

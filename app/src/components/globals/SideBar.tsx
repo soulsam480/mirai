@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { useUser } from 'stores/user'
 import { defineSidebar } from 'utils/helpers'
 import MLink from 'lib/MLink'
+import { MIcon } from 'components/lib/MIcon'
 
 interface Props {}
 
@@ -10,10 +11,12 @@ const sidebarConfig = {
     {
       label: 'Institutes',
       path: '/institute',
+      icon: <IconLaUniversity />,
     },
     {
       label: 'Students',
       path: '/student',
+      icon: <IconLaUserGraduate />,
     },
   ]),
   INSTITUTE: defineSidebar('/institute').extend([
@@ -21,37 +24,45 @@ const sidebarConfig = {
       label: 'Departments',
       path: '/department',
       active: (path) => path.includes('/department'),
+      icon: <IconLaSitemap />,
     },
     {
       label: 'Courses',
       path: '/course',
+      active: (path) => path.includes('/course'),
+      icon: <IconLaBook />,
     },
     {
       label: 'Batches',
       path: '/batch',
+      active: (path) => path.includes('/batch'),
+      icon: <IconLaUserFriends />,
     },
     {
       label: 'Students',
       path: '/student',
+      active: (path) => path.includes('/student'),
+      icon: <IconLaUserGraduate />,
     },
   ]),
   STUDENT: defineSidebar('/student').extend([
     {
       label: 'Profile',
       path: '/profile',
+      icon: <IconLaUserCircle />,
     },
     {
       label: 'My Applications',
       path: '/applications',
+      icon: <IconLaFileAltSolid />,
     },
     {
       label: 'Opportunities',
       path: '/opportunities',
+      icon: <IconLaHandsHelping />,
     },
   ]),
 }
-
-// TODO: refactor to separate user state from page lgic to avoid re-renders
 
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
@@ -76,8 +87,14 @@ export const SideBar: React.FC<Props> = ({ children }) => {
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
                 return (
                   <li key={key}>
-                    <MLink className="!px-2 !py-1" href={item.path} active={item.active} onClick={dismissDrawer}>
-                      {item.label}
+                    <MLink
+                      className="flex items-center gap-2 !px-2 !py-1"
+                      href={item.path}
+                      active={item.active}
+                      onClick={dismissDrawer}
+                    >
+                      {item.icon !== undefined && <MIcon>{item.icon}</MIcon>}
+                      <span>{item.label}</span>
                     </MLink>
                   </li>
                 )
