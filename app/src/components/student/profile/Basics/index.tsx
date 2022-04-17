@@ -22,7 +22,6 @@ const genderTypes = ['MALE', 'FEMALE', 'OTHER'].map((o) => ({ label: o, value: o
 
 export const Basics: React.FC<Props> = () => {
   const studentBasics = useAtomValue(studentBasicsAtom)
-  console.log('studentBasics: ', studentBasics)
   const { manage, isLoading } = useBasics()
   const userData = useUser()
 
@@ -62,11 +61,13 @@ export const Basics: React.FC<Props> = () => {
   }
 
   const editBasics = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, studentId, ...rest } = studentBasics as StudentBasics
-    Object.entries(rest).forEach(([key, value]) => {
-      setValue(key as any, key === 'dob' ? formatDate(value, 'YYYY-MM-DD') : value)
-    })
+    if (studentBasics !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, studentId, ...rest } = studentBasics as StudentBasics
+      Object.entries(rest).forEach(([key, value]) => {
+        setValue(key as any, key === 'dob' ? formatDate(value, 'YYYY-MM-DD') : value)
+      })
+    }
   }
 
   function resetForm() {
@@ -76,7 +77,7 @@ export const Basics: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Student Basics</div>
+        <div className="text-lg font-medium leading-6 text-gray-900">Basic info</div>
         <button
           className="gap-2 flex-start btn btn-sm btn-secondary"
           onClick={() => {
@@ -87,19 +88,17 @@ export const Basics: React.FC<Props> = () => {
           <span>
             <IconLaPlusCircle />
           </span>
-          <span>Edit student basics</span>
+          <span>Edit basic info</span>
         </button>
       </div>
 
-      {studentBasics !== null && <BasicsCard studentBasics={studentBasics} />}
+      {studentBasics !== null ? (
+        <BasicsCard studentBasics={studentBasics} />
+      ) : (
+        <h4> You have not added any student basic data yet !</h4>
+      )}
 
-      <MDialog
-        show={isDialog}
-        onClose={() => {
-          setDialog(false)
-          resetForm()
-        }}
-      >
+      <MDialog show={isDialog} onClose={() => null}>
         <MForm
           form={form}
           onSubmit={handleSubmit((data) => {
@@ -116,17 +115,7 @@ export const Basics: React.FC<Props> = () => {
               placeholder="Alan Stone"
             />
 
-            <MInput
-              error={errors.dob}
-              {...register('dob', {
-                validate(val) {
-                  return new Date(val) instanceof Date
-                },
-              })}
-              name="dob"
-              label="Date of birth"
-              type="date"
-            />
+            <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
 
             <MInput
               {...register('category')}
@@ -182,7 +171,18 @@ export const Basics: React.FC<Props> = () => {
             name="permanentAddress"
           />
 
-          <div className="text-right">
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDialog(false)
+                resetForm()
+              }}
+              className="mt-5 btn btn-sm btn-primary btn-outline"
+            >
+              Cancel
+            </button>
+
             <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
               Save
             </button>

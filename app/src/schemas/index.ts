@@ -53,7 +53,10 @@ export const createBatchSchema = z.object({
 export const createStudentBasicsSchema = z.object({
   studentId: z.number().min(1, 'Student ID is required'),
   name: z.string().min(1, 'Student name is required'),
-  dob: z.string().min(1, 'Date of birth is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .refine((val) => new Date(val) instanceof Date),
   gender: z.string().min(1, 'Gender is required'),
   category: z.string().min(1, 'Category is required'),
   mobileNumber: z.string().min(1, 'Mobile number is required'),
