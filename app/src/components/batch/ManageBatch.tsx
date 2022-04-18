@@ -92,7 +92,7 @@ export const ManageBatch: React.FC<any> = () => {
 
       <FormProvider {...form}>
         <form
-          className="flex form-control sm:w-80 sm:max-w-80"
+          className="sm:max-w-80 form-control flex sm:w-80"
           onSubmit={handleSubmit(isEditMode ? updateBatch : createBatch)}
         >
           <MInput label="Name" {...register('name')} placeholder="Batch name" error={formState.errors.name} />
@@ -112,12 +112,12 @@ export const ManageBatch: React.FC<any> = () => {
             <button
               type="button"
               onClick={async () => await router.push('/institute/batch')}
-              className="mt-5 btn btn-sm btn-secondary"
+              className="btn btn-secondary btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className="mt-5 btn btn-sm btn-primary">
+            <button type="submit" className="btn btn-primary btn-sm mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
           </div>

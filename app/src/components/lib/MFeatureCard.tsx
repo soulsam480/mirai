@@ -2,7 +2,7 @@ import React from 'react'
 
 const Parent: React.FC = ({ children }) => {
   return (
-    <div className="relative flex flex-col justify-between gap-1 p-2 transition-shadow duration-200 ease-in-out rounded-md hover:shadow bg-amber-100">
+    <div className="relative flex flex-col justify-between gap-1 rounded-md bg-amber-100 p-2 transition-shadow duration-200 ease-in-out hover:shadow">
       {children}
     </div>
   )

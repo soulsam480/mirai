@@ -83,8 +83,8 @@ export const MSelect: React.FC<MSelectProps> = ({
                   {reset && !disabled && isValue(value) && (
                     <MIcon
                       className={clsx([
-                        'absolute right-[30px] p-1 z-10 tooltip tooltip-secondary tooltip-left',
-                        disabled && 'text-base-300',
+                        'tooltip tooltip-left tooltip-secondary absolute right-[30px] z-10 p-1',
+                        disabled && 'bg-base-200 text-base-300',
                       ])}
                       onClick={(e) => {
                         e.stopPropagation()
@@ -99,9 +99,9 @@ export const MSelect: React.FC<MSelectProps> = ({
 
                   <MIcon
                     className={clsx([
-                      'transition-all duration-300 flex-none',
+                      'flex-none transition-all duration-300',
                       open && '-rotate-180',
-                      disabled && 'text-base-300',
+                      disabled && 'bg-base-200 text-base-300',
                     ])}
                   >
                     <IconLaChevronDown />
@@ -124,7 +124,7 @@ export const MSelect: React.FC<MSelectProps> = ({
                       value={option}
                       className={({ active }) =>
                         clsx([
-                          'px-3 py-[6px] text-left rounded-sm cursor-pointer break-words flex items-center gap-2',
+                          'flex cursor-pointer items-center gap-2 break-words rounded-sm px-3 py-[6px] text-left',
                           active && 'bg-amber-200',
                         ])
                       }
@@ -149,7 +149,7 @@ export const MSelect: React.FC<MSelectProps> = ({
               ) : (
                 <Listbox.Option
                   value={''}
-                  className="px-3 flex space-x-2 items-center font-medium py-[6px] text-left rounded-sm cursor-not-allowed"
+                  className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
                   <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>

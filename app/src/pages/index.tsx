@@ -21,18 +21,18 @@ interface Props {
 
 const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
   return (
-    <div className="min-h-screen hero">
+    <div className="hero min-h-screen">
       <div className="absolute top-0 left-0 right-0 ">
-        <div className="mb-2 rounded-none navbar min-h-12 text-neutral">
-          <div className="flex-1 mx-2">
+        <div className="navbar min-h-12 mb-2 rounded-none text-neutral">
+          <div className="mx-2 flex-1">
             <Link href="/">
               <a className="text-lg font-bold">Mirai</a>
             </Link>
           </div>
           <div className="flex-none space-x-2">
-            <button className="btn btn-sm btn-ghost hover:bg-primary btn-primary">Contact sales</button>
+            <button className="btn btn-primary btn-ghost btn-sm hover:bg-primary">Contact sales</button>
             <Link href={user === undefined || user === null ? '/login' : getUserHome(user.user.role)}>
-              <a className="btn btn-sm btn-ghost hover:bg-primary btn-primary">
+              <a className="btn btn-primary btn-ghost btn-sm hover:bg-primary">
                 {user === undefined || user === null ? 'Login / Signup' : 'Go to home'}
               </a>
             </Link>
@@ -40,9 +40,9 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
         </div>
       </div>
 
-      <div className="text-center hero-content">
+      <div className="hero-content text-center">
         <div className="max-w-3xl">
-          <h1 className="mb-6 text-4xl font-extrabold text-transparent sm:text-8xl bg-clip-text bg-gradient-to-br from-primary-focus to-secondary">
+          <h1 className="mb-6 bg-gradient-to-br from-primary-focus to-secondary bg-clip-text text-4xl font-extrabold text-transparent sm:text-8xl">
             Hiring simplified for humans
           </h1>
           <p className="mb-5 text-xl">
@@ -50,9 +50,9 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
             understand.
           </p>
           <div className="flex justify-center space-x-2">
-            <button className="btn btn-sm sm:btn-md btn-primary">Contact sales</button>
+            <button className="btn btn-primary btn-sm sm:btn-md">Contact sales</button>
             <Link href={user === undefined || user === null ? '/login' : getUserHome(user.user.role)}>
-              <a className="btn btn-sm sm:btn-md btn-secondary">
+              <a className="btn btn-secondary btn-sm sm:btn-md">
                 {user === undefined || user === null ? 'Login / Signup' : 'Go to home'}
               </a>
             </Link>

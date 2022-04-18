@@ -9,12 +9,13 @@ import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
 import { useStudent } from 'contexts/student'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { NextPageWithLayout } from '../_app'
+import type { NextPageWithLayout } from '../_app'
 import { useEvent } from 'react-use'
 import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
-import { useCallback } from 'react'
-import throttle from 'lodash/throttle'
+import { useCallback, useEffect } from 'react'
 import { useSetAtom } from 'jotai'
+import { MIcon } from 'components/lib/MIcon'
+import debounce from 'lodash/debounce'
 
 export const getServerSideProps = getServerSideAuthGuard(['STUDENT'])
 
@@ -23,9 +24,14 @@ const StudentProfile: NextPageWithLayout = () => {
 
   const setActiveTab = useSetAtom(activeProfileAtom)
 
+  useEffect(() => {
+    void setActiveTab(null)
+  })
+
   const debouncedHandler = useCallback(
     () =>
-      throttle(() => {
+      // debounce makes sure we invoke the scroll check after some delay
+      debounce(() => {
         const elements = [
           getElement('experience'),
           getElement('skills'),
@@ -60,11 +66,23 @@ const StudentProfile: NextPageWithLayout = () => {
     [setActiveTab],
   )
 
-  useEvent('scroll', debouncedHandler, typeof window !== 'undefined' ? window : undefined, { capture: true })
+  useEvent('scroll', debouncedHandler, typeof window !== 'undefined' ? window : undefined, {
+    capture: true,
+    passive: true,
+  })
+
+  function closeDrawer(tab: SidebarTabs) {
+    // dismiss the dropdown
+    document.activeElement instanceof HTMLElement && document.activeElement?.blur()
+
+    // we're not using route anchors as it's hard to pin active tab
+    document.getElementById(tab)?.scrollIntoView({ behavior: 'smooth' })
+    void setActiveTab(tab)
+  }
 
   return (
-    <div className="flex items-start space-x-2">
-      <div className="flex flex-col flex-grow gap-2 mb-[100px]">
+    <div className="flex items-start gap-2">
+      <div className="mb-[100px] flex flex-grow flex-col gap-2">
         <ProfileSection id="basics">
           <Basics />
         </ProfileSection>
@@ -90,8 +108,27 @@ const StudentProfile: NextPageWithLayout = () => {
         </ProfileSection>
       </div>
 
-      <div className="hidden max-h-screen p-1 overflow-y-auto rounded-md sm:sticky sm:top-0 sm:shadow sm:shadow-amber-200 w-60 sm:block">
-        <ProfileSidebar />
+      <div className="hidden max-h-screen w-60 overflow-y-auto rounded-md p-1 sm:sticky sm:top-0 sm:block sm:shadow sm:shadow-amber-200">
+        <ProfileSidebar onClick={closeDrawer} />
+      </div>
+
+      {/* bottom bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 flex h-12 w-full justify-center border-t border-amber-200 bg-amber-50 transition-all duration-300 ease-in-out sm:hidden">
+        <div className="dropdown-top dropdown w-full">
+          <label tabIndex={0} className="btn btn-ghost btn-block flex gap-2 rounded-none">
+            <MIcon className="text-lg">
+              <IconLaUserCircle />
+            </MIcon>
+
+            <span>Profile menu</span>
+          </label>
+
+          <ProfileSidebar
+            tabIndex={0}
+            className="dropdown-content inset-0 bg-amber-50 p-2 shadow"
+            onClick={closeDrawer}
+          />
+        </div>
       </div>
     </div>
   )
