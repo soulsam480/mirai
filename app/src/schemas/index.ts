@@ -56,14 +56,32 @@ export const createStudentBasicsSchema = z.object({
   dob: z
     .string()
     .min(1, 'Date of birth is required')
-    .refine((val) => new Date(val) instanceof Date),
+    .transform((val) => dayjs(val).toISOString()),
   gender: z.string().min(1, 'Gender is required'),
   category: z.string().min(1, 'Category is required'),
   mobileNumber: z.string().min(1, 'Mobile number is required'),
   primaryEmail: z.string().min(1, 'Primary email is required'),
-  secondaryEmail: z.string(),
-  permanentAddress: z.string(),
-  currentAddress: z.string(),
+  secondaryEmail: z.string().nullable(),
+  permanentAddress: z
+    .object({
+      address: z.string(),
+      city: z.string(),
+      district: z.string(),
+      state: z.string(),
+      pin: z.string(),
+      country: z.string(),
+    })
+    .optional(),
+  currentAddress: z
+    .object({
+      address: z.string(),
+      city: z.string(),
+      district: z.string(),
+      state: z.string(),
+      pin: z.string(),
+      country: z.string(),
+    })
+    .optional(),
 })
 
 export const createStudentScoreSchema = z.object({

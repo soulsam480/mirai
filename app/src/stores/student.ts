@@ -11,7 +11,7 @@ import { atom } from 'jotai'
 import type { OverWrite } from 'types'
 
 export interface StudentValueType {
-  basics: StudentBasics | null
+  basics: StudentBasicsOverwrite | null
   score: StudentScore | null
   education: StudentEducation[]
   experience: StudentWorkExperience[]
@@ -28,7 +28,19 @@ export interface StudentSkill {
   score: StudentSkillScore
 }
 
-export const studentBasicsAtom = atom<StudentBasics | null>(null)
+export interface StudentAddress {
+  address?: string
+  city?: string
+  district?: string
+  state?: string
+  pin?: string
+  country?: string
+}
+
+export interface StudentBasicsOverwrite
+  extends OverWrite<StudentBasics, { permanentAddress: StudentAddress; currentAddress: StudentAddress }> {}
+
+export const studentBasicsAtom = atom<StudentBasicsOverwrite | null>(null)
 studentBasicsAtom.debugLabel = 'studentBasicsAtom'
 
 export const studentScoreAtom = atom<StudentScore | null>(null)

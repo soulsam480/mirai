@@ -25,7 +25,7 @@ const StudentProfile: NextPageWithLayout = () => {
   const setActiveTab = useSetAtom(activeProfileAtom)
 
   useEffect(() => {
-    void setActiveTab(null)
+    void setActiveTab('basics')
   })
 
   const debouncedHandler = useCallback(
@@ -33,6 +33,8 @@ const StudentProfile: NextPageWithLayout = () => {
       // debounce makes sure we invoke the scroll check after some delay
       debounce(() => {
         const elements = [
+          getElement('basics'),
+          getElement('education'),
           getElement('experience'),
           getElement('skills'),
           getElement('projects'),
@@ -41,8 +43,9 @@ const StudentProfile: NextPageWithLayout = () => {
 
         for (let i = 0; i < elements.length; i++) {
           const curr = elements[i]
+          const prev = elements[i - 1]
 
-          const [active, id] = isSectionActive(curr as any)
+          const [active, id] = isSectionActive(curr as any, prev as any)
 
           if (active) {
             void setActiveTab(id)
@@ -55,10 +58,13 @@ const StudentProfile: NextPageWithLayout = () => {
           return document.getElementById(id)
         }
 
-        function isSectionActive(curr: HTMLElement): [boolean, SidebarTabs | null] {
+        function isSectionActive(curr: HTMLElement, next: HTMLElement): [boolean, SidebarTabs | null] {
           const { y } = curr.getBoundingClientRect()
 
-          if (y > 0 && y < 150) return [true, curr.id as SidebarTabs]
+          if (y > 120 && next !== undefined && next.getBoundingClientRect().y < 200)
+            return [true, next.id as SidebarTabs]
+
+          if (y > 0 && y < 120) return [true, curr.id as SidebarTabs]
 
           return [false, null]
         }

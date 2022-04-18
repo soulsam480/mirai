@@ -1,5 +1,37 @@
 {
   "globals": {
-    "IconLaHome": true
+    "IconLaBars": true,
+    "IconLaBook": true,
+    "IconLaBookReader": true,
+    "IconLaBuilding": true,
+    "IconLaCalendar": true,
+    "IconLaCheckCircleSolid": true,
+    "IconLaCheckDouble": true,
+    "IconLaChevronDown": true,
+    "IconLaExclamationCircle": true,
+    "IconLaFileAltSolid": true,
+    "IconLaFileInvoice": true,
+    "IconLaFlask": true,
+    "IconLaGraduationCap": true,
+    "IconLaHandsHelping": true,
+    "IconLaHome": true,
+    "IconLaHotel": true,
+    "IconLaIdCardSolid": true,
+    "IconLaMailBulk": true,
+    "IconLaMoneyBill": true,
+    "IconLaPassport": true,
+    "IconLaPenSquare": true,
+    "IconLaPlusCircle": true,
+    "IconLaRocket": true,
+    "IconLaRulerCombined": true,
+    "IconLaSchool": true,
+    "IconLaShieldAlt": true,
+    "IconLaSitemap": true,
+    "IconLaTrashAltSolid": true,
+    "IconLaUndoAlt": true,
+    "IconLaUniversity": true,
+    "IconLaUserCircle": true,
+    "IconLaUserFriends": true,
+    "IconLaUserGraduate": true
   }
 }
