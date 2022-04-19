@@ -98,12 +98,12 @@ const StudentProfile: NextPageWithLayout = () => {
         </ProfileSection>
       </div>
 
-      <div className="hidden max-h-screen w-60 overflow-y-auto rounded-md p-1 sm:sticky sm:top-0 sm:block sm:shadow sm:shadow-amber-200">
+      <div className="hidden max-h-screen w-60 overflow-y-auto rounded-sm bg-base-200 p-1 sm:sticky sm:top-0 sm:block sm:shadow-md">
         <ProfileSidebar onClick={closeDrawer} />
       </div>
 
       {/* bottom bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 flex h-12 w-full justify-center border-t border-amber-200 bg-amber-50 transition-all duration-300 ease-in-out sm:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-40 flex h-12 w-full justify-center border-t border-base-300 bg-base-200 transition-all duration-300 ease-in-out sm:hidden">
         <div className="dropdown-top dropdown w-full">
           <label tabIndex={0} className="btn btn-ghost btn-block flex gap-2 rounded-none">
             <MIcon className="text-lg">
@@ -115,7 +115,7 @@ const StudentProfile: NextPageWithLayout = () => {
 
           <ProfileSidebar
             tabIndex={0}
-            className="dropdown-content inset-0 bg-amber-50 p-2 shadow"
+            className="dropdown-content inset-0 bg-base-200 p-2 shadow"
             onClick={closeDrawer}
           />
         </div>

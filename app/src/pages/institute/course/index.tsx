@@ -22,33 +22,33 @@ const ProgramListing: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'programName',
         label: 'Name',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: '',
         label: 'Department',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ department }) => <> {department.name} </>,
       },
       {
         field: 'scoreType',
         label: 'Score type',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: '',
         label: 'Duration',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ programDuration, programDurationType }) => (
           <>
             {programDuration} <span className="text-xs"> ({programDurationType}) </span>{' '}
@@ -58,14 +58,14 @@ const ProgramListing: NextPageWithLayout = () => {
       {
         field: 'programLevel',
         label: 'Level',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ id }) => (
           <MLink href={`/institute/course?courseId=${id as number}`} as={`/institute/course/${id as number}`}>
             <IconLaPenSquare className="text-lg" />

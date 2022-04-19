@@ -57,8 +57,8 @@ export const ProfileSidebar: React.FC<Props> = ({ className, onClick, tabIndex }
         <li key={section.anchor}>
           <button
             className={clsx([
-              'btn btn-ghost btn-sm flex h-[2.5rem] items-center justify-start gap-2 rounded-lg !px-2 !py-2 text-base font-normal',
-              activeTab !== null && activeTab === section.anchor && '!btn-secondary',
+              'btn btn-ghost btn-sm flex h-[2.5rem] items-center justify-start gap-2 !px-2 !py-2 text-base font-semibold',
+              activeTab !== null && activeTab === section.anchor && '!btn-primary',
             ])}
             onClick={() => onClick?.(section.anchor as SidebarTabs)}
           >

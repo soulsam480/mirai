@@ -23,27 +23,27 @@ const Departments: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'name',
         label: 'Name',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'inCharge',
         label: 'In charge',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ id }) => (
           <MLink
             href={`/institute/department?departmentId=${id as number}`}

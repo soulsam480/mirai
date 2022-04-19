@@ -78,17 +78,17 @@ export const SideBar: React.FC<Props> = ({ children }) => {
       {children}
       <div className="drawer-side ">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
-        <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-amber-200 bg-amber-50 p-4 pt-0 text-base-content lg:bg-transparent">
+        <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-base-200  p-4 pt-0 text-base-content lg:bg-transparent">
           {userData.role !== undefined && (
             <>
-              <li className="!hover:bg-transparent mb-1 text-ellipsis border-b border-amber-200 p-1 text-sm font-semibold">
+              <li className="!hover:bg-transparent mb-1 truncate border-b border-base-200 p-1 text-sm font-semibold">
                 {userData.name ?? userData.email ?? 'User'} ({userData.role})
               </li>
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
                 return (
                   <li key={key}>
                     <MLink
-                      className="flex items-center gap-2 !px-2 !py-1"
+                      className="flex items-center gap-2 !px-2 !py-1 font-semibold"
                       href={item.path}
                       active={item.active}
                       onClick={dismissDrawer}

@@ -168,23 +168,21 @@ export const MSearch: React.FC<MSearchProps> = ({
                       value={option}
                       className={({ active }) =>
                         clsx([
-                          'flex cursor-pointer items-center gap-2 break-words rounded-sm px-3 py-[6px] text-left',
-                          active && 'bg-amber-200',
+                          'group flex cursor-pointer items-center gap-2 break-words rounded-sm px-3 py-[6px] text-left',
+                          active && 'bg-accent',
                         ])
                       }
                     >
                       {(slotCtx) =>
                         optionSlot?.({ option, slotCtx: { ...slotCtx, selected } }) ?? (
-                          <>
-                            {selected && (
-                              <MIcon className="text-amber-600">
-                                <IconLaCheckDouble />
-                              </MIcon>
-                            )}
-                            <span className={clsx([selected ? 'font-semibold text-amber-600' : '', 'flex-grow'])}>
-                              {option.label}
-                            </span>
-                          </>
+                          <span
+                            className={clsx([
+                              selected ? 'font-semibold text-primary group-hover:text-base-100' : '',
+                              'flex-grow',
+                            ])}
+                          >
+                            {option.label}
+                          </span>
                         )
                       }
                     </Combobox.Option>

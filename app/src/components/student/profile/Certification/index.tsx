@@ -139,7 +139,7 @@ export const Certifications: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6 text-gray-900">Certifications</div>
-        <button className="flex-start btn btn-secondary btn-sm gap-2" onClick={() => setDialog(true)}>
+        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
@@ -259,13 +259,13 @@ export const Certifications: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn-outline btn btn-primary btn-sm mt-5"
+              className="btn-neutral btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn-neutral btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}

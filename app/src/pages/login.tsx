@@ -118,7 +118,7 @@ const Login: NextPageWithLayout = () => {
               )}{' '}
             </label>
 
-            <button type="submit" className="btn btn-primary btn-block mt-5">
+            <button type="submit" className="btn-neutral btn btn-block mt-5">
               Submit
             </button>
           </form>

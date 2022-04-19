@@ -112,12 +112,12 @@ export const ManageBatch: React.FC<any> = () => {
             <button
               type="button"
               onClick={async () => await router.push('/institute/batch')}
-              className="btn btn-secondary btn-sm mt-5"
+              className="btn-neutral btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className="btn btn-primary btn-sm mt-5">
+            <button type="submit" className="btn-neutral btn btn-sm mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
           </div>
