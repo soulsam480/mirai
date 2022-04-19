@@ -10,7 +10,7 @@ import { useAtomValue } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { createStudentBasicsSchema } from 'schemas'
-import { StudentAddress, studentBasicsAtom, StudentBasicsOverwrite } from 'stores/student'
+import { StudentAddress, studentBasicsAtom } from 'stores/student'
 import { useUser } from 'stores/user'
 import { z } from 'zod'
 import { BasicsCard } from './BasicsCard'
@@ -28,6 +28,15 @@ const CATEGORY_TYPES = [
 ].map((v) => ({ label: v, value: v }))
 
 const ADDRES_FIELDS: Array<keyof StudentAddress> = ['address', 'city', 'district', 'state', 'pin', 'country']
+
+const initialAddress = {
+  address: '',
+  city: '',
+  district: '',
+  state: '',
+  pin: '',
+  country: '',
+}
 
 const AddressLabels = {
   address: 'Address',
@@ -58,22 +67,8 @@ export const Basics: React.FC<Props> = () => {
       mobileNumber: '8917300318',
       primaryEmail: 'soulsam480@gmail.com',
       secondaryEmail: '',
-      currentAddress: {
-        address: '',
-        city: '',
-        district: '',
-        state: '',
-        pin: '',
-        country: '',
-      },
-      permanentAddress: {
-        address: '',
-        city: '',
-        district: '',
-        state: '',
-        pin: '',
-        country: '',
-      },
+      currentAddress: initialAddress,
+      permanentAddress: initialAddress,
       dob: undefined,
     },
     shouldFocusError: true,
@@ -86,37 +81,21 @@ export const Basics: React.FC<Props> = () => {
     setValue,
     getValues,
     setError,
+    reset,
   } = form
 
   useEffect(() => {
     if (studentBasics === null) return
 
-    Object.keys(studentBasics).forEach((key) => {
-      const value = studentBasics[key as keyof StudentBasicsOverwrite] as any
+    const { dob, currentAddress, permanentAddress } = studentBasics
 
-      if (key === 'dob') {
-        value !== undefined && setValue('dob', formatDate(studentBasics.dob, 'YYYY-MM-DD'))
-
-        return
-      }
-
-      if ((key === 'currentAddress' || key === 'permanentAddress') && value !== undefined) {
-        setValue(key, {
-          address: '',
-          city: '',
-          district: '',
-          state: '',
-          pin: '',
-          country: '',
-          ...value,
-        })
-
-        return
-      }
-
-      value !== undefined && value !== null && setValue(key as any, value)
+    reset({
+      ...studentBasics,
+      dob: formatDate(dob, 'YYYY-MM-DD') ?? undefined,
+      currentAddress: currentAddress ?? initialAddress,
+      permanentAddress: permanentAddress ?? initialAddress,
     })
-  }, [setValue, studentBasics])
+  }, [studentBasics, reset])
 
   function validateAddress(val: z.infer<typeof createStudentBasicsSchema>) {
     const validator = z.string().min(1, 'Field is required')
