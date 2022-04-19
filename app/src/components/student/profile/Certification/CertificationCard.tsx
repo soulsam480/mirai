@@ -82,7 +82,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
 
       <MFeatureCard.Footer>
         {/* // TODO: read only mode */}
-        <button className="items-center gap-1 text-base-content btn btn-link btn-xs" onClick={() => onEdit()}>
+        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
           <MIcon>
             <IconLaPenSquare />
           </MIcon>
@@ -90,7 +90,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
           <span>Edit</span>
         </button>
 
-        <button className="items-center gap-1 text-error btn btn-link btn-xs" onClick={() => setDeleteDialog(true)}>
+        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
             <IconLaTrashAltSolid />
           </MIcon>

@@ -27,7 +27,7 @@ export const MCheckbox: React.FC<Props> = ({ error, label, name, control: _contr
               <input
                 {...rest}
                 type="checkbox"
-                className={clsx(['checkbox checkbox-primary checkbox-sm', rest.className])}
+                className={clsx(['checkbox-primary checkbox checkbox-sm', rest.className])}
                 checked={value}
                 onChange={(e) => {
                   onChange?.(e.target.checked as any)

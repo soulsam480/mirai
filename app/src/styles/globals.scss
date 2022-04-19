@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --rounded-box: 6px; /* border-radius for cards and other big elements */
-  --rounded-btn: 6px; /* border-radius for buttons and similar elements */
-  --rounded-badge: 6px;
+  --rounded-box: 8px;
+  --rounded-btn: 8px;
+  --rounded-badge: 8px;
+  --rsbs-backdrop-bg: #fef3c7;
+  --rsbs-bg: #fffbeb;
+  --rsbs-handle-bg: #fbbf24;
 }
 
 .btn {
@@ -23,19 +26,19 @@ body {
 }
 
 .dialog-content {
-  @apply inline-block p-6 my-8  align-middle transition-all transform bg-amber-50 shadow-lg rounded-lg;
+  @apply my-8 inline-block transform  rounded-lg bg-amber-50 p-6 align-middle shadow-lg transition-all;
   @apply w-[90%] sm:w-auto;
 }
 
 .file-input {
-  @apply block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 cursor-pointer file:cursor-pointer file:text-sm file:font-semibold file:bg-base-100  file:text-secondary hover:file:opacity-80;
+  @apply block w-full cursor-pointer text-sm text-slate-500 file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-base-100 file:py-2 file:px-4 file:text-sm file:font-semibold  file:text-secondary hover:file:opacity-80;
 }
 
 .j-alert {
-  @apply py-3 self-center;
+  @apply self-center py-3;
 
   &__content {
-    @apply flex items-center space-x-2 text-white text-sm font-bold px-4 py-2 rounded-md shadow-md z-50;
+    @apply z-50 flex items-center space-x-2 rounded-md px-4 py-2 text-sm font-bold text-white shadow-md;
   }
 
   &--enter,
@@ -100,8 +103,8 @@ body {
 
 .m-select {
   &__btn {
-    @apply flex-grow border bg-base-100 rounded-btn border-primary items-center flex;
-    @apply border-opacity-100 border-primary py-[5px] px-3 text-left text-sm relative;
+    @apply rounded-btn flex flex-grow items-center border border-primary bg-base-100;
+    @apply relative border-primary border-opacity-100 py-[5px] px-3 text-left text-sm;
 
     &:focus {
       outline: 2px solid hsl(var(--p));
@@ -114,6 +117,6 @@ body {
   }
 
   &__options {
-    @apply absolute z-30 w-full py-1 mt-10 overflow-auto text-sm bg-gray-100 rounded-md shadow-lg max-h-60 focus:outline-none;
+    @apply absolute z-30 mt-10 max-h-60 w-full overflow-auto rounded-md bg-gray-100 py-1 text-sm shadow-lg focus:outline-none;
   }
 }

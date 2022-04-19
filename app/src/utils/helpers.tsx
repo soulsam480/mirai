@@ -1,7 +1,6 @@
 import type { Role } from '@prisma/client'
-import type { MLinkProps } from 'components/lib/MLink'
 import dayjs from 'dayjs'
-import type { NullToUndefined } from 'types'
+import type { NullToUndefined, SidebarItem } from 'types'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
 
@@ -26,15 +25,16 @@ export async function copyToClip(value: string) {
 }
 
 export function defineSidebar(base: string) {
-  const stack: Array<Record<'path' | 'label', string> & { active?: MLinkProps['active'] }> = [
+  const stack: SidebarItem[] = [
     {
       label: 'Home',
       path: base,
+      icon: <IconLaHome />,
     },
   ]
   return {
     stack,
-    extend(entries: typeof stack) {
+    extend(entries: SidebarItem[]) {
       stack.push(...entries.map((e) => ({ ...e, path: base + e.path })))
 
       return stack

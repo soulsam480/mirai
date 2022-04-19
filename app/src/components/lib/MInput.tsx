@@ -18,8 +18,8 @@ export const MInput = React.forwardRef<HTMLInputElement, Props>(
         <RenderInput
           className={clsx([
             RenderInput === 'input'
-              ? 'input input-bordered input-primary input-sm'
-              : 'textarea textarea-bordered textarea-primary',
+              ? 'input-bordered input-primary input input-sm'
+              : 'textarea-bordered textarea-primary textarea',
             rest.className,
           ])}
           {...rest}

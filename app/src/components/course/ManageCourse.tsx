@@ -111,7 +111,7 @@ export const ManageCourse: React.FC<Props> = () => {
       </div>
 
       <FormProvider {...form}>
-        <form className="flex w-full form-control sm:w-[700px] sm:max-w-[700px]" onSubmit={handleSubmit(submitHandler)}>
+        <form className="form-control flex w-full sm:w-[700px] sm:max-w-[700px]" onSubmit={handleSubmit(submitHandler)}>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
             <div>
               <MInput
@@ -166,16 +166,16 @@ export const ManageCourse: React.FC<Props> = () => {
             </div>
           </div>
 
-          <div className="flex justify-end mt-4 space-x-2">
+          <div className="mt-4 flex justify-end space-x-2">
             <button
               type="button"
               onClick={async () => await router.push('/institute/course')}
-              className="mt-5 btn btn-sm btn-secondary"
+              className="btn btn-secondary btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className="mt-5 btn btn-sm btn-primary">
+            <button type="submit" className="btn btn-primary btn-sm mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
           </div>

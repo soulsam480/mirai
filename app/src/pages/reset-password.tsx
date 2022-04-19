@@ -71,9 +71,9 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
   }, [disabled, setAlert])
 
   return (
-    <div className="flex justify-center min-h-screen py-10">
+    <div className="flex min-h-screen justify-center py-10">
       <div className="w-full sm:max-w-md">
-        <form className="w-full form-control" onSubmit={handleSubmit(handleResetPassword)}>
+        <form className="form-control w-full" onSubmit={handleSubmit(handleResetPassword)}>
           <div className="mb-4 text-xl">Reset password</div>
 
           <MInput
@@ -105,7 +105,7 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
             error={formState.errors.confirmPassword}
           />
 
-          <button type="submit" className="mt-5 btn btn-block btn-primary" disabled={disabled}>
+          <button type="submit" className="btn btn-primary btn-block mt-5" disabled={disabled}>
             Submit
           </button>
         </form>

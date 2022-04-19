@@ -2,6 +2,8 @@ import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
 import { AnyRouter, inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
 import type { AppRouter } from '@mirai/api'
+import { MLinkProps } from 'components/lib/MLink'
+import React from 'react'
 
 export type TRPCErrorType = TRPCClientErrorLike<AnyRouter>
 
@@ -26,4 +28,11 @@ export interface Option {
   label: string
   value: any
   meta?: any
+}
+
+export interface SidebarItem {
+  path: string
+  label: string
+  active?: MLinkProps['active']
+  icon?: React.ReactNode
 }

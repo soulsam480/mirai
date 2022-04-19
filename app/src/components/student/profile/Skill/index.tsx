@@ -88,7 +88,7 @@ export const Skills: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6 text-gray-900">Skills</div>
-        <button className="gap-2 flex-start btn btn-sm btn-secondary" onClick={() => setDialog(true)}>
+        <button className="flex-start btn btn-secondary btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
@@ -97,7 +97,7 @@ export const Skills: React.FC<Props> = () => {
       </div>
 
       {skills.length > 0 ? (
-        <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
+        <div className="grid-col-1 grid gap-2 sm:grid-cols-2">
           {skills.map((skill, i) => {
             return <SkillCard skill={skill} key={i} onEdit={handleSkill} />
           })}
@@ -133,24 +133,24 @@ export const Skills: React.FC<Props> = () => {
             />
           </div>
 
-          {!isReadonly && (
-            <div className="flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setDialog(false)
-                  resetForm()
-                }}
-                className="mt-5 btn btn-sm btn-primary btn-outline"
-              >
-                Cancel
-              </button>
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setDialog(false)
+                resetForm()
+              }}
+              className="btn-outline btn btn-primary btn-sm mt-5"
+            >
+              Cancel
+            </button>
 
-              <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
+            {!isReadonly && (
+              <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </MForm>
       </MDialog>
     </div>

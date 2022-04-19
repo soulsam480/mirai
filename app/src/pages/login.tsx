@@ -78,10 +78,10 @@ const Login: NextPageWithLayout = () => {
       <NavBar />
       <div className="flex justify-center">
         <div className="w-full sm:max-w-md">
-          <form className="w-full form-control" onSubmit={handleSubmit(userLogin)}>
+          <form className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
             <div className="mb-4 text-xl">Login</div>
             {error !== null && (
-              <div className="py-2 text-sm alert alert-error">
+              <div className="alert alert-error py-2 text-sm">
                 <div className="flex-1">
                   <label> {error} </label>
                 </div>
@@ -94,7 +94,7 @@ const Login: NextPageWithLayout = () => {
             <input
               type="email"
               placeholder="john@doe.com"
-              className="input input-bordered input-primary"
+              className="input-bordered input-primary input"
               {...register('email')}
             />
             <label className="label">
@@ -109,7 +109,7 @@ const Login: NextPageWithLayout = () => {
             <input
               type="password"
               placeholder="password"
-              className="input input-bordered input-primary"
+              className="input-bordered input-primary input"
               {...register('password')}
             />
             <label className="label">
@@ -118,7 +118,7 @@ const Login: NextPageWithLayout = () => {
               )}{' '}
             </label>
 
-            <button type="submit" className="mt-5 btn btn-block btn-primary">
+            <button type="submit" className="btn btn-primary btn-block mt-5">
               Submit
             </button>
           </form>

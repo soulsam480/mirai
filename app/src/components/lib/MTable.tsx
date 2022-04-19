@@ -112,7 +112,7 @@ export const MTable: React.FC<Props> = ({
               rows.map((row, i) => <MTableRow row={row} key={i} />)
             ) : (
               <tr>
-                <td colSpan={columns.length} className="font-normal bg-transparent">
+                <td colSpan={columns.length} className="bg-transparent font-normal">
                   {loading ? (
                     <div className="flex items-center space-x-2">
                       <MSpinner size="20px" /> <span>Loading entries...</span>

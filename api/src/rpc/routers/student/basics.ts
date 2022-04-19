@@ -17,6 +17,7 @@ export const basicsRouter = createRouter()
           message: 'Student basics not found !',
         })
       }
+
       return studentBasics
     },
   })

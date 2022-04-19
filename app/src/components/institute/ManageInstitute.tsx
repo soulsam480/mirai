@@ -102,7 +102,7 @@ export const ManageInstitute: React.FC<any> = () => {
         )}
       </div>
       <form
-        className="flex w-full form-control sm:w-80"
+        className="form-control flex w-full sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
       >
         <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
@@ -124,7 +124,7 @@ export const ManageInstitute: React.FC<any> = () => {
         <label className="label">
           <span className="label-text">Onboarding status</span>
         </label>
-        <select className="select select-bordered select-primary select-sm" {...register('status')}>
+        <select className="select-bordered select-primary select select-sm" {...register('status')}>
           {instituteStatus.map((val, key) => {
             return (
               <option key={key} value={val}>
@@ -152,19 +152,19 @@ export const ManageInstitute: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/admin/institute')}
-            className="mt-5 btn btn-sm btn-secondary"
+            className="btn btn-secondary btn-sm mt-5"
           >
             Cancel{' '}
           </button>
 
-          <button type="submit" className="mt-5 btn btn-sm btn-primary">
+          <button type="submit" className="btn btn-primary btn-sm mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
           {isEditMode && instituteData?.status === 'PENDING' && (
             <button
               type="button"
               onClick={exportSignupLink}
-              className="mt-5 btn btn-sm btn-primary"
+              className="btn btn-primary btn-sm mt-5"
               title="Generate Signup link for institute"
             >
               {' '}

@@ -1,59 +1,70 @@
-import MLink from 'components/lib/MLink'
+import clsx from 'clsx'
+import { MIcon } from 'components/lib/MIcon'
 import { useAtomValue } from 'jotai'
-import { useRouter } from 'next/router'
 import React from 'react'
-import { activeProfileAtom } from 'stores/activeProfile'
+import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
 
-interface Props {}
-
-// TODO: scroll synced route change and navigation
+interface Props {
+  className?: string
+  onClick?: (anchor: SidebarTabs) => void
+  tabIndex?: number
+}
 
 const STUDENT_PROFILE_SIDEBAR = [
   {
     label: 'Basics',
     anchor: 'basics',
-  },
-  {
-    label: 'Score',
-    anchor: 'score',
+    icon: <IconLaPassport />,
   },
   {
     label: 'Education',
     anchor: 'education',
+    icon: <IconLaSchool />,
+  },
+  {
+    label: 'Score',
+    anchor: 'score',
+    icon: <IconLaFileInvoice />,
   },
   {
     label: 'Experience',
     anchor: 'experience',
+    icon: <IconLaBuilding />,
   },
   {
     label: 'Skills',
     anchor: 'skills',
+    icon: <IconLaShieldAlt />,
   },
   {
     label: 'Projects',
     anchor: 'projects',
+    icon: <IconLaRocket />,
   },
   {
     label: 'Certifications',
     anchor: 'certifications',
+    icon: <IconLaUserGraduate />,
   },
 ]
 
-export const ProfileSidebar: React.FC<Props> = () => {
-  const { pathname } = useRouter()
+export const ProfileSidebar: React.FC<Props> = ({ className, onClick, tabIndex }) => {
   const activeTab = useAtomValue(activeProfileAtom)
 
   return (
-    <ul className="gap-1 menu menu-compact">
+    <ul className={clsx(['menu gap-1', className ?? ''])} tabIndex={tabIndex}>
       {STUDENT_PROFILE_SIDEBAR.map((section) => (
         <li key={section.anchor}>
-          <MLink
-            href={`${pathname}#${section.anchor}`}
-            className="hover:rounded-md rounded-md !text-base"
-            active={() => activeTab !== null && activeTab === section.anchor}
+          <button
+            className={clsx([
+              'btn btn-ghost btn-sm flex h-[2.5rem] items-center justify-start gap-2 rounded-lg !px-2 !py-2 text-base font-normal',
+              activeTab !== null && activeTab === section.anchor && '!btn-secondary',
+            ])}
+            onClick={() => onClick?.(section.anchor as SidebarTabs)}
           >
-            {section.label}
-          </MLink>
+            <MIcon>{section.icon}</MIcon>
+            <span> {section.label}</span>
+          </button>
         </li>
       ))}
     </ul>
