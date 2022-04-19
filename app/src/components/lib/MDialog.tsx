@@ -29,7 +29,7 @@ export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape }) 
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-amber-100" />
+            <Dialog.Overlay className="fixed inset-0 bg-base-100" />
           </Transition.Child>
 
           <span className="inline-block h-screen align-middle" aria-hidden="true">

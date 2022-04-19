@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 :root {
-  --rounded-box: 8px;
-  --rounded-btn: 8px;
-  --rounded-badge: 8px;
   --rsbs-backdrop-bg: #fef3c7;
   --rsbs-bg: #fffbeb;
   --rsbs-handle-bg: #fbbf24;
@@ -17,7 +14,7 @@
 
 html,
 body {
-  @apply bg-amber-50 text-base;
+  @apply bg-base-100 text-base;
   font-family: 'Nunito', sans-serif;
 }
 
@@ -26,7 +23,7 @@ body {
 }
 
 .dialog-content {
-  @apply my-8 inline-block transform  rounded-lg bg-amber-50 p-6 align-middle shadow-lg transition-all;
+  @apply my-8 inline-block transform  rounded-lg bg-base-200 p-6 align-middle shadow-lg transition-all;
   @apply w-[90%] sm:w-auto;
 }
 
@@ -38,7 +35,7 @@ body {
   @apply self-center py-3;
 
   &__content {
-    @apply z-50 flex items-center space-x-2 rounded-md px-4 py-2 text-sm font-bold text-white shadow-md;
+    @apply z-50 flex items-center space-x-2 rounded-md px-4 py-2 text-sm font-bold text-base-100 shadow-md;
   }
 
   &--enter,

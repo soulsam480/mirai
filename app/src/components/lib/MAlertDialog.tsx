@@ -21,7 +21,7 @@ export const MAlertDialog: React.FC<Props> = ({ label, onConfirm, onReject, show
         <div className="text-md">{label}</div>
 
         <div className="flex items-center justify-end gap-4">
-          <button className="btn btn-success btn-sm items-center gap-1" onClick={onReject}>
+          <button className="btn-neutral btn-outline btn btn-sm items-center gap-1" onClick={onReject}>
             <MIcon>
               <IconLaCheckCircleSolid />
             </MIcon>

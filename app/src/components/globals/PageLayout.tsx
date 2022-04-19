@@ -20,11 +20,11 @@ interface PageHeaderProps extends HTMLProps<HTMLDivElement> {
 
 const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, headerLabel, ...props }) => {
   return (
-    <div className="flex items-center justify-between border-b border-amber-200 pb-4" {...props}>
+    <div className="flex items-center justify-between border-b border-base-200 pb-4" {...props}>
       <div className="text-xl font-medium">{headerLabel}</div>
 
       <MLink href={createActionUrl}>
-        <a className="btn btn-primary btn-sm flex items-center gap-2">
+        <a className="btn-neutral btn-outline btn btn-sm flex items-center gap-2">
           <MIcon>
             <IconLaPlusCircle />
           </MIcon>

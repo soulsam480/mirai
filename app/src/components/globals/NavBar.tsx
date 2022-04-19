@@ -11,7 +11,7 @@ export const NavBar: React.FC<Props> = () => {
   const isLoggedIn = useAtomValue(loggedInAtom)
 
   return (
-    <div className="sticky top-0 z-10 mb-2 w-full border-b border-amber-200 bg-opacity-40 text-neutral backdrop-blur">
+    <div className="sticky top-0 z-10 mb-2 w-full border-b border-base-200 bg-opacity-40 text-neutral backdrop-blur">
       <div className="navbar !h-12 min-h-[0]">
         <div className="mx-2 flex-1">
           <Link href="/">
@@ -21,22 +21,22 @@ export const NavBar: React.FC<Props> = () => {
         <div className="flex-none space-x-2">
           {isLoggedIn === false ? (
             <>
-              <button className="btn btn-primary btn-ghost btn-sm hover:bg-primary">Contact sales</button>
+              <button className="btn btn-primary btn-ghost btn-sm ">Contact sales</button>
               <Link href="/login">
-                <a className="btn btn-secondary btn-ghost btn-sm hover:bg-primary">Login / Signup</a>
+                <a className="btn btn-secondary btn-ghost btn-sm ">Login / Signup</a>
               </Link>
             </>
           ) : (
             <>
               <div className="dropdown-end dropdown">
                 <button tabIndex={0} className="placeholder avatar">
-                  <div className="h-8 w-8 rounded-full bg-primary text-neutral">
+                  <div className="h-8 w-8 rounded-full bg-primary text-base-100">
                     <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
                   </div>
                 </button>
                 <ul
                   tabIndex={0}
-                  className="dropdown-content menu rounded-box w-52 space-y-2 border border-amber-200 bg-amber-50 p-2 shadow-lg"
+                  className="dropdown-content menu rounded-box w-52 space-y-2 border border-base-200 bg-base-200 p-2 shadow-lg"
                 >
                   <li>
                     <div className="p-1 text-sm">

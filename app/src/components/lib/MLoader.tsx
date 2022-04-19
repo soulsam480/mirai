@@ -12,7 +12,7 @@ export const MLoader: React.FC<Props> = () => {
   return createPortal(
     <>
       {isLoader === true && (
-        <div id="loader-root" className="absolute inset-0 z-[10000] flex items-center justify-center bg-amber-50">
+        <div id="loader-root" className="absolute inset-0 z-[10000] flex items-center justify-center bg-base-200">
           <MSpinner size="100px" thickness={4} />
         </div>
       )}

@@ -23,20 +23,20 @@ const Batches: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'name',
         label: 'Name',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
       },
       {
         field: 'duration',
         label: 'Duration',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ duration, durationType }) => (
           <>
             {duration} <span className="text-xs"> ({durationType}) </span>{' '}
@@ -46,15 +46,15 @@ const Batches: NextPageWithLayout = () => {
       {
         field: 'status',
         label: 'Status',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         // format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+        headerClasses: '!bg-primary !text-base-100',
+        classes: 'bg-base-200',
         format: ({ id }) => (
           <MLink href={`/institute/batch?batchId=${id as number}`} as={`/institute/batch/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
