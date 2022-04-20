@@ -133,7 +133,7 @@ export const MSelect: React.FC<MSelectProps> = ({
                         optionSlot?.({ option, slotCtx: { ...slotCtx, selected } }) ?? (
                           <span
                             className={clsx([
-                              selected ? 'font-semibold text-primary group-hover:text-base-100' : '',
+                              selected ? 'font-semibold text-primary group-hover:text-base-100' : 'text-base-content',
                               'flex-grow',
                             ])}
                           >

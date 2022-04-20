@@ -1,7 +1,9 @@
 import { useAlert } from 'components/lib/store/alerts'
+import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
 import { useEffectOnce } from 'react-use'
+import { themeAtom } from 'stores/config'
 import { TRPCErrorType } from 'types'
 
 export function useMounted() {
@@ -90,17 +92,17 @@ export function useQuery(key: string) {
   }
 }
 
-export function useDarkMode() {
+export function useTheme() {
   const localTheme = () => localStorage.getItem('mirai-theme')
   const docTheme = () => document.documentElement.getAttribute('data-theme')
 
-  const [currentTheme, setCurrentTheme] = useState('corporate')
+  const [currentTheme, setCurrentTheme] = useAtom(themeAtom)
 
   function setTheme(theme: string) {
     localStorage.setItem('mirai-theme', theme)
     document.documentElement.setAttribute('data-theme', theme)
 
-    setCurrentTheme(theme)
+    void setCurrentTheme(theme)
   }
 
   function checkTheme() {
@@ -117,7 +119,7 @@ export function useDarkMode() {
   checkTheme()
 
   useEffectOnce(() => {
-    setCurrentTheme(localTheme() ?? 'corporate')
+    void setCurrentTheme(localTheme() ?? 'corporate')
   })
 
   return {

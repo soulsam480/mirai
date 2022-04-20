@@ -1,18 +1,18 @@
 import React from 'react'
 import { SessionProvider as NextAuthProvider } from 'next-auth/react'
-import { CurrentAccountProvider } from 'contexts'
-import { useDarkMode } from 'utils/hooks'
+import { CurrentAccount } from 'contexts'
+import { useTheme } from 'utils/hooks'
 
 interface Props {
   pageProps: any
 }
 
 export const AppProviders: React.FC<Props> = ({ pageProps, children }) => {
-  useDarkMode()
+  useTheme()
 
   return (
     <NextAuthProvider session={pageProps.session}>
-      <CurrentAccountProvider>{children}</CurrentAccountProvider>
+      <CurrentAccount>{children}</CurrentAccount>
     </NextAuthProvider>
   )
 }

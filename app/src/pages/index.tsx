@@ -7,7 +7,7 @@ import { getSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { getUserHome } from 'utils/helpers'
-import { useDarkMode } from 'utils/hooks'
+import { useTheme } from 'utils/hooks'
 import { NextPageWithLayout } from './_app'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -25,7 +25,7 @@ interface Props {
 }
 
 const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
-  const { theme, setTheme } = useDarkMode()
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
     if (typeof window === 'undefined') return

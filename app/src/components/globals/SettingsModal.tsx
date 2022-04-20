@@ -1,14 +1,14 @@
 import clsx from 'clsx'
 import { MIcon } from 'components/lib/MIcon'
 import React from 'react'
-import { useDarkMode } from 'utils/hooks'
+import { useTheme } from 'utils/hooks'
 
 interface Props {
   onClose: (val: boolean) => void
 }
 
 export const SettingsModal: React.FC<Props> = ({ onClose }) => {
-  const { setTheme, theme } = useDarkMode()
+  const { setTheme, theme } = useTheme()
 
   return (
     <div className="flex min-h-[600px] flex-col gap-2 text-left sm:w-[700px] sm:max-w-[700px]">
