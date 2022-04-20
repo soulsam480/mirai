@@ -161,7 +161,7 @@ export const WorkExperience: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+        <div className="text-lg font-medium leading-6    ">Work experience</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
@@ -194,7 +194,7 @@ export const WorkExperience: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+          <div className="text-lg font-medium leading-6    ">Work experience</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
@@ -304,13 +304,13 @@ export const WorkExperience: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="   btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn-neutral btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}

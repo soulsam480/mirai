@@ -1,6 +1,7 @@
 import { useAlert } from 'components/lib/store/alerts'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo, useState } from 'react'
+import { useEffectOnce } from 'react-use'
 import { TRPCErrorType } from 'types'
 
 export function useMounted() {
@@ -86,5 +87,41 @@ export function useQuery(key: string) {
   return {
     queryVal,
     isQuery,
+  }
+}
+
+export function useDarkMode() {
+  const localTheme = () => localStorage.getItem('mirai-theme')
+  const docTheme = () => document.documentElement.getAttribute('data-theme')
+
+  const [currentTheme, setCurrentTheme] = useState('corporate')
+
+  function setTheme(theme: string) {
+    localStorage.setItem('mirai-theme', theme)
+    document.documentElement.setAttribute('data-theme', theme)
+
+    setCurrentTheme(theme)
+  }
+
+  function checkTheme() {
+    if (typeof window === 'undefined') return
+
+    const theme = localTheme()
+
+    if (theme === null) return setTheme(docTheme() ?? 'corporate')
+    if (theme === docTheme()) return
+
+    setTheme(theme)
+  }
+
+  checkTheme()
+
+  useEffectOnce(() => {
+    setCurrentTheme(localTheme() ?? 'corporate')
+  })
+
+  return {
+    setTheme,
+    theme: currentTheme === 'corporate' ? 'light' : 'dark',
   }
 }

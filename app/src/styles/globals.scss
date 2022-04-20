@@ -6,15 +6,14 @@
   --rsbs-backdrop-bg: #fef3c7;
   --rsbs-bg: #fffbeb;
   --rsbs-handle-bg: #fbbf24;
-}
-
-.btn {
-  @apply normal-case;
+  --rounded-box: 0.25rem;
+  --rounded-btn: 0.125rem;
+  --rounded-badge: 0.125rem;
 }
 
 html,
 body {
-  @apply bg-base-100 text-base;
+  @apply bg-base-100 text-base-content;
   font-family: 'Nunito', sans-serif;
 }
 
@@ -22,8 +21,43 @@ body {
   scroll-behavior: smooth;
 }
 
+@responsive {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-xs {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-md {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 15px 30px rgba(0, 0, 0, 0.11), 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .text-shadow-none {
+    text-shadow: none;
+  }
+}
+
+.btn {
+  @apply normal-case;
+}
+
+.input[disabled],
+.textarea[disabled] {
+  @apply border-base-300;
+}
+
+.textarea[disabled] {
+  @apply resize-none;
+}
+
 .dialog-content {
-  @apply my-8 inline-block transform  rounded-lg bg-base-200 p-6 align-middle shadow-lg transition-all;
+  @apply my-8 inline-block transform rounded-lg bg-base-200 p-6 align-middle shadow-lg transition-all;
   @apply w-[90%] sm:w-auto;
 }
 
@@ -109,11 +143,11 @@ body {
     }
 
     &[disabled] {
-      @apply cursor-not-allowed border-base-200 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
+      @apply cursor-not-allowed border-base-300 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
     }
   }
 
   &__options {
-    @apply absolute z-30 mt-10 max-h-60 w-full overflow-auto rounded-md bg-gray-100 py-1 text-sm shadow-lg focus:outline-none;
+    @apply absolute z-30 mt-10 max-h-60 w-full overflow-auto rounded-md bg-base-100 py-1 text-sm shadow-lg focus:outline-none;
   }
 }

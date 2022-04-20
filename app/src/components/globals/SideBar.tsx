@@ -76,9 +76,9 @@ export const SideBar: React.FC<Props> = ({ children }) => {
     <div className="drawer-mobile drawer !h-[calc(100vh-57px)] sm:drawer-side">
       <input id="mirai-drawer" type="checkbox" className="drawer-toggle" ref={drawerRef} />
       {children}
-      <div className="drawer-side ">
+      <div className="drawer-side">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
-        <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-base-200  p-4 pt-0 text-base-content lg:bg-transparent">
+        <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-base-200 bg-base-100  p-4 pt-0 text-base-content lg:bg-transparent">
           {userData.role !== undefined && (
             <>
               <li className="!hover:bg-transparent mb-1 truncate border-b border-base-200 p-1 text-sm font-semibold">

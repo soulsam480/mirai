@@ -80,7 +80,7 @@ export const ManageBatch: React.FC<any> = () => {
 
   return (
     <>
-      <div className="text-lg font-medium leading-6 text-gray-900">
+      <div className="text-lg font-medium leading-6    ">
         {isEditMode ? (
           <>
             Manage <span className="font-bold text-primary">{batch?.name}</span>
@@ -112,12 +112,12 @@ export const ManageBatch: React.FC<any> = () => {
             <button
               type="button"
               onClick={async () => await router.push('/institute/batch')}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="   btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className="btn-neutral btn btn-sm mt-5">
+            <button type="submit" className="   btn btn-sm mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
           </div>

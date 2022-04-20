@@ -74,9 +74,9 @@ const Login: NextPageWithLayout = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen ">
       <NavBar />
-      <div className="flex justify-center">
+      <div className="flex justify-center px-3">
         <div className="w-full sm:max-w-md">
           <form className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
             <div className="mb-4 text-xl">Login</div>
@@ -118,7 +118,7 @@ const Login: NextPageWithLayout = () => {
               )}{' '}
             </label>
 
-            <button type="submit" className="btn-neutral btn btn-block mt-5">
+            <button type="submit" className="   btn btn-block mt-5">
               Submit
             </button>
           </form>

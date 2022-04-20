@@ -87,7 +87,7 @@ export const Skills: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Skills</div>
+        <div className="text-lg font-medium leading-6    ">Skills</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
@@ -112,7 +112,7 @@ export const Skills: React.FC<Props> = () => {
           onSubmit={handleSubmit(async (data) => await submitHandler(data))}
           className="flex flex-col gap-2 md:w-[350px] md:max-w-[350px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Skill</div>
+          <div className="text-lg font-medium leading-6    ">Skill</div>
 
           <div className="grid grid-cols-1 gap-2">
             <MInput
@@ -140,13 +140,13 @@ export const Skills: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="   btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn-neutral btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}

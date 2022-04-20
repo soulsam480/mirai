@@ -105,7 +105,7 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
             error={formState.errors.confirmPassword}
           />
 
-          <button type="submit" className="btn-neutral btn btn-block mt-5" disabled={disabled}>
+          <button type="submit" className="   btn btn-block mt-5" disabled={disabled}>
             Submit
           </button>
         </form>

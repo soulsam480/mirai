@@ -97,7 +97,7 @@ export const ManageCourse: React.FC<Props> = () => {
 
   return (
     <>
-      <div className="mb-4 text-lg font-medium leading-6 text-gray-900">
+      <div className="mb-4 text-lg font-medium leading-6    ">
         {isEditMode ? (
           <>
             Manage{' '}
@@ -170,12 +170,12 @@ export const ManageCourse: React.FC<Props> = () => {
             <button
               type="button"
               onClick={async () => await router.push('/institute/course')}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="   btn-outline btn btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className="btn-neutral btn btn-sm mt-5">
+            <button type="submit" className="   btn btn-sm mt-5">
               {isEditMode ? 'Update' : 'Create'}
             </button>
           </div>
