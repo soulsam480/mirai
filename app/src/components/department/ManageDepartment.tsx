@@ -1,7 +1,5 @@
-import { useAlert } from 'components/lib/store/alerts'
 import { useRouter } from 'next/router'
-import { useState, useMemo, useEffect } from 'react'
-import { TRPCErrorType } from 'types'
+import { useMemo } from 'react'
 import { z } from 'zod'
 import { MInput } from 'components/lib/MInput'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -9,13 +7,14 @@ import { useForm } from 'react-hook-form'
 import { useUser } from 'stores/user'
 import { useDepartment } from 'contexts'
 import { createDepartmentSchema } from 'schemas'
+import { MForm } from 'components/lib/MForm'
+import { useGlobalError } from 'utils/hooks'
 
 export const ManageDepartment: React.FC<any> = () => {
   const router = useRouter()
-  const setAlert = useAlert()
   const userData = useUser()
+  const setError = useGlobalError()
 
-  const [globalError, setError] = useState<TRPCErrorType | null>(null)
   const isEditMode = useMemo(
     () => router.query.departmentId !== undefined && router.query.departmentId.length > 0,
     [router.query],
@@ -37,7 +36,7 @@ export const ManageDepartment: React.FC<any> = () => {
     },
   })
 
-  const { register, handleSubmit, formState, setValue } = useForm({
+  const form = useForm({
     resolver: zodResolver(createDepartmentSchema.omit({ instituteId: true })),
     defaultValues: {
       name: '',
@@ -45,6 +44,8 @@ export const ManageDepartment: React.FC<any> = () => {
     },
     shouldFocusError: true,
   })
+
+  const { register, handleSubmit, formState, setValue } = form
 
   async function createDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
     create.mutate({ ...data, instituteId: Number(userData.instituteId) })
@@ -54,24 +55,14 @@ export const ManageDepartment: React.FC<any> = () => {
     update.mutate({ ...data, id: Number(router.query.departmentId), instituteId: userData.instituteId as number })
   }
 
-  useEffect(() => {
-    if (globalError == null) return
-
-    setAlert({
-      message: globalError.message,
-      type: 'danger',
-    })
-
-    setError(null)
-  }, [globalError, setAlert])
-
   return (
     <>
-      <form
+      <MForm
         className="sm:max-w-80 form-control flex sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateDepartment : createDepartment)}
+        form={form}
       >
-        <div className="text-lg font-medium leading-6    ">
+        <div className="text-lg font-medium leading-6">
           {isEditMode ? (
             <>
               Manage <span className="font-bold text-primary">{department?.name}</span>
@@ -94,16 +85,16 @@ export const ManageDepartment: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/department')}
-            className="   btn-outline btn btn-sm mt-5"
+            className="btn-outline btn btn-sm mt-5"
           >
-            Cancel{' '}
+            Cancel
           </button>
 
-          <button type="submit" className="   btn btn-sm mt-5">
+          <button type="submit" className="btn btn-sm mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
         </div>
-      </form>
+      </MForm>
     </>
   )
 }

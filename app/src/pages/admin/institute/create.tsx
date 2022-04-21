@@ -17,7 +17,7 @@ const CreateInstitute: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <MDialog show onClose={async () => await router.push('/admin/institute')}>
+    <MDialog show onClose={() => null} noEscape>
       <ManageInstitute />
     </MDialog>
   )

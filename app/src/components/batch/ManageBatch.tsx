@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
 import { MSelect } from 'components/lib/MSelect'
 import { useAlert } from 'components/lib/store/alerts'
 import { useBatch } from 'contexts/useBatch'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { createBatchSchema } from 'schemas'
 import { useUser } from 'stores/user'
 import { TRPCErrorType } from 'types'
@@ -90,39 +91,38 @@ export const ManageBatch: React.FC<any> = () => {
         )}
       </div>
 
-      <FormProvider {...form}>
-        <form
-          className="sm:max-w-80 form-control flex sm:w-80"
-          onSubmit={handleSubmit(isEditMode ? updateBatch : createBatch)}
-        >
-          <MInput label="Name" {...register('name')} placeholder="Batch name" error={formState.errors.name} />
+      <MForm
+        form={form}
+        className="sm:max-w-80 form-control flex sm:w-80"
+        onSubmit={handleSubmit(isEditMode ? updateBatch : createBatch)}
+      >
+        <MInput label="Name" {...register('name')} placeholder="Batch name" error={formState.errors.name} />
 
-          <MInput {...register('duration')} label="Duration" placeholder="Duration" error={formState.errors.duration} />
+        <MInput {...register('duration')} label="Duration" placeholder="Duration" error={formState.errors.duration} />
 
-          <MSelect
-            name="durationType"
-            label="Batch duration type"
-            options={durationType}
-            error={formState.errors.durationType}
-          />
+        <MSelect
+          name="durationType"
+          label="Batch duration type"
+          options={durationType}
+          error={formState.errors.durationType}
+        />
 
-          <MSelect name="status" label="Status" options={statusType} error={formState.errors.status} />
+        <MSelect name="status" label="Status" options={statusType} error={formState.errors.status} />
 
-          <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={async () => await router.push('/institute/batch')}
-              className="   btn-outline btn btn-sm mt-5"
-            >
-              Cancel
-            </button>
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={async () => await router.push('/institute/batch')}
+            className="   btn-outline btn btn-sm mt-5"
+          >
+            Cancel
+          </button>
 
-            <button type="submit" className="   btn btn-sm mt-5">
-              {isEditMode ? 'Update' : 'Create'}
-            </button>
-          </div>
-        </form>
-      </FormProvider>
+          <button type="submit" className="   btn btn-sm mt-5">
+            {isEditMode ? 'Update' : 'Create'}
+          </button>
+        </div>
+      </MForm>
     </>
   )
 }

@@ -27,6 +27,7 @@ declare global {
   const IconLaShieldAlt: typeof import('~icons/la/shield-alt.jsx')['default']
   const IconLaSitemap: typeof import('~icons/la/sitemap.jsx')['default']
   const IconLaSun: typeof import('~icons/la/sun.jsx')['default']
+  const IconLaTimes: typeof import('~icons/la/times.jsx')['default']
   const IconLaTimesCircle: typeof import('~icons/la/times-circle.jsx')['default']
   const IconLaTrashAltSolid: typeof import('~icons/la/trash-alt-solid.jsx')['default']
   const IconLaUndoAlt: typeof import('~icons/la/undo-alt.jsx')['default']

@@ -73,7 +73,12 @@ const MTableColumn = React.memo<MTableColumnProps>(
     const tdVal = useMemo(() => (format != null ? format(row) : row[field]), [format, field, row])
 
     return (
-      <td className={classes !== undefined ? (typeof classes === 'string' ? classes : classes(row)) : ''} {...rest}>
+      <td
+        {...rest}
+        className={
+          classes !== undefined ? (typeof classes === 'string' ? classes : classes(row)) : 'border-base-300 bg-base-200'
+        }
+      >
         {tdVal}
       </td>
     )
@@ -100,7 +105,13 @@ export const MTable: React.FC<Props> = ({
           <thead>
             <tr className={headerClass}>
               {columns.map(({ label, headerClasses }, i) => (
-                <th key={i} className={clsx([headerClasses, 'first:rounded-none last:rounded-none'])}>
+                <th
+                  key={i}
+                  className={clsx([
+                    headerClasses ?? 'bg-primary text-base-100',
+                    'first:rounded-none last:rounded-none',
+                  ])}
+                >
                   {label}
                 </th>
               ))}

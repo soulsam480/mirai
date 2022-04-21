@@ -17,7 +17,7 @@ const Department: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <MDialog show onClose={async () => await router.push('/institute/department')}>
+    <MDialog show onClose={() => null} noEscape>
       <ManageDepartment />
     </MDialog>
   )

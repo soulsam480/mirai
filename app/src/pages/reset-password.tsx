@@ -1,3 +1,4 @@
+import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
 import { useAlert } from 'components/lib/store/alerts'
 import { GetServerSideProps } from 'next'
@@ -21,13 +22,15 @@ interface passwordResetSchema {
 }
 
 const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) => {
-  const { register, handleSubmit, formState, getValues } = useForm<passwordResetSchema>({
+  const form = useForm<passwordResetSchema>({
     defaultValues: {
       password: '',
       confirmPassword: '',
     },
     shouldFocusError: true,
   })
+
+  const { register, handleSubmit, formState, getValues } = form
 
   const { query, push } = useRouter()
   const setAlert = useAlert()
@@ -73,7 +76,7 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
   return (
     <div className="flex min-h-screen justify-center py-10">
       <div className="w-full sm:max-w-md">
-        <form className="form-control w-full" onSubmit={handleSubmit(handleResetPassword)}>
+        <MForm form={form} className="form-control w-full" onSubmit={handleSubmit(handleResetPassword)}>
           <div className="mb-4 text-xl">Reset password</div>
 
           <MInput
@@ -105,10 +108,10 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
             error={formState.errors.confirmPassword}
           />
 
-          <button type="submit" className="   btn btn-block mt-5" disabled={disabled}>
+          <button type="submit" className="btn btn-block mt-5" disabled={disabled}>
             Submit
           </button>
-        </form>
+        </MForm>
       </div>
     </div>
   )

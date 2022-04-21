@@ -66,10 +66,10 @@ export function useGlobalError() {
   const [globalError, setError] = useState<TRPCErrorType | null>(null)
 
   useEffect(() => {
-    if (globalError == null) return
+    if (globalError === null) return
 
     setAlert({
-      message: globalError.message,
+      message: globalError.message ?? 'Something went wrong !',
       type: 'danger',
     })
 

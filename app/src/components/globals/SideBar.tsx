@@ -1,8 +1,10 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { useUser } from 'stores/user'
 import { defineSidebar } from 'utils/helpers'
 import MLink from 'lib/MLink'
 import { MIcon } from 'components/lib/MIcon'
+import { useAtom } from 'jotai'
+import { sidebarAtom } from 'stores/config'
 
 interface Props {}
 
@@ -66,24 +68,31 @@ const sidebarConfig = {
 
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
-  const drawerRef = useRef<HTMLInputElement | null>(null)
-
-  function dismissDrawer() {
-    drawerRef.current !== null && (drawerRef.current.checked = false)
-  }
+  const [sidebar, setSidebar] = useAtom(sidebarAtom)
 
   return (
     <div className="drawer-mobile drawer !h-[calc(100vh-57px)] sm:drawer-side">
-      <input id="mirai-drawer" type="checkbox" className="drawer-toggle" ref={drawerRef} />
+      <input
+        id="mirai-drawer"
+        type="checkbox"
+        className="drawer-toggle"
+        checked={sidebar}
+        onChange={({ target: { checked } }) => {
+          void setSidebar(checked)
+        }}
+      />
+
       {children}
       <div className="drawer-side">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
+
         <aside className="menu w-60 space-y-1 overflow-y-auto border-r border-base-200 bg-base-100  p-4 pt-0 text-base-content lg:bg-transparent">
           {userData.role !== undefined && (
             <>
               <li className="!hover:bg-transparent mb-1 truncate border-b border-base-200 p-1 text-sm font-semibold">
                 {userData.name ?? userData.email ?? 'User'} ({userData.role})
               </li>
+
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
                 return (
                   <li key={key}>
@@ -91,7 +100,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
                       className="flex items-center gap-2 !px-2 !py-1 font-semibold"
                       href={item.path}
                       active={item.active}
-                      onClick={dismissDrawer}
+                      onClick={() => setSidebar(false)}
                     >
                       {item.icon !== undefined && <MIcon>{item.icon}</MIcon>}
                       <span>{item.label}</span>

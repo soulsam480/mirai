@@ -57,8 +57,8 @@ body {
 }
 
 .dialog-content {
-  @apply my-8 inline-block transform rounded-lg bg-base-200 p-6 align-middle shadow-lg transition-all;
-  @apply w-[90%] sm:w-auto;
+  @apply mx-4 my-8 transform rounded-lg bg-base-200 p-6 shadow-lg transition-all;
+  @apply max-h-[90%] w-full overflow-y-auto sm:w-auto;
 }
 
 .file-input {
