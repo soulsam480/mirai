@@ -21,7 +21,7 @@ body {
   scroll-behavior: smooth;
 }
 
-@responsive {
+@layer utilities {
   .text-shadow {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -57,8 +57,8 @@ body {
 }
 
 .dialog-content {
-  @apply mx-4 my-8 transform rounded-lg bg-base-200 p-6 shadow-lg transition-all;
-  @apply max-h-[90%] w-full overflow-y-auto sm:w-auto;
+  @apply mx-4  transform rounded-lg bg-base-200 p-6 shadow-lg transition-all;
+  @apply relative max-h-[90%] w-full overflow-auto sm:w-auto;
 }
 
 .file-input {

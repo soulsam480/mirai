@@ -36,3 +36,5 @@ export interface SidebarItem {
   active?: MLinkProps['active']
   icon?: React.ReactNode
 }
+
+export type StudentProfileIgnore = 'verified' | 'verifiedBy' | 'verifiedOn' | 'createdAt' | 'updatedAt'

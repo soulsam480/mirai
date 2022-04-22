@@ -14,7 +14,8 @@ import { useForm, useWatch } from 'react-hook-form'
 import { createProjectSchema } from 'schemas'
 import { studentProjectsAtom } from 'stores/student'
 import { useUser } from 'stores/user'
-import { OverWrite } from 'types'
+import { OverWrite, StudentProfileIgnore } from 'types'
+import { STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { ProjectCard } from './ProjectCard'
@@ -23,7 +24,7 @@ interface Props {}
 
 type StudentProjectDateStrings = Omit<
   OverWrite<StudentProject, { startedAt: string; endedAt: string | null }>,
-  'verified' | 'verifiedBy' | 'verifiedOn'
+  StudentProfileIgnore
 >
 
 export const Projects: React.FC<Props> = () => {
@@ -103,7 +104,7 @@ export const Projects: React.FC<Props> = () => {
       // TODO: simplify setup to only update diff
       let currExp = projects.find(({ id }) => id === selectedProject) as unknown as StudentProjectDateStrings
 
-      currExp = omit(currExp, ['verified', 'verifiedBy', 'verifiedOn', 'studentId', 'id']) as StudentProjectDateStrings
+      currExp = omit(currExp, [...STUDENT_PROFILE_IGNORE_KEYS, 'studentId', 'id']) as StudentProjectDateStrings
 
       const diff = getDiff(currExp, val)
 
@@ -124,7 +125,7 @@ export const Projects: React.FC<Props> = () => {
     readOnly && setReadonly(true)
 
     Object.entries(rest).forEach(([key, value]) => {
-      if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
+      if (STUDENT_PROFILE_IGNORE_KEYS.includes(key) === true) return
 
       // ! This is an issue with native date input
       // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element

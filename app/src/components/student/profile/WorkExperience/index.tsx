@@ -16,8 +16,8 @@ import { useForm, useWatch } from 'react-hook-form'
 import { createExperienceSchema } from 'schemas'
 import { studentExperienceAtom } from 'stores/student'
 import { useUser } from 'stores/user'
-import { OverWrite } from 'types'
-import { INDUSTRY_TYPES } from 'utils/constnts'
+import { OverWrite, StudentProfileIgnore } from 'types'
+import { INDUSTRY_TYPES, STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { ExperienceCard } from './ExperienceCard'
@@ -30,7 +30,7 @@ const STIPEND_OPTIONS = ['0-10K', '10-50K', '50K Plus'].map((value) => ({ label:
 
 type StudentWorkExperienceDateStrings = Omit<
   OverWrite<StudentWorkExperience, { startedAt: string; endedAt: string | null }>,
-  'verified' | 'verifiedBy' | 'verifiedOn'
+  StudentProfileIgnore
 >
 
 export const WorkExperience: React.FC<Props> = () => {
@@ -118,13 +118,7 @@ export const WorkExperience: React.FC<Props> = () => {
         ({ id }) => id === selectedExperience,
       ) as unknown as StudentWorkExperienceDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentWorkExperienceDateStrings
+      currExp = omit(currExp, [...STUDENT_PROFILE_IGNORE_KEYS, 'studentId', 'id']) as StudentWorkExperienceDateStrings
 
       const diff = getDiff(currExp, val)
 
@@ -144,7 +138,7 @@ export const WorkExperience: React.FC<Props> = () => {
     readonly && setReadonly(true)
 
     Object.entries(rest).forEach(([key, value]) => {
-      if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
+      if (STUDENT_PROFILE_IGNORE_KEYS.includes(key) === true) return
 
       // ! This is an issue with native date input
       // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element

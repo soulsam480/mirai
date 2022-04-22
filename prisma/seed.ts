@@ -44,7 +44,7 @@ async function instituteSeed() {
     create: {
       name: 'IGIT Sarang',
       code: 'igit_sarang',
-      status: 'PENDING',
+      status: 'ONBOARDED',
     },
     update: {},
   })

@@ -13,7 +13,8 @@ import { useForm } from 'react-hook-form'
 import { createCertificationSchema } from 'schemas'
 import { studentCertificationsAtom } from 'stores/student'
 import { useUser } from 'stores/user'
-import { OverWrite } from 'types'
+import { OverWrite, StudentProfileIgnore } from 'types'
+import { STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { CertificationCard } from './CertificationCard'
@@ -24,7 +25,7 @@ const SCORE_TYPE = ['PERCENTAGE', 'CGPA', 'GRADES'].map((val) => ({ label: val, 
 
 type StudentCertificationDateStrings = Omit<
   OverWrite<StudentCertification, { date: string | null; expiresAt: string | null }>,
-  'verified' | 'verifiedBy' | 'verifiedOn'
+  StudentProfileIgnore
 >
 
 export const Certifications: React.FC<Props> = () => {
@@ -95,13 +96,7 @@ export const Certifications: React.FC<Props> = () => {
       // TODO: simplify setup to only update diff
       let currExp = certifications.find(({ id }) => id === selectedCert) as unknown as StudentCertificationDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentCertificationDateStrings
+      currExp = omit(currExp, [...STUDENT_PROFILE_IGNORE_KEYS, 'studentId', 'id']) as StudentCertificationDateStrings
 
       const diff = getDiff(currExp, val)
 
@@ -121,7 +116,7 @@ export const Certifications: React.FC<Props> = () => {
     readonly && setReadonly(true)
 
     Object.entries(rest).forEach(([key, value]) => {
-      if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
+      if (STUDENT_PROFILE_IGNORE_KEYS.includes(key) === true) return
 
       // ! This is an issue with native date input
       // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element
