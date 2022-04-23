@@ -1,14 +1,15 @@
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
+import { studentsQuerySchema } from '@mirai/app'
 
 export const instituteRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user === null) throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (ctx.session === null) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     const nextCtx = await next({
       // might seem dumb, but it's done like this to keep TS happy
-      ctx: { ...ctx, user: ctx.user },
+      ctx: { ...ctx, session: ctx.session },
     })
 
     return nextCtx
@@ -34,8 +35,30 @@ export const instituteRouter = createRouter()
       return instituteData
     },
   })
+  // TODO: paginate
+  .query('get_all_students', {
+    input: studentsQuerySchema,
+    async resolve({ ctx, input }) {
+      const { name, ...rest } = input
+
+      const students = await ctx.prisma.student.findMany({
+        where: { ...rest, basics: { name } },
+        select: {
+          instituteId: true,
+          uniId: true,
+          Batch: { select: { name: true, id: true } },
+          Department: { select: { name: true, id: true } },
+          basics: true,
+          course: { select: { programName: true, id: true } },
+          id: true,
+        },
+      })
+
+      return students
+    },
+  })
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user.user.role !== 'ADMIN') throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (ctx.session.user.role !== 'ADMIN') throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     const nextCtx = await next({ ctx })
 

@@ -9,7 +9,7 @@ import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
 import { useBatches } from 'contexts/useBatch'
-import ManageBatch from 'components/batch/ManageBatch'
+import ManageBatch from 'components/institute/batch/ManageBatch'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])

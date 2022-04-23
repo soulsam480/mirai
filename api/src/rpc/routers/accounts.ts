@@ -6,13 +6,13 @@ import { createInstituteSchema } from '@mirai/app'
 
 export const accountRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user === null || ctx.user.user.role !== 'ADMIN')
+    if (ctx.session === null || ctx.session.user.role !== 'ADMIN')
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })
 
     const nextCtx = await next({
-      ctx: { ...ctx, user: ctx.user },
+      ctx: { ...ctx, user: ctx.session },
     })
 
     return nextCtx

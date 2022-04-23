@@ -14,7 +14,7 @@ interface RenderPropCtx {
 
 export interface MSelectProps {
   name: string
-  label: string
+  label?: string
   options: Option[]
   error?: FieldError
   optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
@@ -22,36 +22,29 @@ export interface MSelectProps {
   control?: Control<any, any>
   disabled?: boolean
   reset?: boolean
+  onChange?: (value: any) => void
+  value?: any
+  palceholder?: string
 }
 
-export const MSelect: React.FC<MSelectProps> = ({
-  name,
+const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   label,
   options = [],
   optionSlot,
-  error: _error,
   noDataLabel,
-  control,
   disabled,
   reset = false,
+  value,
+  onChange,
+  palceholder,
+  children,
 }) => {
-  const formCtx = useFormContext()
-  const _control = formCtx !== null ? formCtx.control : control
-
-  const {
-    field: { onChange, value },
-    fieldState: { error },
-  } = useController({
-    name,
-    control: _control,
-  })
-
   function isValue(val: null | string | undefined) {
     return !(val === undefined || val === null || val === '')
   }
 
   const optionFromValue = useMemo(() => {
-    if (!isValue(value)) return 'Select'
+    if (!isValue(value)) return palceholder ?? 'Select'
 
     const selectedOption = options.find((v) => v.value === (isSafeVal(value) === true ? value : value.value ?? ''))
 
@@ -60,17 +53,17 @@ export const MSelect: React.FC<MSelectProps> = ({
     if (isSafeVal(value) === true) return value
 
     return 'Unknown value'
-  }, [value, options])
-
-  const fieldError = _error ?? error
+  }, [value, options, palceholder])
 
   return (
     <div className="flex flex-col">
-      <label className="label">
-        <span className="label-text"> {label} </span>
-      </label>
+      {label !== undefined && (
+        <label className="label">
+          <span className="label-text"> {label} </span>
+        </label>
+      )}
 
-      <Listbox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
+      <Listbox value={value} onChange={(option) => onChange?.(option.value)} disabled={disabled}>
         <div className="relative flex">
           <Listbox.Button className="m-select__btn">
             {({ open, disabled }) => {
@@ -83,13 +76,13 @@ export const MSelect: React.FC<MSelectProps> = ({
                   {reset && !disabled && isValue(value) && (
                     <MIcon
                       className={clsx([
-                        'tooltip tooltip-left tooltip-secondary absolute right-[30px] z-10 p-1',
-                        disabled && 'bg-base-200 text-base-300',
+                        'tooltip tooltip-left tooltip-secondary',
+                        disabled ? 'bg-base-200 text-base-300' : 'bg-base-100',
                       ])}
                       onClick={(e) => {
                         e.stopPropagation()
 
-                        onChange('')
+                        onChange?.(undefined)
                       }}
                       data-tip="Reset value"
                     >
@@ -157,11 +150,42 @@ export const MSelect: React.FC<MSelectProps> = ({
           </Transition>
         </div>
       </Listbox>
-
-      <label className="label">
-        {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}{' '}
-      </label>
+      {children}
     </div>
+  )
+}
+
+export const MSelect: React.FC<MSelectProps> = ({
+  name,
+  error: _error,
+  control,
+  value: _value,
+  onChange: _onChange,
+  ...rest
+}) => {
+  const formCtx = useFormContext()
+
+  if (formCtx === null && control === undefined) return <BaseSelect onChange={_onChange} value={_value} {...rest} />
+
+  const _control = control ?? formCtx?.control
+
+  const {
+    field: { onChange, value },
+    fieldState: { error },
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+  } = useController({
+    name,
+    control: _control,
+  })
+
+  const fieldError = _error ?? error
+
+  return (
+    <BaseSelect onChange={onChange} value={value} {...rest}>
+      <label className="label">
+        {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}
+      </label>
+    </BaseSelect>
   )
 }
 

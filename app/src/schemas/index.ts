@@ -119,3 +119,18 @@ export const createSkillSchema = z.object({
   name: z.string().min(1, 'Skill name is required'),
   score: z.enum(['Beginner', 'Intermediate', 'Expert']),
 })
+
+export const studentsQuerySchema = z.object({
+  instituteId: z.number(),
+  departmentId: z.number().optional(),
+  courseId: z.number().optional(),
+  batchId: z.number().optional(),
+  uniId: z
+    .string()
+    .optional()
+    .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
+  name: z
+    .string()
+    .optional()
+    .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
+})

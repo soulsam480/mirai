@@ -9,12 +9,15 @@ import { loaderAtom } from 'components/lib/store/loader'
 import { useStrictQueryCheck } from 'utils/hooks'
 import { QueryOptions } from 'types'
 
-export function useBatches() {
+export function useBatches(opts?: QueryOptions<'batch.getAll'>) {
+  opts = opts ?? {}
+
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
   const { data: batches = [], isLoading } = trpc.useQuery(['batch.getAll', userData.instituteId as number], {
+    ...opts,
     enabled: isLoggedIn,
     onError(e) {
       if (e.data?.code === 'UNAUTHORIZED') {

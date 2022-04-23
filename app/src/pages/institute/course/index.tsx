@@ -9,7 +9,7 @@ import type { Course } from '@prisma/client'
 import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
-import { ManageCourse } from 'components/course/ManageCourse'
+import { ManageCourse } from 'components/institute/course/ManageCourse'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

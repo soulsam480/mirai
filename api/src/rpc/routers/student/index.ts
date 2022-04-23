@@ -9,13 +9,13 @@ export const studentRouter = createRouter()
   // TODO: add logic for student-student queries, where a student shouldn't be
   // able to query another
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user === null)
+    if (ctx.session === null)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })
 
     const nextCtx = await next({
-      ctx: { ...ctx, user: ctx.user },
+      ctx: { ...ctx, user: ctx.session },
     })
 
     return nextCtx

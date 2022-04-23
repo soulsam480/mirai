@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
-import { ManageDepartment } from 'components/department/ManageDepartment'
+import { ManageDepartment } from 'components/institute/department/ManageDepartment'
 import { useDepartments } from 'contexts'
 
 // TODO: add support for admin view

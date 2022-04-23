@@ -1,7 +1,7 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { NextPageWithLayout } from 'pages/_app'
-import { ManageCourse } from 'components/course/ManageCourse'
+import { ManageCourse } from 'components/institute/course/ManageCourse'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

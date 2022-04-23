@@ -42,8 +42,8 @@ const sidebarConfig = {
     },
     {
       label: 'Students',
-      path: '/student',
-      active: (path) => path.includes('/student'),
+      path: '/students',
+      active: (path) => path.includes('/students'),
       icon: <IconLaUserGraduate />,
     },
   ]),

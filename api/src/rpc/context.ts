@@ -17,7 +17,7 @@ export const createContext = async ({ req, res }: CreateFastifyContextOptions) =
     req,
     res,
     prisma: miraiClient,
-    user:
+    session:
       session !== undefined && Object.keys(serializedSession).length > 0 ? (serializedSession as SessionUser) : null,
   }
 }

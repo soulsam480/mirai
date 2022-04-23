@@ -1,5 +1,6 @@
 {
   "globals": {
+    "IconLaArrowCircleRight": true,
     "IconLaBars": true,
     "IconLaBook": true,
     "IconLaBookReader": true,
@@ -8,6 +9,7 @@
     "IconLaCheckCircleSolid": true,
     "IconLaChevronDown": true,
     "IconLaExclamationCircle": true,
+    "IconLaExclamationTriangle": true,
     "IconLaFileAltSolid": true,
     "IconLaFileInvoice": true,
     "IconLaFlask": true,
