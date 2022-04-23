@@ -1,7 +1,7 @@
 import { Listbox, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import { Fragment, ReactElement, useMemo } from 'react'
-import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
+import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
 import type { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
 import { MIcon } from './MIcon'
@@ -25,6 +25,7 @@ export interface MSelectProps {
   onChange?: (value: any) => void
   value?: any
   palceholder?: string
+  width?: string
 }
 
 const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
@@ -38,6 +39,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   onChange,
   palceholder,
   children,
+  width,
 }) => {
   function isValue(val: null | string | undefined) {
     return !(val === undefined || val === null || val === '')
@@ -105,7 +107,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
           </Listbox.Button>
 
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-            <Listbox.Options className="m-select__options">
+            <Listbox.Options className="m-select__options" style={{ width: width ?? '100%' }}>
               {options.length > 0 ? (
                 options.map((option) => {
                   const selected =
@@ -167,25 +169,22 @@ export const MSelect: React.FC<MSelectProps> = ({
 
   if (formCtx === null && control === undefined) return <BaseSelect onChange={_onChange} value={_value} {...rest} />
 
-  const _control = control ?? formCtx?.control
-
-  const {
-    field: { onChange, value },
-    fieldState: { error },
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-  } = useController({
-    name,
-    control: _control,
-  })
-
-  const fieldError = _error ?? error
-
   return (
-    <BaseSelect onChange={onChange} value={value} {...rest}>
-      <label className="label">
-        {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}
-      </label>
-    </BaseSelect>
+    <Controller
+      name={name}
+      control={control ?? formCtx?.control}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
+        const fieldError = _error ?? error
+
+        return (
+          <BaseSelect onChange={onChange} value={value} {...rest}>
+            <label className="label">
+              {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}
+            </label>
+          </BaseSelect>
+        )
+      }}
+    />
   )
 }
 

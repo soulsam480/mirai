@@ -29,6 +29,7 @@ export const DepartmentFilter: React.FC<Props> = () => {
         }))
       }}
       reset
+      width="max-content"
     />
   )
 }

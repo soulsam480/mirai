@@ -25,6 +25,7 @@ export const BatchFilter: React.FC<Props> = () => {
           batchId: val,
         }))
       }}
+      width="max-content"
       reset
     />
   )

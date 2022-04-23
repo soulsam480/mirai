@@ -29,6 +29,7 @@ export const CourseFilter: React.FC<Props> = () => {
         }))
       }}
       reset
+      width="max-content"
     />
   )
 }

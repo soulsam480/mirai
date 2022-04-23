@@ -12,7 +12,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <>
       <Head>
-        <title>Mirai</title>
+        <title>Mirai | Hiring simplified for humans</title>
       </Head>
 
       <NavBar />

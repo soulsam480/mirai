@@ -1,4 +1,4 @@
-import { LoginPayload, LoginResponse } from '@mirai/api'
+import type { LoginPayload, LoginResponse } from '@mirai/api'
 import axios from 'axios'
 
 export const apiClient = axios.create({

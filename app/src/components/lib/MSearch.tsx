@@ -24,6 +24,7 @@ export interface MSearchProps {
   placeholder?: string
   disabled?: boolean
   reset?: boolean
+  width?: string
 }
 
 export const MSearch: React.FC<MSearchProps> = ({
@@ -38,6 +39,7 @@ export const MSearch: React.FC<MSearchProps> = ({
   placeholder,
   disabled,
   reset = false,
+  width,
 }) => {
   const formCtx = useFormContext()
   const _control = formCtx !== null ? formCtx.control : control
@@ -87,7 +89,7 @@ export const MSearch: React.FC<MSearchProps> = ({
   }, [value, extractOption])
 
   return (
-    <div className="flex flex-col">
+    <div className="flex min-w-[200px] flex-col">
       <label className="label">
         <span className="label-text"> {label} </span>
       </label>
@@ -148,7 +150,7 @@ export const MSearch: React.FC<MSearchProps> = ({
             leaveTo="opacity-0"
             afterLeave={() => setQuery('')}
           >
-            <Combobox.Options static className="m-select__options">
+            <Combobox.Options static className="m-select__options" style={{ width: width ?? '100%' }}>
               {filteredOptions.length === 0 && query !== '' ? (
                 <Combobox.Option
                   value={''}

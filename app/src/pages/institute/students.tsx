@@ -69,7 +69,7 @@ const InstituteStudents: NextPageWithLayout = () => {
       <div className="flex flex-col gap-1">
         <div className="text-sm">Filter students</div>
 
-        <div className="flex flex-wrap items-center gap-1">
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
           {filtersLoading === true ? (
             <div className="flex items-center space-x-2">
               <MSpinner size="20px" /> <span>Loading filters...</span>

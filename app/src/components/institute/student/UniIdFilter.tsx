@@ -21,7 +21,7 @@ export const UniIdFilter: React.FC<Props> = () => {
   return (
     <input
       className="input-bordered input-primary input input-sm"
-      placeholder="Regd. number"
+      placeholder="Reg. number"
       value={value}
       onChange={({ currentTarget }) => {
         setValue(currentTarget.value)
