@@ -2,6 +2,8 @@ import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
 import { studentsQuerySchema } from '@mirai/app'
+import { onBoardingTokens } from '../../lib'
+import dayjs from 'dayjs'
 
 export const instituteRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
@@ -55,6 +57,20 @@ export const instituteRouter = createRouter()
       })
 
       return students
+    },
+  })
+  .mutation('gen_onboarding_token', {
+    input: z.object({
+      instituteId: z.number(),
+      name: z.string(),
+    }),
+    async resolve({ input }) {
+      const token = onBoardingTokens.encode({
+        ...input,
+        createdAt: dayjs().toISOString(),
+      })
+
+      return token
     },
   })
   .middleware(async ({ ctx, next }) => {

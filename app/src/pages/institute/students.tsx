@@ -14,6 +14,10 @@ import { studentFiltersAtom } from 'stores/student'
 import { NameFilter } from 'components/institute/student/NameFilter'
 import { useResetAtom } from 'jotai/utils'
 import { UniIdFilter } from 'components/institute/student/UniIdFilter'
+import { useUser } from 'stores/user'
+import { trpcClient } from 'utils/trpc'
+import { copyToClip } from 'utils/helpers'
+import { useAlert } from 'components/lib/store/alerts'
 
 const InstituteStudents: NextPageWithLayout = () => {
   useStudentFilters()
@@ -21,6 +25,8 @@ const InstituteStudents: NextPageWithLayout = () => {
   const filtersLoading = useAtomValue(instituteAssetsLoading)
   const { isLoading, students } = useStudents()
   const setFilters = useResetAtom(studentFiltersAtom)
+  const userData = useUser()
+  const setAlert = useAlert()
 
   const columns = useMemo<Array<Column<StudentsListingType>>>(
     () => [
@@ -62,9 +68,28 @@ const InstituteStudents: NextPageWithLayout = () => {
     }
   }, [setFilters])
 
+  async function generateUrl() {
+    const payload = await trpcClient.mutation('institute.gen_onboarding_token', {
+      instituteId: Number(userData.instituteId),
+      name: userData.owner?.name ?? '',
+    })
+
+    const { origin } = location
+
+    const url = `${origin}/student/onboarding?${new URLSearchParams({ payload }).toString()}`
+
+    void copyToClip(url).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
+  }
+
   return (
     <div className="flex flex-col gap-2">
-      <div className="border-b border-base-200 pb-2 text-xl font-medium">Students</div>
+      <div className="flex justify-between">
+        <div className="border-b border-base-200 pb-2 text-xl font-medium">Students</div>
+
+        <button className="btn-outline btn btn-sm" onClick={generateUrl}>
+          Copy onboarding link
+        </button>
+      </div>
 
       <div className="flex flex-col gap-1">
         <div className="text-sm">Filter students</div>

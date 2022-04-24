@@ -3,15 +3,13 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { authorizeUser } from 'api'
 import { AxiosError } from 'axios'
 
-const secret = process.env.ACCESS_TOKEN_SECRET
-
 export default NextAuth({
   session: {
     strategy: 'jwt',
   },
   secret: process.env.REFRESH_TOKEN_SECRET,
   jwt: {
-    secret,
+    secret: process.env.ACCESS_TOKEN_SECRET,
   },
   callbacks: {
     jwt: ({ token, user }) => {

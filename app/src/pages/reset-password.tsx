@@ -9,9 +9,13 @@ import { trpc } from 'utils/trpc'
 import { NextPageWithLayout } from './_app'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  function isVal(val?: string | string[]) {
+    return val !== undefined && typeof val === 'string' && val.length > 0
+  }
+
   return {
     props: {
-      disabled: query.accountId === undefined || query.token === undefined,
+      disabled: !isVal(query.accountId) || !isVal(query.token),
     },
   }
 }
