@@ -1,6 +1,5 @@
 {
   "globals": {
-    "IconLaArrowCircleRight": true,
     "IconLaBars": true,
     "IconLaBook": true,
     "IconLaChevronDown": true,
@@ -10,8 +9,6 @@
     "IconLaHandsHelping": true,
     "IconLaHome": true,
     "IconLaMoon": true,
-    "IconLaPenSquare": true,
-    "IconLaPlusCircle": true,
     "IconLaSitemap": true,
     "IconLaSun": true,
     "IconLaTimes": true,

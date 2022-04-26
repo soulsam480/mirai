@@ -9,7 +9,7 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "pnpm prisma migrate dev --schema=../prisma/schema.prisma",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "vite --force",
+    "dev": "vite",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
@@ -26,21 +26,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@trpc/server": "^9.22.0",
+    "@trpc/server": "^9.23.0",
     "dotenv": "^16.0.0",
     "events": "^3.3.0",
     "fastify": "^3.28.0",
-    "pino": "^7.10.0",
+    "pino": "^7.11.0",
     "pino-pretty": "^7.6.1",
-    "prisma": "^3.12.0",
+    "prisma": "^3.13.0",
     "prisma-exclude": "^1.0.2",
-    "superjson": "^1.8.1",
+    "superjson": "^1.9.0",
     "url": "^0.11.0"
   },
   "devDependencies": {
     "@mirai/app": "workspace:*",
     "@swc/core": "*",
-    "vite": "^2.9.5",
+    "vite": "^2.9.6",
     "vite-plugin-node": "^0.0.19"
   }
 }
