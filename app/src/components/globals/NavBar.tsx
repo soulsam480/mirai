@@ -59,7 +59,7 @@ export const NavBar: React.FC<Props> = () => {
 
                   <li>
                     <div className="p-0">
-                      <button className="btn-outline btn btn-block btn-sm" onClick={() => setSettingsModal(true)}>
+                      <button className="btn btn-outline btn-sm btn-block" onClick={() => setSettingsModal(true)}>
                         Settings
                       </button>
                     </div>
@@ -68,7 +68,7 @@ export const NavBar: React.FC<Props> = () => {
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn-outline btn btn-block btn-sm"
+                        className="btn btn-outline btn-sm btn-block"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout
@@ -81,7 +81,7 @@ export const NavBar: React.FC<Props> = () => {
               <label
                 htmlFor="mirai-drawer"
                 className={clsx([
-                  'swap drawer-button swap-rotate text-3xl text-base-content lg:hidden',
+                  'swap-rotate swap drawer-button text-3xl text-base-content lg:hidden',
                   sidebar === true && 'swap-active',
                 ])}
               >
