@@ -134,3 +134,14 @@ export const studentsQuerySchema = z.object({
     .optional()
     .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
 })
+
+export const studentOnboardingSchema = z.object({
+  name: z.string().min(1, 'Required'),
+  email: z.string().min(1, 'Required'),
+  password: z.string().min(1, 'Required'),
+  repassword: z.string().min(1, 'Required'),
+  category: z.string().min(1, 'Required'),
+  dob: z.string().min(1, 'Required'),
+  gender: z.string().min(1, 'Required'),
+  mobileNumber: z.number().min(1, 'Required'),
+})
