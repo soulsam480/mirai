@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useUser } from 'stores/user'
 import { defineSidebar } from 'utils/helpers'
 import MLink from 'lib/MLink'
 import { MIcon } from 'components/lib/MIcon'
 import { useAtom } from 'jotai'
 import { sidebarAtom } from 'stores/config'
+import type { Step } from 'react-joyride'
+import dynamic from 'next/dynamic'
+
+const JoyRide = dynamic(async () => await import('react-joyride'), { ssr: false })
 
 interface Props {}
 
@@ -27,24 +31,28 @@ const sidebarConfig = {
       path: '/department',
       active: (path) => path.includes('/department'),
       icon: <IconLaSitemap />,
+      id: 'm-inst-departments',
     },
     {
       label: 'Courses',
       path: '/course',
       active: (path) => path.includes('/course'),
       icon: <IconLaBook />,
+      id: 'm-inst-courses',
     },
     {
       label: 'Batches',
       path: '/batch',
       active: (path) => path.includes('/batch'),
       icon: <IconLaUserFriends />,
+      id: 'm-inst-batches',
     },
     {
       label: 'Students',
       path: '/students',
       active: (path) => path.includes('/students'),
       icon: <IconLaUserGraduate />,
+      id: 'm-inst-students',
     },
   ]),
   STUDENT: defineSidebar('/student').extend([
@@ -69,6 +77,30 @@ const sidebarConfig = {
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
   const [sidebar, setSidebar] = useAtom(sidebarAtom)
+
+  const steps: Step[] = useMemo(
+    () => [
+      {
+        target: '#m-inst-departments',
+        content: 'Manage departments here !',
+      },
+    ],
+    [],
+  )
+
+  const [run, setRun] = useState(false)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const timeout = setTimeout(() => {
+      // delay opening the process to make sure
+      // target is mounted
+      setRun(true)
+    }, 500)
+
+    return () => clearTimeout(timeout)
+  }, [])
 
   return (
     <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
@@ -95,7 +127,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
 
               {sidebarConfig[userData.role === 'INSTITUTE_MOD' ? 'INSTITUTE' : userData.role].map((item, key) => {
                 return (
-                  <li key={key}>
+                  <li key={key} id={item.id}>
                     <MLink
                       className="flex items-center gap-2 !px-2 !py-1 font-semibold"
                       href={item.path}
@@ -112,6 +144,14 @@ export const SideBar: React.FC<Props> = ({ children }) => {
           )}
         </aside>
       </div>
+
+      <JoyRide
+        run={run}
+        steps={steps}
+        continuous
+        scrollToFirstStep={true}
+        debug={process.env.NODE_ENV === 'development'}
+      />
     </div>
   )
 }
