@@ -39,7 +39,7 @@ export const NavBar: React.FC<Props> = () => {
             </>
           ) : (
             <>
-              <div className="dropdown-end dropdown" onClick={() => setSidebar(false)}>
+              <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
                   <div className="h-8 w-8 rounded-full bg-primary text-base-content">
                     <span> {userData.name?.slice(0, 2).toUpperCase()} </span>
@@ -81,7 +81,7 @@ export const NavBar: React.FC<Props> = () => {
               <label
                 htmlFor="mirai-drawer"
                 className={clsx([
-                  'swap-rotate swap drawer-button text-3xl text-base-content lg:hidden',
+                  'swap drawer-button swap-rotate text-3xl text-base-content lg:hidden',
                   sidebar === true && 'swap-active',
                 ])}
               >

@@ -111,7 +111,7 @@ const Login: NextPageWithLayout = () => {
               error={formState.errors.password}
             />
 
-            <button type="submit" className="btn btn-block btn-sm mt-5">
+            <button type="submit" className="btn btn-sm btn-block mt-5">
               Submit
             </button>
           </MForm>

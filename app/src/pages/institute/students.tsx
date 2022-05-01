@@ -18,6 +18,9 @@ import { useUser } from 'stores/user'
 import { trpcClient } from 'utils/trpc'
 import { copyToClip } from 'utils/helpers'
 import { useAlert } from 'components/lib/store/alerts'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const InstituteStudents: NextPageWithLayout = () => {
   useStudentFilters()
@@ -86,7 +89,7 @@ const InstituteStudents: NextPageWithLayout = () => {
       <div className="flex justify-between">
         <div className="border-b border-base-200 pb-2 text-xl font-medium">Students</div>
 
-        <button className="btn-outline btn btn-sm" onClick={generateUrl}>
+        <button className="btn btn-outline btn-sm" onClick={generateUrl}>
           Copy onboarding link
         </button>
       </div>

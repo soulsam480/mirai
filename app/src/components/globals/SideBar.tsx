@@ -71,7 +71,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const [sidebar, setSidebar] = useAtom(sidebarAtom)
 
   return (
-    <div className="drawer-mobile drawer !h-[calc(100vh-57px)] sm:drawer-side">
+    <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
       <input
         id="mirai-drawer"
         type="checkbox"

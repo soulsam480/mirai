@@ -244,7 +244,7 @@ export const Projects: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="   btn-outline btn btn-sm mt-5"
+              className="   btn btn-outline btn-sm mt-5"
             >
               Cancel
             </button>

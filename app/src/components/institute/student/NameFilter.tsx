@@ -20,7 +20,7 @@ export const NameFilter: React.FC<Props> = () => {
 
   return (
     <input
-      className="input-bordered input-primary input input-sm"
+      className="input input-bordered input-primary input-sm"
       placeholder="Name"
       value={value}
       onChange={({ currentTarget }) => {
