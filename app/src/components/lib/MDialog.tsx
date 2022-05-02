@@ -7,15 +7,17 @@ export interface Props {
   onClose: (val: boolean) => void
   children: React.ReactChild
   noEscape?: boolean
+  className?: string
 }
 
 interface ContentProps {
   children: React.ReactChild
+  className?: string
 }
 
-const DialogContent = React.forwardRef<HTMLDivElement, ContentProps>(({ children }, ref) => {
+const DialogContent = React.forwardRef<HTMLDivElement, ContentProps>(({ children, className }, ref) => {
   return (
-    <div className="dialog-content" ref={ref}>
+    <div className={clsx(['dialog-content', className ?? '', 'bg-base-200'])} ref={ref}>
       {React.isValidElement(children)
         ? React.cloneElement(children, {
             ...children.props,
@@ -26,7 +28,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, ContentProps>(({ children
   )
 })
 
-export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape }) => {
+export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape, className }) => {
   return (
     <Transition appear show={show} as={Fragment} static={noEscape}>
       <Dialog
@@ -56,7 +58,7 @@ export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape }) 
           leaveFrom="opacity-100 scale-100"
           leaveTo="opacity-0 scale-95"
         >
-          <DialogContent>{children}</DialogContent>
+          <DialogContent className={className}>{children}</DialogContent>
         </Transition.Child>
       </Dialog>
     </Transition>

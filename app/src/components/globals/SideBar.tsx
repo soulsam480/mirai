@@ -1,14 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useUser } from 'stores/user'
 import { defineSidebar } from 'utils/helpers'
 import MLink from 'lib/MLink'
 import { MIcon } from 'components/lib/MIcon'
 import { useAtom } from 'jotai'
 import { sidebarAtom } from 'stores/config'
-import type { Step } from 'react-joyride'
 import dynamic from 'next/dynamic'
+import { OnboardingDialog } from './OnboardingDialog'
+import type { Tour } from 'react-shepherd'
+import { createBreakpoint } from 'react-use'
 
-const JoyRide = dynamic(async () => await import('react-joyride'), { ssr: false })
+const PlatformTour = dynamic(async () => await import('components/globals/PlatformTour'), { ssr: false })
 
 interface Props {}
 
@@ -74,33 +76,22 @@ const sidebarConfig = {
   ]),
 }
 
+const useBreakpoint = createBreakpoint({ lg: 1024 })
+
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
   const [sidebar, setSidebar] = useAtom(sidebarAtom)
+  const breakpoint = useBreakpoint()
 
-  const steps: Step[] = useMemo(
-    () => [
-      {
-        target: '#m-inst-departments',
-        content: 'Manage departments here !',
-      },
-    ],
-    [],
-  )
+  const tour = useRef<Tour | null>(null)
+  const [showDialog, setDialog] = useState(true)
 
-  const [run, setRun] = useState(false)
+  async function onStart() {
+    setDialog(false)
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const timeout = setTimeout(() => {
-      // delay opening the process to make sure
-      // target is mounted
-      setRun(true)
-    }, 500)
-
-    return () => clearTimeout(timeout)
-  }, [])
+    breakpoint === 'lg' && setSidebar(true)
+    tour.current?.start()
+  }
 
   return (
     <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
@@ -113,7 +104,6 @@ export const SideBar: React.FC<Props> = ({ children }) => {
           void setSidebar(checked)
         }}
       />
-
       {children}
       <div className="drawer-side">
         <label htmlFor="mirai-drawer" className="drawer-overlay lg:hidden" />
@@ -145,12 +135,12 @@ export const SideBar: React.FC<Props> = ({ children }) => {
         </aside>
       </div>
 
-      <JoyRide
-        run={run}
-        steps={steps}
-        continuous
-        scrollToFirstStep={true}
-        debug={process.env.NODE_ENV === 'development'}
+      <OnboardingDialog show={showDialog} onStart={onStart} onDismiss={() => setDialog(false)} />
+
+      <PlatformTour
+        assignRef={(base) => {
+          tour.current = base
+        }}
       />
     </div>
   )
