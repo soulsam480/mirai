@@ -113,7 +113,7 @@ export const ManageBatch: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/batch')}
-            className="   btn-outline btn btn-sm mt-5"
+            className="   btn btn-outline btn-sm mt-5"
           >
             Cancel
           </button>
