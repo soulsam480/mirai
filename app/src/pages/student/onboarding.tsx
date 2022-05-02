@@ -137,7 +137,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
 
               <MInput
                 label="Repeat Password"
-                type="repassword"
+                type="password"
                 {...register('repassword')}
                 placeholder="xxxxxxxxxxx"
                 error={formState.errors.repassword}
@@ -163,15 +163,11 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             />
           </div>
           <div className="mt-4 flex justify-end space-x-2">
-            <button
-              type="button"
-              // onClick={async () => await router.push('/institute/course')}
-              className="btn btn-outline btn-sm mt-5"
-            >
+            <button type="button" className="btn btn-outline btn-sm mt-5">
               Cancel
             </button>
 
-            <button type="submit" className="   btn btn-sm mt-5">
+            <button type="submit" className="btn btn-sm mt-5">
               Submit
             </button>
           </div>
