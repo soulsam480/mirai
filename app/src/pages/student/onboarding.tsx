@@ -2,17 +2,30 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { onBoardingTokens } from '@mirai/api'
 import { MForm } from 'components/lib/MForm'
 import { MInput } from 'components/lib/MInput'
+import { MSelect } from 'components/lib/MSelect'
 import { useAlert } from 'components/lib/store/alerts'
+import { useTicket } from 'contexts/useTicket'
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { studentOnboardingSchema } from 'schemas'
+import { z } from 'zod'
 import { NextPageWithLayout } from '../_app'
+
+const GENDER_TYPES = ['MALE', 'FEMALE', 'OTHER'].map((o) => ({ label: o, value: o }))
+
+const CATEGORY_TYPES = [
+  'General',
+  'Scheduled Caste',
+  'Scheduled Tribe',
+  'Other Backward Classes',
+  'Economically Weaker Section',
+].map((v) => ({ label: v, value: v }))
 
 export const getServerSideProps: GetServerSideProps<{
   name?: string
+  instituteId?: number
   error: string | null
 }> = async ({ query }) => {
   const { payload } = query
@@ -31,6 +44,7 @@ export const getServerSideProps: GetServerSideProps<{
     return {
       props: {
         name: data.name,
+        instituteId: data.instituteId,
         error: null,
       },
     }
@@ -60,8 +74,12 @@ export const getServerSideProps: GetServerSideProps<{
 const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof getServerSideProps>> = ({
   error,
   name,
+  instituteId,
 }) => {
+  const [isSubmitted, setSubmitted] = useState<boolean>(false)
+  const [tokenId, setTokenId] = useState<number | null>(null)
   const setAlert = useAlert()
+  const { create } = useTicket()
 
   const form = useForm({
     resolver: zodResolver(studentOnboardingSchema),
@@ -71,14 +89,18 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
       password: '',
       repassword: '',
       category: '',
-      dob: '',
+      dob: null,
       gender: '',
       mobileNumber: '',
     },
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState } = form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = form
 
   useEffect(() => {
     if (error !== null) {
@@ -89,91 +111,100 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
     }
   }, [error, setAlert])
 
+  async function submitOnboarding(data: z.infer<typeof studentOnboardingSchema>) {
+    const { password, ...meta } = data
+
+    // create ticket
+    const response = await create.mutate({
+      instituteId: Number(instituteId),
+      meta: JSON.stringify({ password, ...meta }),
+      status: 'OPEN',
+      notes: 'New student entry',
+    })
+    setTokenId(48454184515)
+    console.log('response: ', response)
+    console.log(create.variables, 'vars')
+    console.log(create.isSuccess, 'issuccess')
+    console.log(create, 'create')
+
+    setSubmitted(true)
+  }
+
   return (
-    <>
-      <div className="z-2 absolute top-0 left-0 right-0">
-        <div className="navbar min-h-12 mb-2 rounded-none text-neutral">
-          <div className="mx-2 flex-1">
-            <Link href="/">
-              <a className="text-lg font-bold text-base-100">Mirai</a>
-            </Link>
-          </div>
-        </div>
-      </div>
-      <div className="my-8 flex flex-col items-center justify-center">
-        <MForm
-          className="dialog-content form-control mt-16 flex w-full sm:w-[700px] sm:max-w-[700px]"
-          onSubmit={() => {
-            //
-          }}
-          form={form}
-        >
-          <span className="p-4 text-center text-center text-2xl font-bold	text-secondary-focus sm:text-3xl">
-            <h1>Welcome to Mirai! </h1>
-            <h1>You were invited by {name}</h1>
-          </span>
-          <h2 className="text-center text-center text-lg sm:text-xl">Please fill the form below</h2>
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      <MForm
+        className="form-control m-2 flex rounded-xl bg-base-200 p-8 shadow md:w-[700px]"
+        onSubmit={handleSubmit(submitOnboarding)}
+        form={form}
+      >
+        {!isSubmitted ? (
+          <>
+            <span className="p-4 text-center text-2xl font-bold	text-secondary-focus sm:text-3xl">
+              <h1>Welcome to Mirai! </h1>
+              <h1>You were invited by {name}</h1>
+            </span>
+            <h2 className="text-center text-lg">Please fill the form below</h2>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
-            <div>
-              <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" error={formState.errors.name} />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
+              <div>
+                <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" error={errors.name} />
+
+                <MInput
+                  label="New Password"
+                  type="password"
+                  {...register('password')}
+                  placeholder="xxxxxxxxxxx"
+                  error={errors.password}
+                />
+              </div>
+
+              <div>
+                <MInput
+                  label="Email"
+                  type="email"
+                  {...register('email')}
+                  placeholder="smishra@gmail.com"
+                  error={errors.email}
+                />
+
+                <MInput
+                  label="Repeat Password"
+                  type="password"
+                  {...register('repassword')}
+                  placeholder="xxxxxxxxxxx"
+                  error={errors.repassword}
+                />
+              </div>
+
+              <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
+
+              <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
+
+              <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
 
               <MInput
-                label="New Password"
-                type="password"
-                {...register('password')}
-                placeholder="xxxxxxxxxxx"
-                error={formState.errors.password}
+                label="Mobile number"
+                {...register('mobileNumber')}
+                placeholder="+91 873566556"
+                error={errors.mobileNumber}
               />
             </div>
-            <div>
-              <MInput
-                label="Email"
-                type="email"
-                {...register('email')}
-                placeholder="smishra@gmail.com"
-                error={formState.errors.email}
-              />
 
-              <MInput
-                label="Repeat Password"
-                type="password"
-                {...register('repassword')}
-                placeholder="xxxxxxxxxxx"
-                error={formState.errors.repassword}
-              />
+            <div className="mt-4 flex justify-end space-x-2">
+              <button type="submit" className="btn btn-sm mt-5">
+                Submit
+              </button>
             </div>
-
-            <MInput
-              label="Category"
-              {...register('category')}
-              placeholder="General"
-              error={formState.errors.category}
-            />
-
-            <MInput label="Date of birth" {...register('dob')} placeholder="24/05/2000" error={formState.errors.dob} />
-
-            <MInput label="Gender" {...register('gender')} placeholder="Female" error={formState.errors.gender} />
-
-            <MInput
-              label="Mobile number"
-              {...register('mobileNumber')}
-              placeholder="+91 987356xxxx"
-              error={formState.errors.mobileNumber}
-            />
+          </>
+        ) : (
+          <div>
+            <h2 className="text-center text-lg">Form submitted successfully!</h2>
+            <h2 className="text-center text-lg">Please note down the ticket Id for further references</h2>
+            <h2 className="text-center text-lg">{tokenId}</h2>
           </div>
-          <div className="mt-4 flex justify-end space-x-2">
-            <button type="button" className="btn btn-outline btn-sm mt-5">
-              Cancel
-            </button>
-
-            <button type="submit" className="btn btn-sm mt-5">
-              Submit
-            </button>
-          </div>
-        </MForm>
-      </div>
-    </>
+        )}
+      </MForm>
+    </div>
   )
 }
 

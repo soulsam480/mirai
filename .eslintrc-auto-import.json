@@ -1,8 +1,8 @@
 {
   "globals": {
-    "IconLaArrowCircleRight": true,
     "IconLaBars": true,
     "IconLaBook": true,
+    "IconLaExclamationTriangle": true,
     "IconLaFileAltSolid": true,
     "IconLaHandsHelping": true,
     "IconLaHome": true,
