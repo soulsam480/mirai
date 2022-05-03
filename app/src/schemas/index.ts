@@ -135,13 +135,30 @@ export const studentsQuerySchema = z.object({
     .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
 })
 
-export const studentOnboardingSchema = z.object({
-  name: z.string().min(1, 'Required'),
-  email: z.string().min(1, 'Required'),
-  password: z.string().min(1, 'Required'),
-  repassword: z.string().min(1, 'Required'),
-  category: z.string().min(1, 'Required'),
-  dob: z.string().min(1, 'Required'),
-  gender: z.string().min(1, 'Required'),
-  mobileNumber: z.number().min(1, 'Required'),
-})
+export const studentOnboardingSchema = z
+  .object({
+    name: z.string().min(1, 'Required'),
+    email: z.string().min(1, 'Required'),
+    password: z
+      .string()
+      .min(1, 'Required')
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/,
+        'password must be atleast eight characters including one uppercase letter, one special character and alphanumeric characters',
+      ),
+    repassword: z.string().min(1, 'Required'),
+    category: z.string().min(1, 'Required'),
+    dob: z
+      .string()
+      .nullable()
+      .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+    gender: z.string().min(1, 'Required'),
+    mobileNumber: z
+      .string()
+      .min(1, 'Required')
+      .regex(/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/, 'Invalid phone number'),
+  })
+  .refine((val) => val.password === val.repassword, {
+    message: 'Both passwords should match',
+    path: ['repassword'],
+  })

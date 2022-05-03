@@ -48,6 +48,7 @@ export const ticketRouter = createRouter()
       const newToken = await ctx.prisma.ticket.create({
         data: input,
       })
+
       return newToken
     },
   })

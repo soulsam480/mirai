@@ -1,3 +1,4 @@
+import { Ticket } from '@prisma/client'
 import { useAlert } from 'components/lib/store/alerts'
 import { loaderAtom } from 'components/lib/store/loader'
 import { useAtomValue, useSetAtom } from 'jotai'
@@ -68,15 +69,15 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
   })
 
   const create = trpc.useMutation(['ticket.create'], {
-    onSuccess() {
+    async onSuccess(data): Promise<Ticket> {
       void utils.invalidateQueries(['ticket.getAll'])
 
-      // setAlert({
-      //   type: 'success',
-      //   message: 'Ticket created',
-      // })
+      setAlert({
+        type: 'success',
+        message: 'Ticket created',
+      })
 
-      void router.push('/login')
+      return data
     },
   })
 
