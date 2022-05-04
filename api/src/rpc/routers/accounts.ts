@@ -1,18 +1,39 @@
 import { TRPCError } from '@trpc/server'
-// import { createStudentSchema } from 'pages/admin/student/manage/[[...id]]';
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
-import { createInstituteSchema } from '@mirai/app'
+import { createInstituteSchema, tourSchema } from '@mirai/app'
 
 export const accountRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.session === null || ctx.session.user.role !== 'ADMIN')
+    if (ctx.session === null)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })
 
     const nextCtx = await next({
-      ctx: { ...ctx, user: ctx.session },
+      ctx: { ...ctx, session: ctx.session },
+    })
+
+    return nextCtx
+  })
+  .mutation('toggle_tour', {
+    input: tourSchema,
+    async resolve({ ctx, input: { id, showTour } }) {
+      await ctx.prisma.account.update({
+        where: { id },
+        data: { showTour },
+        select: { id: true, showTour: true },
+      })
+    },
+  })
+  .middleware(async ({ ctx, next }) => {
+    if (ctx.session?.user.role !== 'ADMIN')
+      throw new TRPCError({
+        code: 'UNAUTHORIZED',
+      })
+
+    const nextCtx = await next({
+      ctx: { ...ctx, session: ctx.session },
     })
 
     return nextCtx
@@ -46,13 +67,3 @@ export const accountRouter = createRouter()
       })
     },
   })
-// .mutation('create_student', {
-//   input: createStudentSchema,
-//   async resolve({ ctx, input }) {
-//     const student = await ctx.prisma.student.create({
-//       data: input,
-//     });
-
-//     return student;
-//   },
-// });

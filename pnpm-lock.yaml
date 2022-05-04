@@ -27,7 +27,7 @@ importers:
       eslint-plugin-promise: ^6.0.0
       eslint-plugin-react: ^7.29.4
       eslint-plugin-react-hooks: ^4.4.0
-      husky: ^7.0.4
+      husky: ^7.0.0
       jsonwebtoken: ^8.5.1
       lint-staged: ^12.4.1
       nanoid: ^3.3.3
@@ -132,6 +132,7 @@ importers:
       fork-ts-checker-webpack-plugin: ^7.2.7
       jotai: ^1.6.4
       lodash: ^4.17.21
+      mitt: ^3.0.0
       next: ^12.1.4
       next-auth: ^4.3.2
       next-compose-plugins: ^2.2.1
@@ -143,6 +144,7 @@ importers:
       react-dom: ^17.0.2
       react-hook-form: ^7.30.0
       react-query: ^3.38.0
+      react-shepherd: ^3.3.6
       react-use: ^17.3.2
       sass: ^1.51.0
       superjson: ^1.9.0
@@ -162,6 +164,7 @@ importers:
       daisyui: 2.14.2_3425a46c47258e6ad509bc7cdce7ea50
       jotai: 1.6.4_react-query@3.38.0+react@17.0.2
       lodash: 4.17.21
+      mitt: 3.0.0
       next: 12.1.4_1b11a9fbd6a82b51c875b786deaf2000
       next-auth: 4.3.2_react-dom@17.0.2+react@17.0.2
       next-compose-plugins: 2.2.1
@@ -171,6 +174,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-hook-form: 7.30.0_react@17.0.2
       react-query: 3.38.0_react-dom@17.0.2+react@17.0.2
+      react-shepherd: 3.3.6_react-dom@17.0.2+react@17.0.2
       react-use: 17.3.2_react-dom@17.0.2+react@17.0.2
       superjson: 1.9.0
     devDependencies:
@@ -695,6 +699,10 @@ packages:
 
   /@panva/hkdf/1.0.1:
     resolution: {integrity: sha512-mMyQ9vjpuFqePkfe5bZVIf/H3Dmk6wA8Kjxff9RcO4kqzJo+Ek9pGKwZHpeMr7Eku0QhLXMCd7fNCSnEnRMubg==}
+    dev: false
+
+  /@popperjs/core/2.11.5:
+    resolution: {integrity: sha512-9X2obfABZuDVLCgPK9aX0a/x4jaOEweTTWE2+9sr0Qqqevj2Uv5XorvusThmc9XGYpS9yI+fhh8RTafBtGposw==}
     dev: false
 
   /@prisma/client/3.13.0:
@@ -4145,6 +4153,10 @@ packages:
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
 
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
+
   /mri/1.1.4:
     resolution: {integrity: sha512-6y7IjGPm8AzlvoUrwAaw1tLnUBudaS3752vcd8JtrpGGQn+rXIe63LFVHm/YMwtqAuh+LJPCFdlLYPWM1nYn6w==}
     engines: {node: '>=4'}
@@ -4929,6 +4941,18 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     dev: false
 
+  /react-shepherd/3.3.6_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-pYa6WuK+nHTwi1k/WFBSKj2WxQUCwGKjIxRVtAO9wDfRJwF6+hA9UVP7l0paGYaz4ZfU7ZxiOEsUFbXUyWs4xg==}
+    engines: {node: '>=8', npm: '>=5'}
+    peerDependencies:
+      react: ^17.0.2
+      react-dom: ^17.0.2
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      shepherd.js: 8.3.1
+    dev: false
+
   /react-ssr-prepass/1.5.0_react@17.0.2:
     resolution: {integrity: sha512-yFNHrlVEReVYKsLI5lF05tZoHveA5pGzjFbFJY/3pOqqjGOmMmqx83N4hIjN2n6E1AOa+eQEUxs3CgRnPmT0RQ==}
     peerDependencies:
@@ -5267,6 +5291,15 @@ packages:
     resolution: {integrity: sha512-Vpfqwm4EnqGdlsBFNmHhxhElJYrdfcxPThu+ryKS5J8L/fhAwLazFZtq+S+TWZ9ANj2piSQLGj6NQg+lKPmxrw==}
     dev: true
 
+  /shepherd.js/8.3.1:
+    resolution: {integrity: sha512-IhxZNhnK2m/pNTXudNfYrcwvcZNWkeYngQbQee8nC3xJ2GjeIatGqivhdZAMZ+LeogZvKMakB931d/V534uhrw==}
+    engines: {node: 10.* || >= 12}
+    dependencies:
+      '@popperjs/core': 2.11.5
+      deepmerge: 4.2.2
+      smoothscroll-polyfill: 0.4.4
+    dev: false
+
   /side-channel/1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}
     dependencies:
@@ -5315,6 +5348,10 @@ packages:
       ansi-styles: 6.1.0
       is-fullwidth-code-point: 4.0.0
     dev: true
+
+  /smoothscroll-polyfill/0.4.4:
+    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
+    dev: false
 
   /sonic-boom/1.4.1:
     resolution: {integrity: sha512-LRHh/A8tpW7ru89lrlkU4AszXt1dbwSjVWguGrmlxE7tawVmDBlI1PILMkXAxJTwqhgsEeTHzj36D5CmHgQmNg==}

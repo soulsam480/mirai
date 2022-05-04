@@ -8,3 +8,5 @@ export const apiClient = axios.create({
 export async function authorizeUser(payload: LoginPayload) {
   return await apiClient.post<LoginResponse>('auth', payload)
 }
+
+export * from './account'
