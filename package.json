@@ -5,14 +5,21 @@
   "scripts": {
     "lint": "eslint **/{src,prisma}/**/*.{js,ts,tsx}",
     "lint-fix": "pnpm lint --fix",
-    "fmt": "pnpm dlx prettier --config ./prettier.config.cjs --plugin=prettier-plugin-tailwindcss --write **/{src,prisma}/**/*.{js,ts,tsx}",
+    "fmt": "prettier --config ./prettier.config.cjs --plugin=prettier-plugin-tailwindcss --write **/{src,prisma}/**/*.{js,ts,tsx}",
     "dev:app": "pnpm run --filter @mirai/app dx",
     "dev:api": "pnpm run --filter @mirai/api dx",
     "dev": "concurrently --kill-others-on-fail \"pnpm run dev:app\"  \"pnpm run dev:api\"",
     "db-nuke": "pnpm run --filter @mirai/api db-nuke",
     "build:api": "pnpm run --filter @mirai/api build",
     "build:app": "pnpm run --filter @mirai/app build",
-    "build": "run-p build:*"
+    "build": "run-p build:*",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "prettier --config ./prettier.config.cjs --plugin=prettier-plugin-tailwindcss --write",
+      "eslint --fix"
+    ]
   },
   "dependencies": {
     "@mirai/api": "workspace:*",
@@ -43,6 +50,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.4.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.4.1",
     "nanoid": "^3.3.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",

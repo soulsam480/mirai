@@ -1,6 +1,7 @@
 import { MSelect } from 'components/lib/MSelect'
 import { useAtom, useAtomValue } from 'jotai'
 import React, { useMemo } from 'react'
+import { useSelectAtom } from 'stores/index'
 import { instituteBatches } from 'stores/institute'
 import { studentFiltersAtom } from 'stores/student'
 
@@ -28,5 +29,22 @@ export const BatchFilter: React.FC<Props> = () => {
       width="max-content"
       reset
     />
+  )
+}
+
+export const BatchFilterPreview: React.FC = () => {
+  const batchId = useSelectAtom(studentFiltersAtom, (v) => v.batchId)
+  const departmentId = useSelectAtom(studentFiltersAtom, (v) => v.departmentId)
+  const batches = useAtomValue(instituteBatches)
+
+  const batchName = useMemo(() => batches.find((b) => b.id === batchId), [batchId, batches])
+
+  if (batchId === undefined || batchName === undefined) return null
+
+  return (
+    <div className="text-sm">
+      belong to <span className="font-semibold text-primary-focus">{batchName.name}</span> batch
+      {departmentId !== undefined && ','}
+    </div>
   )
 }

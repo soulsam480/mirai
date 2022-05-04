@@ -1,6 +1,7 @@
 import { MSelect } from 'components/lib/MSelect'
 import { useAtom, useAtomValue } from 'jotai'
 import React, { useMemo } from 'react'
+import { useSelectAtom } from 'stores/index'
 import { instituteCourses } from 'stores/institute'
 import { studentFiltersAtom } from 'stores/student'
 
@@ -31,5 +32,22 @@ export const CourseFilter: React.FC<Props> = () => {
       reset
       width="max-content"
     />
+  )
+}
+
+export const CourseFilterPreview: React.FC = () => {
+  const studentName = useSelectAtom(studentFiltersAtom, (v) => v.name)
+  const courseId = useSelectAtom(studentFiltersAtom, (v) => v.courseId)
+  const courses = useAtomValue(instituteCourses)
+
+  const courseName = useMemo(() => courses.find((b) => b.id === courseId), [courseId, courses])
+
+  if (courseId === undefined || courseName === undefined) return null
+
+  return (
+    <div className="text-sm">
+      enrolled to <span className="font-semibold text-primary-focus">{courseName.programName}</span> course
+      {Boolean(studentName) && ','}
+    </div>
   )
 }

@@ -39,7 +39,7 @@ export const NavBar: React.FC<Props> = () => {
             </>
           ) : (
             <>
-              <div className="dropdown-end dropdown" onClick={() => setSidebar(false)}>
+              <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
                   <div className="h-8 w-8 rounded-full bg-primary text-base-content">
                     <span> {userData.name?.slice(0, 2).toUpperCase()} </span>
@@ -59,7 +59,7 @@ export const NavBar: React.FC<Props> = () => {
 
                   <li>
                     <div className="p-0">
-                      <button className="btn-outline btn btn-block btn-sm" onClick={() => setSettingsModal(true)}>
+                      <button className="btn btn-outline btn-sm btn-block" onClick={() => setSettingsModal(true)}>
                         Settings
                       </button>
                     </div>
@@ -68,7 +68,7 @@ export const NavBar: React.FC<Props> = () => {
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn-outline btn btn-block btn-sm"
+                        className="btn btn-outline btn-sm btn-block"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout

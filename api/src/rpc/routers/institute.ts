@@ -41,10 +41,16 @@ export const instituteRouter = createRouter()
   .query('get_all_students', {
     input: studentsQuerySchema,
     async resolve({ ctx, input }) {
-      const { name, ...rest } = input
+      const { name, uniId, ...rest } = input
 
       const students = await ctx.prisma.student.findMany({
-        where: { ...rest, basics: { name } },
+        where: {
+          ...rest,
+          // we need to conditionally construct queries because with an
+          // empty string, prisma advanced queries won't work
+          uniId: uniId !== undefined ? { contains: uniId } : undefined,
+          basics: name !== undefined ? { name: { startsWith: name, mode: 'insensitive' } } : undefined,
+        },
         select: {
           instituteId: true,
           uniId: true,

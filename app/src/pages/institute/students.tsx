@@ -4,25 +4,20 @@ import { StudentsListingType, useStudents } from 'contexts/useStudents'
 import { useEffect, useMemo } from 'react'
 import { NextPageWithLayout } from '../_app'
 import { useStudentFilters } from 'contexts'
-import { DepartmentFilter } from 'components/institute/student/DepartmentFilter'
-import { BatchFilter } from 'components/institute/student/BatchFilter'
-import { CourseFilter } from 'components/institute/student/CourseFilter'
-import { useAtomValue } from 'jotai'
-import { instituteAssetsLoading } from 'stores/institute'
-import MSpinner from 'components/lib/MSpinner'
 import { studentFiltersAtom } from 'stores/student'
-import { NameFilter } from 'components/institute/student/NameFilter'
 import { useResetAtom } from 'jotai/utils'
-import { UniIdFilter } from 'components/institute/student/UniIdFilter'
 import { useUser } from 'stores/user'
 import { trpcClient } from 'utils/trpc'
 import { copyToClip } from 'utils/helpers'
 import { useAlert } from 'components/lib/store/alerts'
+import { getServerSideAuthGuard } from 'server/lib/auth'
+import { StudentFiltersBlock } from 'components/institute/student/filters'
+
+export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const InstituteStudents: NextPageWithLayout = () => {
   useStudentFilters()
 
-  const filtersLoading = useAtomValue(instituteAssetsLoading)
   const { isLoading, students } = useStudents()
   const setFilters = useResetAtom(studentFiltersAtom)
   const userData = useUser()
@@ -69,46 +64,38 @@ const InstituteStudents: NextPageWithLayout = () => {
   }, [setFilters])
 
   async function generateUrl() {
-    const payload = await trpcClient.mutation('institute.gen_onboarding_token', {
-      instituteId: Number(userData.instituteId),
-      name: userData.owner?.name ?? '',
-    })
+    try {
+      const payload = await trpcClient.mutation('institute.gen_onboarding_token', {
+        instituteId: Number(userData.instituteId),
+        name: userData.owner?.name ?? '',
+      })
 
-    const { origin } = location
+      const { origin } = location
 
-    const url = `${origin}/student/onboarding?${new URLSearchParams({ payload }).toString()}`
+      const url = `${origin}/student/onboarding?${new URLSearchParams({ payload }).toString()}`
 
-    void copyToClip(url).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
+      void copyToClip(url).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
+    } catch (error) {
+      setAlert({
+        type: 'danger',
+        message: 'Unable to generate URL',
+      })
+    }
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between">
-        <div className="border-b border-base-200 pb-2 text-xl font-medium">Students</div>
+      <div className="flex items-center justify-between border-b border-base-200 pb-2">
+        <div className="text-xl font-medium">Students</div>
 
-        <button className="btn-outline btn btn-sm" onClick={generateUrl}>
+        <button className="btn btn-outline btn-sm" onClick={generateUrl}>
           Copy onboarding link
         </button>
       </div>
 
       <div className="flex flex-col gap-1">
         <div className="text-sm">Filter students</div>
-
-        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2">
-          {filtersLoading === true ? (
-            <div className="flex items-center space-x-2">
-              <MSpinner size="20px" /> <span>Loading filters...</span>
-            </div>
-          ) : (
-            <>
-              <BatchFilter />
-              <DepartmentFilter />
-              <CourseFilter />
-              <NameFilter />
-              <UniIdFilter />
-            </>
-          )}
-        </div>
+        <StudentFiltersBlock />
       </div>
 
       <MTable
