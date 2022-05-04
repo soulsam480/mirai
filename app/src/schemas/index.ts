@@ -170,3 +170,8 @@ export const studentOnboardingSchema = z
     message: 'Both passwords should match',
     path: ['repassword'],
   })
+
+export const tourSchema = z.object({
+  id: z.number(),
+  showTour: z.boolean(),
+})

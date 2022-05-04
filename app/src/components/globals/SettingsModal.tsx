@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { MIcon } from 'components/lib/MIcon'
 import React from 'react'
+import { eventBus } from 'utils/helpers'
 import { useTheme } from 'utils/hooks'
 
 interface Props {
@@ -33,7 +34,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
             setTheme(theme === 'dark' ? 'corporate' : 'dark')
           }}
         >
-          <label className={clsx(['swap-rotate swap flex-none', theme === 'light' && 'swap-active'])}>
+          <label className={clsx(['swap swap-rotate flex-none', theme === 'light' && 'swap-active'])}>
             <MIcon className="swap-on">
               <IconLaSun />
             </MIcon>
@@ -44,6 +45,22 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
           </label>
 
           <div className="text-xs">switch to {theme === 'light' ? 'Dark' : 'Light'} </div>
+        </button>
+      </div>
+
+      <div className="text-base">Platform</div>
+
+      <div className="flex items-center justify-between gap-2">
+        <div className="text-xs">Interactive tour</div>
+
+        <button
+          className="btn btn-ghost btn-xs flex items-center gap-2"
+          onClick={() => {
+            onClose(false)
+            eventBus.emit('toggle-tour')
+          }}
+        >
+          Show tour
         </button>
       </div>
     </div>

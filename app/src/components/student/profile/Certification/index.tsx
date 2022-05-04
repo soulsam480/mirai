@@ -254,13 +254,13 @@ export const Certifications: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="   btn btn-outline btn-sm mt-5"
+              className="btn btn-outline btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}
