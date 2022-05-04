@@ -134,3 +134,8 @@ export const studentsQuerySchema = z.object({
     .optional()
     .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
 })
+
+export const tourSchema = z.object({
+  id: z.number(),
+  showTour: z.boolean(),
+})

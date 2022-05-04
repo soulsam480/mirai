@@ -132,6 +132,7 @@ importers:
       fork-ts-checker-webpack-plugin: ^7.2.7
       jotai: ^1.6.4
       lodash: ^4.17.21
+      mitt: ^3.0.0
       next: ^12.1.4
       next-auth: ^4.3.2
       next-compose-plugins: ^2.2.1
@@ -163,6 +164,7 @@ importers:
       daisyui: 2.14.2_3425a46c47258e6ad509bc7cdce7ea50
       jotai: 1.6.4_react-query@3.38.0+react@17.0.2
       lodash: 4.17.21
+      mitt: 3.0.0
       next: 12.1.4_1b11a9fbd6a82b51c875b786deaf2000
       next-auth: 4.3.2_react-dom@17.0.2+react@17.0.2
       next-compose-plugins: 2.2.1
@@ -4150,6 +4152,10 @@ packages:
 
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
+
+  /mitt/3.0.0:
+    resolution: {integrity: sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==}
+    dev: false
 
   /mri/1.1.4:
     resolution: {integrity: sha512-6y7IjGPm8AzlvoUrwAaw1tLnUBudaS3752vcd8JtrpGGQn+rXIe63LFVHm/YMwtqAuh+LJPCFdlLYPWM1nYn6w==}

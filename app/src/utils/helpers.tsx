@@ -1,5 +1,6 @@
 import type { Role } from '@prisma/client'
 import dayjs from 'dayjs'
+import mitt from 'mitt'
 import type { NullToUndefined, SidebarItem } from 'types'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
@@ -155,3 +156,10 @@ export async function sleep(ms: number): Promise<any> {
     }, ms)
   })
 }
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type MittEvents = {
+  'toggle-tour': any
+}
+
+export const eventBus = mitt<MittEvents>()

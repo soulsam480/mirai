@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useUser } from 'stores/user'
-import { defineSidebar } from 'utils/helpers'
+import { defineSidebar, eventBus } from 'utils/helpers'
 import MLink from 'lib/MLink'
 import { MIcon } from 'components/lib/MIcon'
 import { useAtom } from 'jotai'
@@ -9,6 +9,7 @@ import dynamic from 'next/dynamic'
 import { OnboardingDialog } from './OnboardingDialog'
 import type { Tour } from 'react-shepherd'
 import { createBreakpoint } from 'react-use'
+import { toggleTour } from 'api'
 
 const PlatformTour = dynamic(async () => await import('components/globals/PlatformTour'), { ssr: false })
 
@@ -84,7 +85,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const breakpoint = useBreakpoint()
 
   const tour = useRef<Tour | null>(null)
-  const [showDialog, setDialog] = useState(true)
+  const [showDialog, setDialog] = useState(userData?.showTour ?? false)
 
   async function onStart() {
     setDialog(false)
@@ -92,6 +93,24 @@ export const SideBar: React.FC<Props> = ({ children }) => {
     breakpoint === 'lg' && setSidebar(true)
     tour.current?.start()
   }
+
+  useEffect(() => {
+    if (userData.id === undefined) return
+
+    eventBus.on('toggle-tour', () => {
+      setDialog(true)
+      toggleTour({ id: userData?.id, showTour: true })
+    })
+  }, [userData])
+
+  useEffect(() => {
+    tour.current?.on('complete', () => {
+      if (userData.id === undefined) return
+
+      toggleTour({ id: userData?.id, showTour: false })
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tour.current])
 
   return (
     <div className="drawer drawer-mobile !h-[calc(100vh-57px)] sm:drawer-side">
@@ -135,7 +154,15 @@ export const SideBar: React.FC<Props> = ({ children }) => {
         </aside>
       </div>
 
-      <OnboardingDialog show={showDialog} onStart={onStart} onDismiss={() => setDialog(false)} />
+      <OnboardingDialog
+        show={showDialog}
+        onStart={onStart}
+        onDismiss={() => {
+          setDialog(false)
+
+          toggleTour({ id: userData?.id, showTour: false })
+        }}
+      />
 
       <PlatformTour
         assignRef={(base) => {
