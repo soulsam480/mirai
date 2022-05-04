@@ -1,5 +1,7 @@
+import { createTicketSchema } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
+import { hashPass } from '../../lib'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
@@ -38,13 +40,13 @@ export const ticketRouter = createRouter()
     },
   })
   .mutation('create', {
-    input: z.object({
-      instituteId: z.number(),
-      meta: z.string(),
-      status: z.enum(['OPEN', 'INPROGRESS', 'CLOSED', 'RESOLVED']),
-      notes: z.string(),
-    }),
+    input: createTicketSchema,
     async resolve({ ctx, input }) {
+      const pass = input.meta.data.password
+      if (pass !== undefined) {
+        input.meta.data.password = await hashPass(pass)
+      }
+
       const newToken = await ctx.prisma.ticket.create({
         data: input,
       })
@@ -53,15 +55,7 @@ export const ticketRouter = createRouter()
     },
   })
   .mutation('update', {
-    input: z.object({
-      id: z.number(),
-      instituteId: z.number(),
-      meta: z.string(),
-      status: z.enum(['OPEN', 'INPROGRESS', 'CLOSED', 'RESOLVED']),
-      notes: z.string(),
-      closedAt: z.date(),
-      closedBy: z.string(),
-    }),
+    input: createTicketSchema.extend({ id: z.number() }),
     async resolve({ ctx, input }) {
       const { id, ...data } = input
       const newToken = await ctx.prisma.ticket.update({

@@ -1,6 +1,7 @@
 import { StudentScoreType } from '@prisma/client'
 import dayjs from 'dayjs'
 import { z } from 'zod'
+import { MOBILE_REGEX, PASSWORD_REGEX } from './regex'
 
 export const createInstituteSchema = z.object({
   code: z.string().min(1, "Code shouldn't be empty"),
@@ -135,6 +136,16 @@ export const studentsQuerySchema = z.object({
     .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
 })
 
+export const createTicketSchema = z.object({
+  instituteId: z.number(),
+  meta: z.object({
+    data: z.any(),
+    action: z.enum(['STUDENT_ONBOARDING', 'UPDATE_DATA']),
+  }),
+  status: z.enum(['OPEN', 'INPROGRESS', 'CLOSED', 'RESOLVED']),
+  notes: z.string().optional(),
+})
+
 export const studentOnboardingSchema = z
   .object({
     name: z.string().min(1, 'Required'),
@@ -143,7 +154,7 @@ export const studentOnboardingSchema = z
       .string()
       .min(1, 'Required')
       .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{8,30}$/,
+        PASSWORD_REGEX,
         'password must be atleast eight characters including one uppercase letter, one special character and alphanumeric characters',
       ),
     repassword: z.string().min(1, 'Required'),
@@ -153,10 +164,7 @@ export const studentOnboardingSchema = z
       .nullable()
       .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
     gender: z.string().min(1, 'Required'),
-    mobileNumber: z
-      .string()
-      .min(1, 'Required')
-      .regex(/^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/, 'Invalid phone number'),
+    mobileNumber: z.string().min(1, 'Required').regex(MOBILE_REGEX, 'Invalid phone number'),
   })
   .refine((val) => val.password === val.repassword, {
     message: 'Both passwords should match',

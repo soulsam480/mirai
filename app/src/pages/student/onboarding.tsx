@@ -112,20 +112,19 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
   }, [error, setAlert])
 
   async function submitOnboarding(data: z.infer<typeof studentOnboardingSchema>) {
-    const { password, ...meta } = data
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { repassword, ...studentDetails } = data
 
     // create ticket
-    const response = await create.mutate({
+    const response = await create.mutateAsync({
       instituteId: Number(instituteId),
-      meta: JSON.stringify({ password, ...meta }),
+      meta: {
+        data: studentDetails,
+        action: 'STUDENT_ONBOARDING',
+      },
       status: 'OPEN',
-      notes: 'New student entry',
     })
-    setTokenId(48454184515)
-    console.log('response: ', response)
-    console.log(create.variables, 'vars')
-    console.log(create.isSuccess, 'issuccess')
-    console.log(create, 'create')
+    setTokenId(response.id)
 
     setSubmitted(true)
   }
@@ -156,6 +155,10 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
                   placeholder="xxxxxxxxxxx"
                   error={errors.password}
                 />
+
+                <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
+
+                <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
               </div>
 
               <div>
@@ -174,20 +177,16 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
                   placeholder="xxxxxxxxxxx"
                   error={errors.repassword}
                 />
+
+                <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
+
+                <MInput
+                  label="Mobile number"
+                  {...register('mobileNumber')}
+                  placeholder="+91 873566556"
+                  error={errors.mobileNumber}
+                />
               </div>
-
-              <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
-
-              <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
-
-              <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
-
-              <MInput
-                label="Mobile number"
-                {...register('mobileNumber')}
-                placeholder="+91 873566556"
-                error={errors.mobileNumber}
-              />
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">

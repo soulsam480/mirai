@@ -7,6 +7,7 @@ import { useEffect, useMemo } from 'react'
 import { loggedInAtom, useUser } from 'stores/user'
 import { QueryOptions } from 'types'
 import { getUserHome } from 'utils/helpers'
+import { useGlobalError, useQuery } from 'utils/hooks'
 import { trpc } from 'utils/trpc'
 
 export function useTickets(opts?: QueryOptions<'ticket.getAll'>) {
@@ -31,11 +32,12 @@ export function useTickets(opts?: QueryOptions<'ticket.getAll'>) {
 export function useTicket(opts?: QueryOptions<'ticket.get'>) {
   opts = opts ?? {}
   const userData = useUser()
-  const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
   const setAlert = useAlert()
   const setLoader = useSetAtom(loaderAtom)
   const utils = trpc.useContext()
+  const { isQuery } = useQuery('ticketId')
+  const setError = useGlobalError()
 
   const { data: ticket, isLoading } = trpc.useQuery(
     [
@@ -47,13 +49,10 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     ],
     {
       onError(e) {
-        if (e.data?.code === 'NOT_FOUND') {
-          setAlert({ type: 'danger', message: 'Ticket not found' })
-          void router.push('/institute/ticket')
-        }
+        setError(e)
       },
       ...opts,
-      enabled: isLoggedIn === true,
+      enabled: isQuery,
     },
   )
 
@@ -65,6 +64,9 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
         message: 'Ticket updated',
       })
       void router.push('/institute/ticket')
+    },
+    onError(e) {
+      setError(e)
     },
   })
 
@@ -78,6 +80,9 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
       })
 
       return data
+    },
+    onError(e) {
+      setError(e)
     },
   })
 
