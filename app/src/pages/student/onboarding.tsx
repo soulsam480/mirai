@@ -1,6 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { onBoardingTokens } from '@mirai/api'
+import { MBadge } from 'components/lib/MBadge'
 import { MForm } from 'components/lib/MForm'
+import { MIcon } from 'components/lib/MIcon'
 import { MInput } from 'components/lib/MInput'
 import { MSelect } from 'components/lib/MSelect'
 import { useAlert } from 'components/lib/store/alerts'
@@ -33,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<{
   if (payload === undefined || typeof payload !== 'string') {
     return {
       props: {
-        error: 'Onboarding URL is invalid',
+        error: 'Onboarding URL is invalid. Please use correct onboarding URL',
       },
     }
   }
@@ -55,18 +57,20 @@ export const getServerSideProps: GetServerSideProps<{
           error: 'Onboarding URL has expired',
         },
       }
-    } else if (error instanceof JsonWebTokenError) {
+    }
+
+    if (error instanceof JsonWebTokenError) {
       return {
         props: {
-          error: 'Onboarding URL is invalid',
+          error: 'Onboarding URL is invalid. Please use correct onboarding URL',
         },
       }
-    } else {
-      return {
-        props: {
-          error: 'Unable to process Onboarding request',
-        },
-      }
+    }
+
+    return {
+      props: {
+        error: 'Unable to process Onboarding request',
+      },
     }
   }
 }
@@ -124,9 +128,25 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
       },
       status: 'OPEN',
     })
+
     setTokenId(response.id)
 
     setSubmitted(true)
+  }
+
+  if (error !== null) {
+    return (
+      <div className="my-10 mx-4 flex flex-col items-center">
+        <div className="alert alert-error font-semibold shadow-lg sm:max-w-[600px]">
+          <div>
+            <MIcon>
+              <IconLaExclamationTriangle />
+            </MIcon>
+            <span>{error}</span>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -139,10 +159,10 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
         {!isSubmitted ? (
           <>
             <span className="p-4 text-center text-2xl font-bold	text-secondary-focus sm:text-3xl">
-              <h1>Welcome to Mirai! </h1>
-              <h1>You were invited by {name}</h1>
+              <div>Welcome to Mirai! </div>
+              <div>You were invited by {name}</div>
             </span>
-            <h2 className="text-center text-lg">Please fill the form below</h2>
+            <div className="text-center text-lg">Please fill the form below</div>
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
               <div>
@@ -196,10 +216,16 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             </div>
           </>
         ) : (
-          <div>
-            <h2 className="text-center text-lg">Form submitted successfully!</h2>
-            <h2 className="text-center text-lg">Please note down the ticket Id for further references</h2>
-            <h2 className="text-center text-lg">{tokenId}</h2>
+          <div className="flex flex-col items-center gap-2">
+            <div className="text-lg">
+              Congrats ! your registration was successful with reference number{' '}
+              <MBadge className="rounded-full font-bold">{tokenId}</MBadge>
+            </div>
+
+            <div className="text-sm">
+              Please save it for further reference and wait for a confirmation email from your institute to get started
+              on Mirai.
+            </div>
           </div>
         )}
       </MForm>

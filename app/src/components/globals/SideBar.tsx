@@ -57,6 +57,13 @@ const sidebarConfig = {
       icon: <IconLaUserGraduate />,
       id: 'm-inst-students',
     },
+    {
+      label: 'Tickets',
+      path: '/tickets',
+      active: (path) => path.includes('/tickets'),
+      icon: <IconLaTicketAlt />,
+      id: 'm-inst-tickets',
+    },
   ]),
   STUDENT: defineSidebar('/student').extend([
     {

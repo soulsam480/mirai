@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react'
-import { useAtomValue } from 'jotai'
+import React from 'react'
+import { useAtom, useAtomValue } from 'jotai'
 import { DepartmentFilter, DepartmentFilterPreview } from 'components/institute/student/filters/DepartmentFilter'
 import { BatchFilter, BatchFilterPreview } from 'components/institute/student/filters/BatchFilter'
 import { CourseFilter, CourseFilterPreview } from 'components/institute/student/filters/CourseFilter'
@@ -8,15 +8,15 @@ import { UniIdFilter, UniIdFilterPreview } from 'components/institute/student/fi
 import MSpinner from 'components/lib/MSpinner'
 import { instituteAssetsLoading } from 'stores/institute'
 import { studentFiltersAtom } from 'stores/student'
+import { MIcon } from 'components/lib/MIcon'
 
 interface Props {}
 
 export const StudentFiltersBlock: React.FC<Props> = () => {
   const filtersLoading = useAtomValue(instituteAssetsLoading)
-  const filters = useAtomValue(studentFiltersAtom)
-  const hasAnyFilter = useMemo(() => {
-    return Object.values(filters).some(Boolean)
-  }, [filters])
+  const [filters, setFilters] = useAtom(studentFiltersAtom)
+
+  const hasAnyFilter = Object.values(filters).some(Boolean)
 
   return filtersLoading === true ? (
     <div className="flex items-center space-x-2">
@@ -30,6 +30,14 @@ export const StudentFiltersBlock: React.FC<Props> = () => {
         <CourseFilter />
         <NameFilter />
         <UniIdFilter />
+
+        {hasAnyFilter && (
+          <button className="btn  btn-ghost btn-circle btn-sm" onClick={() => setFilters({})}>
+            <MIcon className="tooltip tooltip-right tooltip-secondary text-lg" data-tip="Reset all">
+              <IconLaTimesCircle />
+            </MIcon>
+          </button>
+        )}
       </div>
 
       {hasAnyFilter && (

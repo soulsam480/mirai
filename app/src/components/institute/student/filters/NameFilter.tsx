@@ -1,6 +1,6 @@
 import { MIcon } from 'components/lib/MIcon'
 import { useSetAtom } from 'jotai'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
 import { useSelectAtom } from 'stores/index'
 import { studentFiltersAtom } from 'stores/student'
@@ -9,6 +9,7 @@ interface Props {}
 
 export const NameFilter: React.FC<Props> = () => {
   const setFilters = useSetAtom(studentFiltersAtom)
+  const nameFilter = useSelectAtom(studentFiltersAtom, (v) => v.name)
 
   const [value, setValue] = useState('')
 
@@ -19,6 +20,10 @@ export const NameFilter: React.FC<Props> = () => {
     500,
     [value],
   )
+
+  useEffect(() => {
+    nameFilter === undefined && setValue('')
+  }, [nameFilter, setValue])
 
   return (
     <div className="relative">
