@@ -112,7 +112,6 @@ export const Education: React.FC<Props> = () => {
   }
 
   async function submitHandler(val: z.infer<typeof createStudentEducationSchema>, createEd: boolean) {
-    console.log(val)
     if (!validateEndedAt(val)) return
 
     if (createEd && userData.studentId !== null) {
@@ -143,17 +142,22 @@ export const Education: React.FC<Props> = () => {
     }
   }
 
-  function handleEducationSelection({ studentId: _sid, id, ...rest }: StudentEducation, readonly = false) {
+  function handleEducationSelection(
+    { studentId: _sid, id, verified, verifiedBy, verifiedOn, ...rest }: StudentEducation,
+    readonly = false,
+  ) {
     setSelected(id)
     setDialog(true)
     readonly && setReadonly(true)
 
-    Object.entries(rest).forEach(([key, value]) => {
-      if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
+    if (verified || verifiedBy !== null || verifiedOn !== null) return
 
-      // ! This is an issue with native date input
-      // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element
-      setValue(key as any, ['startedAt', 'endedAt'].includes(key) ? formatDate(value, 'YYYY-MM-DD') : value)
+    const { startedAt, endedAt, ...educationDetails } = rest
+
+    reset({
+      ...educationDetails,
+      startedAt: formatDate(startedAt, 'YYYY-MM-DD') ?? undefined,
+      endedAt: formatDate(endedAt, 'YYYY-MM-DD') ?? undefined,
     })
   }
 
@@ -161,7 +165,7 @@ export const Education: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6 text-gray-900">Student education</div>
-        <button className="gap-2 flex-start btn btn-sm btn-secondary" onClick={() => setDialog(true)}>
+        <button className="flex-start btn btn-secondary btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
@@ -170,7 +174,7 @@ export const Education: React.FC<Props> = () => {
       </div>
 
       {education.length > 0 ? (
-        <div className="grid gap-2 sm:grid-cols-2 grid-col-1">
+        <div className="grid-col-1 grid gap-2 sm:grid-cols-2">
           {education.map((edu) => {
             return <EducationCard education={edu} key={edu.id} onEdit={() => handleEducationSelection(edu)} />
           })}
@@ -301,12 +305,12 @@ export const Education: React.FC<Props> = () => {
                   setDialog(false)
                   resetForm()
                 }}
-                className="mt-5 btn btn-sm btn-primary btn-outline"
+                className="btn-outline btn btn-primary btn-sm mt-5"
               >
                 Cancel
               </button>
 
-              <button type="submit" className={clsx(['mt-5 btn btn-sm btn-primary', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             </div>

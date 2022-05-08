@@ -56,7 +56,6 @@ export const Certifications: React.FC<Props> = () => {
     formState: { errors },
     handleSubmit,
     reset,
-    setValue,
     setError,
   } = form
 
@@ -120,12 +119,13 @@ export const Certifications: React.FC<Props> = () => {
     setDialog(true)
     readonly && setReadonly(true)
 
-    Object.entries(rest).forEach(([key, value]) => {
-      if (['verified', 'verifiedBy', 'verifiedOn'].includes(key)) return
+    const { date, expiresAt, identificationNumber, ...certificationDetails } = rest
 
-      // ! This is an issue with native date input
-      // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element
-      setValue(key as any, ['date', 'expiresAt'].includes(key) ? formatDate(value, 'YYYY-MM-DD') : value)
+    reset({
+      ...certificationDetails,
+      identificationNumber: identificationNumber ?? undefined,
+      date: formatDate(date, 'YYYY-MM-DD') ?? undefined,
+      expiresAt: formatDate(expiresAt, 'YYYY-MM-DD') ?? undefined,
     })
   }
 
