@@ -21,14 +21,10 @@ export const ticketRouter = createRouter()
     },
   })
   .query('get', {
-    input: z.object({
-      id: z.number(),
-      instituteId: z.number(),
-    }),
+    input: z.number(),
     async resolve({ ctx, input }) {
-      const { instituteId, id } = input
       const ticket = await ctx.prisma.ticket.findFirst({
-        where: { instituteId, id },
+        where: { id: input },
       })
 
       if (ticket == null)
