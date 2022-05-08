@@ -44,7 +44,7 @@ body {
 }
 
 .btn {
-  @apply normal-case;
+  @apply font-bold normal-case;
 }
 
 .input[disabled],
@@ -57,7 +57,7 @@ body {
 }
 
 .dialog-content {
-  @apply mx-4 transform rounded-lg bg-base-200 p-6 shadow-lg transition-all;
+  @apply mx-4 transform rounded-lg p-6 shadow-lg transition-all;
   @apply relative max-h-[90%] w-full overflow-y-auto sm:w-auto;
 }
 
@@ -150,4 +150,50 @@ body {
   &__options {
     @apply absolute z-30 mt-10 max-h-60 origin-top-left overflow-auto rounded-md bg-base-100 py-1 text-sm shadow-lg focus:outline-none;
   }
+}
+
+// shepherd styles
+.shepherd-content {
+  @apply flex flex-col gap-4;
+}
+
+.shepherd-footer {
+  @apply flex items-center justify-between;
+}
+
+.shepherd-element {
+  transition: opacity 0.3s, visibility 0.3s;
+  @apply invisible z-[9999] w-full max-w-[300px] rounded-md bg-base-200;
+  @apply p-4 opacity-0 shadow-lg outline-none;
+}
+
+.shepherd-arrow,
+.shepherd-arrow:before {
+  @apply absolute z-[-1] h-4 w-4;
+}
+
+.shepherd-modal-overlay-container {
+  transition: all 0.3s ease-out, height 0ms 0.3s, opacity 0.3s 0ms;
+  @apply pointer-events-none fixed top-0 left-0 z-[9997] h-0 w-screen overflow-hidden opacity-0;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  transition: all 0.3s ease-out, height 0s 0s, opacity 0.3s 0s;
+  @apply h-screen opacity-50;
+}
+
+.shepherd-enabled.shepherd-element {
+  @apply visible opacity-100;
+}
+
+.shepherd-text {
+  @apply text-base-content;
+}
+
+.shepherd-arrow:before {
+  @apply rotate-45 bg-base-200 content-[''];
+}
+
+.shepherd-element[data-popper-placement^='bottom'] > .shepherd-arrow {
+  @apply top-[-8px];
 }

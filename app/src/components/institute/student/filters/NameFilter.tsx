@@ -33,7 +33,7 @@ export const NameFilter: React.FC<Props> = () => {
 
       {value.length > 0 && (
         <MIcon
-          className="tooltip tooltip-left tooltip-secondary absolute inset-y-0 right-0 flex cursor-pointer items-center pr-2 text-sm"
+          className="tooltip tooltip-left tooltip-secondary absolute inset-y-0 right-0 m-0.5 flex cursor-pointer items-center rounded bg-base-100 px-1 text-sm"
           onClick={(e) => {
             e.stopPropagation()
 

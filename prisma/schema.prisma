@@ -24,6 +24,7 @@ model Account {
   otpExpiry     DateTime?
   // use this for password reset op
   accountToken  String?
+  showTour      Boolean   @default(true)
 
   //TODO: make role an array see https://excalidraw.com/#json=LYBIWlYeJsErhnWtaUGdi,_dfsdpm3KIOU3HTb30eXXQ
   role    Role
@@ -59,13 +60,13 @@ model Institute {
   departments Department[]
   courses     Course[]
   students    Student[]
+  requests    Ticket[]
 
   account Account?
 
   // auto generated
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  requests  Ticket[]
 }
 
 enum OnboardingStatus {
