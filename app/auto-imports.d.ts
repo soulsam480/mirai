@@ -11,8 +11,6 @@ declare global {
   const IconLaHandsHelping: typeof import('~icons/la/hands-helping.jsx')['default']
   const IconLaHome: typeof import('~icons/la/home.jsx')['default']
   const IconLaMoon: typeof import('~icons/la/moon.jsx')['default']
-  const IconLaPenSquare: typeof import('~icons/la/pen-square.jsx')['default']
-  const IconLaPlusCircle: typeof import('~icons/la/plus-circle.jsx')['default']
   const IconLaSitemap: typeof import('~icons/la/sitemap.jsx')['default']
   const IconLaSun: typeof import('~icons/la/sun.jsx')['default']
   const IconLaTimes: typeof import('~icons/la/times.jsx')['default']
