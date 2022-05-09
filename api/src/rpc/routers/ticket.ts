@@ -1,21 +1,37 @@
-import { createTicketSchema } from '@mirai/app'
+import { createTicketSchema, ticketFiltersSchema } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass } from '../../lib'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
-  .query('getAll', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      const tickets = await ctx.prisma.ticket.findMany({
-        where: { instituteId: input },
-      })
-      if (tickets == null)
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          message: 'Institute not found !',
+  .query('get_all', {
+    input: ticketFiltersSchema,
+    async resolve({ ctx, input: { instituteId, status, type } }) {
+      const jsonQueries = []
+
+      type !== undefined &&
+        jsonQueries.push({
+          meta: {
+            path: ['type'],
+            equals: type,
+          },
         })
+
+      status !== undefined &&
+        jsonQueries.push({
+          meta: {
+            path: ['status'],
+            equals: status,
+          },
+        })
+
+      const tickets = await ctx.prisma.ticket.findMany({
+        where: {
+          instituteId,
+          AND: jsonQueries,
+        },
+      })
 
       return tickets
     },

@@ -3,6 +3,8 @@
 declare global {
   const IconLaBars: typeof import('~icons/la/bars.jsx')['default']
   const IconLaBook: typeof import('~icons/la/book.jsx')['default']
+  const IconLaChevronDown: typeof import('~icons/la/chevron-down.jsx')['default']
+  const IconLaExclamationCircle: typeof import('~icons/la/exclamation-circle.jsx')['default']
   const IconLaExclamationTriangle: typeof import('~icons/la/exclamation-triangle.jsx')['default']
   const IconLaFileAltSolid: typeof import('~icons/la/file-alt-solid.jsx')['default']
   const IconLaHandsHelping: typeof import('~icons/la/hands-helping.jsx')['default']
@@ -15,6 +17,7 @@ declare global {
   const IconLaTicketAlt: typeof import('~icons/la/ticket-alt.jsx')['default']
   const IconLaTimes: typeof import('~icons/la/times.jsx')['default']
   const IconLaTimesCircle: typeof import('~icons/la/times-circle.jsx')['default']
+  const IconLaUndoAlt: typeof import('~icons/la/undo-alt.jsx')['default']
   const IconLaUniversity: typeof import('~icons/la/university.jsx')['default']
   const IconLaUserCircle: typeof import('~icons/la/user-circle.jsx')['default']
   const IconLaUserFriends: typeof import('~icons/la/user-friends.jsx')['default']

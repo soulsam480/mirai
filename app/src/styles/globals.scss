@@ -197,3 +197,7 @@ body {
 .shepherd-element[data-popper-placement^='bottom'] > .shepherd-arrow {
   @apply top-[-8px];
 }
+
+.table :where(thead, tfoot) :where(th, td) {
+  @apply normal-case;
+}

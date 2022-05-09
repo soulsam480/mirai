@@ -2,6 +2,10 @@ import type { Role } from '@prisma/client'
 import dayjs from 'dayjs'
 import mitt from 'mitt'
 import type { NullToUndefined, SidebarItem } from 'types'
+import lowerCase from 'lodash/lowerCase'
+import upperFirst from 'lodash/upperFirst'
+import startCase from 'lodash/startCase'
+import camelCase from 'lodash/camelCase'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
 
@@ -163,3 +167,11 @@ type MittEvents = {
 }
 
 export const eventBus = mitt<MittEvents>()
+
+export function sentenceCase(str: string) {
+  return upperFirst(lowerCase(str))
+}
+
+export function titleCase(str: string) {
+  return startCase(camelCase(str))
+}

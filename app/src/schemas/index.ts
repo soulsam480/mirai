@@ -136,13 +136,17 @@ export const studentsQuerySchema = z.object({
     .transform((val) => (val !== undefined && val?.length > 0 ? val : undefined)),
 })
 
+const ticketType = z.enum(['STUDENT_ONBOARDING', 'STUDENT_UPDATE_DATA', 'STUDENT_SUPPORT'])
+export type TicketType = z.infer<typeof ticketType>
+const ticketStatus = z.enum(['OPEN', 'INPROGRESS', 'CLOSED', 'RESOLVED'])
+
 export const createTicketSchema = z.object({
   instituteId: z.number(),
   meta: z.object({
     data: z.any(),
-    action: z.enum(['STUDENT_ONBOARDING', 'UPDATE_DATA']),
+    type: ticketType,
   }),
-  status: z.enum(['OPEN', 'INPROGRESS', 'CLOSED', 'RESOLVED']),
+  status: ticketStatus,
   notes: z.string().optional(),
 })
 
@@ -174,4 +178,10 @@ export const studentOnboardingSchema = z
 export const tourSchema = z.object({
   id: z.number(),
   showTour: z.boolean(),
+})
+
+export const ticketFiltersSchema = z.object({
+  type: ticketType.optional(),
+  status: ticketStatus.optional(),
+  instituteId: z.number().optional(),
 })

@@ -124,7 +124,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
       instituteId: Number(instituteId),
       meta: {
         data: studentDetails,
-        action: 'STUDENT_ONBOARDING',
+        type: 'STUDENT_ONBOARDING',
       },
       status: 'OPEN',
     })

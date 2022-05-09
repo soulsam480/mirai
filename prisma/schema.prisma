@@ -7,7 +7,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["filterJson"]
+
 }
 
 model Account {
@@ -374,7 +376,6 @@ model Ticket {
   // type -> student onboarding / data change / others [required]
   // student / mod /institute
   // data -> ticket operation payload
-  // action create_student | update_data |
   meta     Json         @default("{}")
   status   TicketStatus @default(OPEN)
   closedAt DateTime?
