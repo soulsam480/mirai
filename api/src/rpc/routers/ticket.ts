@@ -1,41 +1,10 @@
-import { createTicketSchema, ticketFiltersSchema } from '@mirai/app'
+import { createTicketSchema, ticketListingInput } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import { hashPass } from '../../lib'
+import { hashPass, isRole } from '../../lib'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
-  .query('get_all', {
-    input: ticketFiltersSchema,
-    async resolve({ ctx, input: { instituteId, status, type } }) {
-      const jsonQueries = []
-
-      type !== undefined &&
-        jsonQueries.push({
-          meta: {
-            path: ['type'],
-            equals: type,
-          },
-        })
-
-      status !== undefined &&
-        jsonQueries.push({
-          meta: {
-            path: ['status'],
-            equals: status,
-          },
-        })
-
-      const tickets = await ctx.prisma.ticket.findMany({
-        where: {
-          instituteId,
-          AND: jsonQueries,
-        },
-      })
-
-      return tickets
-    },
-  })
   .query('get', {
     input: z.number(),
     async resolve({ ctx, input }) {
@@ -64,6 +33,46 @@ export const ticketRouter = createRouter()
       })
 
       return newToken
+    },
+  })
+  .middleware(async ({ ctx, next }) => {
+    if (ctx.session === null || !(isRole(ctx.session.user.role).admin || isRole(ctx.session.user.role).instituteOrMod))
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+
+    return await next({
+      ctx: { ...ctx, session: ctx.session },
+    })
+  })
+  // TODO: paginate
+  .query('get_all', {
+    input: ticketListingInput,
+    async resolve({ ctx, input: { type, createdAt, ...rest } }) {
+      const jsonQueries = []
+
+      type !== undefined &&
+        jsonQueries.push({
+          meta: {
+            path: ['type'],
+            equals: type,
+          },
+        })
+
+      /**
+       * TODO
+       * ////- support created after and before filters
+       * - support sorting
+       *   - createdAt asc and desc
+       */
+
+      const tickets = await ctx.prisma.ticket.findMany({
+        where: {
+          ...rest,
+          AND: jsonQueries,
+          createdAt: createdAt.value.length > 0 ? { [createdAt.type]: createdAt.value } : undefined,
+        },
+      })
+
+      return tickets
     },
   })
   .mutation('update', {

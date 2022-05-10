@@ -85,7 +85,7 @@ const InstituteStudents: NextPageWithLayout = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between border-b border-base-200 pb-2">
+      <div className="flex items-center justify-between pb-2">
         <div className="text-xl font-medium">Students</div>
 
         <button className="btn btn-outline btn-sm" onClick={generateUrl}>

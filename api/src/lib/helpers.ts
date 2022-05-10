@@ -13,6 +13,16 @@ export function getUserHome(role: Role) {
   return role === 'ADMIN' ? '/admin' : isInstituteRole(role).is ? '/institute' : '/student'
 }
 
+export function isRole(role: Role) {
+  return {
+    admin: role === 'ADMIN',
+    institute: role === 'INSTITUTE',
+    mod: role === 'INSTITUTE_MOD',
+    student: role === 'STUDENT',
+    instituteOrMod: ['INSTITUTE', 'INSTITUTE_MOD'].includes(role),
+  }
+}
+
 export function getEnv(key: string, strict = false) {
   const val = process.env[key]
 

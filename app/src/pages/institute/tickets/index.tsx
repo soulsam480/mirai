@@ -2,6 +2,7 @@ import { AppLayout } from 'components/globals/AppLayout'
 import { MBadge } from 'components/lib/MBadge'
 import { Column, MTable } from 'components/lib/MTable'
 import { TicketFiltersBlock } from 'components/tickets/filters'
+import { ListingSettings } from 'components/tickets/ListingSettings'
 import { TicketWithMeta, useTickets } from 'contexts/useTicket'
 import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
@@ -75,7 +76,7 @@ const TicketListing: NextPageWithLayout = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center justify-between border-b border-base-200 pb-2">
+      <div className="flex items-center justify-between pb-2">
         <div className="text-xl font-medium">Tickets</div>
       </div>
 
@@ -91,6 +92,7 @@ const TicketListing: NextPageWithLayout = () => {
         compact
         noDataLabel={'No tickets were found !'}
         loading={isLoading}
+        settingsSlot={<ListingSettings />}
       />
     </div>
   )

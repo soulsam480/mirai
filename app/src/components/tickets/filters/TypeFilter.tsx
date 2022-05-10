@@ -41,7 +41,6 @@ export const TypeFilterPreview: React.FC = () => {
   return (
     <div className="text-sm">
       of type <span className="font-semibold text-primary-focus">{titleCase(filters.type)}</span>
-      {filters.status !== undefined && ','}
     </div>
   )
 }

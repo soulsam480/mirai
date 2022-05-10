@@ -1,8 +1,8 @@
 import { atomWithReset } from 'jotai/utils'
-import { ticketFiltersSchema } from 'schemas'
+import { ticketListingInput } from 'schemas'
 import { z } from 'zod'
 
-type TicketFilterQuery = Omit<z.infer<typeof ticketFiltersSchema>, 'instituteId'>
+type TicketFilterQuery = Omit<z.infer<typeof ticketListingInput>, 'instituteId'>
 
-export const ticketFiltersAtom = atomWithReset<TicketFilterQuery>({})
+export const ticketFiltersAtom = atomWithReset<TicketFilterQuery>({ createdAt: { type: 'gte', value: '' } })
 ticketFiltersAtom.debugLabel = 'ticketFiltersAtom'

@@ -19,6 +19,8 @@ interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   noDataLabel?: React.ReactNode
   /** is table data loading */
   loading?: boolean
+  /** slot for table settings, sorting menu etc. */
+  settingsSlot?: React.ReactNode
 }
 
 export interface Column<R = any> {
@@ -34,7 +36,8 @@ export interface Column<R = any> {
   format?: (row: R) => React.ReactNode
 }
 
-interface TableContextType extends Pick<Props, 'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading'> {}
+interface TableContextType
+  extends Pick<Props, 'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading' | 'settingsSlot'> {}
 
 const TableContext = createContext<TableContextType | undefined>(undefined)
 
@@ -51,13 +54,16 @@ interface MRowProps extends HTMLProps<HTMLTableRowElement> {
 }
 
 const MTableRow = React.memo<MRowProps>(({ row, children: _children, ...rest }) => {
-  const { bodyRowClass, columns } = useTableContext()
+  const { bodyRowClass, columns, settingsSlot } = useTableContext()
 
   return (
-    <tr className={bodyRowClass} {...rest}>
+    <tr className={clsx([bodyRowClass, 'group'])} {...rest}>
       {columns.map((column, i) => (
         <MTableColumn {...column} row={row} key={i} />
       ))}
+      {settingsSlot !== undefined && (
+        <td className="transition-colors duration-200 first:rounded-none last:rounded-none group-hover:bg-base-200" />
+      )}
     </tr>
   )
 })
@@ -75,9 +81,10 @@ const MTableColumn = React.memo<MTableColumnProps>(
     return (
       <td
         {...rest}
-        className={
-          classes !== undefined ? (typeof classes === 'string' ? classes : classes(row)) : 'border-base-300 bg-base-200'
-        }
+        className={clsx([
+          classes !== undefined ? (typeof classes === 'string' ? classes : classes(row)) : '',
+          'transition-colors duration-200 first:rounded-none last:rounded-none group-hover:bg-base-200',
+        ])}
       >
         {tdVal}
       </td>
@@ -96,10 +103,11 @@ export const MTable: React.FC<Props> = ({
   bodyRowClass,
   noDataLabel,
   loading = false,
+  settingsSlot,
   ...rest
 }) => {
   return (
-    <TableContext.Provider value={{ rows, columns, headerClass, bodyRowClass, loading }}>
+    <TableContext.Provider value={{ rows, columns, headerClass, bodyRowClass, loading, settingsSlot }}>
       <div className={clsx(['overflow-x-auto', className])} {...rest}>
         <table className={clsx(['table w-full', compact && 'table-compact'])}>
           <thead>
@@ -108,13 +116,19 @@ export const MTable: React.FC<Props> = ({
                 <th
                   key={i}
                   className={clsx([
-                    headerClasses ?? 'bg-primary text-base-100',
+                    headerClasses ?? 'border-b border-base-200 bg-base-100',
                     'first:rounded-none last:rounded-none',
                   ])}
                 >
                   {label}
                 </th>
               ))}
+
+              {settingsSlot !== undefined && (
+                <th className="border-b border-base-200 bg-base-100 first:rounded-none last:rounded-none">
+                  {settingsSlot}
+                </th>
+              )}
             </tr>
           </thead>
 
@@ -125,7 +139,7 @@ export const MTable: React.FC<Props> = ({
               <tr>
                 <td colSpan={columns.length} className="bg-transparent font-normal">
                   {loading ? (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2">
                       <MSpinner size="20px" /> <span>Loading entries...</span>
                     </div>
                   ) : (

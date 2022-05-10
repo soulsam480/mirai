@@ -134,16 +134,18 @@ body {
 
 .m-select {
   &__btn {
-    @apply rounded-btn flex flex-grow items-center gap-2 border border-primary bg-base-100;
+    @apply rounded-btn flex flex-grow items-center gap-2 bg-base-100;
     @apply relative border-primary border-opacity-100 py-[5px] px-3 text-left text-sm;
-
-    &:focus {
-      outline: 2px solid hsl(var(--p));
-      outline-offset: 2px;
-    }
 
     &[disabled] {
       @apply cursor-not-allowed border-base-300 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
+    }
+
+    &--focus {
+      &:focus {
+        outline: 2px solid hsl(var(--p));
+        outline-offset: 2px;
+      }
     }
   }
 

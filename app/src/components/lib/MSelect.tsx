@@ -6,10 +6,24 @@ import type { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
 import { MIcon } from './MIcon'
 
-interface RenderPropCtx {
+interface OptionRenderPropCtx {
   active: boolean
   selected: boolean
   disabled: boolean
+}
+
+interface ButtonRenderPropCtx {
+  open: boolean
+  disabled: boolean
+  /** notice here value is unsafe. add a runtime check for value type
+   * e.g.
+   * ```js
+   *  function isValue(val: null | string | undefined) {
+        return !(val === undefined || val === null || val === '')
+      }
+   * ```
+   */
+  value: any
 }
 
 export interface MSelectProps {
@@ -17,7 +31,7 @@ export interface MSelectProps {
   label?: string
   options: Option[]
   error?: FieldError
-  optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
+  optionSlot?: (ctx: { option: Option; slotCtx: OptionRenderPropCtx }) => ReactElement
   noDataLabel?: React.ReactNode
   control?: Control<any, any>
   disabled?: boolean
@@ -26,6 +40,8 @@ export interface MSelectProps {
   value?: any
   palceholder?: string
   width?: string
+  borderless?: boolean
+  customButton?: React.ReactNode | ((ctx: ButtonRenderPropCtx) => React.ReactNode)
 }
 
 const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
@@ -40,6 +56,8 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   palceholder,
   children,
   width,
+  borderless = false,
+  customButton,
 }) => {
   function isValue(val: null | string | undefined) {
     return !(val === undefined || val === null || val === '')
@@ -67,43 +85,59 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
 
       <Listbox value={value} onChange={(option) => onChange?.(option.value)} disabled={disabled}>
         <div className="relative flex">
-          <Listbox.Button className="m-select__btn">
-            {({ open, disabled }) => {
-              return (
-                <>
-                  <span className="flex-grow">
-                    {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
-                  </span>
+          <Listbox.Button
+            className={clsx([
+              'm-select__btn',
+              !borderless && 'm-select__btn--focus border border-primary',
+              borderless && 'focus:outline-none',
+            ])}
+          >
+            {customButton !== undefined
+              ? (ctx) =>
+                  // more flexibility as a render prop
+                  typeof customButton === 'function'
+                    ? customButton({
+                        ...ctx,
+                        value: optionFromValue,
+                      })
+                    : // normal compoent
+                      customButton
+              : ({ open, disabled }) => {
+                  return (
+                    <>
+                      <span className="flex-grow">
+                        {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
+                      </span>
 
-                  {reset && !disabled && isValue(value) && (
-                    <MIcon
-                      className={clsx([
-                        'tooltip tooltip-left tooltip-secondary',
-                        disabled ? 'bg-base-200 text-base-300' : 'bg-base-100',
-                      ])}
-                      onClick={(e) => {
-                        e.stopPropagation()
+                      {reset && !disabled && isValue(value) && (
+                        <MIcon
+                          className={clsx([
+                            'tooltip tooltip-left tooltip-secondary',
+                            disabled ? 'bg-base-200 text-base-300' : 'bg-base-100',
+                          ])}
+                          onClick={(e) => {
+                            e.stopPropagation()
 
-                        onChange?.(undefined)
-                      }}
-                      data-tip="Reset value"
-                    >
-                      <IconLaUndoAlt />
-                    </MIcon>
-                  )}
+                            onChange?.(undefined)
+                          }}
+                          data-tip="Reset value"
+                        >
+                          <IconLaUndoAlt />
+                        </MIcon>
+                      )}
 
-                  <MIcon
-                    className={clsx([
-                      'flex-none transition-all duration-300',
-                      open && '-rotate-180',
-                      disabled && 'bg-base-200 text-base-300',
-                    ])}
-                  >
-                    <IconLaChevronDown />
-                  </MIcon>
-                </>
-              )
-            }}
+                      <MIcon
+                        className={clsx([
+                          'flex-none transition-all duration-300',
+                          open && '-rotate-180',
+                          disabled && 'bg-base-200 text-base-300',
+                        ])}
+                      >
+                        <IconLaChevronDown />
+                      </MIcon>
+                    </>
+                  )
+                }}
           </Listbox.Button>
 
           <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">

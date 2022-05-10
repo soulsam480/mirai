@@ -180,8 +180,14 @@ export const tourSchema = z.object({
   showTour: z.boolean(),
 })
 
-export const ticketFiltersSchema = z.object({
+export const ticketListingInput = z.object({
   type: ticketType.optional(),
   status: ticketStatus.optional(),
   instituteId: z.number().optional(),
+  createdAt: z.object({
+    type: z.enum(['gte', 'lt']),
+    value: z.string().transform((val) => {
+      return val.length > 0 ? dayjs(val).toISOString() : ''
+    }),
+  }),
 })
