@@ -113,6 +113,7 @@ importers:
       '@headlessui/react': ^1.6.1
       '@hookform/resolvers': ^2.8.8
       '@iconify-json/la': ^1.1.1
+      '@popperjs/core': ^2.11.5
       '@prisma/client': '*'
       '@svgr/core': ^6.2.1
       '@tailwindcss/typography': ^0.5.2
@@ -154,6 +155,7 @@ importers:
     dependencies:
       '@headlessui/react': 1.6.1_sfoxds7t5ydpegc3knd667wn6m
       '@hookform/resolvers': 2.8.8_react-hook-form@7.30.0
+      '@popperjs/core': 2.11.5
       '@prisma/client': 3.13.0
       '@trpc/client': 9.23.2_@trpc+server@9.23.2
       '@trpc/next': 9.23.2_sstdjiwpxvfv33xjwx3aacd4b4

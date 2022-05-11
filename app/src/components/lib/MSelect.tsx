@@ -1,9 +1,10 @@
-import { Listbox, Transition } from '@headlessui/react'
+import { Listbox, Portal } from '@headlessui/react'
 import clsx from 'clsx'
-import { Fragment, ReactElement, useMemo } from 'react'
+import { ReactElement, useMemo } from 'react'
 import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
 import type { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
+import { usePopper } from 'utils/hooks'
 import { MIcon } from './MIcon'
 
 interface OptionRenderPropCtx {
@@ -44,6 +45,29 @@ export interface MSelectProps {
   customButton?: React.ReactNode | ((ctx: ButtonRenderPropCtx) => React.ReactNode)
 }
 
+export const useSelectPopperConfig = (width?: string) =>
+  usePopper({
+    placement: 'bottom-start',
+    strategy: 'fixed',
+    modifiers: [
+      {
+        name: 'sameWidth',
+        enabled: width === undefined,
+        phase: 'beforeWrite',
+        fn({ state }) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          state.styles.popper.width = `${state.rects.reference.width}px`
+        },
+        requires: ['computeStyles'],
+        effect: ({ state }) => {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          state.elements.popper.style.width = `${(state.elements.reference as unknown as any).clientWidth}px`
+        },
+      },
+      { name: 'offset', options: { offset: [0, 10] } },
+    ],
+  })
+
 const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   label,
   options = [],
@@ -75,6 +99,8 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
     return 'Unknown value'
   }, [value, options, palceholder])
 
+  const [trigger, container] = useSelectPopperConfig(width)
+
   return (
     <div className="flex flex-col">
       {label !== undefined && (
@@ -91,6 +117,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
               !borderless && 'm-select__btn--focus border border-primary',
               borderless && 'focus:outline-none',
             ])}
+            ref={trigger}
           >
             {customButton !== undefined
               ? (ctx) =>
@@ -140,8 +167,8 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                 }}
           </Listbox.Button>
 
-          <Transition as={Fragment} leave="transition ease-in duration-100" leaveFrom="opacity-100" leaveTo="opacity-0">
-            <Listbox.Options className="m-select__options" style={{ width: width ?? '100%' }}>
+          <Portal>
+            <Listbox.Options className="m-select__options" style={{ width: width ?? 'auto' }} ref={container}>
               {options.length > 0 ? (
                 options.map((option) => {
                   const selected =
@@ -183,7 +210,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                 </Listbox.Option>
               )}
             </Listbox.Options>
-          </Transition>
+          </Portal>
         </div>
       </Listbox>
       {children}

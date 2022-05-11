@@ -150,7 +150,7 @@ body {
   }
 
   &__options {
-    @apply absolute z-30 mt-10 max-h-60 origin-top-left overflow-auto rounded-md bg-base-100 py-1 text-sm shadow-lg focus:outline-none;
+    @apply absolute z-30 max-h-60 origin-top-left overflow-auto rounded-md bg-base-100 py-1 text-sm shadow-lg focus:outline-none;
   }
 }
 

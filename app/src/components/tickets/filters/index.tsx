@@ -1,6 +1,6 @@
 import { MIcon } from 'components/lib/MIcon'
 import { useAtomValue } from 'jotai'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { StatusFilter, StatusFilterPreview } from './StatusFilter'
 import { TypeFilter, TypeFilterPreview } from './TypeFilter'
@@ -13,9 +13,12 @@ export const TicketFiltersBlock: React.FC<Props> = () => {
   const filters = useAtomValue(ticketFiltersAtom)
   const resetFilters = useResetAtom(ticketFiltersAtom)
 
-  const hasAnyFilter = Object.values(filters).some((value) =>
-    typeof value === 'object' ? value.value.length > 0 : Boolean(value),
-  )
+  const hasAnyFilter = useMemo(() => {
+    const { sort: _sort, ...rest } = filters
+
+    return Object.values(rest).some((value) => Boolean(typeof value === 'object' ? value.value : value))
+  }, [filters])
+
   return (
     <>
       <div className="flex flex-wrap items-center gap-x-1.5 gap-y-2">

@@ -30,6 +30,8 @@ export function useTickets(opts?: QueryOptions<'ticket.get_all'>) {
     [
       'ticket.get_all',
       {
+        // TODO: fix bug
+        // when date filter value is not there don't refetch
         instituteId: userData.instituteId as number,
         ...ticketFilters,
       },

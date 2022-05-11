@@ -1,7 +1,8 @@
 import { useAlert } from 'components/lib/store/alerts'
+import { createPopper, Options } from '@popperjs/core'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
-import { useEffect, useMemo, useState } from 'react'
+import { RefCallback, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import { themeAtom } from 'stores/config'
 import { TRPCErrorType } from 'types'
@@ -126,4 +127,38 @@ export function useTheme() {
     setTheme,
     theme: currentTheme === 'corporate' ? 'light' : 'dark',
   }
+}
+
+/**
+ * Example implementation to use Popper: https://popper.js.org/
+ */
+export function usePopper(options?: Partial<Options>): [RefCallback<Element | null>, RefCallback<HTMLElement | null>] {
+  const reference = useRef<Element | null>(null)
+  const popper = useRef<HTMLElement | null>(null)
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const cleanupCallback = useRef(() => {})
+
+  const instantiatePopper = useCallback(() => {
+    if (reference.current === null) return
+    if (popper.current === null) return
+
+    if (Boolean(cleanupCallback.current)) cleanupCallback.current()
+
+    cleanupCallback.current = createPopper(reference.current, popper.current, options).destroy
+  }, [reference, popper, cleanupCallback, options])
+
+  return useMemo(
+    () => [
+      (referenceDomNode) => {
+        reference.current = referenceDomNode
+        instantiatePopper()
+      },
+      (popperDomNode) => {
+        popper.current = popperDomNode
+        instantiatePopper()
+      },
+    ],
+    [reference, popper, instantiatePopper],
+  )
 }

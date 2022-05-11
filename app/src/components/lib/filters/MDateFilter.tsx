@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Option } from 'types'
 import { MSelect } from 'lib/MSelect'
 import { MIcon } from 'lib/MIcon'
@@ -24,31 +24,19 @@ const DATE_OPTIONS: Option[] = [
   },
 ]
 
-export const MDateFilter: React.FC<Props> = ({ onChange, value }) => {
-  const [filters, setFilters] = useState<DateFilterValue>({
-    type: 'gte',
-    value: '',
-  })
-
-  useEffect(() => {
-    if (value.value.length === 0 && filters.value.length === 0) return
-
-    onChange(filters)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, value])
-
+export const MDateFilter: React.FC<Props> = ({ onChange, value: model }) => {
   return (
     <div className="relative flex items-center gap-0.5 border border-primary ">
       <MSelect
         name="type"
         options={DATE_OPTIONS}
-        value={filters.type}
+        value={model.type}
         palceholder="Select date filter type"
         onChange={(type) => {
-          setFilters((prev) => ({
-            ...prev,
+          onChange({
+            ...model,
             type,
-          }))
+          })
         }}
         width="max-content"
         borderless
@@ -57,26 +45,26 @@ export const MDateFilter: React.FC<Props> = ({ onChange, value }) => {
       <input
         className="input input-bordered input-primary input-sm border-y-0 border-r-0 focus:outline-none"
         placeholder="Select date"
-        value={filters.value}
+        value={model.value}
         onChange={({ currentTarget }) => {
-          setFilters((prev) => ({
-            ...prev,
+          onChange({
+            ...model,
             value: currentTarget.value,
-          }))
+          })
         }}
         type="date"
       />
 
-      {filters.value.length !== 0 && (
+      {model.value.length !== 0 && (
         <MIcon
           className="tooltip tooltip-left tooltip-secondary m-0.5 flex cursor-pointer items-center self-stretch border-l border-primary px-1 text-sm"
           onClick={(e) => {
             e.stopPropagation()
 
-            setFilters((prev) => ({
-              ...prev,
+            onChange({
+              ...model,
               value: '',
-            }))
+            })
           }}
           data-tip="Reset value"
         >

@@ -16,6 +16,7 @@
   "dependencies": {
     "@headlessui/react": "^1.6.1",
     "@hookform/resolvers": "^2.8.8",
+    "@popperjs/core": "^2.11.5",
     "@prisma/client": "*",
     "@trpc/client": "^9.23.2",
     "@trpc/next": "^9.23.2",

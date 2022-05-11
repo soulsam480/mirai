@@ -190,4 +190,5 @@ export const ticketListingInput = z.object({
       return val.length > 0 ? dayjs(val).toISOString() : ''
     }),
   }),
+  sort: z.enum(['asc', 'desc']),
 })

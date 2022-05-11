@@ -46,7 +46,7 @@ export const ticketRouter = createRouter()
   // TODO: paginate
   .query('get_all', {
     input: ticketListingInput,
-    async resolve({ ctx, input: { type, createdAt, ...rest } }) {
+    async resolve({ ctx, input: { type, createdAt, sort, ...rest } }) {
       const jsonQueries = []
 
       type !== undefined &&
@@ -70,6 +70,7 @@ export const ticketRouter = createRouter()
           AND: jsonQueries,
           createdAt: createdAt.value.length > 0 ? { [createdAt.type]: createdAt.value } : undefined,
         },
+        orderBy: { createdAt: sort },
       })
 
       return tickets
