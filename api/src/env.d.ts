@@ -10,5 +10,6 @@ interface ImportMeta {
 declare namespace NodeJS {
   interface ProcessEnv {
     ONBOARDING_SECRET: string
+    REDIS_PORT: string
   }
 }

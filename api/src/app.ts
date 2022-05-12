@@ -6,7 +6,7 @@ import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 import { appRouter } from './rpc/routers/_appRouter'
 import { createContext } from './rpc/context'
 import { fileURLToPath } from 'url'
-import { getEnv, logger } from './lib'
+import { getEnv, logger, setupBull } from './lib'
 import { registerRoutes } from './routes'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
@@ -31,6 +31,8 @@ export function createServer() {
   server.get('/', async () => {
     return "This is Mirai's API"
   })
+
+  setupBull(server)
 
   const start = async () => {
     try {

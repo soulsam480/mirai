@@ -51,7 +51,7 @@ export default NextAuth({
         } catch (error) {
           const { response } = error as AxiosError
 
-          throw new Error(response?.data ?? 'Unable to authorize user')
+          throw new Error((response?.data as string) ?? 'Unable to authorize user')
         }
       },
     }),

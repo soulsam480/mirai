@@ -1,27 +1,5 @@
 {
   "globals": {
-    "IconLaBars": true,
-    "IconLaBook": true,
-    "IconLaChevronDown": true,
-    "IconLaExclamationCircle": true,
-    "IconLaExclamationTriangle": true,
-    "IconLaFileAltSolid": true,
-    "IconLaHandsHelping": true,
-    "IconLaHome": true,
-    "IconLaMoon": true,
-    "IconLaPenSquare": true,
-    "IconLaPlusCircle": true,
-    "IconLaSitemap": true,
-    "IconLaSortAmountDown": true,
-    "IconLaSortAmountUp": true,
-    "IconLaSun": true,
-    "IconLaTicketAlt": true,
-    "IconLaTimes": true,
-    "IconLaTimesCircle": true,
-    "IconLaUndoAlt": true,
-    "IconLaUniversity": true,
-    "IconLaUserCircle": true,
-    "IconLaUserFriends": true,
-    "IconLaUserGraduate": true
+    "IconLaHome": true
   }
 }
