@@ -25,6 +25,13 @@ const CATEGORY_TYPES = [
   'Economically Weaker Section',
 ].map((v) => ({ label: v, value: v }))
 
+// TODO: we need couple of extra fields here
+/**
+ * department
+ * course
+ * uni ID
+ */
+
 export const getServerSideProps: GetServerSideProps<{
   name?: string
   instituteId?: number

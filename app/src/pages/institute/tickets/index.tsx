@@ -10,6 +10,7 @@ import { useEffect, useMemo } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { formatDate, titleCase } from 'utils/helpers'
+import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -63,6 +64,20 @@ const TicketListing: NextPageWithLayout = () => {
         field: 'closedBy',
         label: 'Closed by',
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
+      },
+      {
+        field: 'action',
+        label: 'Action',
+        format: ({ id }) => (
+          <button
+            className="btn btn-xs"
+            onClick={() => {
+              trpcClient.mutation('ticket.resolve', { id, status: 'RESOLVED' })
+            }}
+          >
+            Resolve
+          </button>
+        ),
       },
     ],
     [],

@@ -2,6 +2,7 @@ import { createTicketSchema, ticketListingInput } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass, isRole } from '../../lib'
+import { ticketQueue } from '../../queues'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
@@ -76,15 +77,15 @@ export const ticketRouter = createRouter()
       return tickets
     },
   })
-  .mutation('update', {
-    input: createTicketSchema.extend({ id: z.number() }),
-    async resolve({ ctx, input }) {
-      const { id, ...data } = input
-      const newToken = await ctx.prisma.ticket.update({
-        where: { id },
-        data,
-      })
-      return newToken
+
+  .mutation('resolve', {
+    input: createTicketSchema.pick({ status: true }).extend({
+      id: z.number(),
+    }),
+    async resolve({ ctx, input: { id, status } }) {
+      await ctx.prisma.ticket.update({ where: { id }, data: { status } })
+
+      await ticketQueue.add({ id })
     },
   })
   .mutation('remove', {

@@ -53,7 +53,6 @@ export function useTickets(opts?: QueryOptions<'ticket.get_all'>) {
 
 export function useTicket(opts?: QueryOptions<'ticket.get'>) {
   opts = opts ?? {}
-  const router = useRouter()
   const setAlert = useAlert()
   const setLoader = useSetAtom(loaderAtom)
   const utils = trpc.useContext()
@@ -66,20 +65,6 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     },
     ...opts,
     enabled: isQuery,
-  })
-
-  const update = trpc.useMutation(['ticket.update'], {
-    onSuccess() {
-      void utils.invalidateQueries(['ticket.get_all'])
-      setAlert({
-        type: 'success',
-        message: 'Ticket updated',
-      })
-      void router.push('/institute/ticket')
-    },
-    onError(e) {
-      setError(e)
-    },
   })
 
   const create = trpc.useMutation(['ticket.create'], {
@@ -98,17 +83,13 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     },
   })
 
-  const loading = useMemo(
-    () => isLoading === true || update.isLoading || create.isLoading,
-    [isLoading, update.isLoading, create.isLoading],
-  )
+  const loading = useMemo(() => isLoading === true || create.isLoading, [isLoading, create.isLoading])
 
   useEffect(() => setLoader(loading), [loading, setLoader])
 
   return {
     ticket,
     create,
-    update,
     isLoading,
   }
 }
