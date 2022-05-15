@@ -2,7 +2,7 @@ import { createTicketSchema, studentOnboardingSchema } from '@mirai/app'
 import Queue from 'bull'
 import { z } from 'zod'
 import miraiClient from '../db'
-import { logger } from '../lib'
+import { createStudent, logger } from '../lib'
 import { OverWrite, TicketJob } from '../types'
 
 export const ticketQueue = Queue<TicketJob>('tickets', process.env.REDIS_PORT, {
@@ -15,21 +15,37 @@ type StudentTicketShape = OverWrite<
 >
 
 void ticketQueue.process(async (job) => {
-  // logger.info('processing job', job.data)
-
   const ticket = await miraiClient.ticket.findFirst({ where: { id: job.data.id } })
 
-  if (ticket === null) return 'invalid ticket'
+  if (ticket === null)
+    return {
+      success: false,
+      message: "Ticket doesn't exist",
+    }
 
   const meta = ticket.meta as StudentTicketShape
 
-  if (meta.type !== 'STUDENT_ONBOARDING') return 'non-student ticket'
+  // here we'll probably handle different tickets with early return if blocks
+  if (meta.type !== 'STUDENT_ONBOARDING')
+    return {
+      success: false,
+      message: 'non-student ticket',
+    }
 
-  // TODO: create student, account and link them
+  try {
+    const createResult = await createStudent({ ...meta.data, instituteId: ticket.instituteId })
+
+    return createResult
+  } catch (error) {
+    return {
+      success: false,
+      message: error.toString(),
+    }
+  }
 })
 
 ticketQueue.on('completed', async (job, result) => {
-  logger.info('job done', result)
+  logger.info('job done', JSON.stringify(result))
 
   // if (await job.isCompleted()) void job.remove()
 })

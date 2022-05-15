@@ -30,7 +30,7 @@ const DialogContent = React.forwardRef<HTMLDivElement, ContentProps>(({ children
 
 export const MDialog: React.FC<Props> = ({ show, children, onClose, noEscape, className }) => {
   return (
-    <Transition appear show={show} as={Fragment} static={noEscape}>
+    <Transition appear unmount show={show} as={Fragment} static={noEscape}>
       <Dialog
         as="div"
         className="fixed inset-0 z-10 flex max-h-screen items-center justify-center overflow-y-hidden"

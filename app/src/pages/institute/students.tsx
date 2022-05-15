@@ -1,17 +1,15 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { Column, MTable } from 'lib/MTable'
 import { StudentsListingType, useStudents } from 'contexts/useStudents'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { NextPageWithLayout } from '../_app'
 import { useStudentFilters } from 'contexts'
 import { studentFiltersAtom } from 'stores/student'
 import { useResetAtom } from 'jotai/utils'
-import { useUser } from 'stores/user'
-import { trpcClient } from 'utils/trpc'
-import { copyToClip } from 'utils/helpers'
-import { useAlert } from 'components/lib/store/alerts'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { StudentFiltersBlock } from 'components/institute/student/filters'
+import { MDialog } from 'components/lib/MDialog'
+import { GenerateUrlDialog } from 'components/institute/student/GenerateUrlDialog'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -20,8 +18,7 @@ const InstituteStudents: NextPageWithLayout = () => {
 
   const { isLoading, students } = useStudents()
   const setFilters = useResetAtom(studentFiltersAtom)
-  const userData = useUser()
-  const setAlert = useAlert()
+  const [isModal, setModal] = useState(false)
 
   const columns = useMemo<Array<Column<StudentsListingType>>>(
     () => [
@@ -63,33 +60,17 @@ const InstituteStudents: NextPageWithLayout = () => {
     }
   }, [setFilters])
 
-  async function generateUrl() {
-    try {
-      const payload = await trpcClient.mutation('institute.gen_onboarding_token', {
-        instituteId: Number(userData.instituteId),
-        name: userData.owner?.name ?? '',
-      })
-
-      const { origin } = location
-
-      const url = `${origin}/student/onboarding?${new URLSearchParams({ payload }).toString()}`
-
-      void copyToClip(url).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
-    } catch (error) {
-      setAlert({
-        type: 'danger',
-        message: 'Unable to generate URL',
-      })
-    }
-  }
-
   return (
     <div className="flex flex-col gap-2">
+      <MDialog show={isModal} onClose={setModal}>
+        <GenerateUrlDialog />
+      </MDialog>
+
       <div className="flex items-center justify-between pb-2">
         <div className="text-xl font-medium">Students</div>
 
-        <button className="btn btn-outline btn-sm" onClick={generateUrl}>
-          Copy onboarding link
+        <button className="btn btn-outline btn-sm" onClick={() => setModal(true)}>
+          generate onboarding URL
         </button>
       </div>
 

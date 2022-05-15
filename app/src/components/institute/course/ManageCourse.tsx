@@ -98,7 +98,7 @@ export const ManageCourse: React.FC<Props> = () => {
 
   return (
     <>
-      <div className="mb-4 text-lg font-medium leading-6    ">
+      <div className="mb-4 text-lg font-medium leading-6">
         {isEditMode ? (
           <>
             Manage{' '}

@@ -10,6 +10,8 @@ declare global {
   const IconLaHandsHelping: typeof import('~icons/la/hands-helping.jsx')['default']
   const IconLaHome: typeof import('~icons/la/home.jsx')['default']
   const IconLaMoon: typeof import('~icons/la/moon.jsx')['default']
+  const IconLaPenSquare: typeof import('~icons/la/pen-square.jsx')['default']
+  const IconLaPlusCircle: typeof import('~icons/la/plus-circle.jsx')['default']
   const IconLaSitemap: typeof import('~icons/la/sitemap.jsx')['default']
   const IconLaSortAmountDown: typeof import('~icons/la/sort-amount-down.jsx')['default']
   const IconLaSortAmountUp: typeof import('~icons/la/sort-amount-up.jsx')['default']

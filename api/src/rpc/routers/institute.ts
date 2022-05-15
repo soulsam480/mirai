@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
-import { studentsQuerySchema } from '@mirai/app'
+import { generateOnboardingUrlSchema, studentsQuerySchema } from '@mirai/app'
 import { onBoardingTokens } from '../../lib'
 import dayjs from 'dayjs'
 
@@ -59,6 +59,7 @@ export const instituteRouter = createRouter()
           basics: true,
           course: { select: { programName: true, id: true } },
           id: true,
+          code: true,
         },
       })
 
@@ -66,10 +67,7 @@ export const instituteRouter = createRouter()
     },
   })
   .mutation('gen_onboarding_token', {
-    input: z.object({
-      instituteId: z.number(),
-      name: z.string(),
-    }),
+    input: generateOnboardingUrlSchema,
     async resolve({ input }) {
       const token = onBoardingTokens.encode({
         ...input,

@@ -165,10 +165,14 @@ export const studentOnboardingSchema = z
     category: z.string().min(1, 'Required'),
     dob: z
       .string()
-      .nullable()
-      .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+      .min(1, 'Required')
+      .transform((val) => (val.length > 0 ? dayjs(val).toISOString() : '')),
     gender: z.string().min(1, 'Required'),
     mobileNumber: z.string().min(1, 'Required').regex(MOBILE_REGEX, 'Invalid phone number'),
+    uniId: z.string().min(1, 'Required'),
+    departmentId: z.number(),
+    courseId: z.number(),
+    batchId: z.number(),
   })
   .refine((val) => val.password === val.repassword, {
     message: 'Both passwords should match',
@@ -191,4 +195,12 @@ export const ticketListingInput = z.object({
     }),
   }),
   sort: z.enum(['asc', 'desc']),
+})
+
+export const generateOnboardingUrlSchema = z.object({
+  departmentId: z.number(),
+  courseId: z.number(),
+  batchId: z.number(),
+  instituteId: z.number(),
+  name: z.string().optional(),
 })

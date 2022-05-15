@@ -6,10 +6,11 @@ interface Props extends HTMLProps<HTMLInputElement> {
   error?: FieldError
   label: string
   as?: 'input' | 'textarea'
+  hint?: string
 }
 
 export const MInput = React.forwardRef<HTMLInputElement, Props>(
-  ({ error, label, as: RenderInput = 'input', ...rest }, ref) => {
+  ({ error, label, hint, as: RenderInput = 'input', ...rest }, ref) => {
     return (
       <div className="flex flex-col">
         <label className="label">
@@ -27,7 +28,9 @@ export const MInput = React.forwardRef<HTMLInputElement, Props>(
           ref={ref}
         />
         <label className="label">
-          {error !== undefined && error !== null && <span className="label-text-alt"> {error.message} </span>}{' '}
+          {(hint !== undefined || (error !== undefined && error !== null)) && (
+            <span className="label-text-alt"> {error?.message ?? hint} </span>
+          )}
         </label>
       </div>
     )

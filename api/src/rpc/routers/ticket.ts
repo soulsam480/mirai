@@ -1,7 +1,7 @@
 import { createTicketSchema, ticketListingInput } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
-import { hashPass, isRole } from '../../lib'
+import { hashPass, isRole, isUniqueId } from '../../lib'
 import { ticketQueue } from '../../queues'
 import { createRouter } from '../createRouter'
 
@@ -24,7 +24,12 @@ export const ticketRouter = createRouter()
   .mutation('create', {
     input: createTicketSchema,
     async resolve({ ctx, input }) {
+      if (!(await isUniqueId(input.meta.data.uniId, input.instituteId))) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'University ID should be unique' })
+      }
+
       const pass = input.meta.data.password
+
       if (pass !== undefined) {
         input.meta.data.password = await hashPass(pass)
       }
@@ -57,13 +62,6 @@ export const ticketRouter = createRouter()
             equals: type,
           },
         })
-
-      /**
-       * TODO
-       * ////- support created after and before filters
-       * - support sorting
-       *   - createdAt asc and desc
-       */
 
       const tickets = await ctx.prisma.ticket.findMany({
         where: {

@@ -1,10 +1,5 @@
 import * as jsonwebtoken from 'jsonwebtoken'
-
-interface OnboardingPayload {
-  instituteId: number
-  name: string
-  createdAt: string
-}
+import { OnboardingPayload } from '../types'
 
 export const onBoardingTokens = {
   encode(value: OnboardingPayload) {

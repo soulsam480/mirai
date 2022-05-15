@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { onBoardingTokens } from '@mirai/api'
+import { OnboardingPayload, onBoardingTokens } from '@mirai/api'
 import { MBadge } from 'components/lib/MBadge'
 import { MForm } from 'components/lib/MForm'
 import { MIcon } from 'components/lib/MIcon'
@@ -25,18 +25,11 @@ const CATEGORY_TYPES = [
   'Economically Weaker Section',
 ].map((v) => ({ label: v, value: v }))
 
-// TODO: we need couple of extra fields here
-/**
- * department
- * course
- * uni ID
- */
-
-export const getServerSideProps: GetServerSideProps<{
-  name?: string
-  instituteId?: number
-  error: string | null
-}> = async ({ query }) => {
+export const getServerSideProps: GetServerSideProps<
+  {
+    error: string | null
+  } & Partial<OnboardingPayload>
+> = async ({ query }) => {
   const { payload } = query
 
   if (payload === undefined || typeof payload !== 'string') {
@@ -52,8 +45,7 @@ export const getServerSideProps: GetServerSideProps<{
 
     return {
       props: {
-        name: data.name,
-        instituteId: data.instituteId,
+        ...data,
         error: null,
       },
     }
@@ -86,13 +78,14 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
   error,
   name,
   instituteId,
+  ...rest
 }) => {
   const [isSubmitted, setSubmitted] = useState<boolean>(false)
   const [tokenId, setTokenId] = useState<number | null>(null)
   const setAlert = useAlert()
   const { create } = useTicket()
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof studentOnboardingSchema>>({
     resolver: zodResolver(studentOnboardingSchema),
     defaultValues: {
       name: '',
@@ -100,9 +93,12 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
       password: '',
       repassword: '',
       category: '',
-      dob: null,
+      dob: '',
       gender: '',
       mobileNumber: '',
+      batchId: rest.batchId,
+      courseId: rest.courseId,
+      departmentId: rest.departmentId,
     },
     shouldFocusError: true,
   })
@@ -123,10 +119,8 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
   }, [error, setAlert])
 
   async function submitOnboarding(data: z.infer<typeof studentOnboardingSchema>) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { repassword, ...studentDetails } = data
+    const { repassword: _repassword, ...studentDetails } = data
 
-    // create ticket
     const response = await create.mutateAsync({
       instituteId: Number(instituteId),
       meta: {
@@ -171,49 +165,55 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             </span>
             <div className="text-center text-lg">Please fill the form below</div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
-              <div>
-                <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" error={errors.name} />
+            <div className="grid grid-cols-1 gap-x-2 gap-y-1 sm:grid-cols-2 ">
+              <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" error={errors.name} />
 
-                <MInput
-                  label="New Password"
-                  type="password"
-                  {...register('password')}
-                  placeholder="xxxxxxxxxxx"
-                  error={errors.password}
-                />
+              <MInput
+                label="Email"
+                type="email"
+                {...register('email')}
+                placeholder="smishra@gmail.com"
+                error={errors.email}
+              />
 
-                <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
+              <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
 
-                <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
-              </div>
+              <MInput
+                error={errors.uniId}
+                {...register('uniId')}
+                name="uniId"
+                label="University ID"
+                placeholder="23f32r23rf2r3r"
+                hint="Make sure the ID is correct and belongs to you !"
+              />
 
-              <div>
-                <MInput
-                  label="Email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="smishra@gmail.com"
-                  error={errors.email}
-                />
+              <MInput
+                label="Password"
+                type="password"
+                {...register('password')}
+                placeholder="xxxxxxxxxxx"
+                error={errors.password}
+                hint="Don't worry, you password is encrypted and safe !"
+              />
 
-                <MInput
-                  label="Repeat Password"
-                  type="password"
-                  {...register('repassword')}
-                  placeholder="xxxxxxxxxxx"
-                  error={errors.repassword}
-                />
+              <MInput
+                label="Repeat Password"
+                type="password"
+                {...register('repassword')}
+                placeholder="xxxxxxxxxxx"
+                error={errors.repassword}
+              />
 
-                <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
+              <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
 
-                <MInput
-                  label="Mobile number"
-                  {...register('mobileNumber')}
-                  placeholder="+91 873566556"
-                  error={errors.mobileNumber}
-                />
-              </div>
+              <MInput
+                label="Mobile number"
+                {...register('mobileNumber')}
+                placeholder="+91 873566556"
+                error={errors.mobileNumber}
+              />
+
+              <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">
