@@ -1,7 +1,7 @@
 {
   "type": "excalidraw",
   "version": 2,
-  "source": "vscode-webview://1jfa1tobub6i131qtjpnue4lvhq178tbsafjvtqftu6u4hf8b2bh",
+  "source": "vscode-webview://048osgbgee0jq8k0e0o857mu3qpuppce7nrles9mpdpjg8rvtrd3",
   "elements": [
     {
       "type": "text",
@@ -11887,40 +11887,29 @@
       "originalText": "When user updates any data, update the selected row in selectedTickets atom ->  "
     },
     {
-      "id": "8nRwj85-B0rzzKBW3lbNs",
       "type": "arrow",
-      "x": 20865.888379723576,
-      "y": 1272.8936990553464,
-      "width": 83.76354483961768,
-      "height": 375.840087890625,
-      "angle": 0,
-      "strokeColor": "#000000",
-      "backgroundColor": "transparent",
+      "version": 271,
+      "versionNonce": 1150523302,
+      "isDeleted": false,
+      "id": "8nRwj85-B0rzzKBW3lbNs",
       "fillStyle": "hachure",
       "strokeWidth": 1,
       "strokeStyle": "solid",
       "roughness": 1,
       "opacity": 100,
+      "angle": 0,
+      "x": 20865.888379723576,
+      "y": 1272.8936990553464,
+      "strokeColor": "#000000",
+      "backgroundColor": "transparent",
+      "width": 83.76354483961768,
+      "height": 375.840087890625,
+      "seed": 1477070778,
       "groupIds": [],
       "strokeSharpness": "round",
-      "seed": 1477070778,
-      "version": 271,
-      "versionNonce": 1150523302,
-      "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1652515267436,
       "link": null,
-      "points": [
-        [
-          0,
-          0
-        ],
-        [
-          83.76354483961768,
-          375.840087890625
-        ]
-      ],
-      "lastCommittedPoint": null,
       "startBinding": {
         "focus": -0.8218622916146997,
         "gap": 2.3217395356684847,
@@ -11931,8 +11920,19 @@
         "gap": 7.428321499487765,
         "elementId": "LifciUnQTZr4k47pBgq_i"
       },
+      "lastCommittedPoint": null,
       "startArrowhead": null,
-      "endArrowhead": "arrow"
+      "endArrowhead": "arrow",
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          83.76354483961768,
+          375.840087890625
+        ]
+      ]
     },
     {
       "type": "text",

@@ -1,8 +1,9 @@
-import { createTicketSchema, ticketListingInput } from '@mirai/app'
+import { bulkTicketResolveSchema, createTicketSchema, ticketListingInput } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass, isRole, isUniqueId } from '../../lib'
 import { ticketQueue } from '../../queues'
+import { TicketResolveResponse } from '../../types'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
@@ -75,15 +76,34 @@ export const ticketRouter = createRouter()
       return tickets
     },
   })
+  .mutation('action', {
+    input: bulkTicketResolveSchema,
+    async resolve({ input }) {
+      const errors: TicketResolveResponse[] = []
 
-  .mutation('resolve', {
-    input: createTicketSchema.pick({ status: true }).extend({
-      id: z.number(),
-    }),
-    async resolve({ ctx, input: { id, status } }) {
-      await ctx.prisma.ticket.update({ where: { id }, data: { status } })
+      for (let index = 0; index < input.data.length; index++) {
+        const ticket = input.data[index]
 
-      await ticketQueue.add({ id })
+        // check is job is there in the queue or not
+        const jobId = `${input.key}-${ticket.id}`
+
+        const job = await ticketQueue.getJob(jobId)
+
+        if (job !== null) {
+          // if job exists, add an error and move to next one
+          errors.push({ type: 'duplicate', data: { message: 'Ticket is already being processed !' } })
+          continue
+        }
+
+        try {
+          await ticketQueue.add({ ...ticket }, { jobId })
+        } catch (error) {
+          errors.push({ type: 'system', data: error })
+          continue
+        }
+      }
+
+      return { success: errors.length === 0, data: errors }
     },
   })
   .mutation('remove', {

@@ -121,18 +121,20 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
   async function submitOnboarding(data: z.infer<typeof studentOnboardingSchema>) {
     const { repassword: _repassword, ...studentDetails } = data
 
-    const response = await create.mutateAsync({
-      instituteId: Number(instituteId),
-      meta: {
-        data: studentDetails,
-        type: 'STUDENT_ONBOARDING',
-      },
-      status: 'OPEN',
-    })
+    try {
+      const response = await create.mutateAsync({
+        instituteId: Number(instituteId),
+        meta: {
+          data: studentDetails,
+          type: 'STUDENT_ONBOARDING',
+        },
+        status: 'OPEN',
+      })
 
-    setTokenId(response.id)
+      setTokenId(response.id)
 
-    setSubmitted(true)
+      setSubmitted(true)
+    } catch (_error) {}
   }
 
   if (error !== null) {

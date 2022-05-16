@@ -204,3 +204,16 @@ export const generateOnboardingUrlSchema = z.object({
   instituteId: z.number(),
   name: z.string().optional(),
 })
+
+export const bulkTicketResolveSchema = z.object({
+  /** this is basically our identifier for the unique job ID */
+  key: z.string().min(1),
+  data: z.array(
+    z.object({
+      // we can allow different actions i.e. resolve/reject only on reviewed tickets. This ensures
+      // lower data load on the system
+      status: z.enum(['RESOLVED']),
+      id: z.number(),
+    }),
+  ),
+})

@@ -32,8 +32,28 @@ void ticketQueue.process(async (job) => {
       message: 'non-student ticket',
     }
 
+  const { id: ticketId, status: incomingStatus, notes } = job.data
+
+  if (incomingStatus !== 'RESOLVED') {
+    await miraiClient.ticket.update({
+      where: { id: ticketId },
+      data: {
+        status: incomingStatus,
+        notes,
+      },
+    })
+
+    return {
+      success: true,
+      message: `Ticket handled with status ${incomingStatus}`,
+    }
+  }
+
   try {
     const createResult = await createStudent({ ...meta.data, instituteId: ticket.instituteId })
+
+    // resolve the ticket
+    await miraiClient.ticket.update({ where: { id: ticketId }, data: { status: incomingStatus, notes } })
 
     return createResult
   } catch (error) {

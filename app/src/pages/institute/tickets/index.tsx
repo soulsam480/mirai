@@ -10,7 +10,6 @@ import { useEffect, useMemo } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { formatDate, titleCase } from 'utils/helpers'
-import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -65,20 +64,24 @@ const TicketListing: NextPageWithLayout = () => {
         label: 'Closed by',
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
-      {
-        field: 'action',
-        label: 'Action',
-        format: ({ id }) => (
-          <button
-            className="btn btn-xs"
-            onClick={() => {
-              trpcClient.mutation('ticket.resolve', { id, status: 'RESOLVED' })
-            }}
-          >
-            Resolve
-          </button>
-        ),
-      },
+      // TODO: handle tickets like this from UI when doing batch ops
+      // {
+      //   field: 'action',
+      //   label: 'Action',
+      //   format: ({ id }) => (
+      //     <button
+      //       className="btn btn-xs"
+      //       onClick={async () => {
+      //         await trpcClient.mutation('ticket.action', {
+      //           key: userData.owner?.code ?? '',
+      //           data: [{ id, status: 'RESOLVED' }],
+      //         })
+      //       }}
+      //     >
+      //       Resolve
+      //     </button>
+      //   ),
+      // },
     ],
     [],
   )
