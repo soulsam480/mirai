@@ -27,13 +27,15 @@ export interface Column<R = any> {
   /** property inside row that hold column data */
   field: string
   /** Column header label */
-  label: string
+  label?: string
   /** Column classes */
   classes?: string | ((row: R) => string)
   /** classes to apply on column header , thead -> tr -> th */
   headerClasses?: string
   /** Custom formatter to format data before displaying */
   format?: (row: R) => React.ReactNode
+  /** Custom formatter to format data before displaying */
+  headerslot?: React.ReactNode
 }
 
 interface TableContextType
@@ -112,7 +114,7 @@ export const MTable: React.FC<Props> = ({
         <table className={clsx(['table w-full', compact && 'table-compact'])}>
           <thead>
             <tr className={headerClass}>
-              {columns.map(({ label, headerClasses }, i) => (
+              {columns.map(({ label, headerClasses, headerslot }, i) => (
                 <th
                   key={i}
                   className={clsx([
@@ -120,7 +122,7 @@ export const MTable: React.FC<Props> = ({
                     'first:rounded-none last:rounded-none',
                   ])}
                 >
-                  {label}
+                  {headerslot ?? label}
                 </th>
               ))}
 

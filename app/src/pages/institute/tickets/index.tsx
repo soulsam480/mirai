@@ -4,10 +4,12 @@ import { Column, MTable } from 'components/lib/MTable'
 import { TicketFiltersBlock } from 'components/tickets/filters'
 import { ListingSettings } from 'components/tickets/ListingSettings'
 import { TicketWithMeta, useTickets } from 'contexts/useTicket'
+import { useAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
+import { selectedTickets } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { useUser } from 'stores/user'
 import { formatDate, titleCase } from 'utils/helpers'
@@ -36,8 +38,45 @@ const TicketListing: NextPageWithLayout = () => {
   const setFilters = useResetAtom(ticketFiltersAtom)
   const userData = useUser()
 
+  const [selected, setSelected] = useAtom(selectedTickets)
+  const [selectAll, setSelectAll] = useState<boolean>(false)
+
+  const handleTicketSelection = (selectedId: number) =>
+    setSelected((prev) =>
+      prev.map((data) => (selectedId === data.id ? { id: data.id, isChecked: !Boolean(data.isChecked) } : data)),
+    )
+
+  const handleSelectAll = () => setSelectAll((prev) => !prev)
+
+  useEffect(() => {
+    const res = tickets.map(({ id }) => ({
+      id,
+      isChecked: false,
+    }))
+    void setSelected(res)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tickets])
+
+  useEffect(() => {
+    void setSelected((prev) => prev.map((data) => ({ id: data.id, isChecked: selectAll })))
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectAll])
+
   const columns = useMemo<Array<Column<TicketWithMeta>>>(
     () => [
+      {
+        field: 'select',
+        headerslot: <input type="checkbox" checked={selectAll} onChange={() => handleSelectAll()} />,
+        format: ({ id }) => (
+          <input
+            type="checkbox"
+            checked={selected.find((data) => data.id === id)?.isChecked}
+            onChange={() => handleTicketSelection(id)}
+          />
+        ),
+      },
       {
         field: 'id',
         label: 'ID',
