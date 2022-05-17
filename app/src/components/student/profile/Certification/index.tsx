@@ -13,7 +13,8 @@ import { useForm } from 'react-hook-form'
 import { createCertificationSchema } from 'schemas'
 import { studentCertificationsAtom } from 'stores/student'
 import { useUser } from 'stores/user'
-import { OverWrite } from 'types'
+import { OverWrite, StudentProfileIgnore } from 'types'
+import { STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { CertificationCard } from './CertificationCard'
@@ -24,7 +25,7 @@ const SCORE_TYPE = ['PERCENTAGE', 'CGPA', 'GRADES'].map((val) => ({ label: val, 
 
 type StudentCertificationDateStrings = Omit<
   OverWrite<StudentCertification, { date: string | null; expiresAt: string | null }>,
-  'verified' | 'verifiedBy' | 'verifiedOn'
+  StudentProfileIgnore
 >
 
 export const Certifications: React.FC<Props> = () => {
@@ -94,13 +95,7 @@ export const Certifications: React.FC<Props> = () => {
       // TODO: simplify setup to only update diff
       let currExp = certifications.find(({ id }) => id === selectedCert) as unknown as StudentCertificationDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentCertificationDateStrings
+      currExp = omit(currExp, [...STUDENT_PROFILE_IGNORE_KEYS, 'studentId', 'id']) as StudentCertificationDateStrings
 
       const diff = getDiff(currExp, val)
 
@@ -138,7 +133,7 @@ export const Certifications: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Certifications</div>
+        <div className="text-lg font-medium leading-6    ">Certifications</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
@@ -171,7 +166,7 @@ export const Certifications: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Certification</div>
+          <div className="text-lg font-medium leading-6    ">Certification</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
@@ -259,13 +254,13 @@ export const Certifications: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="btn btn-outline btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn-neutral btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}

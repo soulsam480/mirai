@@ -8,7 +8,10 @@ import type {
   Student,
 } from '@prisma/client'
 import { atom } from 'jotai'
+import { atomWithReset } from 'jotai/utils'
+import { studentsQuerySchema } from 'schemas'
 import type { OverWrite } from 'types'
+import { z } from 'zod'
 
 export interface StudentValueType {
   basics: StudentBasicsOverwrite | null
@@ -91,3 +94,8 @@ export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { 
   },
 )
 studentAtom.debugLabel = 'studentAtom'
+
+export type StudentQueryType = Omit<z.infer<typeof studentsQuerySchema>, 'instituteId'>
+
+export const studentFiltersAtom = atomWithReset<StudentQueryType>({ name: '', uniId: '' })
+studentFiltersAtom.debugLabel = 'studentFiltersAtom'

@@ -8,8 +8,11 @@ import { getUserHome } from 'utils/helpers'
 import { getSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { NavBar } from 'components/globals/NavBar'
-import { useLoader } from 'components/lib/store/loader'
+import { useLoader } from 'lib/store/loader'
 import { LoginSchema } from 'schemas'
+import { MForm } from 'lib/MForm'
+import { MInput } from 'components/lib/MInput'
+import { MIcon } from 'components/lib/MIcon'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req })
@@ -34,7 +37,7 @@ const Login: NextPageWithLayout = () => {
   const [error, setError] = useState<string | null>(null)
   const loader = useLoader()
 
-  const { register, handleSubmit, formState } = useForm<{
+  const form = useForm<{
     email: string
     password: string
   }>({
@@ -45,6 +48,8 @@ const Login: NextPageWithLayout = () => {
     },
     shouldFocusError: true,
   })
+
+  const { register, handleSubmit, formState } = form
 
   async function userLogin(data: { email: string; password: string }) {
     setError(null)
@@ -76,52 +81,40 @@ const Login: NextPageWithLayout = () => {
   return (
     <div className="min-h-screen">
       <NavBar />
-      <div className="flex justify-center">
+      <div className="flex justify-center px-3">
         <div className="w-full sm:max-w-md">
-          <form className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
+          <MForm form={form} className="form-control w-full" onSubmit={handleSubmit(userLogin)}>
             <div className="mb-4 text-xl">Login</div>
             {error !== null && (
               <div className="alert alert-error py-2 text-sm">
-                <div className="flex-1">
-                  <label> {error} </label>
-                </div>
+                <MIcon className="flex-none">
+                  <IconLaExclamationCircle />
+                </MIcon>
+
+                <span className="flex-grow">{error}</span>
               </div>
             )}
 
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <input
+            <MInput
               type="email"
-              placeholder="john@doe.com"
-              className="input-bordered input-primary input"
+              placeholder="Email"
+              label="Email"
+              error={formState.errors.email}
               {...register('email')}
             />
-            <label className="label">
-              {formState.errors?.email !== undefined && (
-                <span className="label-text-alt"> {formState.errors.email.message} </span>
-              )}{' '}
-            </label>
 
-            <label className="label">
-              <span className="label-text">Password</span>
-            </label>
-            <input
+            <MInput
+              label="Password"
               type="password"
               placeholder="password"
-              className="input-bordered input-primary input"
               {...register('password')}
+              error={formState.errors.password}
             />
-            <label className="label">
-              {formState.errors?.password !== undefined && (
-                <span className="label-text-alt"> {formState.errors.password?.message} </span>
-              )}{' '}
-            </label>
 
-            <button type="submit" className="btn-neutral btn btn-block mt-5">
+            <button type="submit" className="btn btn-sm btn-block mt-5">
               Submit
             </button>
-          </form>
+          </MForm>
         </div>
       </div>
     </div>

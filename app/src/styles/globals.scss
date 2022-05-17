@@ -6,15 +6,14 @@
   --rsbs-backdrop-bg: #fef3c7;
   --rsbs-bg: #fffbeb;
   --rsbs-handle-bg: #fbbf24;
-}
-
-.btn {
-  @apply normal-case;
+  --rounded-box: 0.25rem;
+  --rounded-btn: 0.125rem;
+  --rounded-badge: 0.125rem;
 }
 
 html,
 body {
-  @apply bg-base-100 text-base;
+  @apply bg-base-100 text-base-content;
   font-family: 'Nunito', sans-serif;
 }
 
@@ -22,9 +21,44 @@ body {
   scroll-behavior: smooth;
 }
 
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-xs {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-md {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 15px 30px rgba(0, 0, 0, 0.11), 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .text-shadow-none {
+    text-shadow: none;
+  }
+}
+
+.btn {
+  @apply font-semibold normal-case;
+}
+
+.input[disabled],
+.textarea[disabled] {
+  @apply border-base-300;
+}
+
+.textarea[disabled] {
+  @apply resize-none;
+}
+
 .dialog-content {
-  @apply my-8 inline-block transform  rounded-lg bg-base-200 p-6 align-middle shadow-lg transition-all;
-  @apply w-[90%] sm:w-auto;
+  @apply mx-4 transform rounded-lg p-6 shadow-lg transition-all;
+  @apply relative max-h-[90%] w-full overflow-y-auto sm:w-auto;
 }
 
 .file-input {
@@ -100,20 +134,72 @@ body {
 
 .m-select {
   &__btn {
-    @apply rounded-btn flex flex-grow items-center border border-primary bg-base-100;
+    @apply rounded-btn flex flex-grow items-center gap-2 bg-base-100;
     @apply relative border-primary border-opacity-100 py-[5px] px-3 text-left text-sm;
 
-    &:focus {
-      outline: 2px solid hsl(var(--p));
-      outline-offset: 2px;
+    &[disabled] {
+      @apply cursor-not-allowed border-base-300 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
     }
 
-    &[disabled] {
-      @apply cursor-not-allowed border-base-200 bg-base-200 text-opacity-20 placeholder-base-content placeholder-opacity-20;
+    &--focus {
+      &:focus {
+        outline: 2px solid hsl(var(--p));
+        outline-offset: 2px;
+      }
     }
   }
 
   &__options {
-    @apply absolute z-30 mt-10 max-h-60 w-full overflow-auto rounded-md bg-gray-100 py-1 text-sm shadow-lg focus:outline-none;
+    @apply absolute z-30 max-h-60 origin-top-left overflow-auto rounded-md bg-base-100 py-1 text-sm shadow-lg focus:outline-none;
   }
+}
+
+// shepherd styles
+.shepherd-content {
+  @apply flex flex-col gap-4;
+}
+
+.shepherd-footer {
+  @apply flex items-center justify-between;
+}
+
+.shepherd-element {
+  transition: opacity 0.3s, visibility 0.3s;
+  @apply invisible z-[9999] w-full max-w-[300px] rounded-md bg-base-200;
+  @apply p-4 opacity-0 shadow-lg outline-none;
+}
+
+.shepherd-arrow,
+.shepherd-arrow:before {
+  @apply absolute z-[-1] h-4 w-4;
+}
+
+.shepherd-modal-overlay-container {
+  transition: all 0.3s ease-out, height 0ms 0.3s, opacity 0.3s 0ms;
+  @apply pointer-events-none fixed top-0 left-0 z-[9997] h-0 w-screen overflow-hidden opacity-0;
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  transition: all 0.3s ease-out, height 0s 0s, opacity 0.3s 0s;
+  @apply h-screen opacity-50;
+}
+
+.shepherd-enabled.shepherd-element {
+  @apply visible opacity-100;
+}
+
+.shepherd-text {
+  @apply text-base-content;
+}
+
+.shepherd-arrow:before {
+  @apply rotate-45 bg-base-200 content-[''];
+}
+
+.shepherd-element[data-popper-placement^='bottom'] > .shepherd-arrow {
+  @apply top-[-8px];
+}
+
+.table :where(thead, tfoot) :where(th, td) {
+  @apply normal-case;
 }

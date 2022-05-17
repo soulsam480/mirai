@@ -60,6 +60,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'no-extra-boolean-cast': 'off',
   },
   settings: {
     react: {

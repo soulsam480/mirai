@@ -120,7 +120,7 @@ const StudentProfile: NextPageWithLayout = () => {
 
       {/* bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 flex h-12 w-full justify-center border-t border-base-300 bg-base-200 transition-all duration-300 ease-in-out sm:hidden">
-        <div className="dropdown-top dropdown w-full">
+        <div className="dropdown dropdown-top w-full">
           <label tabIndex={0} className="btn btn-ghost btn-block flex gap-2 rounded-none">
             <MIcon className="text-lg">
               <IconLaUserCircle />

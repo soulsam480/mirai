@@ -1,4 +1,4 @@
-import { LoginPayload, LoginResponse } from '@mirai/api'
+import type { LoginPayload, LoginResponse } from '@mirai/api'
 import axios from 'axios'
 
 export const apiClient = axios.create({
@@ -8,3 +8,5 @@ export const apiClient = axios.create({
 export async function authorizeUser(payload: LoginPayload) {
   return await apiClient.post<LoginResponse>('auth', payload)
 }
+
+export * from './account'

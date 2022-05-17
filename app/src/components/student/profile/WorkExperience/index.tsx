@@ -16,8 +16,8 @@ import { useForm, useWatch } from 'react-hook-form'
 import { createExperienceSchema } from 'schemas'
 import { studentExperienceAtom } from 'stores/student'
 import { useUser } from 'stores/user'
-import { OverWrite } from 'types'
-import { INDUSTRY_TYPES } from 'utils/constnts'
+import { OverWrite, StudentProfileIgnore } from 'types'
+import { INDUSTRY_TYPES, STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constnts'
 import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
 import { ExperienceCard } from './ExperienceCard'
@@ -30,7 +30,7 @@ const STIPEND_OPTIONS = ['0-10K', '10-50K', '50K Plus'].map((value) => ({ label:
 
 type StudentWorkExperienceDateStrings = Omit<
   OverWrite<StudentWorkExperience, { startedAt: string; endedAt: string | null }>,
-  'verified' | 'verifiedBy' | 'verifiedOn'
+  StudentProfileIgnore
 >
 
 export const WorkExperience: React.FC<Props> = () => {
@@ -118,13 +118,7 @@ export const WorkExperience: React.FC<Props> = () => {
         ({ id }) => id === selectedExperience,
       ) as unknown as StudentWorkExperienceDateStrings
 
-      currExp = omit(currExp, [
-        'verified',
-        'verifiedBy',
-        'verifiedOn',
-        'studentId',
-        'id',
-      ]) as StudentWorkExperienceDateStrings
+      currExp = omit(currExp, [...STUDENT_PROFILE_IGNORE_KEYS, 'studentId', 'id']) as StudentWorkExperienceDateStrings
 
       const diff = getDiff(currExp, val)
 
@@ -166,7 +160,7 @@ export const WorkExperience: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+        <div className="text-lg font-medium leading-6    ">Work experience</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
@@ -199,7 +193,7 @@ export const WorkExperience: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Work experience</div>
+          <div className="text-lg font-medium leading-6">Work experience</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
@@ -309,13 +303,13 @@ export const WorkExperience: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
+              className="btn btn-outline btn-sm mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn-neutral btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             )}

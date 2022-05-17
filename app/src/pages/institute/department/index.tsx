@@ -8,7 +8,7 @@ import { useMemo } from 'react'
 import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
-import { ManageDepartment } from 'components/department/ManageDepartment'
+import { ManageDepartment } from 'components/institute/department/ManageDepartment'
 import { useDepartments } from 'contexts'
 
 // TODO: add support for admin view
@@ -23,27 +23,19 @@ const Departments: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
       },
       {
         field: 'name',
         label: 'Name',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
       },
       {
         field: 'inCharge',
         label: 'In charge',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
         format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
         format: ({ id }) => (
           <MLink
             href={`/institute/department?departmentId=${id as number}`}
@@ -74,10 +66,7 @@ const Departments: NextPageWithLayout = () => {
         loading={isLoading}
       />
 
-      <MDialog
-        show={router.query.departmentId !== undefined}
-        onClose={async () => await router.push('/institute/department')}
-      >
+      <MDialog show={router.query.departmentId !== undefined} onClose={() => null} noEscape>
         <ManageDepartment />
       </MDialog>
     </PageLayout.PageWrapper>

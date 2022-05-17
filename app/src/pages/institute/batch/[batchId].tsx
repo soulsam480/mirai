@@ -1,7 +1,7 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { NextPageWithLayout } from 'pages/_app'
-import ManageBatch from 'components/batch/ManageBatch'
+import ManageBatch from 'components/institute/batch/ManageBatch'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

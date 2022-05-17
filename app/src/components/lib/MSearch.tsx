@@ -1,10 +1,11 @@
-import { Combobox, Transition } from '@headlessui/react'
+import { Combobox, Portal } from '@headlessui/react'
 import clsx from 'clsx'
-import React, { Fragment, ReactElement, useMemo, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
 import { Option } from 'types'
 import { isSafeVal } from 'utils/helpers'
 import { MIcon } from './MIcon'
+import { useSelectPopperConfig } from './MSelect'
 
 interface RenderPropCtx {
   active: boolean
@@ -24,6 +25,7 @@ export interface MSearchProps {
   placeholder?: string
   disabled?: boolean
   reset?: boolean
+  width?: string
 }
 
 export const MSearch: React.FC<MSearchProps> = ({
@@ -38,6 +40,7 @@ export const MSearch: React.FC<MSearchProps> = ({
   placeholder,
   disabled,
   reset = false,
+  width,
 }) => {
   const formCtx = useFormContext()
   const _control = formCtx !== null ? formCtx.control : control
@@ -86,23 +89,33 @@ export const MSearch: React.FC<MSearchProps> = ({
     return 'Unknown value'
   }, [value, extractOption])
 
+  const [trigger, container] = useSelectPopperConfig(width)
+
   return (
-    <div className="flex flex-col">
+    <div className="flex min-w-[200px] flex-col">
       <label className="label">
         <span className="label-text"> {label} </span>
       </label>
 
-      <Combobox value={value} onChange={(option) => onChange(option.value)} disabled={disabled}>
+      <Combobox
+        value={value}
+        onChange={(option) => {
+          setQuery('')
+          onChange(option.value)
+        }}
+        disabled={disabled}
+      >
         <div className="relative flex">
           <div className="relative flex w-full items-center">
             <Combobox.Input
-              className="input-bordered input-primary input input-sm flex-grow"
+              className="input input-bordered input-primary input-sm flex-grow"
               displayValue={(val) => displayValue(extractOption(val))}
               onChange={(event) => setQuery(event.target.value)}
               autoComplete="off"
               autoCorrect="off"
               aria-autocomplete="none"
               placeholder={placeholder}
+              ref={trigger}
             />
 
             <Combobox.Button className="absolute right-0 top-[0.25] bottom-[0.25] float-none mr-2 flex items-center bg-base-100">
@@ -141,14 +154,8 @@ export const MSearch: React.FC<MSearchProps> = ({
             </Combobox.Button>
           </div>
 
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={() => setQuery('')}
-          >
-            <Combobox.Options static className="m-select__options">
+          <Portal>
+            <Combobox.Options className="m-select__options" style={{ width: width ?? 'auto' }} ref={container}>
               {filteredOptions.length === 0 && query !== '' ? (
                 <Combobox.Option
                   value={''}
@@ -190,7 +197,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                 })
               )}
             </Combobox.Options>
-          </Transition>
+          </Portal>
         </div>
       </Combobox>
 

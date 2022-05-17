@@ -4,12 +4,13 @@ import { MSelect } from 'components/lib/MSelect'
 import { useDepartments, useCourse } from 'contexts'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo } from 'react'
-import { FormProvider, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useGlobalError } from 'utils/hooks'
 import { z } from 'zod'
 import omit from 'lodash/omit'
 import { useUser } from 'stores/user'
 import { createCourseSchema } from 'schemas'
+import { MForm } from 'components/lib/MForm'
 
 interface Props {}
 
@@ -97,7 +98,7 @@ export const ManageCourse: React.FC<Props> = () => {
 
   return (
     <>
-      <div className="mb-4 text-lg font-medium leading-6 text-gray-900">
+      <div className="mb-4 text-lg font-medium leading-6">
         {isEditMode ? (
           <>
             Manage{' '}
@@ -110,77 +111,79 @@ export const ManageCourse: React.FC<Props> = () => {
         )}
       </div>
 
-      <FormProvider {...form}>
-        <form className="form-control flex w-full sm:w-[700px] sm:max-w-[700px]" onSubmit={handleSubmit(submitHandler)}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
-            <div>
-              <MInput
-                label="Branch name"
-                {...register('branchName')}
-                placeholder="Branch name"
-                error={formState.errors.branchName}
-              />
+      <MForm
+        form={form}
+        className="form-control flex w-full sm:w-[700px] sm:max-w-[700px]"
+        onSubmit={handleSubmit(submitHandler)}
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
+          <div>
+            <MInput
+              label="Branch name"
+              {...register('branchName')}
+              placeholder="Branch name"
+              error={formState.errors.branchName}
+            />
 
-              <MInput
-                label="Branch code"
-                {...register('branchCode')}
-                placeholder="Branch code"
-                error={formState.errors.branchCode}
-              />
+            <MInput
+              label="Branch code"
+              {...register('branchCode')}
+              placeholder="Branch code"
+              error={formState.errors.branchCode}
+            />
 
-              <MInput
-                label="Course name"
-                {...register('programName')}
-                placeholder="Course name"
-                error={formState.errors.programName}
-              />
+            <MInput
+              label="Course name"
+              {...register('programName')}
+              placeholder="Course name"
+              error={formState.errors.programName}
+            />
 
-              <MSelect
-                name="programDurationType"
-                label="Course duration type"
-                options={programDurationType}
-                error={formState.errors.programDurationType}
-              />
-            </div>
-
-            <div>
-              <MInput
-                label="Course duration"
-                {...register('programDuration', { valueAsNumber: true })}
-                placeholder="Course duration"
-                error={formState.errors.programDuration}
-                type="number"
-                min={0}
-              />
-
-              <MSelect
-                name="scoreType"
-                label="Course score type"
-                options={courseScoreType}
-                error={formState.errors.scoreType}
-              />
-
-              <MSelect name="programLevel" label="Course level" options={programLevel} />
-
-              <MSelect name="departmentId" label="Department" options={departmentOptions} />
-            </div>
+            <MSelect
+              name="programDurationType"
+              label="Course duration type"
+              options={programDurationType}
+              error={formState.errors.programDurationType}
+            />
           </div>
 
-          <div className="mt-4 flex justify-end space-x-2">
-            <button
-              type="button"
-              onClick={async () => await router.push('/institute/course')}
-              className="btn-neutral btn-outline btn btn-sm mt-5"
-            >
-              Cancel
-            </button>
+          <div>
+            <MInput
+              label="Course duration"
+              {...register('programDuration', { valueAsNumber: true })}
+              placeholder="Course duration"
+              error={formState.errors.programDuration}
+              type="number"
+              min={0}
+            />
 
-            <button type="submit" className="btn-neutral btn btn-sm mt-5">
-              {isEditMode ? 'Update' : 'Create'}
-            </button>
+            <MSelect
+              name="scoreType"
+              label="Course score type"
+              options={courseScoreType}
+              error={formState.errors.scoreType}
+            />
+
+            <MSelect name="programLevel" label="Course level" options={programLevel} />
+
+            <MSelect name="departmentId" label="Department" options={departmentOptions} />
           </div>
-        </form>
-      </FormProvider>
+        </div>
+
+        <div className="mt-4 flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={async () => await router.push('/institute/course')}
+            className="btn btn-outline btn-sm mt-5"
+          >
+            Cancel
+          </button>
+
+          <button type="submit" className="   btn btn-sm mt-5">
+            {isEditMode ? 'Update' : 'Create'}
+          </button>
+        </div>
+      </MForm>
     </>
   )
 }

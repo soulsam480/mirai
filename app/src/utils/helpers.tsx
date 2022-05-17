@@ -1,6 +1,11 @@
 import type { Role } from '@prisma/client'
 import dayjs from 'dayjs'
+import mitt from 'mitt'
 import type { NullToUndefined, SidebarItem } from 'types'
+import lowerCase from 'lodash/lowerCase'
+import upperFirst from 'lodash/upperFirst'
+import startCase from 'lodash/startCase'
+import camelCase from 'lodash/camelCase'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
 
@@ -35,7 +40,7 @@ export function defineSidebar(base: string) {
   return {
     stack,
     extend(entries: SidebarItem[]) {
-      stack.push(...entries.map((e) => ({ ...e, path: base + e.path })))
+      stack.push(...entries.map((e) => ({ ...e, path: base + (e.path as string) })))
 
       return stack
     },
@@ -145,4 +150,28 @@ export function getDiff<
   })
 
   return result
+}
+
+export async function sleep(ms: number): Promise<any> {
+  return await new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      clearTimeout(timeout)
+      resolve(undefined)
+    }, ms)
+  })
+}
+
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+type MittEvents = {
+  'toggle-tour': any
+}
+
+export const eventBus = mitt<MittEvents>()
+
+export function sentenceCase(str: string) {
+  return upperFirst(lowerCase(str))
+}
+
+export function titleCase(str: string) {
+  return startCase(camelCase(str))
 }

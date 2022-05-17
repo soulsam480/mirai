@@ -9,8 +9,10 @@ import { useAlert } from 'components/lib/store/alerts'
 import { useInstitute } from 'contexts'
 import { useGlobalError } from 'utils/hooks'
 import { manageInstituteSchema } from 'schemas'
+import { MSelect } from 'components/lib/MSelect'
+import { MForm } from 'components/lib/MForm'
 
-const instituteStatus = ['ONBOARDED', 'INPROGRESS', 'PENDING']
+const INSTITUTE_STATUS = ['ONBOARDED', 'INPROGRESS', 'PENDING'].map((v) => ({ label: v, value: v }))
 
 export const ManageInstitute: React.FC<any> = () => {
   const router = useRouter()
@@ -47,7 +49,7 @@ export const ManageInstitute: React.FC<any> = () => {
   const inputFile = useRef<HTMLInputElement>(null)
   const uploadFile = useRef<File | null>(null)
 
-  const { register, handleSubmit, formState, setValue } = useForm<z.infer<typeof manageInstituteSchema>>({
+  const form = useForm<z.infer<typeof manageInstituteSchema>>({
     resolver: zodResolver(manageInstituteSchema),
     defaultValues: {
       code: '',
@@ -57,6 +59,8 @@ export const ManageInstitute: React.FC<any> = () => {
     },
     shouldFocusError: true,
   })
+
+  const { register, handleSubmit, formState, setValue } = form
 
   async function createInstitute(data: z.infer<typeof manageInstituteSchema>) {
     await create(data)
@@ -92,7 +96,7 @@ export const ManageInstitute: React.FC<any> = () => {
   return (
     <>
       {' '}
-      <div className="text-lg font-medium leading-6 text-gray-900">
+      <div className="text-lg font-medium leading-6    ">
         {isEditMode ? (
           <>
             Manage <span className="font-bold text-primary">{instituteData?.name}</span>
@@ -101,11 +105,13 @@ export const ManageInstitute: React.FC<any> = () => {
           'Create new institute'
         )}
       </div>
-      <form
+      <MForm
+        form={form}
         className="form-control flex w-full sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
       >
         <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
+
         <MInput
           disabled={instituteData != null && instituteData.status !== 'PENDING'}
           label="Email"
@@ -113,6 +119,7 @@ export const ManageInstitute: React.FC<any> = () => {
           placeholder="Institute Email"
           error={formState.errors.email}
         />
+
         <MInput
           disabled={isEditMode && instituteData?.status !== null}
           label="Code"
@@ -121,7 +128,7 @@ export const ManageInstitute: React.FC<any> = () => {
           error={formState.errors.code}
         />
 
-        <label className="label">
+        {/* <label className="label">
           <span className="label-text">Onboarding status</span>
         </label>
         <select className="select-bordered select-primary select select-sm" {...register('status')}>
@@ -138,7 +145,9 @@ export const ManageInstitute: React.FC<any> = () => {
           {formState.errors.status != null && (
             <span className="label-text-alt"> {formState.errors.status.message} </span>
           )}{' '}
-        </label>
+        </label> */}
+
+        <MSelect label="Onboarding status" name="status" options={INSTITUTE_STATUS} error={formState.errors.status} />
 
         <label className="label">
           <span className="label-text">Logo</span>
@@ -152,19 +161,19 @@ export const ManageInstitute: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/admin/institute')}
-            className="btn-neutral btn-outline btn btn-sm mt-5"
+            className="   btn btn-outline btn-sm mt-5"
           >
             Cancel{' '}
           </button>
 
-          <button type="submit" className="btn-neutral btn btn-sm mt-5">
+          <button type="submit" className="   btn btn-sm mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
           {isEditMode && instituteData?.status === 'PENDING' && (
             <button
               type="button"
               onClick={exportSignupLink}
-              className="btn-neutral btn btn-sm mt-5"
+              className="   btn btn-sm mt-5"
               title="Generate Signup link for institute"
             >
               {' '}
@@ -172,7 +181,7 @@ export const ManageInstitute: React.FC<any> = () => {
             </button>
           )}
         </div>
-      </form>
+      </MForm>
     </>
   )
 }

@@ -1,11 +1,11 @@
 import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
-import { AnyRouter, inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
+import { inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
 import type { AppRouter } from '@mirai/api'
 import { MLinkProps } from 'components/lib/MLink'
 import React from 'react'
 
-export type TRPCErrorType = TRPCClientErrorLike<AnyRouter>
+export type TRPCErrorType = TRPCClientErrorLike<AppRouter>
 
 type inferProcedures<TObj extends ProcedureRecord<any, any, any, any>> = {
   [TPath in keyof TObj]: {
@@ -35,4 +35,7 @@ export interface SidebarItem {
   label: string
   active?: MLinkProps['active']
   icon?: React.ReactNode
+  id?: string
 }
+
+export type StudentProfileIgnore = 'verified' | 'verifiedBy' | 'verifiedOn' | 'createdAt' | 'updatedAt'

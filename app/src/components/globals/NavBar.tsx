@@ -1,24 +1,35 @@
-import { useAtomValue } from 'jotai'
+import clsx from 'clsx'
+import { MDialog } from 'components/lib/MDialog'
+import { MIcon } from 'components/lib/MIcon'
+import { useAtom, useAtomValue } from 'jotai'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
+import { sidebarAtom } from 'stores/config'
 import { loggedInAtom, useUser } from 'stores/user'
+import { SettingsModal } from './SettingsModal'
 
 interface Props {}
 
 export const NavBar: React.FC<Props> = () => {
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
+  const [settingsModal, setSettingsModal] = useState(false)
+  const [sidebar, setSidebar] = useAtom(sidebarAtom)
 
   return (
     <div className="sticky top-0 z-10 mb-2 w-full border-b border-base-200 bg-opacity-40 text-neutral backdrop-blur">
+      <MDialog show={settingsModal} onClose={setSettingsModal}>
+        <SettingsModal onClose={setSettingsModal} />
+      </MDialog>
+
       <div className="navbar !h-12 min-h-[0]">
         <div className="mx-2 flex-1">
           <Link href="/">
-            <a className="text-lg font-bold">Mirai</a>
+            <a className="text-lg font-bold text-base-content">Mirai</a>
           </Link>
         </div>
-        <div className="flex-none space-x-2">
+        <div className="flex flex-none items-center gap-2">
           {isLoggedIn === false ? (
             <>
               <button className="btn btn-primary btn-ghost btn-sm ">Contact sales</button>
@@ -28,10 +39,10 @@ export const NavBar: React.FC<Props> = () => {
             </>
           ) : (
             <>
-              <div className="dropdown-end dropdown">
+              <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
-                  <div className="h-8 w-8 rounded-full bg-primary text-base-100">
-                    <span className="text-base"> {userData.name?.slice(0, 2).toUpperCase()} </span>
+                  <div className="h-8 w-8 rounded-full bg-primary text-base-content">
+                    <span> {userData.name?.slice(0, 2).toUpperCase()} </span>
                   </div>
                 </button>
                 <ul
@@ -40,23 +51,24 @@ export const NavBar: React.FC<Props> = () => {
                 >
                   <li>
                     <div className="p-1 text-sm">
-                      <span className="font-semibold">
-                        {' '}
+                      <span className="font-semibold text-base-content">
                         {userData.name} ({userData.role})
                       </span>
-                    </div>{' '}
+                    </div>
                   </li>
 
                   <li>
                     <div className="p-0">
-                      <button className="btn-outline btn btn-block btn-sm">Settings</button>
-                    </div>{' '}
+                      <button className="btn btn-outline btn-sm btn-block" onClick={() => setSettingsModal(true)}>
+                        Settings
+                      </button>
+                    </div>
                   </li>
 
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn-outline btn btn-block btn-sm"
+                        className="btn btn-outline btn-sm btn-block"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout
@@ -66,11 +78,21 @@ export const NavBar: React.FC<Props> = () => {
                 </ul>
               </div>
 
-              <div>
-                <label htmlFor="mirai-drawer" className="drawer-button lg:hidden">
-                  <IconLaBars className="text-3xl" />
-                </label>
-              </div>
+              <label
+                htmlFor="mirai-drawer"
+                className={clsx([
+                  'swap drawer-button swap-rotate text-3xl text-base-content lg:hidden',
+                  sidebar === true && 'swap-active',
+                ])}
+              >
+                <MIcon className="swap-off">
+                  <IconLaBars />
+                </MIcon>
+
+                <MIcon className="swap-on">
+                  <IconLaTimes />
+                </MIcon>
+              </label>
             </>
           )}
         </div>

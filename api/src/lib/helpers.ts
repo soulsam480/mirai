@@ -1,5 +1,5 @@
 import { Role } from '@prisma/client'
-import pino from 'pino'
+import * as pino from 'pino'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
   return {
@@ -11,6 +11,16 @@ export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' 
 
 export function getUserHome(role: Role) {
   return role === 'ADMIN' ? '/admin' : isInstituteRole(role).is ? '/institute' : '/student'
+}
+
+export function isRole(role: Role) {
+  return {
+    admin: role === 'ADMIN',
+    institute: role === 'INSTITUTE',
+    mod: role === 'INSTITUTE_MOD',
+    student: role === 'STUDENT',
+    instituteOrMod: ['INSTITUTE', 'INSTITUTE_MOD'].includes(role),
+  }
 }
 
 export function getEnv(key: string, strict = false) {
@@ -26,4 +36,4 @@ const transport = pino.transport({
   options: { colorize: true },
 })
 
-export const logger = pino(transport)
+export const logger = pino.pino(transport)

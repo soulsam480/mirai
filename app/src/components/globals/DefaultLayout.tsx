@@ -10,7 +10,7 @@ export const DefaultLayout = ({ children }: DefaultLayoutProps) => {
   return (
     <>
       <Head>
-        <title>Mirai</title>
+        <title>Mirai | Hiring simplified for humans</title>
       </Head>
 
       <main>{children}</main>

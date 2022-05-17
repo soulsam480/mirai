@@ -148,3 +148,5 @@ export const INDUSTRY_TYPES = [
   'Wireless',
   'Writing & Editing',
 ]
+
+export const STUDENT_PROFILE_IGNORE_KEYS = ['verified', 'verifiedOn', 'verifiedBy', 'createdAt', 'updatedAt']

@@ -2,7 +2,7 @@ import type { Institute } from '@prisma/client'
 import clsx from 'clsx'
 import { AppLayout } from 'components/globals/AppLayout'
 import PageLayout from 'components/globals/PageLayout'
-import { ManageInstitute } from 'components/institute/ManageInstitute'
+import { ManageInstitute } from 'components/admin/institute/ManageInstitute'
 import { MDialog } from 'components/lib/MDialog'
 import MLink from 'components/lib/MLink'
 import { Column, MTable } from 'components/lib/MTable'
@@ -39,33 +39,23 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
       },
       {
         field: 'name',
         label: 'Name',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
       },
       {
         field: 'status',
         label: 'Status',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
         format: (row) => <span className={clsx([getStatusClass(row.status), 'badge'])}>{row.status}</span>,
       },
       {
         field: 'code',
         label: 'Code',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
       },
       {
         field: '',
         label: 'Edit',
-        headerClasses: '!bg-primary !text-base-100',
-        classes: 'bg-base-200',
         format: ({ id }) => (
           <MLink href={`/admin/institute?instituteId=${id as number}`} as={`/admin/institute/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
@@ -94,10 +84,7 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
       />
 
       {/* contextual routing for instant feedback. Reloads will show actual page */}
-      <MDialog
-        show={router.query.instituteId !== undefined}
-        onClose={async () => await router.push('/admin/institute')}
-      >
+      <MDialog show={router.query.instituteId !== undefined} onClose={() => null} noEscape>
         <ManageInstitute />
       </MDialog>
     </PageLayout.PageWrapper>

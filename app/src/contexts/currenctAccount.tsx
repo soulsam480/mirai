@@ -8,7 +8,7 @@ import { useAtomsDevtools } from 'jotai/devtools'
 
 interface Props {}
 
-export const CurrentAccountProvider: React.FC<Props> = ({ children }) => {
+export const CurrentAccount: React.FC<Props> = ({ children }) => {
   const [_, setUser] = useAtom(userAtom)
   const { data } = useSession()
   const setLoader = useSetAtom(loaderAtom)
