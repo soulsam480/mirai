@@ -6,7 +6,7 @@ interface Props {
   label: React.ReactNode
   show: boolean
   onConfirm: () => void
-  onReject?: () => void
+  onReject?: (val: boolean) => void
 }
 
 export const MAlertDialog: React.FC<Props> = ({ label, onConfirm, onReject, show }) => {
@@ -14,14 +14,14 @@ export const MAlertDialog: React.FC<Props> = ({ label, onConfirm, onReject, show
     <MDialog
       show={show}
       onClose={() => {
-        onReject?.()
+        onReject?.(false)
       }}
     >
       <div className="flex flex-col gap-5">
         <div className="text-md">{label}</div>
 
         <div className="flex items-center justify-end gap-4">
-          <button className="   btn btn-outline btn-sm items-center gap-1" onClick={onReject}>
+          <button className="   btn btn-outline btn-sm items-center gap-1" onClick={() => onReject?.(false)}>
             <MIcon>
               <IconLaCheckCircleSolid />
             </MIcon>

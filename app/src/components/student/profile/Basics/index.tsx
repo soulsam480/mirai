@@ -254,7 +254,7 @@ export const Basics: React.FC<Props> = () => {
                     <input
                       type="checkbox"
                       checked={sameAsPermanent}
-                      className="checkbox-primary checkbox checkbox-sm"
+                      className="checkbox checkbox-primary checkbox-sm"
                       onChange={({ target: { checked } }) => {
                         handleSameAddress(checked)
                       }}
@@ -287,12 +287,12 @@ export const Basics: React.FC<Props> = () => {
                 setDialog(false)
                 setSameAsPermanent(false)
               }}
-              className="btn-outline btn btn-primary btn-sm mt-5"
+              className="btn btn-outline btn-sm mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
+            <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
               Save
             </button>
           </div>

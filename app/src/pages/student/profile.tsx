@@ -5,6 +5,7 @@ import { Certifications } from 'components/student/profile/Certification'
 import { Projects } from 'components/student/profile/Project'
 import { Skills } from 'components/student/profile/Skill'
 import { WorkExperience } from 'components/student/profile/WorkExperience'
+import { Course } from 'components/student/profile/Course'
 import { ProfileSection } from 'components/student/ProfileSection'
 import { ProfileSidebar } from 'components/student/ProfileSidebar'
 import { useStudent } from 'contexts/student'
@@ -91,6 +92,10 @@ const StudentProfile: NextPageWithLayout = () => {
       <div className="mb-[100px] flex flex-grow flex-col gap-2">
         <ProfileSection id="basics">
           <Basics />
+        </ProfileSection>
+
+        <ProfileSection id="course">
+          <Course />
         </ProfileSection>
 
         <ProfileSection id="education">

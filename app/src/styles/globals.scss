@@ -58,7 +58,7 @@ body {
 
 .dialog-content {
   @apply mx-4 transform rounded-lg p-6 shadow-lg transition-all;
-  @apply relative max-h-[90%] w-full overflow-y-auto sm:w-auto;
+  @apply relative max-h-[90%] w-full overflow-y-auto overflow-x-hidden sm:w-auto;
 }
 
 .file-input {

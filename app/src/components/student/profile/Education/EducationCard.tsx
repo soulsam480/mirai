@@ -30,7 +30,7 @@ export const EducationCard = React.memo<Props>(({ education, onEdit }) => {
           setDeleteDialog(false)
         }}
         show={isDeleteDialog}
-        onReject={() => setDeleteDialog(false)}
+        onReject={setDeleteDialog}
       />
 
       <MFeatureCard.Body>
@@ -38,6 +38,7 @@ export const EducationCard = React.memo<Props>(({ education, onEdit }) => {
           <MIcon className="text-base">
             <IconLaHotel />
           </MIcon>
+
           <span className="text-lg">{education.school}</span>
         </div>
 
@@ -45,16 +46,21 @@ export const EducationCard = React.memo<Props>(({ education, onEdit }) => {
           <MIcon className="text-sm">
             <IconLaGraduationCap />
           </MIcon>
+
           <span className="text-sm">
             {education.program}({education.board})
           </span>
+
           <span>.</span>
+
           <span className="text-sm">{education.type}</span>
         </div>
+
         <div className="flex items-center gap-2">
           <MIcon className="text-sm">
             <IconLaCalendar />
           </MIcon>
+
           <span className="text-xs">
             {formatDate(education.startedAt)} <span className="mx-0.5">to&nbsp;</span>
             {education.isOngoing && (education.endedAt === null || education.endedAt === undefined)
@@ -66,14 +72,15 @@ export const EducationCard = React.memo<Props>(({ education, onEdit }) => {
 
       <MFeatureCard.Footer>
         {/* // TODO: readonly mode */}
-        <button className="items-center gap-1 text-base-content btn btn-link btn-xs" onClick={() => onEdit()}>
+        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
           <MIcon>
             <IconLaPenSquare />
           </MIcon>
 
           <span>Edit</span>
         </button>
-        <button className="items-center gap-1 text-error btn btn-link btn-xs" onClick={() => setDeleteDialog(true)}>
+
+        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
             <IconLaTrashAltSolid />
           </MIcon>

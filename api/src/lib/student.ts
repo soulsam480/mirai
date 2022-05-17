@@ -67,6 +67,18 @@ export async function createStudent({
     },
   })
 
+  await miraiClient.studentScore.create({
+    data: {
+      studentId,
+      aggregatePercentage: '0',
+      // TODO: this will come from course details
+      courseStartedAt: new Date().toISOString(),
+      currentTerm: 0,
+      hasBacklog: false,
+      lateralEntry: false,
+    },
+  })
+
   // create and link account
   await miraiClient.account.create({
     data: {

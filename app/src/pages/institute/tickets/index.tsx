@@ -9,7 +9,9 @@ import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
+import { useUser } from 'stores/user'
 import { formatDate, titleCase } from 'utils/helpers'
+import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -32,6 +34,7 @@ function getStatusColor(status: TicketWithMeta['status']) {
 const TicketListing: NextPageWithLayout = () => {
   const { tickets, isLoading } = useTickets()
   const setFilters = useResetAtom(ticketFiltersAtom)
+  const userData = useUser()
 
   const columns = useMemo<Array<Column<TicketWithMeta>>>(
     () => [
@@ -65,25 +68,25 @@ const TicketListing: NextPageWithLayout = () => {
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
       // TODO: handle tickets like this from UI when doing batch ops
-      // {
-      //   field: 'action',
-      //   label: 'Action',
-      //   format: ({ id }) => (
-      //     <button
-      //       className="btn btn-xs"
-      //       onClick={async () => {
-      //         await trpcClient.mutation('ticket.action', {
-      //           key: userData.owner?.code ?? '',
-      //           data: [{ id, status: 'RESOLVED' }],
-      //         })
-      //       }}
-      //     >
-      //       Resolve
-      //     </button>
-      //   ),
-      // },
+      {
+        field: 'action',
+        label: 'Action',
+        format: ({ id }) => (
+          <button
+            className="btn btn-xs"
+            onClick={async () => {
+              await trpcClient.mutation('ticket.action', {
+                key: userData.owner?.code ?? '',
+                data: [{ id, status: 'RESOLVED' }],
+              })
+            }}
+          >
+            Resolve
+          </button>
+        ),
+      },
     ],
-    [],
+    [userData],
   )
 
   useEffect(() => {

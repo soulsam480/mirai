@@ -6,6 +6,10 @@ import type {
   StudentProject,
   StudentCertification,
   Student,
+  Course,
+  Batch,
+  Department,
+  Institute,
 } from '@prisma/client'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
@@ -22,6 +26,7 @@ export interface StudentValueType {
   projects: StudentProject[]
   certifications: StudentCertification[]
   base: Student | null
+  course: StduentCourseComposed | null
 }
 
 export type StudentSkillScore = 'Beginner' | 'Intermediate' | 'Expert'
@@ -38,6 +43,13 @@ export interface StudentAddress {
   state?: string
   pin?: string
   country?: string
+}
+
+export interface StduentCourseComposed {
+  course: Pick<Course, 'branchName' | 'programName'>
+  batch: Pick<Batch, 'name'>
+  department: Pick<Department, 'name'>
+  institute: Pick<Institute, 'name'>
 }
 
 export interface StudentBasicsOverwrite
@@ -67,6 +79,9 @@ studentCertificationsAtom.debugLabel = 'StudentCertificationsAtom'
 export const studentBaseAtom = atom<Student | null>(null)
 studentBaseAtom.debugLabel = 'studentBaseAtom'
 
+export const studentCourseAtom = atom<StduentCourseComposed | null>(null)
+studentCourseAtom.debugLabel = 'studentCourseAtom'
+
 export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { skills: string | StudentSkill[] }>>(
   (get) => {
     return {
@@ -78,10 +93,11 @@ export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { 
       projects: get(studentProjectsAtom),
       certifications: get(studentCertificationsAtom),
       base: get(studentBaseAtom),
+      course: get(studentCourseAtom),
     }
   },
   (_get, set, update) => {
-    const { basics, score, education, experience, skills, projects, certifications, base } = update
+    const { basics, score, education, experience, skills, projects, certifications, base, course } = update
 
     set(studentBasicsAtom, basics)
     set(studentScoreAtom, score)
@@ -91,6 +107,7 @@ export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { 
     set(studentProjectsAtom, projects)
     set(studentCertificationsAtom, certifications)
     set(studentBaseAtom, base)
+    set(studentCourseAtom, course)
   },
 )
 studentAtom.debugLabel = 'studentAtom'

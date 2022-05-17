@@ -31,7 +31,7 @@ export function useBasics() {
 
     const data = await trpcClient.query('student.basics.get', userData.studentId)
 
-    void setBasics(data)
+    void setBasics(data as any)
   }
   return {
     manage,

@@ -16,7 +16,7 @@ function normalizeAddress({ address, city, country, district, pin, state }: Stud
 export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
   return (
     // We do this because basics will be there before student creation bby default
-    <div className="flex flex-col gap-2 rounded-md bg-amber-100 p-2">
+    <div className="flex flex-col gap-2 rounded-md bg-base-200 p-2 shadow">
       <div className="flex justify-between">
         <div className="flex items-center gap-2 text-left">
           <MIcon>
@@ -26,7 +26,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
           <h4>Identity details</h4>
         </div>
 
-        <button className="flex-start btn btn-secondary btn-xs gap-2" onClick={() => onTrigger('basics')}>
+        <button className="flex-start btn btn-ghost btn-xs gap-2" onClick={() => onTrigger('basics')}>
           <span>
             <IconLaPenSquare />
           </span>
@@ -60,7 +60,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
         </div>
 
         <button
-          className="flex-start btn btn-secondary btn-xs gap-2"
+          className="flex-start btn btn-ghost btn-xs gap-2"
           onClick={() => onTrigger('contact')}
           disabled={Object.values(pick(studentBasics, ['name', 'gender', 'category', 'dob'])).some(
             // may break
@@ -87,17 +87,12 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
         <div className="flex flex-grow flex-col gap-1">
           <div>{studentBasics?.mobileNumber ?? '-'}</div>
           <div>{studentBasics?.primaryEmail ?? '-'}</div>
-          <div>
-            {
-              // eslint-disable-next-line no-extra-boolean-cast
-              Boolean(studentBasics?.secondaryEmail) ? studentBasics?.secondaryEmail : '-'
-            }
-          </div>
+          <div>{studentBasics?.secondaryEmail ?? '-'}</div>
           {/* // TODO: break when length is more */}
-          <div>
+          <div className="truncate">
             {studentBasics?.permanentAddress === undefined ? '-' : normalizeAddress(studentBasics.permanentAddress)}
           </div>
-          <div>
+          <div className="truncate">
             {studentBasics?.currentAddress === undefined ? '-' : normalizeAddress(studentBasics.currentAddress)}
           </div>
         </div>

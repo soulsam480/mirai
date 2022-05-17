@@ -164,8 +164,8 @@ export const Education: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6 text-gray-900">Student education</div>
-        <button className="flex-start btn btn-secondary btn-sm gap-2" onClick={() => setDialog(true)}>
+        <div className="text-lg font-medium leading-6">Student education</div>
+        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />
           </span>
@@ -191,7 +191,7 @@ export const Education: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 sm:w-[700px] sm:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6 text-gray-900">Student Education</div>
+          <div className="text-lg font-medium leading-6">Education</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
@@ -200,7 +200,7 @@ export const Education: React.FC<Props> = () => {
                 error={errors.school}
                 label="School / Institute name"
                 name="school"
-                placeholder="St. Joseph's"
+                placeholder="Global Academy"
                 disabled={isReadonly}
               />
 
@@ -305,12 +305,12 @@ export const Education: React.FC<Props> = () => {
                   setDialog(false)
                   resetForm()
                 }}
-                className="btn-outline btn btn-primary btn-sm mt-5"
+                className="btn btn-outline btn-sm mt-5"
               >
                 Cancel
               </button>
 
-              <button type="submit" className={clsx(['btn btn-primary btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
                 Save
               </button>
             </div>

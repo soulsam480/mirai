@@ -160,7 +160,7 @@ export const WorkExperience: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6    ">Work experience</div>
+        <div className="text-lg font-medium leading-6">Work experience</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />

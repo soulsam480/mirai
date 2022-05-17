@@ -40,6 +40,27 @@ export const studentRouter = createRouter()
           },
           projects: true,
           score: true,
+          course: {
+            select: {
+              branchName: true,
+              programName: true,
+            },
+          },
+          Batch: {
+            select: {
+              name: true,
+            },
+          },
+          Department: {
+            select: {
+              name: true,
+            },
+          },
+          institute: {
+            select: {
+              name: true,
+            },
+          },
         },
       })
 
