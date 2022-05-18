@@ -1,5 +1,8 @@
+import { Ticket } from '@prisma/client'
 import { AppLayout } from 'components/globals/AppLayout'
+import ManageTickets from 'components/institute/ticket/ManageTickets'
 import { MBadge } from 'components/lib/MBadge'
+import { MDialog } from 'components/lib/MDialog'
 import { Column, MTable } from 'components/lib/MTable'
 import { TicketFiltersBlock } from 'components/tickets/filters'
 import { ListingSettings } from 'components/tickets/ListingSettings'
@@ -9,7 +12,7 @@ import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { selectedTickets } from 'stores/ticket'
+import { activeTicket, selectedTickets } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { useUser } from 'stores/user'
 import { formatDate, titleCase } from 'utils/helpers'
@@ -39,36 +42,77 @@ const TicketListing: NextPageWithLayout = () => {
   const userData = useUser()
 
   const [selected, setSelected] = useAtom(selectedTickets)
-  const [selectAll, setSelectAll] = useState<boolean>(false)
+  const [currentTicketIndex, setCurrentTicketIndex] = useAtom(activeTicket)
+  // const [selectAll, setSelectAll] = useState<boolean>(true)
+  const [activeModal, setActiveModal] = useState<boolean>(false)
 
   const handleTicketSelection = (selectedId: number) =>
     setSelected((prev) =>
       prev.map((data) => (selectedId === data.id ? { id: data.id, isChecked: !Boolean(data.isChecked) } : data)),
     )
 
-  const handleSelectAll = () => setSelectAll((prev) => !prev)
+  const isAnySelected = useMemo(() => selected.some(({ isChecked }) => isChecked === true), [selected])
+
+  const closeModal = () => setActiveModal(false)
+
+  const countSelected = useMemo(
+    () =>
+      selected.reduce((acc, { isChecked }, index) => {
+        if (index !== selected.length) {
+          if (isChecked === true) {
+            acc = Number(acc) + 1
+          }
+        }
+        return acc
+      }, 0),
+    [selected],
+  )
+
+  const previousTicket = () => {
+    if (currentTicketIndex !== 0) void setCurrentTicketIndex((prev) => prev - 1)
+  }
+
+  const nextTicket = () => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    if (currentTicketIndex + 1 !== countSelected) void setCurrentTicketIndex((prev) => prev + 1)
+  }
+
+  const handleSelectAll = () => {
+    // setSelectAll((prev) => !prev)
+  }
 
   useEffect(() => {
     const res = tickets.map(({ id }) => ({
       id,
       isChecked: false,
+      notes: '',
+      status: '',
+      verifiedBy: '',
+      verifiedOn: '',
     }))
+
     void setSelected(res)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tickets])
 
-  useEffect(() => {
-    void setSelected((prev) => prev.map((data) => ({ id: data.id, isChecked: selectAll })))
+  // useEffect(() => {
+  //   void setSelected((prev) => prev.map((data) => ({ id: data.id, isChecked: selectAll })))
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectAll])
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectAll])
 
   const columns = useMemo<Array<Column<TicketWithMeta>>>(
     () => [
       {
         field: 'select',
-        headerslot: <input type="checkbox" checked={selectAll} onChange={() => handleSelectAll()} />,
+        headerslot: (
+          <input
+            type="checkbox"
+            // checked={selectAll}
+            onChange={() => handleSelectAll()}
+          />
+        ),
         format: ({ id }) => (
           <input
             type="checkbox"
@@ -145,6 +189,20 @@ const TicketListing: NextPageWithLayout = () => {
         <TicketFiltersBlock />
       </div>
 
+      <div className="h-4">
+        {isAnySelected === true && (
+          <div>
+            <p>
+              You have selected {countSelected} tickets,{' '}
+              <button className="btn  btn-xs" onClick={() => setActiveModal(true)}>
+                Click
+              </button>{' '}
+              to start resolving.
+            </p>
+          </div>
+        )}
+      </div>
+
       <MTable
         className="mt-4"
         columns={columns}
@@ -154,6 +212,18 @@ const TicketListing: NextPageWithLayout = () => {
         loading={isLoading}
         settingsSlot={<ListingSettings />}
       />
+
+      <MDialog show={activeModal} onClose={() => null} noEscape>
+        <ManageTickets
+          closeModal={closeModal}
+          updateTicket={setSelected}
+          ticket={tickets[currentTicketIndex] as Ticket}
+          nextTicket={nextTicket}
+          previousTicket={previousTicket}
+          ticketIndex={currentTicketIndex}
+          totalTickets={countSelected}
+        />
+      </MDialog>
     </div>
   )
 }

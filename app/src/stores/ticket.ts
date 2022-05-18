@@ -1,7 +1,6 @@
-import { Ticket } from '@prisma/client'
 import { atom } from 'jotai'
 
-interface SelectedTicketType {
+export interface SelectedTicketType {
   id: number
   isChecked: boolean
 }
@@ -9,5 +8,5 @@ interface SelectedTicketType {
 export const selectedTickets = atom<SelectedTicketType[]>([])
 selectedTickets.debugLabel = 'selectedTickets'
 
-export const activeTicket = atom<Ticket | null>(null)
+export const activeTicket = atom<number>(0)
 activeTicket.debugLabel = 'activeTicket'
