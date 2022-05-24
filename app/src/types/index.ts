@@ -1,9 +1,11 @@
+import { createTicketSchema, studentOnboardingSchema } from './../schemas/index'
 import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
 import { inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
 import type { AppRouter } from '@mirai/api'
 import { MLinkProps } from 'components/lib/MLink'
 import React from 'react'
+import type { z } from 'zod'
 
 export type TRPCErrorType = TRPCClientErrorLike<AppRouter>
 
@@ -37,5 +39,10 @@ export interface SidebarItem {
   icon?: React.ReactNode
   id?: string
 }
+
+export type StudentTicketShape = OverWrite<
+  z.infer<typeof createTicketSchema>['meta'],
+  { data: z.infer<typeof studentOnboardingSchema> }
+>
 
 export type StudentProfileIgnore = 'verified' | 'verifiedBy' | 'verifiedOn' | 'createdAt' | 'updatedAt'

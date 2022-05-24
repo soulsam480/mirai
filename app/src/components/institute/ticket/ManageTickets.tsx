@@ -2,6 +2,7 @@ import { Ticket } from '@prisma/client'
 import { MInput } from 'components/lib/MInput'
 import React, { SetStateAction } from 'react'
 import { SelectedTicketType } from 'stores/ticket'
+import { StudentTicketShape } from 'types'
 import { formatDate } from 'utils/helpers'
 
 interface Props {
@@ -23,13 +24,12 @@ const ManageTickets: React.FC<Props> = ({
   nextTicket,
   // updateTicket,
 }) => {
+  const { status, meta } = ticket
+
   const {
-    meta: {
-      data: { name, email, gender, mobileNumber, category, dob },
-      type,
-    },
-    status,
-  } = ticket
+    data: { name, email, gender, mobileNumber, category, dob },
+    type,
+  } = meta as StudentTicketShape
 
   return (
     <form className="w-full sm:w-[35rem]">
