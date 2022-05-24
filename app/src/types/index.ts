@@ -26,9 +26,9 @@ export type QueryOptions<
 export type OverWrite<T, K> = Omit<T, keyof K> & K
 export type NullToUndefined<T> = T extends null ? undefined : T
 
-export interface Option {
+export interface Option<T = any> {
   label: string
-  value: any
+  value: T
   meta?: any
 }
 

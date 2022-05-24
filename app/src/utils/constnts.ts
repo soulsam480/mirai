@@ -159,3 +159,5 @@ export const CATEGORY_TYPES = [
   'Other Backward Classes',
   'Economically Weaker Section',
 ].map((v) => ({ label: v, value: v }))
+
+export const TICKET_DISPLAY_KEYS = ['name', 'dob', 'mobileNumber', 'uniId', 'gender', 'category']

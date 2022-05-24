@@ -1,9 +1,13 @@
-import { Ticket } from '@prisma/client'
+import type { Ticket, TicketStatus } from '@prisma/client'
 import { MInput } from 'components/lib/MInput'
+import dayjs from 'dayjs'
 import React, { SetStateAction } from 'react'
-import { SelectedTicketType } from 'stores/ticket'
-import { StudentTicketShape } from 'types'
-import { formatDate } from 'utils/helpers'
+import { Option } from 'types'
+import { TICKET_DISPLAY_KEYS } from 'utils/constnts'
+import { formatDate, titleCase } from 'utils/helpers'
+import { MSelect } from 'lib/MSelect'
+import { useSetAtom } from 'jotai'
+import { selectedTicketsAtom } from 'stores/ticket'
 
 interface Props {
   ticket: Ticket
@@ -12,8 +16,23 @@ interface Props {
   previousTicket: () => void
   nextTicket: () => void
   closeModal: () => void
-  updateTicket: (update: SetStateAction<SelectedTicketType[]>) => void
+  updateTicket: (update: SetStateAction<number[]>) => void
 }
+
+const STATUS_OPTIONS: Array<Option<TicketStatus>> = [
+  {
+    label: 'Resolve',
+    value: 'RESOLVED',
+  },
+  {
+    label: 'In Progress',
+    value: 'INPROGRESS',
+  },
+  {
+    label: 'Close',
+    value: 'CLOSED',
+  },
+]
 
 const ManageTickets: React.FC<Props> = ({
   ticket,
@@ -24,44 +43,64 @@ const ManageTickets: React.FC<Props> = ({
   nextTicket,
   // updateTicket,
 }) => {
-  const { status, meta } = ticket
+  const { meta } = ticket
 
-  const {
-    data: { name, email, gender, mobileNumber, category, dob },
-    type,
-  } = meta as StudentTicketShape
+  const { data } = meta as Record<string, any>
+
+  function getSafeVal(key: string) {
+    return typeof data[key] === 'string'
+      ? dayjs(Date.parse(data[key])).isValid()
+        ? formatDate(data[key], 'DD MMM YYYY')
+        : data[key]
+      : null
+  }
+
+  const updateSelectedTickets = useSetAtom(selectedTicketsAtom)
+
+  function _updateTicket(_data: Ticket) {
+    void updateSelectedTickets((prev) => {
+      // update current ticket here
+      return prev
+    })
+  }
 
   return (
-    <form className="w-full sm:w-[35rem]">
+    <form className="flex w-full flex-col gap-5 sm:w-[600px]">
       <div className="flex items-center justify-between">
-        <h1 className="p-2 text-xl font-semibold">{type.replaceAll('_', ' ')}</h1>
+        <h1 className="p-2 text-xl font-semibold">
+          Reviewing ticket {'#'}
+          {ticket.id}
+        </h1>
         <IconLaTimesCircle onClick={() => closeModal()} />
       </div>
 
-      <div className="rounded-md border border-gray-700 p-2">
-        <h1 className="font-bold">Details</h1>
-        <p>Name : {name}</p>
-        <p>Email : {email}</p>
-        <p>Status : {status}</p>
-        <p>Gender : {gender}</p>
-        <p>Category : {category}</p>
-        <p>Mobile number : {mobileNumber}</p>
-        <p>Date of birth : {formatDate(dob, 'DD MMMM YYYY')}</p>
-        <MInput label="Notes" as="textarea" />
+      <div className="rounded-md bg-base-300/70 p-4">
+        <div className="mb-2 text-lg font-semibold">Details</div>
 
-        <div className="flex justify-between">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault()
+        <div className="grid grid-cols-2 gap-2">
+          {TICKET_DISPLAY_KEYS.map((key) => {
+            return getSafeVal(key) !== null ? (
+              <>
+                <div className="max-w-max">{titleCase(key)}:</div> <div>{getSafeVal(key)}</div>
+              </>
+            ) : null
+          })}
+        </div>
+
+        <div className="divider my-2"></div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <MInput label="Notes" as="textarea" />
+
+          <MSelect
+            value={(ticket.meta as any).status}
+            onChange={(value) => {
+              console.log(value)
             }}
-            className="btn btn-success btn-sm mt-5"
-          >
-            Resolve
-          </button>
-          <button type="button" className="btn btn-error btn-sm mt-5">
-            Reject
-          </button>
+            name="status"
+            options={STATUS_OPTIONS}
+            label="Status"
+          />
         </div>
       </div>
 
@@ -70,10 +109,7 @@ const ManageTickets: React.FC<Props> = ({
           <button
             type="button"
             disabled={ticketIndex === 0}
-            onClick={(e) => {
-              e.preventDefault()
-              previousTicket()
-            }}
+            onClick={previousTicket}
             className="btn btn-outline btn-sm mt-5"
           >
             Previous
@@ -86,12 +122,9 @@ const ManageTickets: React.FC<Props> = ({
           </button>
 
           <button
-            type="submit"
+            type="button"
             disabled={ticketIndex + 1 === totalTickets}
-            onClick={(e) => {
-              e.preventDefault()
-              nextTicket()
-            }}
+            onClick={nextTicket}
             className="btn btn-outline btn-sm mt-5"
           >
             Next

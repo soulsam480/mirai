@@ -12,11 +12,9 @@ import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { activeTicket, selectedTickets } from 'stores/ticket'
+import { activeTicket, selectedTicketsAtom } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
-import { useUser } from 'stores/user'
 import { formatDate, titleCase } from 'utils/helpers'
-import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -38,87 +36,62 @@ function getStatusColor(status: TicketWithMeta['status']) {
 
 const TicketListing: NextPageWithLayout = () => {
   const { tickets, isLoading } = useTickets()
+
   const setFilters = useResetAtom(ticketFiltersAtom)
-  const userData = useUser()
 
-  const [selected, setSelected] = useAtom(selectedTickets)
-  const [currentTicketIndex, setCurrentTicketIndex] = useAtom(activeTicket)
-  // const [selectAll, setSelectAll] = useState<boolean>(true)
   const [activeModal, setActiveModal] = useState<boolean>(false)
+  const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
+  const [activeTicketId, setActiveTicketId] = useAtom(activeTicket)
 
-  const handleTicketSelection = (selectedId: number) =>
-    setSelected((prev) =>
-      prev.map((data) => (selectedId === data.id ? { id: data.id, isChecked: !Boolean(data.isChecked) } : data)),
-    )
-
-  const isAnySelected = useMemo(() => selected.some(({ isChecked }) => isChecked === true), [selected])
+  const [allTicketsSelected, setSelectAll] = useState(false)
 
   const closeModal = () => setActiveModal(false)
 
-  const countSelected = useMemo(
-    () =>
-      selected.reduce((acc, { isChecked }, index) => {
-        if (index !== selected.length) {
-          if (isChecked === true) {
-            acc = Number(acc) + 1
-          }
-        }
-        return acc
-      }, 0),
-    [selected],
-  )
+  const countSelected = selectedTickets.length
 
   const previousTicket = () => {
-    if (currentTicketIndex !== 0) void setCurrentTicketIndex((prev) => prev - 1)
+    if (activeTicketId !== 0) void setActiveTicketId((prev) => prev - 1)
   }
 
   const nextTicket = () => {
-    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-    if (currentTicketIndex + 1 !== countSelected) void setCurrentTicketIndex((prev) => prev + 1)
+    if ((activeTicketId as number) + 1 !== countSelected) void setActiveTicketId((prev) => prev++)
   }
 
-  const handleSelectAll = () => {
-    // setSelectAll((prev) => !prev)
-  }
+  const columns = useMemo<Array<Column<TicketWithMeta>>>(() => {
+    function handleSelectAll() {
+      setSelectAll((prev) => !prev)
 
-  useEffect(() => {
-    const res = tickets.map(({ id }) => ({
-      id,
-      isChecked: false,
-      notes: '',
-      status: '',
-      verifiedBy: '',
-      verifiedOn: '',
-    }))
+      void setSelectedTickets(allTicketsSelected ? [] : tickets.map(({ id }) => id))
+    }
 
-    void setSelected(res)
+    function handleTicketSelection(selectedId: number) {
+      void setSelectedTickets((prev) =>
+        prev.includes(selectedId) === true ? prev.filter((id) => id !== selectedId) : [...prev, selectedId],
+      )
+    }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tickets])
-
-  // useEffect(() => {
-  //   void setSelected((prev) => prev.map((data) => ({ id: data.id, isChecked: selectAll })))
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectAll])
-
-  const columns = useMemo<Array<Column<TicketWithMeta>>>(
-    () => [
+    return [
       {
         field: 'select',
         headerslot: (
-          <input
-            type="checkbox"
-            // checked={selectAll}
-            onChange={() => handleSelectAll()}
-          />
+          <div className="flex items-center justify-center">
+            <input
+              className="checkbox checkbox-xs"
+              type="checkbox"
+              checked={allTicketsSelected}
+              onChange={handleSelectAll}
+            />
+          </div>
         ),
         format: ({ id }) => (
-          <input
-            type="checkbox"
-            checked={selected.find((data) => data.id === id)?.isChecked}
-            onChange={() => handleTicketSelection(id)}
-          />
+          <div className="flex items-center justify-center">
+            <input
+              className="checkbox checkbox-xs"
+              type="checkbox"
+              checked={selectedTickets.includes(id)}
+              onChange={() => handleTicketSelection(id)}
+            />
+          </div>
         ),
       },
       {
@@ -151,26 +124,31 @@ const TicketListing: NextPageWithLayout = () => {
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
       // TODO: handle tickets like this from UI when doing batch ops
-      {
-        field: 'action',
-        label: 'Action',
-        format: ({ id }) => (
-          <button
-            className="btn btn-xs"
-            onClick={async () => {
-              await trpcClient.mutation('ticket.action', {
-                key: userData.owner?.code ?? '',
-                data: [{ id, status: 'RESOLVED' }],
-              })
-            }}
-          >
-            Resolve
-          </button>
-        ),
-      },
-    ],
-    [userData],
-  )
+      // {
+      //   field: 'action',
+      //   label: 'Action',
+      //   format: ({ id }) => (
+      //     <button
+      //       className="btn btn-xs"
+      //       onClick={async () => {
+      //         await trpcClient.mutation('ticket.action', {
+      //           key: userData.owner?.code ?? '',
+      //           data: [{ id, status: 'RESOLVED' }],
+      //         })
+      //       }}
+      //     >
+      //       Resolve
+      //     </button>
+      //   ),
+      // },
+    ]
+  }, [allTicketsSelected, selectedTickets, setSelectedTickets, tickets])
+
+  useEffect(() => {
+    if (allTicketsSelected && selectedTickets.length === 0) {
+      setSelectAll(false)
+    }
+  }, [selectedTickets, allTicketsSelected])
 
   useEffect(() => {
     return () => {
@@ -190,11 +168,17 @@ const TicketListing: NextPageWithLayout = () => {
       </div>
 
       <div className="h-4">
-        {isAnySelected === true && (
+        {selectedTickets.length !== 0 && (
           <div>
             <p>
               You have selected {countSelected} tickets,{' '}
-              <button className="btn  btn-xs" onClick={() => setActiveModal(true)}>
+              <button
+                className="btn  btn-xs"
+                onClick={() => {
+                  setActiveModal(true)
+                  void setActiveTicketId(selectedTickets[0])
+                }}
+              >
                 Click
               </button>{' '}
               to start resolving.
@@ -216,11 +200,11 @@ const TicketListing: NextPageWithLayout = () => {
       <MDialog show={activeModal} onClose={() => null} noEscape>
         <ManageTickets
           closeModal={closeModal}
-          updateTicket={setSelected}
-          ticket={tickets[currentTicketIndex] as Ticket}
+          updateTicket={setSelectedTickets}
+          ticket={tickets[activeTicketId] as Ticket}
+          ticketIndex={activeTicketId}
           nextTicket={nextTicket}
           previousTicket={previousTicket}
-          ticketIndex={currentTicketIndex}
           totalTickets={countSelected}
         />
       </MDialog>
