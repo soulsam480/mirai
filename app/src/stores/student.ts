@@ -17,9 +17,25 @@ import { studentsQuerySchema } from 'schemas'
 import type { OverWrite } from 'types'
 import { z } from 'zod'
 
+export interface StudentSemScore {
+  ongoingBacklogs?: string
+  cummScore?: string
+  semScore?: string
+  totalBacklogs?: string
+  verified?: boolean
+  verifiedBy?: string
+  verifiedOn?: Date
+  fileUrl?: string
+}
+
+export type StudentScoreType = Record<string, StudentSemScore | undefined>
+
 export interface StudentValueType {
   basics: StudentBasicsOverwrite | null
-  score: StudentScore | null
+  score: OverWrite<
+    StudentScore,
+    { scores: StudentScoreType; backlogDetails: Record<string, string | undefined> }
+  > | null
   education: StudentEducation[]
   experience: StudentWorkExperience[]
   skills: StudentSkill[]
@@ -46,8 +62,8 @@ export interface StudentAddress {
 }
 
 export interface StduentCourseComposed {
-  course: Pick<Course, 'branchName' | 'programName'>
-  batch: Pick<Batch, 'name'>
+  course: Pick<Course, 'branchName' | 'programName' | 'programDuration' | 'scoreType'>
+  batch: Pick<Batch, 'name' | 'startsAt' | 'endsAt'>
   department: Pick<Department, 'name'>
   institute: Pick<Institute, 'name'>
 }
@@ -58,7 +74,7 @@ export interface StudentBasicsOverwrite
 export const studentBasicsAtom = atom<StudentBasicsOverwrite | null>(null)
 studentBasicsAtom.debugLabel = 'studentBasicsAtom'
 
-export const studentScoreAtom = atom<StudentScore | null>(null)
+export const studentScoreAtom = atom<StudentValueType['score'] | null>(null)
 studentScoreAtom.debugLabel = 'studentScoreAtom'
 
 export const studentEducationAtom = atom<StudentEducation[]>([])

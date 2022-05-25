@@ -44,11 +44,15 @@ export const studentRouter = createRouter()
             select: {
               branchName: true,
               programName: true,
+              programDuration: true,
+              scoreType: true,
             },
           },
           Batch: {
             select: {
               name: true,
+              startsAt: true,
+              endsAt: true,
             },
           },
           Department: {

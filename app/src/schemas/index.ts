@@ -289,3 +289,17 @@ export const bulkTicketResolveSchema = z.object({
     }),
   ),
 })
+
+export const semUpdateSchema = z
+  .object({
+    semScore: z.string().min(1, 'Required'),
+    cummScore: z.string().min(1, 'Required'),
+    ongoingBacklogs: z.string(),
+    totalBacklogs: z.string(),
+    fileUrl: z.string(),
+    backlogDetails: z.string(),
+  })
+  .refine((val) => (Number(val.ongoingBacklogs) === 0 ? true : Boolean(val.backlogDetails?.trim().length)), {
+    message: 'Backlog details is required',
+    path: ['backlogDetails'],
+  })

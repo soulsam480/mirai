@@ -63,7 +63,7 @@ const InstituteStudents: NextPageWithLayout = () => {
   return (
     <div className="flex flex-col gap-2">
       <MDialog show={isModal} onClose={setModal}>
-        <GenerateUrlDialog />
+        <GenerateUrlDialog onClose={setModal} />
       </MDialog>
 
       <div className="flex items-center justify-between pb-2">

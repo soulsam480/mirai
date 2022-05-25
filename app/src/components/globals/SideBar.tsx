@@ -92,7 +92,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const breakpoint = useBreakpoint()
 
   const tour = useRef<Tour | null>(null)
-  const [showDialog, setDialog] = useState(userData?.showTour ?? false)
+  const [showDialog, setDialog] = useState(userData?.role !== 'INSTITUTE' ? false : userData?.showTour ?? false)
 
   async function onStart() {
     setDialog(false)

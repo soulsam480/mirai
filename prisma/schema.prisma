@@ -83,6 +83,9 @@ model Batch {
   institute   Institute @relation(references: [id], onDelete: Cascade, fields: [instituteId])
   instituteId Int
 
+  startsAt DateTime
+  endsAt   DateTime
+
   duration     String
   durationType BatchDurationType
   status       BatchStatus
