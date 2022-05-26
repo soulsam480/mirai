@@ -150,3 +150,12 @@ export const INDUSTRY_TYPES = [
 ]
 
 export const STUDENT_PROFILE_IGNORE_KEYS = ['verified', 'verifiedOn', 'verifiedBy', 'createdAt', 'updatedAt']
+
+export const GENDER_TYPES = ['MALE', 'FEMALE', 'OTHER'].map((o) => ({ label: o, value: o }))
+export const CATEGORY_TYPES = [
+  'General',
+  'Scheduled Caste',
+  'Scheduled Tribe',
+  'Other Backward Classes',
+  'Economically Weaker Section',
+].map((v) => ({ label: v, value: v }))

@@ -172,20 +172,17 @@ model StudentScore {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int     @unique
 
-  aggregatePercentage String
-  currentTerm         Int
-  hasGraduated        Boolean @default(false)
-  lateralEntry        Boolean
+  currentTerm  Int
+  hasGraduated Boolean @default(false)
+  lateralEntry Boolean
 
-  // backlogs
-  hasBacklog     Boolean
-  totalBacklogs  Int     @default(0)
   // Why JSON ?
   // As this is going to be edited less frequently
   // adding a new table doesn't make sense
   // We can statically type this field using TS to ensure
   // the JSON schema remains same
-  backlogDetails Json    @default("{}")
+  // TODO: remove this from table
+  backlogDetails Json @default("{}")
 
   // Why JSON ?
   // As this is going to be edited less frequently

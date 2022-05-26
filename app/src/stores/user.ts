@@ -3,7 +3,18 @@ import { atom, useAtomValue } from 'jotai'
 
 export type User = Omit<
   Prisma.AccountGetPayload<{
-    include: { owner: true; tenant: true }
+    include: {
+      owner: true
+      tenant: {
+        include: {
+          basics: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }
+    }
   }>,
   'password' | 'otp' | 'otpExpiry' | 'emailToken'
 >

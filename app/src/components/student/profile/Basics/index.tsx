@@ -15,17 +15,9 @@ import { useUser } from 'stores/user'
 import { z } from 'zod'
 import { BasicsCard } from './BasicsCard'
 import { formatDate } from 'utils/helpers'
+import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constnts'
 
 interface Props {}
-
-const GENDER_TYPES = ['MALE', 'FEMALE', 'OTHER'].map((o) => ({ label: o, value: o }))
-const CATEGORY_TYPES = [
-  'General',
-  'Scheduled Caste',
-  'Scheduled Tribe',
-  'Other Backward Classes',
-  'Economically Weaker Section',
-].map((v) => ({ label: v, value: v }))
 
 const ADDRES_FIELDS: Array<keyof StudentAddress> = ['address', 'city', 'district', 'state', 'pin', 'country']
 
@@ -62,10 +54,8 @@ export const Basics: React.FC<Props> = () => {
       name: '',
       category: '',
       gender: '',
-      // TODO: it's here for now as student onboarding setup is not done
-      // once we have that ready, basics data will be here by default from API
-      mobileNumber: '8917300318',
-      primaryEmail: 'soulsam480@gmail.com',
+      mobileNumber: '',
+      primaryEmail: '',
       secondaryEmail: '',
       currentAddress: initialAddress,
       permanentAddress: initialAddress,
@@ -159,11 +149,11 @@ export const Basics: React.FC<Props> = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="text-lg font-medium leading-6 text-gray-900">Basic info</div>
+      <div className="text-lg font-medium leading-6">Basic info</div>
 
       <BasicsCard studentBasics={studentBasics} onTrigger={handleTriggerDialog} />
 
-      <MDialog show={isDialog} onClose={() => null}>
+      <MDialog show={isDialog} onClose={() => null} noEscape>
         <MForm
           form={form}
           onSubmit={handleSubmit((data) => {

@@ -18,10 +18,10 @@ import type { OverWrite } from 'types'
 import { z } from 'zod'
 
 export interface StudentSemScore {
-  ongoingBacklogs?: string
-  cummScore?: string
-  semScore?: string
-  totalBacklogs?: string
+  ongoingBacklogs?: number
+  cummScore?: number
+  semScore?: number
+  totalBacklogs?: number
   verified?: boolean
   verifiedBy?: string
   verifiedOn?: Date
@@ -32,10 +32,7 @@ export type StudentScoreType = Record<string, StudentSemScore | undefined>
 
 export interface StudentValueType {
   basics: StudentBasicsOverwrite | null
-  score: OverWrite<
-    StudentScore,
-    { scores: StudentScoreType; backlogDetails: Record<string, string | undefined> }
-  > | null
+  score: OverWrite<StudentScore, { scores: StudentScoreType }> | null
   education: StudentEducation[]
   experience: StudentWorkExperience[]
   skills: StudentSkill[]

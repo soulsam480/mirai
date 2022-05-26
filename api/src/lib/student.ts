@@ -77,10 +77,8 @@ export async function createStudent({
   await miraiClient.studentScore.create({
     data: {
       studentId,
-      aggregatePercentage: '0',
       courseStartedAt: batch.startsAt,
       currentTerm: 0,
-      hasBacklog: false,
       lateralEntry: false,
       scores: '{}',
     },

@@ -31,7 +31,15 @@ export function prismaQueryHelper(client: WithExcludeClient) {
         account = await client.account.findFirst({
           where: { email, id },
           select: {
-            tenant: true,
+            tenant: {
+              include: {
+                basics: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
             ...client.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
           },
         })

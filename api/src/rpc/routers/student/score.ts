@@ -1,33 +1,9 @@
 import { createRouter } from '../../createRouter'
 import { z } from 'zod'
-import { createStudentScoreSchema } from '@mirai/app'
 import { TRPCError } from '@trpc/server'
+import { semUpdateSchema } from '@mirai/app'
 
 export const scoreRouter = createRouter()
-  .mutation('manage', {
-    input: createStudentScoreSchema,
-    async resolve({ ctx, input }) {
-      const { studentId, ...data } = input
-
-      const result = await ctx.prisma.studentScore.upsert({
-        where: { studentId },
-        create: input,
-        update: data,
-      })
-
-      return result
-    },
-  })
-  .mutation('remove', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      try {
-        await ctx.prisma.studentScore.delete({ where: { id: input } })
-      } catch (error) {
-        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Unable to delete score' })
-      }
-    },
-  })
   .query('get', {
     input: z.number(),
     async resolve({ ctx, input }) {
@@ -41,6 +17,20 @@ export const scoreRouter = createRouter()
           message: 'Student score details not found !',
         })
       }
+
       return scoreDetails
+    },
+  })
+  .mutation('update_score_card', {
+    input: z.object({ studentId: z.number(), data: z.record(semUpdateSchema) }),
+    async resolve({ ctx, input: { data, studentId } }) {
+      const scoreData = await ctx.prisma.studentScore.update({
+        where: { studentId },
+        data: {
+          scores: data,
+        },
+      })
+
+      return scoreData
     },
   })

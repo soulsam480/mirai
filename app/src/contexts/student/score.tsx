@@ -9,18 +9,20 @@ export function useScore() {
   const userData = useUser()
   const setScore = useSetAtom(studentScoreAtom)
 
-  const { mutateAsync: manage, isLoading } = trpc.useMutation(['student.score.manage'], {
+  const { mutate: updateScoreCard, isLoading } = trpc.useMutation(['student.score.update_score_card'], {
     onError() {
       setAlert({
         type: 'danger',
         message: 'Unable to process request',
       })
     },
-    onSuccess() {
+    onSuccess(data) {
       setAlert({
         type: 'success',
         message: 'Score updated successfully !',
       })
+
+      void setScore(data as unknown as any)
 
       void invalidate()
     },
@@ -31,11 +33,11 @@ export function useScore() {
 
     const data = await trpcClient.query('student.score.get', userData.studentId)
 
-    void setScore(data)
+    void setScore(data as any)
   }
 
   return {
-    manage,
+    updateScoreCard,
     isLoading,
     invalidate,
   }

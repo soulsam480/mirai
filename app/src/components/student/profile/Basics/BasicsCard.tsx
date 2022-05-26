@@ -34,19 +34,19 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
         </button>
       </div>
 
-      <div className="flex justify-start gap-2 text-sm">
-        <div className="flex min-w-[150px] flex-none flex-col gap-1">
-          <div>Name: </div>
-          <div>Gender: </div>
-          <div>Category: </div>
-          <div>Date of birth: </div>
-        </div>
+      <div className="grid grid-cols-4 gap-2 text-sm">
+        <div>Name </div>
+        <div className="col-span-3">{studentBasics?.name ?? '-'}</div>
 
-        <div className="flex  flex-grow flex-col gap-1">
-          <div>{studentBasics?.name ?? '-'}</div>
-          <div>{studentBasics?.gender ?? '-'}</div>
-          <div>{studentBasics?.category ?? '-'}</div>
-          <div>{(studentBasics?.dob !== undefined && formatDate(studentBasics.dob, 'DD MMM YYYY')) || '-'}</div>
+        <div>Gender </div>
+        <div className="col-span-3">{studentBasics?.gender ?? '-'}</div>
+
+        <div>Category </div>
+        <div className="col-span-3">{studentBasics?.category ?? '-'}</div>
+
+        <div>Date of birth </div>
+        <div className="col-span-3">
+          {(studentBasics?.dob !== undefined && formatDate(studentBasics.dob, 'DD MMM YYYY')) || '-'}
         </div>
       </div>
 
@@ -75,26 +75,26 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
         </button>
       </div>
 
-      <div className="flex justify-start gap-2 text-sm">
-        <div className="flex min-w-[150px] flex-none flex-col gap-1">
-          <div>Mobile Number: </div>
-          <div>Primary Email: </div>
-          <div>Secondary Email: </div>
-          <div>Permanent address: </div>
-          <div>Current address: </div>
+      <div className="grid grid-cols-4 gap-2 text-sm">
+        <div>Mobile Number </div>
+        <div className="col-span-3">{studentBasics?.mobileNumber ?? '-'}</div>
+
+        <div>Primary Email </div>
+        <div className="col-span-3">{studentBasics?.primaryEmail ?? '-'}</div>
+
+        <div>Secondary Email </div>
+        <div className="col-span-3">{studentBasics?.secondaryEmail ?? '-'}</div>
+
+        <div>Permanent address </div>
+        {/* // TODO: break when length is more */}
+        <div className="col-span-3 max-w-full break-words">
+          {studentBasics?.permanentAddress === undefined ? '-' : normalizeAddress(studentBasics.permanentAddress)}
         </div>
 
-        <div className="flex flex-grow flex-col gap-1">
-          <div>{studentBasics?.mobileNumber ?? '-'}</div>
-          <div>{studentBasics?.primaryEmail ?? '-'}</div>
-          <div>{studentBasics?.secondaryEmail ?? '-'}</div>
-          {/* // TODO: break when length is more */}
-          <div className="truncate">
-            {studentBasics?.permanentAddress === undefined ? '-' : normalizeAddress(studentBasics.permanentAddress)}
-          </div>
-          <div className="truncate">
-            {studentBasics?.currentAddress === undefined ? '-' : normalizeAddress(studentBasics.currentAddress)}
-          </div>
+        <div>Current address </div>
+
+        <div className="col-span-3 max-w-full break-words">
+          {studentBasics?.currentAddress === undefined ? '-' : normalizeAddress(studentBasics.currentAddress)}
         </div>
       </div>
     </div>

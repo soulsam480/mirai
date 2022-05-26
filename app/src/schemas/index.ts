@@ -61,8 +61,8 @@ export const createStudentBasicsSchema = z.object({
   gender: z.string().min(1, 'Gender is required'),
   category: z.string().min(1, 'Category is required'),
   mobileNumber: z.string().min(1, 'Mobile number is required'),
-  primaryEmail: z.string().min(1, 'Primary email is required'),
-  secondaryEmail: z.string().nullable(),
+  primaryEmail: z.string().email().min(1, 'Primary email is required'),
+  secondaryEmail: z.string().email().nullable(),
   permanentAddress: z
     .object({
       address: z.string(),
@@ -292,10 +292,10 @@ export const bulkTicketResolveSchema = z.object({
 
 export const semUpdateSchema = z
   .object({
-    semScore: z.string().min(1, 'Required'),
-    cummScore: z.string().min(1, 'Required'),
-    ongoingBacklogs: z.string(),
-    totalBacklogs: z.string(),
+    semScore: z.number({ invalid_type_error: 'Should be numeric' }),
+    cummScore: z.number({ invalid_type_error: 'Should be numeric' }),
+    ongoingBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
+    totalBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
     fileUrl: z.string(),
     backlogDetails: z.string(),
   })

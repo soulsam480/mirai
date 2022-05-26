@@ -35,6 +35,7 @@ const StudentProfile: NextPageWithLayout = () => {
       debounce(() => {
         const elements = [
           getElement('basics'),
+          getElement('course'),
           getElement('education'),
           getElement('experience'),
           getElement('skills'),

@@ -37,10 +37,10 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
     resolver: zodResolver(semUpdateSchema),
     defaultValues: {
       backlogDetails: '',
-      cummScore: '0',
-      semScore: '0',
-      ongoingBacklogs: '0',
-      totalBacklogs: '0',
+      cummScore: 0,
+      semScore: 0,
+      ongoingBacklogs: 0,
+      totalBacklogs: 0,
     },
   })
 
@@ -53,6 +53,24 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
 
   if (courseData === null) return null
 
+  function renderSafeVal(val: any) {
+    return val !== undefined && String(val).length > 0 ? val : '-'
+  }
+
+  const totalBacklogs = Object.values(studentScore?.scores ?? {}).reduce((acc, val) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    acc = acc + ((val?.totalBacklogs as number) ?? 0)
+
+    return acc
+  }, 0)
+
+  const ongoingBacklogs = Object.values(studentScore?.scores ?? {}).reduce((acc, val) => {
+    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+    acc = acc + ((val?.ongoingBacklogs as number) ?? 0)
+
+    return acc
+  }, 0)
+
   return (
     <MFeatureCard.Parent>
       <MDialog show={showDialog} onClose={() => null} noEscape>
@@ -61,8 +79,9 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
           onSubmit={handleSubmit((data) => {
             if (selectedSem === null) return
             onSemUpdate(selectedSem, data)
+
             setSelectedSem(null)
-            reset()
+            reset({})
             setDialog(false)
           })}
           className="flex flex-col gap-2 sm:w-[400px] sm:max-w-[400px]"
@@ -78,12 +97,13 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
 
               return (
                 <MInput
-                  {...register(key as any)}
+                  {...register(key as any, {
+                    valueAsNumber: !['backlogDetails', 'fileUrl'].includes(key),
+                  })}
                   error={errors[key as keyof typeof errors]}
                   label={interpolate(SCORE_RENDER_COLS[key], courseData.course)}
                   name={key}
                   key={key}
-                  type={!['backlogDetails', 'fileUrl'].includes(key) ? 'number' : 'string'}
                 />
               )
             })}
@@ -103,6 +123,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
               onClick={() => {
                 setDialog(false)
                 setSelectedSem(null)
+                reset({})
               }}
               type="button"
             >
@@ -129,7 +150,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
 
         <div className="mt-3">Score card</div>
 
-        <div className="flex rounded-md border border-base-300 text-sm">
+        <div className="flex rounded-md border border-base-300 text-xs sm:text-sm">
           <div className="flex flex-none flex-col border-r border-base-300">
             <div className="border-b border-base-300 p-2 last:border-0">Semester</div>
 
@@ -140,46 +161,66 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
             ))}
           </div>
 
-          <div className="grid flex-grow auto-cols-auto grid-flow-col">
-            {/* semesters */}
-            {Array.from(Array(courseData.course.programDuration)).map((_, idx) => {
-              const semId = idx + 1
+          <div className="flex-grow">
+            <div className="grid w-full auto-cols-fr grid-flow-col">
+              {/* semesters */}
+              {Array.from(Array(courseData.course.programDuration)).map((_, idx) => {
+                const semId = idx + 1
 
-              return (
-                <div key={idx} className="flex flex-col border-r border-base-300 last:border-none">
-                  <div className="border-b border-base-300 p-2 text-center">{semId}</div>
+                return (
+                  <div key={idx} className="flex flex-col border-r border-base-300 last:border-none">
+                    <div className="border-b border-base-300 p-2 text-center">{semId}</div>
 
-                  {/* score columns */}
-                  {Object.keys(SCORE_RENDER_COLS).map((key) => (
-                    <div
-                      key={key}
-                      className={clsx([
-                        'flex justify-center border-b border-base-300 last:border-0',
-                        key !== '_update' ? 'p-2' : 'p-0.5',
-                      ])}
-                    >
-                      {key === '_update' ? (
-                        <button
-                          className="btn btn-ghost btn-circle btn-sm"
-                          onClick={() => {
-                            setSelectedSem(semId)
-                            reset(studentScore?.scores?.[String(semId)])
-                            setDialog(true)
-                          }}
-                        >
-                          <MIcon data-tip={`Update semester ${semId} score`} className="tooltip-top tooltip">
-                            <IconLaPenSquare />
-                          </MIcon>
-                        </button>
-                      ) : (
-                        studentScore?.scores?.[String(semId)]?.[key as keyof StudentSemScore] ?? '-'
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )
-            })}
+                    {/* score columns */}
+                    {Object.keys(SCORE_RENDER_COLS).map((key) => (
+                      <div
+                        key={key}
+                        className={clsx([
+                          'flex justify-center border-b border-base-300 last:border-0',
+                          key !== '_update' ? 'p-2' : 'p-0.5',
+                        ])}
+                      >
+                        {key === '_update' ? (
+                          <button
+                            className="btn btn-ghost btn-circle btn-sm"
+                            onClick={() => {
+                              setSelectedSem(semId)
+                              reset(studentScore?.scores?.[String(semId)])
+                              setDialog(true)
+                            }}
+                          >
+                            <MIcon data-tip={`Update semester ${semId} score`} className="tooltip-top tooltip">
+                              <IconLaPenSquare />
+                            </MIcon>
+                          </button>
+                        ) : (
+                          renderSafeVal(studentScore?.scores?.[String(semId)]?.[key as keyof StudentSemScore])
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )
+              })}
+            </div>
           </div>
+        </div>
+
+        <div className="mt-3">Backlog details</div>
+
+        <div className="grid grid-cols-4 gap-2 text-sm">
+          <div>
+            <span className="tooltip tooltip-right" data-tip="Ongoing and cleared backlogs">
+              Total Backlogs
+            </span>
+          </div>
+          <div className="col-span-3">{totalBacklogs}</div>
+
+          <div>
+            <span className="tooltip tooltip-right" data-tip="Ongoing backlogs">
+              Ongoing backlogs
+            </span>
+          </div>
+          <div className="col-span-3">{ongoingBacklogs}</div>
         </div>
       </MFeatureCard.Body>
     </MFeatureCard.Parent>

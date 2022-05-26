@@ -33,6 +33,7 @@ export function useBasics() {
 
     void setBasics(data as any)
   }
+
   return {
     manage,
     invalidate,
