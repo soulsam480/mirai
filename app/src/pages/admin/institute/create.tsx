@@ -1,7 +1,7 @@
 import { AppLayout } from 'components/globals/AppLayout'
 import { NextPageWithLayout } from 'pages/_app'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { ManageInstitute } from 'components/institute/ManageInstitute'
+import { ManageInstitute } from 'components/admin/institute/ManageInstitute'
 import { useRouter } from 'next/router'
 import { MDialog } from 'components/lib/MDialog'
 import { useEffect } from 'react'
@@ -17,10 +17,8 @@ const CreateInstitute: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <MDialog show onClose={async () => await router.push('/admin/institute')}>
-      <div className="dialog-content">
-        <ManageInstitute />
-      </div>
+    <MDialog show onClose={() => null} noEscape>
+      <ManageInstitute />
     </MDialog>
   )
 }

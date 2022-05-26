@@ -9,7 +9,7 @@ import type { Course } from '@prisma/client'
 import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
-import { ManageCourse } from 'components/course/ManageCourse'
+import { ManageCourse } from 'components/institute/course/ManageCourse'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -22,33 +22,25 @@ const ProgramListing: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: 'programName',
         label: 'Name',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: '',
         label: 'Department',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+
         format: ({ department }) => <> {department.name} </>,
       },
       {
         field: 'scoreType',
         label: 'Score type',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: '',
         label: 'Duration',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
+
         format: ({ programDuration, programDurationType }) => (
           <>
             {programDuration} <span className="text-xs"> ({programDurationType}) </span>{' '}
@@ -58,14 +50,10 @@ const ProgramListing: NextPageWithLayout = () => {
       {
         field: 'programLevel',
         label: 'Level',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
         format: ({ id }) => (
           <MLink href={`/institute/course?courseId=${id as number}`} as={`/institute/course/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
@@ -93,12 +81,8 @@ const ProgramListing: NextPageWithLayout = () => {
         loading={isLoading}
       />
 
-      {/* contextual routing for instant feedback. Reloads will show actual page */}
-      <MDialog show={router.query.courseId !== undefined} onClose={async () => await router.push('/institute/course')}>
-        {/* //todo: again this is a bug, fix this */}
-        <div className="dialog-content">
-          <ManageCourse />
-        </div>
+      <MDialog show={router.query.courseId !== undefined} onClose={() => null} noEscape>
+        <ManageCourse />
       </MDialog>
     </PageLayout.PageWrapper>
   )

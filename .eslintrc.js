@@ -54,6 +54,13 @@ module.exports = {
         allowGlobals: true,
       },
     ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
+    'no-extra-boolean-cast': 'off',
   },
   settings: {
     react: {

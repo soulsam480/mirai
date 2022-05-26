@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { FastifyInstance } from 'fastify'
 import { logger } from '../lib'
 

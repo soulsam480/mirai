@@ -11,8 +11,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "downlevelIteration": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts", "prettier.config.cjs", ".eslintrc.js"],
   "exclude": ["**/node_modules", "**/.next", "out", "**/dist"]
 }

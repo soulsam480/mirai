@@ -37,6 +37,7 @@ export const authRouter = createRouter()
           ...rest,
           accountToken: nanoid(),
           role,
+          // TODO: check owner relation
           instituteId: ['INSTITUTE_MOD', 'INSTITUTE'].includes(role) ? relID : null,
           studentId: role === 'STUDENT' ? relID : null,
           isOwner: role === 'INSTITUTE',
@@ -119,20 +120,24 @@ export const authRouter = createRouter()
     },
   })
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user === null)
+    if (ctx.session === null)
       throw new TRPCError({
         code: 'UNAUTHORIZED',
       })
 
     const nextCtx = await next({
-      ctx: { ...ctx, user: ctx.user },
+      ctx: { ...ctx, session: ctx.session },
     })
 
     return nextCtx
   })
   .query('account', {
     async resolve({ ctx }) {
-      const account = await prismaQueryHelper(ctx.prisma).getAccount(ctx.user.user.role, undefined, ctx.user.user.id)
+      const account = await prismaQueryHelper(ctx.prisma).getAccount(
+        ctx.session.user.role,
+        undefined,
+        ctx.session.user.id,
+      )
 
       if (account === null)
         throw new TRPCError({

@@ -6,11 +6,11 @@ import { z } from 'zod'
 
 export const batchRouter = createRouter()
   .middleware(async ({ ctx, next }) => {
-    if (ctx.user == null || !isInstituteRole(ctx.user.user.role).is) throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (ctx.session == null || !isInstituteRole(ctx.session.user.role).is) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     const newCtx = await next({
       // might seem dumb, but it's done like this to keep TS happy
-      ctx: { ...ctx, user: ctx.user },
+      ctx: { ...ctx, user: ctx.session },
     })
 
     return newCtx
