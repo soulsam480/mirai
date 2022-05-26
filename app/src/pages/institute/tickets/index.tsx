@@ -12,7 +12,7 @@ import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { activeTicket, selectedTicketsAtom } from 'stores/ticket'
+import { activeTicketAtom, selectedTicketsAtom } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { formatDate, titleCase } from 'utils/helpers'
 
@@ -41,32 +41,37 @@ const TicketListing: NextPageWithLayout = () => {
 
   const [activeModal, setActiveModal] = useState<boolean>(false)
   const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
-  const [activeTicketId, setActiveTicketId] = useAtom(activeTicket)
+  const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
 
   const [allTicketsSelected, setSelectAll] = useState(false)
 
-  const closeModal = () => setActiveModal(false)
+  const closeModal = () => {
+    setActiveModal(false)
+    void setActiveTicketIndex(0)
+  }
 
   const countSelected = selectedTickets.length
 
   const previousTicket = () => {
-    if (activeTicketId !== 0) void setActiveTicketId((prev) => prev - 1)
+    if (activeTicketIndex !== 0) void setActiveTicketIndex((prev) => prev - 1)
   }
 
   const nextTicket = () => {
-    if ((activeTicketId as number) + 1 !== countSelected) void setActiveTicketId((prev) => prev++)
+    if ((activeTicketIndex as number) + 1 !== countSelected) void setActiveTicketIndex((prev) => (prev as number) + 1)
   }
 
   const columns = useMemo<Array<Column<TicketWithMeta>>>(() => {
     function handleSelectAll() {
       setSelectAll((prev) => !prev)
 
-      void setSelectedTickets(allTicketsSelected ? [] : tickets.map(({ id }) => id))
+      void setSelectedTickets(allTicketsSelected ? [] : tickets)
     }
 
     function handleTicketSelection(selectedId: number) {
       void setSelectedTickets((prev) =>
-        prev.includes(selectedId) === true ? prev.filter((id) => id !== selectedId) : [...prev, selectedId],
+        prev.find(({ id }) => id === selectedId) !== undefined
+          ? prev.filter(({ id }) => id !== selectedId)
+          : [...prev, tickets.find(({ id }) => id === selectedId) as Ticket],
       )
     }
 
@@ -88,7 +93,7 @@ const TicketListing: NextPageWithLayout = () => {
             <input
               className="checkbox checkbox-xs"
               type="checkbox"
-              checked={selectedTickets.includes(id)}
+              checked={selectedTickets.find((ticket) => ticket.id === id) !== undefined}
               onChange={() => handleTicketSelection(id)}
             />
           </div>
@@ -176,7 +181,6 @@ const TicketListing: NextPageWithLayout = () => {
                 className="btn  btn-xs"
                 onClick={() => {
                   setActiveModal(true)
-                  void setActiveTicketId(selectedTickets[0])
                 }}
               >
                 Click
@@ -200,9 +204,8 @@ const TicketListing: NextPageWithLayout = () => {
       <MDialog show={activeModal} onClose={() => null} noEscape>
         <ManageTickets
           closeModal={closeModal}
-          updateTicket={setSelectedTickets}
-          ticket={tickets[activeTicketId] as Ticket}
-          ticketIndex={activeTicketId}
+          ticket={selectedTickets[activeTicketIndex] as Ticket}
+          ticketIndex={activeTicketIndex}
           nextTicket={nextTicket}
           previousTicket={previousTicket}
           totalTickets={countSelected}

@@ -1,12 +1,12 @@
 import type { Ticket, TicketStatus } from '@prisma/client'
 import { MInput } from 'components/lib/MInput'
 import dayjs from 'dayjs'
-import React, { SetStateAction } from 'react'
+import React from 'react'
 import { Option } from 'types'
 import { TICKET_DISPLAY_KEYS } from 'utils/constnts'
 import { formatDate, titleCase } from 'utils/helpers'
 import { MSelect } from 'lib/MSelect'
-import { useSetAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import { selectedTicketsAtom } from 'stores/ticket'
 
 interface Props {
@@ -16,7 +16,6 @@ interface Props {
   previousTicket: () => void
   nextTicket: () => void
   closeModal: () => void
-  updateTicket: (update: SetStateAction<number[]>) => void
 }
 
 const STATUS_OPTIONS: Array<Option<TicketStatus>> = [
@@ -41,11 +40,11 @@ const ManageTickets: React.FC<Props> = ({
   totalTickets,
   previousTicket,
   nextTicket,
-  // updateTicket,
 }) => {
-  const { meta } = ticket
-
+  const { meta, id } = ticket
   const { data } = meta as Record<string, any>
+
+  const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
 
   function getSafeVal(key: string) {
     return typeof data[key] === 'string'
@@ -55,12 +54,16 @@ const ManageTickets: React.FC<Props> = ({
       : null
   }
 
-  const updateSelectedTickets = useSetAtom(selectedTicketsAtom)
+  function handleStatusChange(value: TicketStatus) {
+    void setSelectedTickets((prev) => {
+      return prev.map((ticket) => (ticket.id === id ? { ...ticket, status: value } : ticket))
+    })
+  }
 
-  function _updateTicket(_data: Ticket) {
-    void updateSelectedTickets((prev) => {
-      // update current ticket here
-      return prev
+  function handleNotes(event: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = event.currentTarget
+    void setSelectedTickets((prev) => {
+      return prev.map((ticket) => (ticket.id === id ? { ...ticket, notes: value } : ticket))
     })
   }
 
@@ -80,9 +83,9 @@ const ManageTickets: React.FC<Props> = ({
         <div className="grid grid-cols-2 gap-2">
           {TICKET_DISPLAY_KEYS.map((key) => {
             return getSafeVal(key) !== null ? (
-              <>
+              <React.Fragment key={key}>
                 <div className="max-w-max">{titleCase(key)}:</div> <div>{getSafeVal(key)}</div>
-              </>
+              </React.Fragment>
             ) : null
           })}
         </div>
@@ -90,13 +93,16 @@ const ManageTickets: React.FC<Props> = ({
         <div className="divider my-2"></div>
 
         <div className="grid grid-cols-2 gap-4">
-          <MInput label="Notes" as="textarea" />
+          <MInput
+            label="Notes"
+            as="textarea"
+            value={selectedTickets.find((ticket) => ticket.id === id)?.notes as string}
+            onChange={handleNotes}
+          />
 
           <MSelect
-            value={(ticket.meta as any).status}
-            onChange={(value) => {
-              console.log(value)
-            }}
+            value={selectedTickets.find((ticket) => ticket.id === id)?.status}
+            onChange={handleStatusChange}
             name="status"
             options={STATUS_OPTIONS}
             label="Status"
@@ -117,10 +123,11 @@ const ManageTickets: React.FC<Props> = ({
         </div>
 
         <div className="flex justify-between space-x-2">
-          <button type="button" className="btn  btn-sm mt-5">
-            Submit
-          </button>
-
+          {ticketIndex + 1 === totalTickets && (
+            <button type="button" className="btn  btn-sm mt-5">
+              Submit
+            </button>
+          )}
           <button
             type="button"
             disabled={ticketIndex + 1 === totalTickets}
