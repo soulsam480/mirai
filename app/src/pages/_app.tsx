@@ -13,6 +13,7 @@ import { MAlertGroup } from 'components/lib/MAlerts'
 import { DefaultLayout } from 'components/globals/DefaultLayout'
 import { AppProviders } from 'contexts'
 import { MLoader } from 'components/lib/MLoader'
+import { getBaseUrl } from 'utils/helpers'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -38,24 +39,6 @@ const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   )
 }) as AppType
 
-function getBaseUrl() {
-  if (typeof window !== 'undefined') {
-    return ''
-  }
-  // reference for vercel.com
-  if (process.env.VERCEL_URL !== undefined) {
-    return `https://${process.env.VERCEL_URL}`
-  }
-
-  // // reference for render.com
-  if (process.env.RENDER_INTERNAL_HOSTNAME !== undefined) {
-    return `http://${process.env.RENDER_INTERNAL_HOSTNAME}:${process.env.PORT ?? 3000}`
-  }
-
-  // assume localhost
-  return `http://localhost:${process.env.PORT ?? 3000}`
-}
-
 export default withTRPC<AppRouter>({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   config() {
@@ -67,7 +50,7 @@ export default withTRPC<AppRouter>({
             process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
         }),
         httpBatchLink({
-          url: `${getBaseUrl()}/api/trpc`,
+          url: `${getBaseUrl() as string}/api/trpc`,
         }),
       ],
       transformer: superjson,

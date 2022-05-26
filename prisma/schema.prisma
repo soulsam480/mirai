@@ -7,7 +7,9 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["filterJson"]
+
 }
 
 model Account {
@@ -24,8 +26,9 @@ model Account {
   otpExpiry     DateTime?
   // use this for password reset op
   accountToken  String?
+  showTour      Boolean   @default(true)
 
-  //TODO: make role an array see https://excalidraw.com/#json=jMFAfWkFXgR-KWdcXdQOb,0Q2STFzfMXyNTJQVliVQwQ
+  //TODO: make role an array see https://excalidraw.com/#json=LYBIWlYeJsErhnWtaUGdi,_dfsdpm3KIOU3HTb30eXXQ
   role    Role
   isOwner Boolean @default(false)
 
@@ -59,6 +62,7 @@ model Institute {
   departments Department[]
   courses     Course[]
   students    Student[]
+  requests    Ticket[]
 
   account Account?
 
@@ -78,6 +82,9 @@ model Batch {
 
   institute   Institute @relation(references: [id], onDelete: Cascade, fields: [instituteId])
   instituteId Int
+
+  startsAt DateTime
+  endsAt   DateTime
 
   duration     String
   durationType BatchDurationType
@@ -136,7 +143,7 @@ model Student {
   experience     StudentWorkExperience[]
   skills         Json                    @default("[]")
   projects       StudentProject[]
-  certifications StudentCeritification[]
+  certifications StudentCertification[]
 }
 
 model StudentBasics {
@@ -150,10 +157,13 @@ model StudentBasics {
   gender           String
   category         String
   mobileNumber     String
-  primaryEmail     String  @unique
+  primaryEmail     String  @unique // use from account also allow to edit
   secondaryEmail   String? @unique
   permanentAddress Json    @default("{}")
   currentAddress   Json    @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model StudentScore {
@@ -162,20 +172,17 @@ model StudentScore {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   studentId Int     @unique
 
-  aggregatePercentage String
-  currentTerm         Int
-  hasGraduated        Boolean @default(false)
-  lateralEntry        Boolean
+  currentTerm  Int
+  hasGraduated Boolean @default(false)
+  lateralEntry Boolean
 
-  // backlogs
-  hasBacklog     Boolean
-  totalBacklogs  Int     @default(0)
   // Why JSON ?
   // As this is going to be edited less frequently
   // adding a new table doesn't make sense
   // We can statically type this field using TS to ensure
   // the JSON schema remains same
-  backlogDetails Json    @default("{}")
+  // TODO: remove this from table
+  backlogDetails Json @default("{}")
 
   // Why JSON ?
   // As this is going to be edited less frequently
@@ -197,6 +204,9 @@ model StudentScore {
   verified   Boolean   @default(false)
   verifiedOn DateTime?
   verifiedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model StudentEducation {
@@ -221,6 +231,9 @@ model StudentEducation {
   verified   Boolean   @default(false)
   verifiedOn DateTime?
   verifiedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum StudentScoreType {
@@ -251,6 +264,9 @@ model StudentWorkExperience {
   verified   Boolean   @default(false)
   verifiedOn DateTime?
   verifiedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model StudentProject {
@@ -269,9 +285,12 @@ model StudentProject {
   verified   Boolean   @default(false)
   verifiedOn DateTime?
   verifiedBy String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-model StudentCeritification {
+model StudentCertification {
   id Int @id @default(autoincrement())
 
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -287,6 +306,9 @@ model StudentCeritification {
   score                String?
   scoreType            StudentScoreType?
   description          String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Department {
@@ -339,4 +361,35 @@ enum ProgramLevel {
   UG
   PG
   PHD
+}
+
+// platform wide support tickets
+// we can split this to be institute - student specific
+// but it's fine for now as we don't have that many users
+model Ticket {
+  id Int @id @default(autoincrement())
+
+  institute   Institute @relation(fields: [instituteId], references: [id], onDelete: Cascade)
+  instituteId Int
+
+  // schema
+  // type -> student onboarding / data change / others [required]
+  // student / mod /institute
+  // data -> ticket operation payload
+  meta     Json         @default("{}")
+  status   TicketStatus @default(OPEN)
+  closedAt DateTime?
+  closedBy String?
+  // from admin / handler
+  notes    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TicketStatus {
+  OPEN
+  INPROGRESS
+  CLOSED
+  RESOLVED
 }

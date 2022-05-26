@@ -5,7 +5,7 @@ import { NextPageWithLayout } from '../_app'
 export const getServerSideProps = getServerSideAuthGuard(['STUDENT'])
 
 const Student: NextPageWithLayout = () => {
-  return <div>Student</div>
+  return <div>Student Feed home</div>
 }
 
 Student.getLayout = (page) => <AppLayout>{page}</AppLayout>

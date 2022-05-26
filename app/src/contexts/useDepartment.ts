@@ -9,12 +9,15 @@ import { getUserHome } from 'utils/helpers'
 import { trpc } from 'utils/trpc'
 import { useStrictQueryCheck } from 'utils/hooks'
 
-export function useDepartments() {
+export function useDepartments(opts?: QueryOptions<'department.getAll'>) {
+  opts = opts ?? {}
+
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
   const { data: departments = [], isLoading } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
+    ...opts,
     enabled: isLoggedIn,
     onError(e) {
       if (e.data?.code === 'UNAUTHORIZED') {

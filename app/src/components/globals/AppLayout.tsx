@@ -12,13 +12,13 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
   return (
     <>
       <Head>
-        <title>Mirai</title>
+        <title>Mirai | Hiring simplified for humans</title>
       </Head>
 
       <NavBar />
 
       <SideBar>
-        <main className="flex-grow block p-3 overflow-x-hidden drawer-content">{children}</main>
+        <main className="drawer-content block flex-grow overflow-x-hidden p-3">{children}</main>
       </SideBar>
 
       {process.env.NODE_ENV !== 'production' && <ReactQueryDevtools initialIsOpen={false} />}

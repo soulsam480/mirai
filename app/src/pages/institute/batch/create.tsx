@@ -1,4 +1,4 @@
-import ManageBatch from 'components/batch/ManageBatch'
+import ManageBatch from 'components/institute/batch/ManageBatch'
 import { AppLayout } from 'components/globals/AppLayout'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
@@ -17,10 +17,8 @@ const Batch: NextPageWithLayout = () => {
   }, [])
 
   return (
-    <MDialog show onClose={async () => await router.push('/institute/batch')}>
-      <div className="inline-block p-6 my-8 overflow-hidden align-middle transition-all transform rounded-lg shadow-lg bg-amber-50">
-        <ManageBatch />
-      </div>
+    <MDialog show onClose={() => null} noEscape>
+      <ManageBatch />
     </MDialog>
   )
 }

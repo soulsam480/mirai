@@ -3,7 +3,7 @@
  */
 
 import { Role } from '@prisma/client'
-import { compare, hash } from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { WithExcludeClient } from '../db'
 // don't make it an alias, the seed command will fail
 import { getEnv, isInstituteRole } from '../lib/helpers'
@@ -15,11 +15,11 @@ export interface JwtPayload {
 }
 
 export async function comparePassword(password: string, hashedPass: string) {
-  return await compare(password, hashedPass)
+  return await bcrypt.compare(password, hashedPass)
 }
 
 export async function hashPass(password: string) {
-  return await hash(password, parseInt(getEnv('HASH') ?? ''))
+  return await bcrypt.hash(password, parseInt(getEnv('HASH') ?? ''))
 }
 
 export function prismaQueryHelper(client: WithExcludeClient) {
@@ -30,7 +30,18 @@ export function prismaQueryHelper(client: WithExcludeClient) {
       if (role === 'STUDENT') {
         account = await client.account.findFirst({
           where: { email, id },
-          include: { tenant: true },
+          select: {
+            tenant: {
+              include: {
+                basics: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+            ...client.$exclude('account', ['password', 'otp', 'otpExpiry', 'emailToken']),
+          },
         })
       } else if (isInstituteRole(role).is) {
         account = await client.account.findFirst({

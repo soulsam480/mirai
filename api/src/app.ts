@@ -1,13 +1,12 @@
 import dotenv from 'dotenv'
 import { join, dirname } from 'path'
 import fastify from 'fastify'
-import fp from 'fastify-plugin'
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
 
-import { appRouter } from './rpc/routers/appRouter'
+import { appRouter } from './rpc/routers/_appRouter'
 import { createContext } from './rpc/context'
 import { fileURLToPath } from 'url'
-import { getEnv, logger } from './lib'
+import { getEnv, logger, setupBull } from './lib'
 import { registerRoutes } from './routes'
 
 const _dirname = typeof __dirname !== 'undefined' ? __dirname : dirname(fileURLToPath(import.meta.url))
@@ -22,7 +21,7 @@ export function createServer() {
     },
   })
 
-  void server.register(fp(fastifyTRPCPlugin), {
+  void server.register(fastifyTRPCPlugin, {
     prefix: '/trpc',
     trpcOptions: { router: appRouter, createContext },
   })
@@ -32,6 +31,8 @@ export function createServer() {
   server.get('/', async () => {
     return "This is Mirai's API"
   })
+
+  setupBull(server)
 
   const start = async () => {
     try {

@@ -9,7 +9,7 @@ import MLink from 'components/lib/MLink'
 import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
 import { useBatches } from 'contexts/useBatch'
-import ManageBatch from 'components/batch/ManageBatch'
+import ManageBatch from 'components/institute/batch/ManageBatch'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
@@ -23,20 +23,14 @@ const Batches: NextPageWithLayout = () => {
       {
         field: 'id',
         label: 'ID',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: 'name',
         label: 'Name',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
       },
       {
         field: 'duration',
         label: 'Duration',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
         format: ({ duration, durationType }) => (
           <>
             {duration} <span className="text-xs"> ({durationType}) </span>{' '}
@@ -46,15 +40,11 @@ const Batches: NextPageWithLayout = () => {
       {
         field: 'status',
         label: 'Status',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
         // format: ({ inCharge }) => <>{inCharge ?? '-'}</>,
       },
       {
         field: 'edit',
         label: 'Edit',
-        headerClasses: '!bg-primary',
-        classes: 'bg-amber-100',
         format: ({ id }) => (
           <MLink href={`/institute/batch?batchId=${id as number}`} as={`/institute/batch/${id as number}`}>
             <IconLaPenSquare className="text-lg" />
@@ -78,11 +68,8 @@ const Batches: NextPageWithLayout = () => {
         loading={isLoading}
       />
 
-      <MDialog show={router.query.batchId !== undefined} onClose={async () => await router.push('/institute/batch')}>
-        {/* //todo: again this is a bug, fix this */}
-        <div className="dialog-content">
-          <ManageBatch />
-        </div>
+      <MDialog show={router.query.batchId !== undefined} onClose={() => null} noEscape>
+        <ManageBatch />
       </MDialog>
     </PageLayout.PageWrapper>
   )
