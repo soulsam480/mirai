@@ -27,7 +27,7 @@ export const TicketFiltersBlock: React.FC<Props> = () => {
         <CreatedAtFilter />
 
         {hasAnyFilter && (
-          <button className="btn  btn-ghost btn-circle btn-sm" onClick={resetFilters}>
+          <button className="btn  btn-circle btn-ghost btn-sm" onClick={resetFilters}>
             <MIcon className="tooltip tooltip-right tooltip-secondary text-lg" data-tip="Reset all">
               <IconLaTimesCircle />
             </MIcon>

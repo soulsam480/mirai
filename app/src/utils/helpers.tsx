@@ -175,3 +175,12 @@ export function sentenceCase(str: string) {
 export function titleCase(str: string) {
   return startCase(camelCase(str))
 }
+
+/**
+ * Interpolate variables inside a string with data
+ */
+export function interpolate(template: string, interpolations: Record<string, string | number>) {
+  return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (marker, token) => {
+    return String(interpolations[token]) ?? marker
+  })
+}

@@ -41,8 +41,8 @@ export const NavBar: React.FC<Props> = () => {
             <>
               <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
-                  <div className="h-8 w-8 rounded-full bg-primary text-base-content">
-                    <span> {userData.name?.slice(0, 2).toUpperCase()} </span>
+                  <div className="h-8 w-8 rounded-full bg-base-200 text-sm shadow">
+                    <span> {(userData.name ?? userData?.tenant?.basics?.name)?.slice(0, 2).toUpperCase()} </span>
                   </div>
                 </button>
                 <ul
@@ -52,7 +52,7 @@ export const NavBar: React.FC<Props> = () => {
                   <li>
                     <div className="p-1 text-sm">
                       <span className="font-semibold text-base-content">
-                        {userData.name} ({userData.role})
+                        {userData.name ?? userData?.tenant?.basics?.name} ({userData.role})
                       </span>
                     </div>
                   </li>

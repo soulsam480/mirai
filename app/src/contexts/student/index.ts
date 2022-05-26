@@ -28,13 +28,26 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
           projects: [],
           certifications: [],
           base: null,
+          course: null,
         })
       }
 
-      const { basics, score, education, experience, projects, certifications, ...rest } = data
+      const {
+        basics,
+        score,
+        education,
+        experience,
+        projects,
+        certifications,
+        Batch,
+        Department,
+        course,
+        institute,
+        ...rest
+      } = data
 
       void setStudentVal({
-        basics,
+        basics: basics as unknown as any,
         score,
         education,
         experience,
@@ -42,6 +55,12 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
         certifications,
         base: rest,
         skills: (rest.skills as string) ?? [],
+        course: {
+          course: course as unknown as any,
+          batch: Batch as unknown as any,
+          department: Department as unknown as any,
+          institute: institute as unknown as any,
+        },
       })
     },
     enabled: isLoggedIn === true && userData.studentId !== null,

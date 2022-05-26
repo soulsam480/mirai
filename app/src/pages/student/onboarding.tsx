@@ -12,18 +12,9 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { studentOnboardingSchema } from 'schemas'
+import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constnts'
 import { z } from 'zod'
 import { NextPageWithLayout } from '../_app'
-
-const GENDER_TYPES = ['MALE', 'FEMALE', 'OTHER'].map((o) => ({ label: o, value: o }))
-
-const CATEGORY_TYPES = [
-  'General',
-  'Scheduled Caste',
-  'Scheduled Tribe',
-  'Other Backward Classes',
-  'Economically Weaker Section',
-].map((v) => ({ label: v, value: v }))
 
 export const getServerSideProps: GetServerSideProps<
   {

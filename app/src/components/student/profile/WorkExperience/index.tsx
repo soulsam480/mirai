@@ -132,17 +132,22 @@ export const WorkExperience: React.FC<Props> = () => {
     }
   }
 
-  function handleExperienceSelection({ studentId: _sid, id, ...rest }: StudentWorkExperience, readonly = false) {
+  function handleExperienceSelection(
+    { studentId: _sid, id, verified, verifiedBy, verifiedOn, ...rest }: StudentWorkExperience,
+    readonly = false,
+  ) {
     setSelected(id)
     setDialog(true)
     readonly && setReadonly(true)
 
-    Object.entries(rest).forEach(([key, value]) => {
-      if (STUDENT_PROFILE_IGNORE_KEYS.includes(key) === true) return
+    if (verified || verifiedBy !== null || verifiedOn !== null) return
 
-      // ! This is an issue with native date input
-      // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element
-      setValue(key as any, ['startedAt', 'endedAt'].includes(key) ? formatDate(value, 'YYYY-MM-DD') : value)
+    const { startedAt, endedAt, ...workExpDetails } = rest
+
+    reset({
+      ...workExpDetails,
+      startedAt: formatDate(startedAt, 'YYYY-MM-DD') ?? undefined,
+      endedAt: formatDate(endedAt, 'YYYY-MM-DD') ?? undefined,
     })
   }
 
@@ -155,7 +160,7 @@ export const WorkExperience: React.FC<Props> = () => {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
-        <div className="text-lg font-medium leading-6    ">Work experience</div>
+        <div className="text-lg font-medium leading-6">Work experience</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconLaPlusCircle />

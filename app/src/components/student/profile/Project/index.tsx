@@ -118,18 +118,23 @@ export const Projects: React.FC<Props> = () => {
     }
   }
 
-  function handleProjectSelection({ studentId: _sid, id, ...rest }: StudentProject, readOnly = false) {
+  function handleProjectSelection(
+    { studentId: _sid, id, verified, verifiedBy, verifiedOn, ...rest }: StudentProject,
+    readOnly = false,
+  ) {
     setSelected(id)
     setDialog(true)
 
     readOnly && setReadonly(true)
 
-    Object.entries(rest).forEach(([key, value]) => {
-      if (STUDENT_PROFILE_IGNORE_KEYS.includes(key) === true) return
+    if (verified || verifiedBy !== null || verifiedOn !== null) return
 
-      // ! This is an issue with native date input
-      // ! The element expects an output/input in the format YYYY-MM-DD but it shows as MM/DD/YYYY inside the element
-      setValue(key as any, ['startedAt', 'endedAt'].includes(key) ? formatDate(value, 'YYYY-MM-DD') : value)
+    const { startedAt, endedAt, ...projectDetails } = rest
+
+    reset({
+      ...projectDetails,
+      startedAt: formatDate(startedAt, 'YYYY-MM-DD') ?? undefined,
+      endedAt: formatDate(endedAt, 'YYYY-MM-DD') ?? undefined,
     })
   }
 

@@ -17,7 +17,8 @@
     "copy-prisma": "node copy.js",
     "build": "run-s build-* copy-prisma",
     "postinstall": "prisma generate --schema=../prisma/schema.prisma",
-    "start": "cross-env NODE_ENV=production node dist/app.js"
+    "start": "cross-env NODE_ENV=production node dist/app.js",
+    "studio": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai prisma studio --schema=../prisma/schema.prisma"
   },
   "prisma": {
     "seed": "pnpm ts-node ../prisma/seed.ts"

@@ -6,6 +6,10 @@ import type {
   StudentProject,
   StudentCertification,
   Student,
+  Course,
+  Batch,
+  Department,
+  Institute,
 } from '@prisma/client'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
@@ -13,15 +17,29 @@ import { studentsQuerySchema } from 'schemas'
 import type { OverWrite } from 'types'
 import { z } from 'zod'
 
+export interface StudentSemScore {
+  ongoingBacklogs?: number
+  cummScore?: number
+  semScore?: number
+  totalBacklogs?: number
+  verified?: boolean
+  verifiedBy?: string
+  verifiedOn?: Date
+  fileUrl?: string
+}
+
+export type StudentScoreType = Record<string, StudentSemScore | undefined>
+
 export interface StudentValueType {
-  basics: StudentBasics | null
-  score: StudentScore | null
+  basics: StudentBasicsOverwrite | null
+  score: OverWrite<StudentScore, { scores: StudentScoreType }> | null
   education: StudentEducation[]
   experience: StudentWorkExperience[]
   skills: StudentSkill[]
   projects: StudentProject[]
   certifications: StudentCertification[]
   base: Student | null
+  course: StduentCourseComposed | null
 }
 
 export type StudentSkillScore = 'Beginner' | 'Intermediate' | 'Expert'
@@ -31,10 +49,29 @@ export interface StudentSkill {
   score: StudentSkillScore
 }
 
-export const studentBasicsAtom = atom<StudentBasics | null>(null)
+export interface StudentAddress {
+  address?: string
+  city?: string
+  district?: string
+  state?: string
+  pin?: string
+  country?: string
+}
+
+export interface StduentCourseComposed {
+  course: Pick<Course, 'branchName' | 'programName' | 'programDuration' | 'scoreType'>
+  batch: Pick<Batch, 'name' | 'startsAt' | 'endsAt'>
+  department: Pick<Department, 'name'>
+  institute: Pick<Institute, 'name'>
+}
+
+export interface StudentBasicsOverwrite
+  extends OverWrite<StudentBasics, { permanentAddress: StudentAddress; currentAddress: StudentAddress }> {}
+
+export const studentBasicsAtom = atom<StudentBasicsOverwrite | null>(null)
 studentBasicsAtom.debugLabel = 'studentBasicsAtom'
 
-export const studentScoreAtom = atom<StudentScore | null>(null)
+export const studentScoreAtom = atom<StudentValueType['score'] | null>(null)
 studentScoreAtom.debugLabel = 'studentScoreAtom'
 
 export const studentEducationAtom = atom<StudentEducation[]>([])
@@ -55,6 +92,9 @@ studentCertificationsAtom.debugLabel = 'StudentCertificationsAtom'
 export const studentBaseAtom = atom<Student | null>(null)
 studentBaseAtom.debugLabel = 'studentBaseAtom'
 
+export const studentCourseAtom = atom<StduentCourseComposed | null>(null)
+studentCourseAtom.debugLabel = 'studentCourseAtom'
+
 export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { skills: string | StudentSkill[] }>>(
   (get) => {
     return {
@@ -66,10 +106,11 @@ export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { 
       projects: get(studentProjectsAtom),
       certifications: get(studentCertificationsAtom),
       base: get(studentBaseAtom),
+      course: get(studentCourseAtom),
     }
   },
   (_get, set, update) => {
-    const { basics, score, education, experience, skills, projects, certifications, base } = update
+    const { basics, score, education, experience, skills, projects, certifications, base, course } = update
 
     set(studentBasicsAtom, basics)
     set(studentScoreAtom, score)
@@ -79,6 +120,7 @@ export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { 
     set(studentProjectsAtom, projects)
     set(studentCertificationsAtom, certifications)
     set(studentBaseAtom, base)
+    set(studentCourseAtom, course)
   },
 )
 studentAtom.debugLabel = 'studentAtom'

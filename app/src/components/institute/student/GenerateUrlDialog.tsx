@@ -12,9 +12,11 @@ import { useAlert } from 'components/lib/store/alerts'
 import { useAtomValue } from 'jotai'
 import { instituteBatches, instituteCourses, instituteDepartments } from 'stores/institute'
 
-interface Props {}
+interface Props {
+  onClose: (val: boolean) => void
+}
 
-export const GenerateUrlDialog: React.FC<Props> = () => {
+export const GenerateUrlDialog: React.FC<Props> = ({ onClose }) => {
   const userData = useUser()
   const setAlert = useAlert()
   const departments = useAtomValue(instituteDepartments)
@@ -50,7 +52,10 @@ export const GenerateUrlDialog: React.FC<Props> = () => {
 
       const url = `${origin}/student/onboarding?${new URLSearchParams({ payload }).toString()}`
 
-      void copyToClip(url).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
+      await copyToClip(url)
+      setAlert({ message: 'Signup link copied to clipboard !', type: 'success' })
+
+      onClose(false)
     } catch (error) {
       setAlert({
         type: 'danger',

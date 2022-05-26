@@ -51,6 +51,78 @@ export const createBatchSchema = z.object({
   status: z.enum(['ACTIVE', 'INACTIVE']),
 })
 
+export const createStudentBasicsSchema = z.object({
+  studentId: z.number().min(1, 'Student ID is required'),
+  name: z.string().min(1, 'Student name is required'),
+  dob: z
+    .string()
+    .min(1, 'Date of birth is required')
+    .transform((val) => dayjs(val).toISOString()),
+  gender: z.string().min(1, 'Gender is required'),
+  category: z.string().min(1, 'Category is required'),
+  mobileNumber: z.string().min(1, 'Mobile number is required'),
+  primaryEmail: z.string().email().min(1, 'Primary email is required'),
+  secondaryEmail: z.string().email().nullable(),
+  permanentAddress: z
+    .object({
+      address: z.string(),
+      city: z.string(),
+      district: z.string(),
+      state: z.string(),
+      pin: z.string(),
+      country: z.string(),
+    })
+    .optional(),
+  currentAddress: z
+    .object({
+      address: z.string(),
+      city: z.string(),
+      district: z.string(),
+      state: z.string(),
+      pin: z.string(),
+      country: z.string(),
+    })
+    .optional(),
+})
+
+export const createStudentScoreSchema = z.object({
+  studentId: z.number().min(1, 'Student ID is required'),
+  aggregatePercentage: z.string().min(1, 'Aggregate percentage is required'),
+  currentTerm: z.number().min(1, 'Current term is required'),
+  hasGraduated: z.boolean({ required_error: 'Please mention if student has graduated or not' }),
+  lateralEntry: z.boolean({ required_error: 'Please mention if student has lateral entry or not' }),
+  hasBacklog: z.boolean({ required_error: 'Please mention  if student has backlog or not' }),
+  totalBacklogs: z.number().min(1, 'Please mention total backlogs'),
+  backlogDetails: z.string().min(1, 'Please mention backlog details'),
+  scores: z.string().min(1, 'Scores are required'),
+  courseStartedAt: z.date({ required_error: 'Course start date is required' }),
+})
+
+export const createStudentEducationSchema = z.object({
+  studentId: z.number().min(1, 'Student ID is required'),
+  school: z.string().min(1, 'School is required'),
+  program: z.string().min(1, 'Program is required'),
+  board: z.string().min(1, 'Board is required'),
+  specialization: z.string().min(1, 'Specialization is required'),
+  type: z
+    .string()
+    .min(1)
+    .refine((val) => ['Full Time', 'Part Time', 'Correspondence', 'Others'].includes(val)),
+  notes: z.string().min(1, 'Description is required'),
+  score: z.string().min(1, 'Score is required'),
+  scorePercentage: z.string().min(1, 'Score percentage is required'),
+  scoreType: z.enum(['PERCENTAGE', 'CGPA', 'GRADES']),
+  startedAt: z
+    .string()
+    .min(1, 'Start date is required')
+    .transform((val) => dayjs(val).toISOString()),
+  endedAt: z
+    .string()
+    .nullable()
+    .transform((val) => (val !== null && val.length > 0 ? dayjs(val).toISOString() : null)),
+  isOngoing: z.boolean().optional(),
+})
+
 export const createExperienceSchema = z.object({
   company: z.string().min(1, 'Company is required'),
   title: z.string().min(1, 'Title is required'),
@@ -217,3 +289,17 @@ export const bulkTicketResolveSchema = z.object({
     }),
   ),
 })
+
+export const semUpdateSchema = z
+  .object({
+    semScore: z.number({ invalid_type_error: 'Should be numeric' }),
+    cummScore: z.number({ invalid_type_error: 'Should be numeric' }),
+    ongoingBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
+    totalBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
+    fileUrl: z.string(),
+    backlogDetails: z.string(),
+  })
+  .refine((val) => (Number(val.ongoingBacklogs) === 0 ? true : Boolean(val.backlogDetails?.trim().length)), {
+    message: 'Backlog details is required',
+    path: ['backlogDetails'],
+  })

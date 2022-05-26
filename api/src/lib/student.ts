@@ -53,7 +53,7 @@ export async function createStudent({
       departmentId,
       courseId,
       // TODO: fix the code generation
-      code: [code ?? name, uniId].map(snakeCase).join('_'),
+      code: [code ?? name.toLowerCase(), uniId].map(snakeCase).join('_'),
       uniId,
     },
   })
@@ -64,6 +64,23 @@ export async function createStudent({
       ...rest,
       studentId,
       primaryEmail: email,
+    },
+  })
+
+  const batch = await miraiClient.batch.findFirst({
+    where: { id: batchId },
+    select: { id: true, startsAt: true },
+  })
+
+  if (batch === null) return
+
+  await miraiClient.studentScore.create({
+    data: {
+      studentId,
+      courseStartedAt: batch.startsAt,
+      currentTerm: 0,
+      lateralEntry: false,
+      scores: '{}',
     },
   })
 

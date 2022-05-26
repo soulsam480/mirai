@@ -1,5 +1,5 @@
 import { loaderAtom } from 'components/lib/store/loader'
-import { useAtom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useMemo } from 'react'
 import { userAtom } from 'stores/user'
@@ -9,11 +9,11 @@ import { useAtomsDevtools } from 'jotai/devtools'
 interface Props {}
 
 export const CurrentAccount: React.FC<Props> = ({ children }) => {
-  const [_, setUser] = useAtom(userAtom)
+  const setUser = useSetAtom(userAtom)
   const { data } = useSession()
   const setLoader = useSetAtom(loaderAtom)
 
-  const enableQuery = useMemo(() => typeof window !== 'undefined' && data !== null, [data])
+  const enableQuery = useMemo(() => typeof window !== 'undefined' && Boolean(data), [data])
 
   const { isLoading } = trpc.useQuery(['auth.account'], {
     refetchOnWindowFocus: false,

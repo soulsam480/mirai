@@ -34,7 +34,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
             setTheme(theme === 'dark' ? 'corporate' : 'dark')
           }}
         >
-          <label className={clsx(['swap swap-rotate flex-none', theme === 'light' && 'swap-active'])}>
+          <label className={clsx(['swap-rotate swap flex-none', theme === 'light' && 'swap-active'])}>
             <MIcon className="swap-on">
               <IconLaSun />
             </MIcon>

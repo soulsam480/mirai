@@ -7,6 +7,7 @@
  */
 
 import { PrismaClient } from '@prisma/client'
+import dayjs from 'dayjs'
 import { hashPass } from '../api/src/lib'
 
 const prisma = new PrismaClient()
@@ -73,7 +74,7 @@ async function instituteSeed() {
       id: 1,
     },
     create: {
-      name: 'Mechanical Engg. Dept',
+      name: 'Mechanical Enggineering Department',
       instituteId: id,
     },
     update: {},
@@ -87,9 +88,9 @@ async function instituteSeed() {
       instituteId: id,
       departmentId,
       programDuration: 8,
-      branchName: 'ME',
+      branchName: 'Mechanical Engineering',
       branchCode: 'ME',
-      programName: 'BTech',
+      programName: 'Bachelor of Technology',
       scoreType: 'CGPA',
       programDurationType: 'SEMESTER',
       programLevel: 'UG',
@@ -109,6 +110,8 @@ async function instituteSeed() {
       durationType: 'YEAR',
       status: 'ACTIVE',
       instituteId: id,
+      startsAt: dayjs('10-05-2018').toISOString(),
+      endsAt: dayjs('10-05-2022').toISOString(),
     },
     update: {},
   })

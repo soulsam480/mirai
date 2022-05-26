@@ -1,8 +1,11 @@
+import { basicsRouter } from './basics'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'
 import { certificationRouter } from './certifications'
 import { experienceRouter } from './experience'
+import { scoreRouter } from './score'
+import { educationRouter } from './education'
 import { projectRouter } from './project'
 
 export const studentRouter = createRouter()
@@ -20,6 +23,7 @@ export const studentRouter = createRouter()
 
     return nextCtx
   })
+
   .query('get', {
     input: z.number(),
     async resolve({ ctx, input }) {
@@ -36,12 +40,44 @@ export const studentRouter = createRouter()
           },
           projects: true,
           score: true,
+          course: {
+            select: {
+              branchName: true,
+              programName: true,
+              programDuration: true,
+              scoreType: true,
+            },
+          },
+          Batch: {
+            select: {
+              name: true,
+              startsAt: true,
+              endsAt: true,
+            },
+          },
+          Department: {
+            select: {
+              name: true,
+            },
+          },
+          institute: {
+            select: {
+              name: true,
+            },
+          },
         },
       })
 
       return studentData
     },
   })
+  .merge('basics.', basicsRouter)
+  .merge('score.', scoreRouter)
+  .merge('education.', educationRouter)
+  .merge('experience.', experienceRouter)
+  .merge('project.', projectRouter)
+  .merge('certification.', certificationRouter)
+
   .mutation('skills.update', {
     input: z.object({
       studentId: z.number(),
@@ -57,6 +93,3 @@ export const studentRouter = createRouter()
       return skillData
     },
   })
-  .merge('experience.', experienceRouter)
-  .merge('project.', projectRouter)
-  .merge('certification.', certificationRouter)
