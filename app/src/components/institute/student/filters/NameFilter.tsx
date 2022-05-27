@@ -46,7 +46,7 @@ export const NameFilter: React.FC<Props> = () => {
           }}
           data-tip="Reset value"
         >
-          <IconLaUndoAlt />
+          <IconPhArrowCounterClockwise />
         </MIcon>
       )}
     </div>

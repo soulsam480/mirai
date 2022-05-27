@@ -20,7 +20,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
       <div className="flex justify-between">
         <div className="flex items-center gap-2 text-left">
           <MIcon>
-            <IconLaIdCardSolid />
+            <IconPhIdentificationCard />
           </MIcon>
 
           <h4>Identity details</h4>
@@ -28,7 +28,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
 
         <button className="flex-start btn btn-ghost btn-xs gap-2" onClick={() => onTrigger('basics')}>
           <span>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </span>
           <span>Edit</span>
         </button>
@@ -53,7 +53,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
       <div className="flex justify-between">
         <div className="flex items-center gap-2 text-left">
           <MIcon>
-            <IconLaMailBulk />
+            <IconPhEnvelope />
           </MIcon>
 
           <h4>Contact details</h4>
@@ -69,7 +69,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
           )}
         >
           <span>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </span>
           <span>Edit</span>
         </button>

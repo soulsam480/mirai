@@ -134,7 +134,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
         <div className="alert alert-error font-semibold shadow-lg sm:max-w-[600px]">
           <div>
             <MIcon>
-              <IconLaExclamationTriangle />
+              <IconPhWarningCircle />
             </MIcon>
             <span>{error}</span>
           </div>

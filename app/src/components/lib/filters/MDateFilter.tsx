@@ -68,7 +68,7 @@ export const MDateFilter: React.FC<Props> = ({ onChange, value: model }) => {
           }}
           data-tip="Reset value"
         >
-          <IconLaUndoAlt />
+          <IconPhArrowCounterClockwise />
         </MIcon>
       )}
     </div>

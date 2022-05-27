@@ -37,14 +37,14 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
       <MFeatureCard.Body>
         <div className="flex items-center gap-2 ">
           <MIcon className="text-base">
-            <IconLaUserGraduate />
+            <IconPhBuildings />
           </MIcon>
           <span className="text-lg">{experience.title}</span>
         </div>
 
         <div className="flex items-center gap-2 ">
           <MIcon className="text-sm">
-            <IconLaBuilding />
+            <IconPhAt />
           </MIcon>
           <span className="text-sm">
             {experience.company} <span className="mx-0.5">.</span> {experience.jobType}{' '}
@@ -54,7 +54,7 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
             <MIcon className="text-sm">
-              <IconLaCalendar />
+              <IconPhCalendar />
             </MIcon>
             <span className="text-xs">
               {formatDate(experience.startedAt)} <span className="mx-0.5">to&nbsp;</span>
@@ -70,7 +70,7 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
 
               <div className="flex items-center gap-2">
                 <MIcon className="text-sm">
-                  <IconLaMoneyBill />
+                  <IconPhMoney />
                 </MIcon>
                 <span className="text-xs">{experience.stipend}</span>
               </div>
@@ -81,16 +81,16 @@ export const ExperienceCard = React.memo<Props>(({ experience, onEdit }) => {
 
       <MFeatureCard.Footer>
         {/* // TODO: read only mode */}
-        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
           <MIcon>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </MIcon>
 
           <span>Edit</span>
         </button>
-        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
-            <IconLaTrashAltSolid />
+            <IconPhTrash />
           </MIcon>
 
           <span>Delete</span>

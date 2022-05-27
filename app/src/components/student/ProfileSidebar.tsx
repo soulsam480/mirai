@@ -13,31 +13,31 @@ interface Props {
 const STUDENT_PROFILE_SIDEBAR = [
   {
     label: 'Basics',
-    icon: <IconLaPassport />,
+    icon: <IconPhIdentificationCard />,
   },
   {
     label: 'Course',
-    icon: <IconLaBook />,
+    icon: <IconPhBooks />,
   },
   {
     label: 'Education',
-    icon: <IconLaSchool />,
+    icon: <IconPhBookOpen />,
   },
   {
     label: 'Experience',
-    icon: <IconLaBuilding />,
+    icon: <IconPhBuildings />,
   },
   {
     label: 'Skills',
-    icon: <IconLaShieldAlt />,
+    icon: <IconPhShieldCheckered />,
   },
   {
     label: 'Projects',
-    icon: <IconLaRocket />,
+    icon: <IconPhRocket />,
   },
   {
     label: 'Certifications',
-    icon: <IconLaUserGraduate />,
+    icon: <IconPhGraduationCap />,
   },
 ]
 
@@ -50,7 +50,7 @@ export const ProfileSidebar: React.FC<Props> = ({ className, onClick, tabIndex }
         <li key={section.label}>
           <button
             className={clsx([
-              'btn btn-ghost btn-sm flex h-[2.5rem] items-center justify-start gap-2 !px-2 !py-2 text-base font-semibold',
+              'btn btn-ghost btn-sm flex h-[2.5rem] items-center justify-start gap-2 !rounded-[4px] !px-2 !py-2 text-base font-semibold',
               activeTab !== null && activeTab === section.label.toLowerCase() && '!btn-primary',
             ])}
             onClick={() => onClick?.(section.label.toLowerCase() as SidebarTabs)}

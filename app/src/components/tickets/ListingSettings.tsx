@@ -12,12 +12,12 @@ const SORT_OPTIONS: Option[] = [
   {
     label: 'Ascending',
     value: 'asc',
-    meta: { icon: <IconLaSortAmountUp /> },
+    meta: { icon: <IconPhSortAscending /> },
   },
   {
     label: 'Descending',
     value: 'desc',
-    meta: { icon: <IconLaSortAmountDown /> },
+    meta: { icon: <IconPhSortDescending /> },
   },
 ]
 
@@ -33,7 +33,11 @@ export const ListingSettings: React.FC<Props> = () => {
       name="sort"
       options={SORT_OPTIONS}
       customButton={({ value }) => {
-        return <MIcon>{value.value === 'asc' ? <IconLaSortAmountUp /> : <IconLaSortAmountDown />}</MIcon>
+        return (
+          <MIcon className="tooltip tooltip-left" data-tip="Sort tickets">
+            {value.value === 'asc' ? <IconPhSortAscending /> : <IconPhSortDescending />}
+          </MIcon>
+        )
       }}
       width="max-content"
       borderless

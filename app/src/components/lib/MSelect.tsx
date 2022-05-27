@@ -139,7 +139,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                       {reset && !disabled && isValue(value) && (
                         <MIcon
                           className={clsx([
-                            'tooltip tooltip-left tooltip-secondary',
+                            'tooltip tooltip-left',
                             disabled ? 'bg-base-200 text-base-300' : 'bg-base-100',
                           ])}
                           onClick={(e) => {
@@ -149,7 +149,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                           }}
                           data-tip="Reset value"
                         >
-                          <IconLaUndoAlt />
+                          <IconPhArrowCounterClockwise />
                         </MIcon>
                       )}
 
@@ -160,7 +160,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                           disabled && 'bg-base-200 text-base-300',
                         ])}
                       >
-                        <IconLaChevronDown />
+                        <IconPhCaretDown />
                       </MIcon>
                     </>
                   )
@@ -206,7 +206,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                   className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
-                  <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
+                  <IconPhWarningCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
                 </Listbox.Option>
               )}
             </Listbox.Options>

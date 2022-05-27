@@ -136,7 +136,7 @@ export const Certifications: React.FC<Props> = () => {
         <div className="text-lg font-medium leading-6    ">Certifications</div>
         <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
           <span>
-            <IconLaPlusCircle />
+            <IconPhPlus />
           </span>
           <span>Add new certification</span>
         </button>

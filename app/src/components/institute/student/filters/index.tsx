@@ -34,7 +34,7 @@ export const StudentFiltersBlock: React.FC<Props> = () => {
         {hasAnyFilter && (
           <button className="btn  btn-ghost btn-circle btn-sm" onClick={() => setFilters({})}>
             <MIcon className="tooltip tooltip-right tooltip-secondary text-lg" data-tip="Reset all">
-              <IconLaTimesCircle />
+              <IconPhX />
             </MIcon>
           </button>
         )}

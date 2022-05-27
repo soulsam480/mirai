@@ -88,7 +88,7 @@ const Login: NextPageWithLayout = () => {
             {error !== null && (
               <div className="alert alert-error py-2 text-sm">
                 <MIcon className="flex-none">
-                  <IconLaExclamationCircle />
+                  <IconPhWarningCircle />
                 </MIcon>
 
                 <span className="flex-grow">{error}</span>

@@ -36,21 +36,21 @@ export const ProjectCard = React.memo<Props>(({ project, onEdit }) => {
       <MFeatureCard.Body>
         <div className="flex items-center gap-2 ">
           <MIcon className="text-base">
-            <IconLaRocket />
+            <IconPhRocket />
           </MIcon>
 
           <span className="text-lg">{project.title}</span>
         </div>
         <div className="flex items-center gap-2 ">
           <MIcon className="text-sm">
-            <IconLaFlask />
+            <IconPhBracketsAngle />
           </MIcon>
 
           <span className="text-sm">{project.domain}</span>
         </div>
         <div className="flex items-center gap-2">
           <MIcon className="text-sm">
-            <IconLaCalendar />
+            <IconPhCalendar />
           </MIcon>
           <span className="text-xs">
             {formatDate(project.startedAt)} <span className="mx-0.5">to&nbsp;</span>
@@ -63,16 +63,16 @@ export const ProjectCard = React.memo<Props>(({ project, onEdit }) => {
 
       <MFeatureCard.Footer>
         {/* // TODO: readonly mode */}
-        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
           <MIcon>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </MIcon>
 
           <span>Edit</span>
         </button>
-        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
-            <IconLaTrashAltSolid />
+            <IconPhTrash />
           </MIcon>
 
           <span>Delete</span>

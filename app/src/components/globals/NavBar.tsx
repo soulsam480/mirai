@@ -86,11 +86,11 @@ export const NavBar: React.FC<Props> = () => {
                 ])}
               >
                 <MIcon className="swap-off">
-                  <IconLaBars />
+                  <IconPhList />
                 </MIcon>
 
                 <MIcon className="swap-on">
-                  <IconLaTimes />
+                  <IconPhX />
                 </MIcon>
               </label>
             </>

@@ -34,7 +34,7 @@ export function defineSidebar(base: string) {
     {
       label: 'Home',
       path: base,
-      icon: <IconLaHome />,
+      icon: <IconPhHouse />,
     },
   ]
   return {

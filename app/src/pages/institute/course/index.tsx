@@ -56,7 +56,7 @@ const ProgramListing: NextPageWithLayout = () => {
         label: 'Edit',
         format: ({ id }) => (
           <MLink href={`/institute/course?courseId=${id as number}`} as={`/institute/course/${id as number}`}>
-            <IconLaPenSquare className="text-lg" />
+            <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),
       },

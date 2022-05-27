@@ -41,7 +41,7 @@ const Departments: NextPageWithLayout = () => {
             href={`/institute/department?departmentId=${id as number}`}
             as={`/institute/department/${id as number}`}
           >
-            <IconLaPenSquare className="text-lg" />
+            <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),
       },

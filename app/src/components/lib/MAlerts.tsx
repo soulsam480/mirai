@@ -2,10 +2,10 @@ import React, { useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import { Transition } from '@headlessui/react'
 import clsx from 'clsx'
-import IconLaInfoCircle from '~icons/la/info-circle.jsx'
-import IconLaCheckCircleSolid from '~icons/la/check-circle-solid.jsx'
-import IconLaExclamationCircle from '~icons/la/exclamation-circle.jsx'
-import IconLaWindowClose from '~icons/la/window-close.jsx'
+import IconPhInfo from '~icons/ph/info.jsx'
+import IconPhCheckCircle from '~icons/ph/check-circle.jsx'
+import IconPhWarningCircle from '~icons/ph/warning-circle.jsx'
+import IconPhSkull from '~icons/ph/skull.jsx'
 import { Alert, alertsSubAtom } from 'components/lib/store/alerts'
 import { useMounted } from 'utils/hooks'
 import { useAtomValue } from 'jotai'
@@ -30,16 +30,16 @@ export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   const iconName = useMemo(() => {
     switch (type) {
       case 'success':
-        return <IconLaCheckCircleSolid />
+        return <IconPhCheckCircle />
 
       case 'warning':
-        return <IconLaExclamationCircle />
+        return <IconPhWarningCircle />
 
       case 'danger':
-        return <IconLaWindowClose />
+        return <IconPhSkull />
 
       default:
-        return <IconLaInfoCircle />
+        return <IconPhInfo />
     }
   }, [type])
 

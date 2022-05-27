@@ -28,8 +28,8 @@ export const TicketFiltersBlock: React.FC<Props> = () => {
 
         {hasAnyFilter && (
           <button className="btn  btn-circle btn-ghost btn-sm" onClick={resetFilters}>
-            <MIcon className="tooltip tooltip-right tooltip-secondary text-lg" data-tip="Reset all">
-              <IconLaTimesCircle />
+            <MIcon className="tooltip tooltip-right tooltip-secondary" data-tip="Reset all">
+              <IconPhXCircle />
             </MIcon>
           </button>
         )}

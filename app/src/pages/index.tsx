@@ -58,13 +58,19 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
             <button className="btn btn-ghost btn-sm flex items-center gap-2 text-base-100">
               <span>Contact sales</span>
               <MIcon>
-                <IconLaArrowCircleRight />
+                <IconPhMegaphone />
               </MIcon>
             </button>
 
             <Link href={user === undefined || user === null ? '/login' : getUserHome(user.user.role)}>
-              <a className="btn btn-ghost btn-sm text-base-100">
-                {user === undefined || user === null ? 'Login / Signup' : 'Go to home'}
+              <a className="btn btn-ghost btn-sm flex items-center gap-2 text-base-100">
+                {user === undefined || user === null ? (
+                  'Login / Signup'
+                ) : (
+                  <>
+                    <span>Go to home</span> <IconPhHouse />
+                  </>
+                )}
               </a>
             </Link>
           </div>
@@ -85,14 +91,20 @@ const IndexPage: NextPageWithLayout<Props> = ({ user }) => {
               <button className="btn btn-primary btn-sm flex items-center gap-2 !font-bold sm:btn-md">
                 <span>Contact sales</span>
                 <MIcon>
-                  <IconLaArrowCircleRight />
+                  <IconPhMegaphone />
                 </MIcon>
               </button>
             )}
 
             <Link href={user === undefined || user === null ? '/login' : getUserHome(user.user.role)}>
-              <a className={clsx(['   btn btn-sm sm:btn-md', (user === undefined || user === null) && 'btn-outline'])}>
-                {user === undefined || user === null ? 'Login / Signup' : 'Go to home'}
+              <a className={clsx(['btn btn-sm  flex items-center gap-2 text-base-100 sm:btn-md'])}>
+                {user === undefined || user === null ? (
+                  'Login / Signup'
+                ) : (
+                  <>
+                    <span>Go to home</span> <IconPhHouse />
+                  </>
+                )}
               </a>
             </Link>
           </div>

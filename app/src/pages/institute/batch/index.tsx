@@ -47,7 +47,7 @@ const Batches: NextPageWithLayout = () => {
         label: 'Edit',
         format: ({ id }) => (
           <MLink href={`/institute/batch?batchId=${id as number}`} as={`/institute/batch/${id as number}`}>
-            <IconLaPenSquare className="text-lg" />
+            <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),
       },
