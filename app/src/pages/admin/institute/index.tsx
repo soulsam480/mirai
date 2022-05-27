@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { NextPageWithLayout } from 'pages/_app'
 import { useMemo } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import IconPhPencilSimple from '~icons/la/penSquare.jsx'
+import IconPhPencilSimple from '~icons/ph/pencil-simple.jsx'
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 

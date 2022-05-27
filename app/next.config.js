@@ -36,7 +36,7 @@ const nextConfig = {
       require('unplugin-icons/webpack')({
         compiler: 'jsx',
         jsx: 'react',
-        autoInstall: true,
+        // autoInstall: true,
         prefix: 'icon',
         extension: 'jsx',
       }),
@@ -45,6 +45,13 @@ const nextConfig = {
     // config.plugins.push(new ForkTsCheckerWebpackPlugin())
 
     return config
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
   },
   swcMinify: true,
   distDir: 'dist',

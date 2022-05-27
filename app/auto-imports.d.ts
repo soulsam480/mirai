@@ -27,6 +27,8 @@ declare global {
   const IconPhRocket: typeof import('~icons/ph/rocket.jsx')['default']
   const IconPhRuler: typeof import('~icons/ph/ruler.jsx')['default']
   const IconPhShieldCheckered: typeof import('~icons/ph/shield-checkered.jsx')['default']
+  const IconPhSortAscending: typeof import('~icons/ph/sort-ascending.jsx')['default']
+  const IconPhSortDescending: typeof import('~icons/ph/sort-descending.jsx')['default']
   const IconPhStudent: typeof import('~icons/ph/student.jsx')['default']
   const IconPhSun: typeof import('~icons/ph/sun.jsx')['default']
   const IconPhTable: typeof import('~icons/ph/table.jsx')['default']
@@ -36,5 +38,6 @@ declare global {
   const IconPhUsers: typeof import('~icons/ph/users.jsx')['default']
   const IconPhWarningCircle: typeof import('~icons/ph/warning-circle.jsx')['default']
   const IconPhX: typeof import('~icons/ph/x.jsx')['default']
+  const IconPhXCircle: typeof import('~icons/ph/x-circle.jsx')['default']
 }
 export {}

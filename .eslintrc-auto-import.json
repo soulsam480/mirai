@@ -26,6 +26,8 @@
     "IconPhRocket": true,
     "IconPhRuler": true,
     "IconPhShieldCheckered": true,
+    "IconPhSortAscending": true,
+    "IconPhSortDescending": true,
     "IconPhStudent": true,
     "IconPhSun": true,
     "IconPhTable": true,
@@ -34,6 +36,7 @@
     "IconPhUser": true,
     "IconPhUsers": true,
     "IconPhWarningCircle": true,
-    "IconPhX": true
+    "IconPhX": true,
+    "IconPhXCircle": true
   }
 }
