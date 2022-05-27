@@ -124,7 +124,6 @@ importers:
     specifiers:
       '@headlessui/react': ^1.6.3
       '@hookform/resolvers': ^2.8.8
-      '@iconify-json/la': ^1.1.1
       '@iconify-json/ph': ^1.1.1
       '@popperjs/core': ^2.11.5
       '@prisma/client': '*'
