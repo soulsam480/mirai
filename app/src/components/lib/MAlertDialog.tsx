@@ -23,7 +23,7 @@ export const MAlertDialog: React.FC<Props> = ({ label, onConfirm, onReject, show
         <div className="flex items-center justify-end gap-4">
           <button className="   btn btn-outline btn-sm items-center gap-1" onClick={() => onReject?.(false)}>
             <MIcon>
-              <IconLaCheckCircleSolid />
+              <IconPhCheckCircle />
             </MIcon>
 
             <span>Cancel</span>
@@ -31,7 +31,7 @@ export const MAlertDialog: React.FC<Props> = ({ label, onConfirm, onReject, show
 
           <button className="btn btn-error btn-sm items-center gap-1" onClick={onConfirm}>
             <MIcon>
-              <IconLaExclamationCircle />
+              <IconPhWarningCircle />
             </MIcon>
 
             <span>Continue</span>

@@ -32,14 +32,14 @@ export const SkillCard = React.memo<Props>(({ skill, onEdit }) => {
       <MFeatureCard.Body>
         <div className="flex items-center gap-2 ">
           <MIcon className="text-base">
-            <IconLaShieldAlt />
+            <IconPhShieldCheckered />
           </MIcon>
           <span className="text-lg">{skill.name}</span>
         </div>
 
         <div className="flex items-center gap-2 ">
           <MIcon className="text-sm">
-            <IconLaRulerCombined />
+            <IconPhRuler />
           </MIcon>
           <span className="text-sm">{skill.score}</span>
         </div>
@@ -47,16 +47,16 @@ export const SkillCard = React.memo<Props>(({ skill, onEdit }) => {
 
       <MFeatureCard.Footer>
         {/* // TODO: read only mode */}
-        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit(skill)}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-base-content" onClick={() => onEdit(skill)}>
           <MIcon>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </MIcon>
 
           <span>Edit</span>
         </button>
-        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
-            <IconLaTrashAltSolid />
+            <IconPhTrash />
           </MIcon>
 
           <span>Delete</span>

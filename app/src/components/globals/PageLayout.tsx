@@ -25,7 +25,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ createActionUrl, createLabel, h
 
       <MLink className="btn btn-outline btn-sm flex items-center gap-2" href={createActionUrl}>
         <MIcon>
-          <IconLaPlusCircle />
+          <IconPhPlus />
         </MIcon>
         <span>{createLabel}</span>
       </MLink>

@@ -129,7 +129,7 @@ const StudentProfile: NextPageWithLayout = () => {
         <div className="dropdown dropdown-top w-full">
           <label tabIndex={0} className="btn btn-ghost btn-block flex gap-2 rounded-none">
             <MIcon className="text-lg">
-              <IconLaUserCircle />
+              <IconPhUser />
             </MIcon>
 
             <span>Profile menu</span>

@@ -36,7 +36,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
       <MFeatureCard.Body>
         <div className="flex items-center gap-2">
           <MIcon className="text-base">
-            <IconLaUserGraduate />
+            <IconPhGraduationCap />
           </MIcon>
           <span className="text-lg">{certification.name}</span>
         </div>
@@ -44,7 +44,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
         {Boolean(certification.subject) && (
           <div className="flex items-center gap-2">
             <MIcon className="text-sm">
-              <IconLaBookReader />
+              <IconPhBookOpen />
             </MIcon>
 
             <span className="text-sm">{certification.subject}</span>
@@ -53,7 +53,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
 
         <div className="flex items-center gap-2">
           <MIcon className="text-sm">
-            <IconLaBuilding />
+            <IconPhBuildings />
           </MIcon>
           <span className="text-sm">{certification.institute}</span>
         </div>
@@ -62,7 +62,7 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-2">
               <MIcon className="text-sm">
-                <IconLaCalendar />
+                <IconPhCalendar />
               </MIcon>
 
               <span className="text-xs">
@@ -82,17 +82,17 @@ export const CertificationCard = React.memo<Props>(({ certification, onEdit }) =
 
       <MFeatureCard.Footer>
         {/* // TODO: read only mode */}
-        <button className="btn btn-link btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-base-content" onClick={() => onEdit()}>
           <MIcon>
-            <IconLaPenSquare />
+            <IconPhPencilSimple />
           </MIcon>
 
           <span>Edit</span>
         </button>
 
-        <button className="btn btn-link btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
+        <button className="btn btn-ghost btn-xs items-center gap-1 text-error" onClick={() => setDeleteDialog(true)}>
           <MIcon>
-            <IconLaTrashAltSolid />
+            <IconPhTrash />
           </MIcon>
 
           <span>Delete</span>

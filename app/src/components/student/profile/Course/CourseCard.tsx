@@ -148,7 +148,12 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
         </div>
         <div className="text-sm text-base-content/60">{courseData.institute.name}</div>
 
-        <div className="mt-3">Score card</div>
+        <div className="mt-3 flex items-center gap-2">
+          <MIcon>
+            <IconPhTable />
+          </MIcon>
+          <span>Score card</span>
+        </div>
 
         <div className="flex rounded-md border border-base-300 text-xs sm:text-sm">
           <div className="flex flex-none flex-col border-r border-base-300">
@@ -182,7 +187,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                       >
                         {key === '_update' ? (
                           <button
-                            className="btn btn-ghost btn-circle btn-sm"
+                            className="btn btn-circle btn-ghost btn-sm"
                             onClick={() => {
                               setSelectedSem(semId)
                               reset(studentScore?.scores?.[String(semId)])
@@ -190,7 +195,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                             }}
                           >
                             <MIcon data-tip={`Update semester ${semId} score`} className="tooltip-top tooltip">
-                              <IconLaPenSquare />
+                              <IconPhPencilSimple />
                             </MIcon>
                           </button>
                         ) : (
@@ -205,9 +210,15 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
           </div>
         </div>
 
-        <div className="mt-3">Backlog details</div>
+        <div className="mt-3 flex items-center gap-2">
+          <MIcon>
+            <IconPhCircleWavyWarning />
+          </MIcon>
 
-        <div className="grid grid-cols-4 gap-2 text-sm">
+          <span>Backlog details</span>
+        </div>
+
+        <div className="grid grid-cols-4 gap-1 text-sm">
           <div>
             <span className="tooltip tooltip-right" data-tip="Ongoing and cleared backlogs">
               Total Backlogs

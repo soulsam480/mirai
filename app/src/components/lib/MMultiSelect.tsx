@@ -123,7 +123,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
                         }}
                         data-tip="Reset value"
                       >
-                        <IconLaUndoAlt />
+                        <IconPhArrowCounterClockwise />
                       </MIcon>
                     )}
 
@@ -134,7 +134,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
                         disabled && 'text-base-300',
                       ])}
                     >
-                      <IconLaChevronDown />
+                      <IconPhCaretDown />
                     </MIcon>
                   </div>
                 )
@@ -156,7 +156,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
                   className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
-                  <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
+                  <IconPhWarningCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
                 </Combobox.Option>
               ) : (
                 filteredOptions.map((option, i) => {
@@ -179,7 +179,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
                           <>
                             {selected && (
                               <MIcon className="text-amber-600">
-                                <IconLaCheckDouble />
+                                <IconPhChecks />
                               </MIcon>
                             )}
                             <span className={clsx([selected ? 'font-semibold text-amber-600' : '', 'flex-grow'])}>

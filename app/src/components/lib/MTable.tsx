@@ -146,7 +146,7 @@ export const MTable: React.FC<Props> = ({
                     <div className="flex items-center">
                       {noDataLabel ?? (
                         <>
-                          <IconLaExclamationTriangle className="text-lg" />
+                          <IconPhWarningCircle className="text-lg" />
                           <span className="ml-1 text-base">No data found !</span>
                         </>
                       )}

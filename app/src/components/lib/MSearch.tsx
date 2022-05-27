@@ -135,7 +135,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                         }}
                         data-tip="Reset value"
                       >
-                        <IconLaUndoAlt />
+                        <IconPhArrowCounterClockwise />
                       </MIcon>
                     )}
 
@@ -146,7 +146,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                         disabled && 'bg-base-200 text-base-300',
                       ])}
                     >
-                      <IconLaChevronDown />
+                      <IconPhCaretDown />
                     </MIcon>
                   </div>
                 )
@@ -162,7 +162,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                   className="flex cursor-not-allowed items-center space-x-2 rounded-sm px-3 py-[6px] text-left font-medium"
                   disabled
                 >
-                  <IconLaExclamationCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
+                  <IconPhWarningCircle className="text-error " /> <span> {noDataLabel ?? 'No options'} </span>
                 </Combobox.Option>
               ) : (
                 filteredOptions.map((option, i) => {

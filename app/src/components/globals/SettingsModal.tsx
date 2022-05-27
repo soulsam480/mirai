@@ -18,7 +18,7 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
 
         <button className="btn btn-ghost btn-circle btn-sm" onClick={() => onClose(false)}>
           <MIcon>
-            <IconLaTimesCircle />
+            <IconPhX />
           </MIcon>
         </button>
       </div>
@@ -36,11 +36,11 @@ export const SettingsModal: React.FC<Props> = ({ onClose }) => {
         >
           <label className={clsx(['swap-rotate swap flex-none', theme === 'light' && 'swap-active'])}>
             <MIcon className="swap-on">
-              <IconLaSun />
+              <IconPhSun />
             </MIcon>
 
             <MIcon className="swap-off">
-              <IconLaMoon />
+              <IconPhMoonStars />
             </MIcon>
           </label>
 

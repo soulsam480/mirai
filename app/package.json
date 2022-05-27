@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@iconify-json/la": "^1.1.1",
+    "@iconify-json/ph": "^1.1.1",
     "@svgr/core": "^6.2.1",
     "@tailwindcss/typography": "^0.5.2",
     "@types/jest": "^27.5.0",

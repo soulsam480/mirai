@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { NextPageWithLayout } from 'pages/_app'
 import { useMemo } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import IconLaPenSquare from '~icons/la/penSquare.jsx'
+import IconPhPencilSimple from '~icons/la/penSquare.jsx'
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
@@ -58,7 +58,7 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
         label: 'Edit',
         format: ({ id }) => (
           <MLink href={`/admin/institute?instituteId=${id as number}`} as={`/admin/institute/${id as number}`}>
-            <IconLaPenSquare className="text-lg" />
+            <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),
       },
