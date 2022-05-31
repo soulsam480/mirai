@@ -2,12 +2,12 @@ import type { Ticket, TicketStatus } from '@prisma/client'
 import { MInput } from 'components/lib/MInput'
 import dayjs from 'dayjs'
 import React from 'react'
-import { Option } from 'types'
 import { TICKET_DISPLAY_KEYS } from 'utils/constnts'
 import { formatDate, titleCase } from 'utils/helpers'
 import { MSelect } from 'lib/MSelect'
 import { useAtom } from 'jotai'
 import { selectedTicketsAtom } from 'stores/ticket'
+import { STATUS_OPTIONS } from 'pages/institute/tickets'
 
 interface Props {
   ticket: Ticket
@@ -16,22 +16,8 @@ interface Props {
   previousTicket: () => void
   nextTicket: () => void
   closeModal: () => void
+  pushTicketToQueue: (tickets: Ticket[]) => Promise<void>
 }
-
-const STATUS_OPTIONS: Array<Option<TicketStatus>> = [
-  {
-    label: 'Resolve',
-    value: 'RESOLVED',
-  },
-  {
-    label: 'In Progress',
-    value: 'INPROGRESS',
-  },
-  {
-    label: 'Close',
-    value: 'CLOSED',
-  },
-]
 
 const ManageTickets: React.FC<Props> = ({
   ticket,
@@ -40,6 +26,7 @@ const ManageTickets: React.FC<Props> = ({
   totalTickets,
   previousTicket,
   nextTicket,
+  pushTicketToQueue,
 }) => {
   const { meta, id } = ticket
   const { data } = meta as Record<string, any>
@@ -67,6 +54,9 @@ const ManageTickets: React.FC<Props> = ({
     })
   }
 
+  const noteValue = selectedTickets.find((ticket) => ticket.id === id)?.notes
+  const statusValue = selectedTickets.find((ticket) => ticket.id === id)?.status
+
   return (
     <form className="flex w-full flex-col gap-5 sm:w-[600px]">
       <div className="flex items-center justify-between">
@@ -74,7 +64,7 @@ const ManageTickets: React.FC<Props> = ({
           Reviewing ticket {'#'}
           {ticket.id}
         </h1>
-        <IconLaTimesCircle onClick={() => closeModal()} />
+        <IconLaTimes className="cursor-pointer text-lg " onClick={() => closeModal()} />
       </div>
 
       <div className="rounded-md bg-base-300/70 p-4">
@@ -93,15 +83,10 @@ const ManageTickets: React.FC<Props> = ({
         <div className="divider my-2"></div>
 
         <div className="grid grid-cols-2 gap-4">
-          <MInput
-            label="Notes"
-            as="textarea"
-            value={selectedTickets.find((ticket) => ticket.id === id)?.notes as string}
-            onChange={handleNotes}
-          />
+          <MInput label="Notes" as="textarea" value={noteValue ?? ''} onChange={handleNotes} />
 
           <MSelect
-            value={selectedTickets.find((ticket) => ticket.id === id)?.status}
+            value={statusValue}
             onChange={handleStatusChange}
             name="status"
             options={STATUS_OPTIONS}
@@ -124,7 +109,13 @@ const ManageTickets: React.FC<Props> = ({
 
         <div className="flex justify-between space-x-2">
           {ticketIndex + 1 === totalTickets && (
-            <button type="button" className="btn  btn-sm mt-5">
+            <button
+              type="button"
+              className="btn  btn-sm mt-5"
+              onClick={async () => {
+                await pushTicketToQueue(selectedTickets)
+              }}
+            >
               Submit
             </button>
           )}

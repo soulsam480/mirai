@@ -1,8 +1,9 @@
-import { Ticket } from '@prisma/client'
+import { Ticket, TicketStatus } from '@prisma/client'
 import { AppLayout } from 'components/globals/AppLayout'
 import ManageTickets from 'components/institute/ticket/ManageTickets'
 import { MBadge } from 'components/lib/MBadge'
 import { MDialog } from 'components/lib/MDialog'
+import { MSelect } from 'components/lib/MSelect'
 import { Column, MTable } from 'components/lib/MTable'
 import { TicketFiltersBlock } from 'components/tickets/filters'
 import { ListingSettings } from 'components/tickets/ListingSettings'
@@ -14,9 +15,27 @@ import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
 import { activeTicketAtom, selectedTicketsAtom } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
+import { useUser } from 'stores/user'
+import { Option } from 'types'
 import { formatDate, titleCase } from 'utils/helpers'
+import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
+
+export const STATUS_OPTIONS: Array<Option<TicketStatus>> = [
+  {
+    label: 'Resolve',
+    value: 'RESOLVED',
+  },
+  {
+    label: 'In Progress',
+    value: 'INPROGRESS',
+  },
+  {
+    label: 'Close',
+    value: 'CLOSED',
+  },
+]
 
 function getStatusColor(status: TicketWithMeta['status']) {
   switch (status) {
@@ -36,12 +55,14 @@ function getStatusColor(status: TicketWithMeta['status']) {
 
 const TicketListing: NextPageWithLayout = () => {
   const { tickets, isLoading } = useTickets()
+  const userData = useUser()
 
   const setFilters = useResetAtom(ticketFiltersAtom)
 
   const [activeModal, setActiveModal] = useState<boolean>(false)
   const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
   const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
+  const [allStatus, setAllStatus] = useState<TicketStatus | ''>('')
 
   const [allTicketsSelected, setSelectAll] = useState(false)
 
@@ -60,14 +81,26 @@ const TicketListing: NextPageWithLayout = () => {
     if ((activeTicketIndex as number) + 1 !== countSelected) void setActiveTicketIndex((prev) => (prev as number) + 1)
   }
 
+  async function pushTicketToQueue(tickets: Ticket[]) {
+    await trpcClient.mutation('ticket.action', {
+      key: userData.owner?.code ?? '',
+      data: tickets.map(({ id, status, notes }) => ({ id, status, notes })),
+    })
+  }
+
+  function reviewAll(value: TicketStatus) {
+    setAllStatus(value)
+    void setSelectedTickets((prev) => prev.map((ticket) => ({ ...ticket, status: value })))
+  }
   const columns = useMemo<Array<Column<TicketWithMeta>>>(() => {
     function handleSelectAll() {
       setSelectAll((prev) => !prev)
 
-      void setSelectedTickets(allTicketsSelected ? [] : tickets)
+      void setSelectedTickets(allTicketsSelected ? [] : tickets.filter(({ status }) => status !== 'RESOLVED'))
     }
 
     function handleTicketSelection(selectedId: number) {
+      setAllStatus('')
       void setSelectedTickets((prev) =>
         prev.find(({ id }) => id === selectedId) !== undefined
           ? prev.filter(({ id }) => id !== selectedId)
@@ -88,11 +121,12 @@ const TicketListing: NextPageWithLayout = () => {
             />
           </div>
         ),
-        format: ({ id }) => (
+        format: ({ id, status }) => (
           <div className="flex items-center justify-center">
             <input
               className="checkbox checkbox-xs"
               type="checkbox"
+              disabled={status === 'RESOLVED'}
               checked={selectedTickets.find((ticket) => ticket.id === id) !== undefined}
               onChange={() => handleTicketSelection(id)}
             />
@@ -128,24 +162,6 @@ const TicketListing: NextPageWithLayout = () => {
         label: 'Closed by',
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
-      // TODO: handle tickets like this from UI when doing batch ops
-      // {
-      //   field: 'action',
-      //   label: 'Action',
-      //   format: ({ id }) => (
-      //     <button
-      //       className="btn btn-xs"
-      //       onClick={async () => {
-      //         await trpcClient.mutation('ticket.action', {
-      //           key: userData.owner?.code ?? '',
-      //           data: [{ id, status: 'RESOLVED' }],
-      //         })
-      //       }}
-      //     >
-      //       Resolve
-      //     </button>
-      //   ),
-      // },
     ]
   }, [allTicketsSelected, selectedTickets, setSelectedTickets, tickets])
 
@@ -172,23 +188,47 @@ const TicketListing: NextPageWithLayout = () => {
         <TicketFiltersBlock />
       </div>
 
-      <div className="h-4">
-        {selectedTickets.length !== 0 && (
-          <div>
-            <p>
-              You have selected {countSelected} tickets,{' '}
+      <div>
+        <>
+          {selectedTickets.length !== 0 && !allTicketsSelected && (
+            <>
+              <div>
+                You have selected {countSelected} tickets,{' '}
+                <button
+                  className="btn  btn-sm"
+                  onClick={() => {
+                    setActiveModal(true)
+                  }}
+                >
+                  Click
+                </button>{' '}
+                to start resolving.
+              </div>
+            </>
+          )}
+        </>
+
+        <>
+          {allTicketsSelected && (
+            <div className="flex items-center gap-3">
+              <div>You have selected {countSelected} tickets, start reviewing in bulk.</div>
+              <MSelect
+                name="status"
+                options={STATUS_OPTIONS}
+                value={allStatus}
+                onChange={reviewAll}
+                width="max-content"
+              />
               <button
-                className="btn  btn-xs"
-                onClick={() => {
-                  setActiveModal(true)
-                }}
+                className="btn btn-sm"
+                disabled={allStatus === ''}
+                onClick={async () => await pushTicketToQueue(selectedTickets)}
               >
-                Click
+                Submit
               </button>{' '}
-              to start resolving.
-            </p>
-          </div>
-        )}
+            </div>
+          )}
+        </>
       </div>
 
       <MTable
@@ -209,6 +249,7 @@ const TicketListing: NextPageWithLayout = () => {
           nextTicket={nextTicket}
           previousTicket={previousTicket}
           totalTickets={countSelected}
+          pushTicketToQueue={pushTicketToQueue}
         />
       </MDialog>
     </div>
