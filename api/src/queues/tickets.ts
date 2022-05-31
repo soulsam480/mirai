@@ -15,7 +15,10 @@ type StudentTicketShape = OverWrite<
 >
 
 void ticketQueue.process(async (job) => {
-  const ticket = await miraiClient.ticket.findFirst({ where: { id: job.data.id } })
+  const ticket = await miraiClient.ticket.findFirst({
+    where: { id: job.data.id },
+    include: { institute: { select: { name: true } } },
+  })
 
   if (ticket === null)
     return {
@@ -40,6 +43,8 @@ void ticketQueue.process(async (job) => {
       data: {
         status: incomingStatus,
         notes,
+        closedAt: incomingStatus === 'CLOSED' ? new Date().toISOString() : null,
+        closedBy: incomingStatus === 'CLOSED' ? ticket.institute.name ?? 'Institute admin' : null,
       },
     })
 

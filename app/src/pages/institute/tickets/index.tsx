@@ -1,10 +1,13 @@
 import { Ticket, TicketStatus } from '@prisma/client'
 import { AppLayout } from 'components/globals/AppLayout'
 import ManageTickets from 'components/institute/ticket/ManageTickets'
+import { MAlertDialog } from 'components/lib/MAlertDialog'
 import { MBadge } from 'components/lib/MBadge'
 import { MDialog } from 'components/lib/MDialog'
+import { MIcon } from 'components/lib/MIcon'
 import { MSelect } from 'components/lib/MSelect'
 import { Column, MTable } from 'components/lib/MTable'
+import { useAlert } from 'components/lib/store/alerts'
 import { TicketFiltersBlock } from 'components/tickets/filters'
 import { ListingSettings } from 'components/tickets/ListingSettings'
 import { TicketWithMeta, useTickets } from 'contexts/useTicket'
@@ -17,7 +20,7 @@ import { activeTicketAtom, selectedTicketsAtom } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { useUser } from 'stores/user'
 import { Option } from 'types'
-import { formatDate, titleCase } from 'utils/helpers'
+import { formatDate, interpolate, titleCase } from 'utils/helpers'
 import { trpcClient } from 'utils/trpc'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
@@ -56,15 +59,16 @@ function getStatusColor(status: TicketWithMeta['status']) {
 const TicketListing: NextPageWithLayout = () => {
   const { tickets, isLoading } = useTickets()
   const userData = useUser()
+  const setAlert = useAlert()
 
-  const setFilters = useResetAtom(ticketFiltersAtom)
-
-  const [activeModal, setActiveModal] = useState<boolean>(false)
   const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
   const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
-  const [allStatus, setAllStatus] = useState<TicketStatus | ''>('')
+  const setFilters = useResetAtom(ticketFiltersAtom)
 
   const [allTicketsSelected, setSelectAll] = useState(false)
+  const [allStatus, setAllStatus] = useState<TicketStatus | null>(null)
+  const [activeModal, setActiveModal] = useState(false)
+  const [alertModal, setAlertModal] = useState(false)
 
   const closeModal = () => {
     setActiveModal(false)
@@ -81,26 +85,69 @@ const TicketListing: NextPageWithLayout = () => {
     if ((activeTicketIndex as number) + 1 !== countSelected) void setActiveTicketIndex((prev) => (prev as number) + 1)
   }
 
-  async function pushTicketToQueue(tickets: Ticket[]) {
-    await trpcClient.mutation('ticket.action', {
+  async function pushTicketToQueue() {
+    const resp = await trpcClient.mutation('ticket.action', {
       key: userData.owner?.code ?? '',
-      data: tickets.map(({ id, status, notes }) => ({ id, status, notes })),
+      data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
     })
+
+    const { success, data } = resp
+
+    if (success === true) return
+
+    // eslint-disable-next-line no-console
+    console.log(data)
   }
 
   function reviewAll(value: TicketStatus) {
     setAllStatus(value)
     void setSelectedTickets((prev) => prev.map((ticket) => ({ ...ticket, status: value })))
   }
+
   const columns = useMemo<Array<Column<TicketWithMeta>>>(() => {
     function handleSelectAll() {
+      if (allTicketsSelected) {
+        setSelectAll((prev) => !prev)
+        return setSelectedTickets([])
+      }
+
+      const toBelSelected = tickets.filter(({ status }) => !['RESOLVED', 'CLOSED'].includes(status))
+
+      if (toBelSelected.length === 0) {
+        return setAlert({
+          message: 'Only tickets with OPEN or INPROGRESS status can be selected',
+          type: 'danger',
+        })
+      }
+
+      if (toBelSelected.length > 100) {
+        setSelectAll((prev) => !prev)
+        void setSelectedTickets(toBelSelected.slice(99))
+
+        setAlert({
+          message: 'Maximum 100 tickets can be selected at once for bulk actions',
+          type: 'danger',
+        })
+      }
+
+      if (
+        toBelSelected.length > 1 &&
+        toBelSelected.slice(1).find(({ status }) => status === toBelSelected[0].status) !== undefined
+      ) {
+        return setAlert({
+          message: 'Only tickets of similar status can be selected for bulk actions',
+          type: 'danger',
+        })
+      }
+
       setSelectAll((prev) => !prev)
 
-      void setSelectedTickets(allTicketsSelected ? [] : tickets.filter(({ status }) => status !== 'RESOLVED'))
+      void setSelectedTickets(toBelSelected)
     }
 
     function handleTicketSelection(selectedId: number) {
-      setAllStatus('')
+      setAllStatus(null)
+
       void setSelectedTickets((prev) =>
         prev.find(({ id }) => id === selectedId) !== undefined
           ? prev.filter(({ id }) => id !== selectedId)
@@ -126,7 +173,7 @@ const TicketListing: NextPageWithLayout = () => {
             <input
               className="checkbox checkbox-xs"
               type="checkbox"
-              disabled={status === 'RESOLVED'}
+              disabled={['RESOLVED', 'CLOSED'].includes(status)}
               checked={selectedTickets.find((ticket) => ticket.id === id) !== undefined}
               onChange={() => handleTicketSelection(id)}
             />
@@ -163,7 +210,7 @@ const TicketListing: NextPageWithLayout = () => {
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
     ]
-  }, [allTicketsSelected, selectedTickets, setSelectedTickets, tickets])
+  }, [allTicketsSelected, selectedTickets, setAlert, setSelectedTickets, tickets])
 
   useEffect(() => {
     if (allTicketsSelected && selectedTickets.length === 0) {
@@ -188,48 +235,60 @@ const TicketListing: NextPageWithLayout = () => {
         <TicketFiltersBlock />
       </div>
 
-      <div>
-        <>
+      {(selectedTickets.length !== 0 || allTicketsSelected) && (
+        <div className="mt-5 flex items-center gap-2">
           {selectedTickets.length !== 0 && !allTicketsSelected && (
             <>
-              <div>
-                You have selected {countSelected} tickets,{' '}
-                <button
-                  className="btn  btn-sm"
-                  onClick={() => {
-                    setActiveModal(true)
-                  }}
-                >
-                  Click
-                </button>{' '}
-                to start resolving.
-              </div>
+              <div>{interpolate('{{count}} ticket selected', { count: countSelected })}</div>
+
+              <button
+                className="btn btn-sm flex items-center gap-2"
+                onClick={() => {
+                  setActiveModal(true)
+                }}
+              >
+                <MIcon>
+                  <IconPhListChecks />
+                </MIcon>
+                <span>Start review</span>
+              </button>
             </>
           )}
-        </>
 
-        <>
           {allTicketsSelected && (
-            <div className="flex items-center gap-3">
-              <div>You have selected {countSelected} tickets, start reviewing in bulk.</div>
+            <>
+              <div>All tickets selected</div>
+
               <MSelect
                 name="status"
                 options={STATUS_OPTIONS}
                 value={allStatus}
                 onChange={reviewAll}
                 width="max-content"
+                palceholder="Select status to continue"
               />
-              <button
-                className="btn btn-sm"
-                disabled={allStatus === ''}
-                onClick={async () => await pushTicketToQueue(selectedTickets)}
-              >
+
+              <button className="btn btn-sm" disabled={allStatus === null} onClick={() => setAlertModal(true)}>
                 Submit
-              </button>{' '}
-            </div>
+              </button>
+            </>
           )}
-        </>
-      </div>
+        </div>
+      )}
+
+      <MAlertDialog
+        label={
+          allTicketsSelected
+            ? 'Submit bulk action ? This is an irreversible operation.'
+            : 'Submit ticket review ? This is an irreversible operation.'
+        }
+        show={alertModal}
+        onReject={setAlertModal}
+        onConfirm={() => {
+          void pushTicketToQueue()
+          setAlertModal(false)
+        }}
+      />
 
       <MTable
         className="mt-4"
@@ -249,7 +308,7 @@ const TicketListing: NextPageWithLayout = () => {
           nextTicket={nextTicket}
           previousTicket={previousTicket}
           totalTickets={countSelected}
-          pushTicketToQueue={pushTicketToQueue}
+          onSubmit={() => setAlertModal(true)}
         />
       </MDialog>
     </div>

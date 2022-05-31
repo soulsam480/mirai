@@ -15,6 +15,7 @@ declare global {
   const IconPhMoonStars: typeof import('~icons/ph/moon-stars.jsx')['default']
   const IconPhPencilSimple: typeof import('~icons/ph/pencil-simple.jsx')['default']
   const IconPhPlus: typeof import('~icons/ph/plus.jsx')['default']
+  const IconPhListChecks: typeof import('~icons/ph/list-checks.jsx')['default']
   const IconPhSortAscending: typeof import('~icons/ph/sort-ascending.jsx')['default']
   const IconPhSortDescending: typeof import('~icons/ph/sort-descending.jsx')['default']
   const IconPhStudent: typeof import('~icons/ph/student.jsx')['default']

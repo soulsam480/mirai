@@ -16,7 +16,7 @@ interface Props {
   previousTicket: () => void
   nextTicket: () => void
   closeModal: () => void
-  pushTicketToQueue: (tickets: Ticket[]) => Promise<void>
+  onSubmit: () => void
 }
 
 const ManageTickets: React.FC<Props> = ({
@@ -26,7 +26,7 @@ const ManageTickets: React.FC<Props> = ({
   totalTickets,
   previousTicket,
   nextTicket,
-  pushTicketToQueue,
+  onSubmit,
 }) => {
   const { meta, id } = ticket
   const { data } = meta as Record<string, any>
@@ -58,13 +58,13 @@ const ManageTickets: React.FC<Props> = ({
   const statusValue = selectedTickets.find((ticket) => ticket.id === id)?.status
 
   return (
-    <form className="flex w-full flex-col gap-5 sm:w-[600px]">
+    <div className="flex w-full flex-col gap-5 sm:w-[600px]">
       <div className="flex items-center justify-between">
         <h1 className="p-2 text-xl font-semibold">
           Reviewing ticket {'#'}
           {ticket.id}
         </h1>
-        <IconLaTimes className="cursor-pointer text-lg " onClick={() => closeModal()} />
+        <IconPhX className="cursor-pointer text-lg " onClick={() => closeModal()} />
       </div>
 
       <div className="rounded-md bg-base-300/70 p-4">
@@ -95,7 +95,7 @@ const ManageTickets: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="flex justify-between space-x-2">
+      <div className="flex justify-between gap-2">
         <div>
           <button
             type="button"
@@ -107,18 +107,13 @@ const ManageTickets: React.FC<Props> = ({
           </button>{' '}
         </div>
 
-        <div className="flex justify-between space-x-2">
+        <div className="flex justify-between gap-2">
           {ticketIndex + 1 === totalTickets && (
-            <button
-              type="button"
-              className="btn  btn-sm mt-5"
-              onClick={async () => {
-                await pushTicketToQueue(selectedTickets)
-              }}
-            >
+            <button type="button" className="btn  btn-sm mt-5" onClick={onSubmit}>
               Submit
             </button>
           )}
+
           <button
             type="button"
             disabled={ticketIndex + 1 === totalTickets}
@@ -129,7 +124,7 @@ const ManageTickets: React.FC<Props> = ({
           </button>
         </div>
       </div>
-    </form>
+    </div>
   )
 }
 
