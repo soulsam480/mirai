@@ -1,6 +1,6 @@
-import { Ticket, TicketStatus } from '@prisma/client'
+import type { Ticket, TicketStatus } from '@prisma/client'
 import { AppLayout } from 'components/globals/AppLayout'
-import ManageTickets from 'components/institute/ticket/ManageTickets'
+import { ManageTickets } from 'components/institute/ticket/ManageTickets'
 import { MAlertDialog } from 'components/lib/MAlertDialog'
 import { MBadge } from 'components/lib/MBadge'
 import { MDialog } from 'components/lib/MDialog'
@@ -10,13 +10,14 @@ import { Column, MTable } from 'components/lib/MTable'
 import { useAlert } from 'components/lib/store/alerts'
 import { TicketFiltersBlock } from 'components/tickets/filters'
 import { ListingSettings } from 'components/tickets/ListingSettings'
+import { useInstituteAssets } from 'contexts'
 import { TicketWithMeta, useTickets } from 'contexts/useTicket'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
 import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo, useState } from 'react'
 import { getServerSideAuthGuard } from 'server/lib/auth'
-import { activeTicketAtom, selectedTicketsAtom } from 'stores/ticket'
+import { activeTicketAtom, selectedTicketsAtom, selectedTicketsSetAtom } from 'stores/ticket'
 import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { useUser } from 'stores/user'
 import { Option } from 'types'
@@ -56,12 +57,15 @@ function getStatusColor(status: TicketWithMeta['status']) {
   }
 }
 
-const TicketListing: NextPageWithLayout = () => {
+const Tickets: NextPageWithLayout = () => {
+  useInstituteAssets()
   const { tickets, isLoading } = useTickets()
   const userData = useUser()
   const setAlert = useAlert()
 
   const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
+  // this is a setter of the write-only atom which makes two copies of selected tickets
+  const setSelectedTicketsStore = useSetAtom(selectedTicketsSetAtom)
   const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
   const setFilters = useResetAtom(ticketFiltersAtom)
 
@@ -93,6 +97,7 @@ const TicketListing: NextPageWithLayout = () => {
 
     const { success, data } = resp
 
+    // TODO: reset all kind of state here after submission
     if (success === true) return
 
     // eslint-disable-next-line no-console
@@ -108,6 +113,8 @@ const TicketListing: NextPageWithLayout = () => {
     function handleSelectAll() {
       if (allTicketsSelected) {
         setSelectAll((prev) => !prev)
+        // looks a bit weired but setter functions are not available in
+        // write-only atoms
         return setSelectedTickets([])
       }
 
@@ -124,7 +131,7 @@ const TicketListing: NextPageWithLayout = () => {
         setSelectAll((prev) => !prev)
         void setSelectedTickets(toBelSelected.slice(99))
 
-        setAlert({
+        return setAlert({
           message: 'Maximum 100 tickets can be selected at once for bulk actions',
           type: 'danger',
         })
@@ -146,9 +153,17 @@ const TicketListing: NextPageWithLayout = () => {
     }
 
     function handleTicketSelection(selectedId: number) {
+      // when a new ticket is being selected
+      if (selectedTickets.length === 100 && selectedTickets.find(({ id }) => id === selectedId) === undefined) {
+        return setAlert({
+          message: 'Maximum 100 tickets can be selected for review',
+          type: 'danger',
+        })
+      }
+
       setAllStatus(null)
 
-      void setSelectedTickets((prev) =>
+      void setSelectedTicketsStore((prev) =>
         prev.find(({ id }) => id === selectedId) !== undefined
           ? prev.filter(({ id }) => id !== selectedId)
           : [...prev, tickets.find(({ id }) => id === selectedId) as Ticket],
@@ -210,7 +225,7 @@ const TicketListing: NextPageWithLayout = () => {
         format: (ticket) => <>{ticket.closedBy === null ? '-' : ticket.closedBy}</>,
       },
     ]
-  }, [allTicketsSelected, selectedTickets, setAlert, setSelectedTickets, tickets])
+  }, [allTicketsSelected, tickets, setSelectedTickets, setAlert, setSelectedTicketsStore, selectedTickets])
 
   useEffect(() => {
     if (allTicketsSelected && selectedTickets.length === 0) {
@@ -221,8 +236,9 @@ const TicketListing: NextPageWithLayout = () => {
   useEffect(() => {
     return () => {
       void setFilters()
+      void setSelectedTicketsStore(() => [])
     }
-  }, [setFilters])
+  }, [setFilters, setSelectedTicketsStore])
 
   return (
     <div className="flex flex-col gap-2">
@@ -251,6 +267,18 @@ const TicketListing: NextPageWithLayout = () => {
                   <IconPhListChecks />
                 </MIcon>
                 <span>Start review</span>
+              </button>
+
+              <button
+                className="btn btn-sm flex items-center gap-2"
+                onClick={() => {
+                  void setSelectedTicketsStore(() => [])
+                }}
+              >
+                <MIcon>
+                  <IconPhArrowCounterClockwise />
+                </MIcon>
+                <span>Discard selection</span>
               </button>
             </>
           )}
@@ -303,11 +331,8 @@ const TicketListing: NextPageWithLayout = () => {
       <MDialog show={activeModal} onClose={() => null} noEscape>
         <ManageTickets
           closeModal={closeModal}
-          ticket={selectedTickets[activeTicketIndex] as Ticket}
-          ticketIndex={activeTicketIndex}
           nextTicket={nextTicket}
           previousTicket={previousTicket}
-          totalTickets={countSelected}
           onSubmit={() => setAlertModal(true)}
         />
       </MDialog>
@@ -315,6 +340,6 @@ const TicketListing: NextPageWithLayout = () => {
   )
 }
 
-TicketListing.getLayout = (page) => <AppLayout>{page}</AppLayout>
+Tickets.getLayout = (page) => <AppLayout>{page}</AppLayout>
 
-export default TicketListing
+export default Tickets

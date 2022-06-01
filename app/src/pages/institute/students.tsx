@@ -3,7 +3,7 @@ import { Column, MTable } from 'lib/MTable'
 import { StudentsListingType, useStudents } from 'contexts/useStudents'
 import { useEffect, useMemo, useState } from 'react'
 import { NextPageWithLayout } from '../_app'
-import { useStudentFilters } from 'contexts'
+import { useInstituteAssets } from 'contexts'
 import { studentFiltersAtom } from 'stores/student'
 import { useResetAtom } from 'jotai/utils'
 import { getServerSideAuthGuard } from 'server/lib/auth'
@@ -14,7 +14,7 @@ import { GenerateUrlDialog } from 'components/institute/student/GenerateUrlDialo
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
 const InstituteStudents: NextPageWithLayout = () => {
-  useStudentFilters()
+  useInstituteAssets()
 
   const { isLoading, students } = useStudents()
   const setFilters = useResetAtom(studentFiltersAtom)

@@ -7,6 +7,8 @@ import { useEffectOnce } from 'react-use'
 import { themeAtom } from 'stores/config'
 import { TRPCErrorType } from 'types'
 
+export * from './student'
+
 export function useMounted() {
   const [mounted, setMounted] = useState(false)
 
