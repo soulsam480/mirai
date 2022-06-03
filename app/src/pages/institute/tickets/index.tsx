@@ -90,18 +90,14 @@ const Tickets: NextPageWithLayout = () => {
   }
 
   async function pushTicketToQueue() {
-    const resp = await trpcClient.mutation('ticket.action', {
+    await trpcClient.mutation('ticket.action', {
       key: userData.owner?.code ?? '',
       data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
     })
 
-    const { success, data } = resp
-
-    // TODO: reset all kind of state here after submission
-    if (success === true) return
-
-    // eslint-disable-next-line no-console
-    console.log(data)
+    setAlertModal(false)
+    setActiveModal(false)
+    void setSelectedTickets([])
   }
 
   function reviewAll(value: TicketStatus) {
@@ -312,10 +308,7 @@ const Tickets: NextPageWithLayout = () => {
         }
         show={alertModal}
         onReject={setAlertModal}
-        onConfirm={() => {
-          void pushTicketToQueue()
-          setAlertModal(false)
-        }}
+        onConfirm={async () => await pushTicketToQueue()}
       />
 
       <MTable
@@ -328,14 +321,16 @@ const Tickets: NextPageWithLayout = () => {
         settingsSlot={<ListingSettings />}
       />
 
-      <MDialog show={activeModal} onClose={() => null} noEscape>
-        <ManageTickets
-          closeModal={closeModal}
-          nextTicket={nextTicket}
-          previousTicket={previousTicket}
-          onSubmit={() => setAlertModal(true)}
-        />
-      </MDialog>
+      {activeModal && (
+        <MDialog show={activeModal} onClose={() => null} noEscape>
+          <ManageTickets
+            closeModal={closeModal}
+            nextTicket={nextTicket}
+            previousTicket={previousTicket}
+            onSubmit={() => setAlertModal(true)}
+          />
+        </MDialog>
+      )}
     </div>
   )
 }
