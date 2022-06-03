@@ -10,6 +10,7 @@ import { OnboardingDialog } from './OnboardingDialog'
 import type { Tour } from 'react-shepherd'
 import { createBreakpoint } from 'react-use'
 import { toggleTour } from 'api'
+import type { Role } from '@prisma/client'
 
 const PlatformTour = dynamic(async () => await import('components/globals/PlatformTour'), { ssr: false })
 
@@ -69,22 +70,30 @@ const sidebarConfig = {
     {
       label: 'Profile',
       path: '/profile',
+      active: (path) => path.includes('/profile'),
       icon: <IconPhUser />,
+      id: 'm-stu-profile',
     },
     {
       label: 'My Applications',
       path: '/applications',
+      active: (path) => path.includes('/applications'),
       icon: <IconPhFiles />,
+      id: 'm-stu-applications',
     },
     {
       label: 'Opportunities',
       path: '/opportunities',
+      active: (path) => path.includes('/opportunities'),
       icon: <IconPhHandshake />,
+      id: 'm-stu-opportunities',
     },
   ]),
 }
 
 const useBreakpoint = createBreakpoint({ lg: 1024 })
+
+const enabledRoles: Role[] = ['INSTITUTE', 'STUDENT']
 
 export const SideBar: React.FC<Props> = ({ children }) => {
   const userData = useUser()
@@ -92,7 +101,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
   const breakpoint = useBreakpoint()
 
   const tour = useRef<Tour | null>(null)
-  const [showDialog, setDialog] = useState(userData?.role !== 'INSTITUTE' ? false : userData?.showTour ?? false)
+  const [showDialog, setDialog] = useState(!enabledRoles.includes(userData.role) ? false : userData.showTour ?? false)
 
   async function onStart() {
     setDialog(false)
@@ -175,6 +184,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
         assignRef={(base) => {
           tour.current = base
         }}
+        role={userData.role}
       />
     </div>
   )
