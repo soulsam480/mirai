@@ -26,16 +26,20 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
-  return getLayout(
+  return (
     <AppProviders pageProps={pageProps}>
-      <Component {...pageProps} />
-      {typeof window !== 'undefined' && (
+      {getLayout(
         <>
-          <MLoader />
-          <MAlertGroup />
-        </>
+          <Component {...pageProps} />
+          {typeof window !== 'undefined' && (
+            <>
+              <MLoader />
+              <MAlertGroup />
+            </>
+          )}
+        </>,
       )}
-    </AppProviders>,
+    </AppProviders>
   )
 }) as AppType
 
@@ -62,6 +66,7 @@ export default withTRPC<AppRouter>({
           },
         },
       },
+      // url: `${getBaseUrl() as string}/api/trpc`,
     }
   },
   /**

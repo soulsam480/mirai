@@ -26,7 +26,7 @@ export function useUser() {
   const userData = useAtomValue(userAtom)
 
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  if (userData === null) return {} as User
+  if (userData === null) return null as unknown as User
 
   return userData
 }

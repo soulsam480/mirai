@@ -1,9 +1,10 @@
+import type { Role } from '@prisma/client'
 import React, { useContext, useEffect } from 'react'
 import { ShepherdOptionsWithType, ShepherdTour, ShepherdTourContext, Tour } from 'react-shepherd'
-// import 'shepherd.js/dist/css/shepherd.css'
 
 interface Props {
   assignRef: (tour: Tour | null) => void
+  role: Role
 }
 
 const tourOptions: Tour.TourOptions = {
@@ -34,24 +35,46 @@ const tourOptions: Tour.TourOptions = {
   useModalOverlay: true,
 }
 
-const steps: ShepherdOptionsWithType[] = [
-  {
-    attachTo: { element: '#m-inst-departments', on: 'bottom' },
-    text: ['Manage departments here !'],
-  },
-  {
-    attachTo: { element: '#m-inst-courses', on: 'bottom' },
-    text: ['Manage courses here !'],
-  },
-  {
-    attachTo: { element: '#m-inst-batches', on: 'bottom' },
-    text: ['Manage batches here !'],
-  },
-  {
-    attachTo: { element: '#m-inst-students', on: 'bottom' },
-    text: ['Manage students here !'],
-  },
-]
+const steps: Record<Role, ShepherdOptionsWithType[]> = {
+  INSTITUTE: [
+    {
+      attachTo: { element: '#m-inst-departments', on: 'bottom' },
+      text: ['Manage departments here.'],
+    },
+    {
+      attachTo: { element: '#m-inst-courses', on: 'bottom' },
+      text: ['Manage courses here.'],
+    },
+    {
+      attachTo: { element: '#m-inst-batches', on: 'bottom' },
+      text: ['Manage batches here.'],
+    },
+    {
+      attachTo: { element: '#m-inst-students', on: 'bottom' },
+      text: ['Manage students here.'],
+    },
+    {
+      attachTo: { element: '#m-inst-tickets', on: 'bottom' },
+      text: ['Review and manage support tickets from students here.'],
+    },
+  ],
+  STUDENT: [
+    {
+      attachTo: { element: '#m-stu-profile', on: 'bottom' },
+      text: ['This is your profile. You can modify your profile to get better job offers.'],
+    },
+    {
+      attachTo: { element: '#m-stu-applications', on: 'bottom' },
+      text: ['View your job applications and more here.'],
+    },
+    {
+      attachTo: { element: '#m-stu-opportunities', on: 'bottom' },
+      text: ['Explore various offers that are available at your institute and on Mirai here.'],
+    },
+  ],
+  ADMIN: [],
+  INSTITUTE_MOD: [],
+}
 
 function TourInstance({ assignRef }: { assignRef: (tour: Tour | null) => void }) {
   const tour = useContext(ShepherdTourContext)
@@ -65,9 +88,9 @@ function TourInstance({ assignRef }: { assignRef: (tour: Tour | null) => void })
   return <></>
 }
 
-const PlatformTour: React.FC<Props> = ({ assignRef }) => {
+const PlatformTour: React.FC<Props> = ({ assignRef, role }) => {
   return typeof window === 'undefined' ? null : (
-    <ShepherdTour tourOptions={tourOptions} steps={steps}>
+    <ShepherdTour tourOptions={tourOptions} steps={steps[role]}>
       <TourInstance assignRef={assignRef} />
     </ShepherdTour>
   )
