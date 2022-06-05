@@ -10,15 +10,13 @@ export interface SessionUser {
 export const createContext = async ({ req, res }: CreateFastifyContextOptions) => {
   // for API-response caching see https://trpc.io/docs/caching
 
-  const session = req.headers.authorization ?? '{}'
-  const serializedSession = JSON.parse(session)
+  const session = req.session()
 
   return {
     req,
     res,
     prisma: miraiClient,
-    session:
-      session !== undefined && Object.keys(serializedSession).length > 0 ? (serializedSession as SessionUser) : null,
+    session,
   }
 }
 

@@ -4,5 +4,6 @@ declare namespace NodeJS {
     REFRESH_TOKEN_SECRET: string
     ACCESS_TOKEN_SECRET: string
     NEXT_API_BASE: string
+    NEXT_WS_BASE: string
   }
 }

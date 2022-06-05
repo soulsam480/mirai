@@ -9,8 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const searlizedSession = JSON.stringify(session)
 
   return await httpProxyMiddleware(req, res, {
-    // TODO: properly setup the BASE_URL later
-    target: 'http://localhost:4002',
+    target: process.env.NEXT_API_BASE ?? 'http://localhost:4002',
     headers: {
       Authorization: searlizedSession,
     },

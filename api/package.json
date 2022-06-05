@@ -9,7 +9,7 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "pnpm prisma migrate dev --schema=../prisma/schema.prisma",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dev": "vite",
+    "dev": "cross-env NODE_ENV=development ts-node-dev --respawn --rs --transpile-only --exit-child --ignore-watch node_modules --files -- src/app.ts",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
@@ -29,23 +29,28 @@
   "dependencies": {
     "@bull-board/api": "^3.11.0",
     "@bull-board/fastify": "^3.11.0",
+    "@fastify/autoload": "^4.0.1",
+    "@fastify/cookie": "^6.0.0",
+    "@fastify/cors": "^7.0.0",
+    "@fastify/websocket": "^5.0.0",
     "@trpc/server": "^9.23.6",
     "bull": "^4.8.3",
     "dotenv": "^16.0.1",
-    "events": "^3.3.0",
     "fastify": "^3.29.0",
+    "fastify-plugin": "^3.0.1",
+    "next-auth": "*",
     "pino": "^7.11.0",
     "pino-pretty": "^7.6.1",
     "prisma": "^3.14.0",
     "prisma-exclude": "^1.0.2",
     "superjson": "^1.9.1",
-    "url": "^0.11.0"
+    "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
     "@mirai/app": "workspace:*",
     "@swc/core": "*",
     "@types/bull": "^3.15.8",
-    "vite": "^2.9.9",
-    "vite-plugin-node": "^1.0.0"
+    "@types/ws": "^8.5.3",
+    "typescript": "*"
   }
 }

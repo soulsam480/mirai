@@ -25,10 +25,10 @@
     "axios": "^0.27.2",
     "clsx": "^1.1.1",
     "daisyui": "^2.15.1",
+    "isomorphic-ws": "^4.0.1",
     "jotai": "^1.6.7",
     "mitt": "^3.0.0",
     "next": "^12.1.6",
-    "next-auth": "^4.3.4",
     "next-compose-plugins": "^2.2.1",
     "next-http-proxy-middleware": "^1.2.4",
     "next-transpile-modules": "^9.0.0",
@@ -38,7 +38,9 @@
     "react-query": "^3.39.0",
     "react-shepherd": "^3.3.6",
     "react-use": "^17.4.0",
-    "superjson": "^1.9.1"
+    "reconnecting-websocket": "^4.4.0",
+    "superjson": "^1.9.1",
+    "ws": "^8.7.0"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.1",
@@ -47,6 +49,7 @@
     "@types/jest": "^27.5.0",
     "@types/react": "^17.0.45",
     "@types/react-dom": "^17.0.16",
+    "@types/ws": "^8.5.3",
     "autoprefixer": "^10.4.7",
     "babel-plugin-superjson-next": "^0.4.3",
     "next-superjson": "^0.0.3",
