@@ -68,8 +68,8 @@ const Tickets: NextPageWithLayout = () => {
   const setSelectedTicketsStore = useSetAtom(selectedTicketsSetAtom)
   const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
   const setFilters = useResetAtom(ticketFiltersAtom)
-
   const [allTicketsSelected, setSelectAll] = useState(false)
+
   const [allStatus, setAllStatus] = useState<TicketStatus | null>(null)
   const [activeModal, setActiveModal] = useState(false)
   const [alertModal, setAlertModal] = useState(false)
@@ -90,14 +90,49 @@ const Tickets: NextPageWithLayout = () => {
   }
 
   async function pushTicketToQueue() {
-    await trpcClient.mutation('ticket.action', {
+    const response = await trpcClient.mutation('ticket.action', {
       key: userData.owner?.code ?? '',
       data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
     })
 
+    const { data, success } = response
+
     setAlertModal(false)
     setActiveModal(false)
-    void setSelectedTickets([])
+
+    if (success === true) {
+      // for no errors
+      setAlert({
+        message: `${
+          selectedTickets.length as number
+        } tickets are being processed. You will be notified once it's done.`,
+        type: 'success',
+      })
+    } else {
+      // for no errors
+      selectedTickets.length - data.length !== 0 &&
+        setAlert({
+          message: `${
+            selectedTickets.length - data.length
+          } tickets are being processed. You will be notified once it's done.`,
+          type: 'success',
+        })
+
+      const unProcessedData = data.filter(({ type }) => type === 'system')
+      // for system errors
+      unProcessedData.length !== 0 &&
+        setAlert({
+          message: `${unProcessedData.length as number} tickets are unable to process, please try again.`,
+          type: 'danger',
+        })
+
+      // for duplicate errors
+      setAlert({
+        message: `${data.length - unProcessedData.length} duplicate tickets were ignored`,
+        type: 'danger',
+      })
+    }
+    void setSelectedTicketsStore(() => [])
   }
 
   function reviewAll(value: TicketStatus) {
@@ -133,6 +168,7 @@ const Tickets: NextPageWithLayout = () => {
         })
       }
 
+      // todo: ask sambit about it
       if (
         toBelSelected.length > 1 &&
         toBelSelected.slice(1).find(({ status }) => status === toBelSelected[0].status) !== undefined
