@@ -91,14 +91,14 @@ export const ticketRouter = createRouter()
 
         if (job !== null) {
           // if job exists, add an error and move to next one
-          errors.push({ type: 'duplicate', data: { id: ticket.id, message: 'Ticket is already being processed !' } })
+          errors.push({ type: 'system', data: { id: ticket.id, message: 'Ticket is already being processed !' } })
           continue
         }
 
         try {
           await ticketQueue.add({ ...ticket }, { jobId })
         } catch (error) {
-          errors.push({ type: 'system', data: error })
+          errors.push({ type: 'system', data: { id: ticket.id, error } })
           continue
         }
       }

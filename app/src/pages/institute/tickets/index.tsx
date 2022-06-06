@@ -96,7 +96,9 @@ const Tickets: NextPageWithLayout = () => {
     })
 
     const { data, success } = response
+    let unProcessedData: any = []
 
+    void setActiveTicketIndex(0)
     setAlertModal(false)
     setActiveModal(false)
 
@@ -118,7 +120,7 @@ const Tickets: NextPageWithLayout = () => {
           type: 'success',
         })
 
-      const unProcessedData = data.filter(({ type }) => type === 'system')
+      unProcessedData = data.filter(({ type }) => type === 'system')
       // for system errors
       unProcessedData.length !== 0 &&
         setAlert({
@@ -127,11 +129,19 @@ const Tickets: NextPageWithLayout = () => {
         })
 
       // for duplicate errors
-      setAlert({
-        message: `${data.length - unProcessedData.length} duplicate tickets were ignored`,
-        type: 'danger',
-      })
+      data.length - unProcessedData.length !== 0 &&
+        setAlert({
+          message: `${data.length - unProcessedData.length} duplicate tickets were ignored`,
+          type: 'danger',
+        })
     }
+
+    if (Boolean(unProcessedData) && unProcessedData?.length !== 0) {
+      return await setSelectedTicketsStore(() =>
+        tickets.filter((ticket) => unProcessedData.some(({ data: { id } }) => (id as number) === ticket.id)),
+      )
+    }
+
     void setSelectedTicketsStore(() => [])
   }
 
