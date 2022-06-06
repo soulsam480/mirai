@@ -1,3 +1,7 @@
+/**
+ * referenced from https://github.com/benawad/dogehouse/blob/staging/kebab/src/websocket/raw.ts
+ */
+
 import WebSocket from 'isomorphic-ws'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import { Session } from 'next-auth'
