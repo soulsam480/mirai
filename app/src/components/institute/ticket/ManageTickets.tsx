@@ -1,4 +1,4 @@
-import type { TicketStatus } from '@prisma/client'
+import type { Ticket, TicketStatus } from '@prisma/client'
 import { MInput } from 'components/lib/MInput'
 import dayjs from 'dayjs'
 import React from 'react'
@@ -12,18 +12,26 @@ import { useStudentAcademicMeta } from 'utils/hooks'
 import { MBadge } from 'components/lib/MBadge'
 
 interface Props {
-  previousTicket: () => void
-  nextTicket: () => void
+  activeTicket: Ticket
+  detailsOnly?: boolean
+  previousTicket?: () => void
+  nextTicket?: () => void
   closeModal: () => void
-  onSubmit: () => void
+  onSubmit?: () => void
 }
 
-const ManageTickets: React.FC<Props> = ({ closeModal, previousTicket, nextTicket, onSubmit }) => {
+const ManageTickets: React.FC<Props> = ({
+  activeTicket,
+  detailsOnly = false,
+  closeModal,
+  previousTicket,
+  nextTicket,
+  onSubmit,
+}) => {
   const [selectedTickets, setSelectedTickets] = useAtom(selectedTicketsAtom)
   const selectedTicketsSnapshot = useAtomValue(selectedTicketsSnapshotAtom)
   const activeTicketIndex = useAtomValue(activeTicketAtom)
 
-  const activeTicket = selectedTickets[activeTicketIndex]
   const { meta, id } = activeTicket
   const { data: ticketData, type: ticketType } = meta as Record<string, any>
 
@@ -73,7 +81,7 @@ const ManageTickets: React.FC<Props> = ({ closeModal, previousTicket, nextTicket
     <div className="flex w-full flex-col gap-5 sm:w-[600px]">
       <div className="flex items-center justify-between">
         <h1 className="p-2 text-xl font-semibold">
-          Reviewing ticket {'#'}
+          {detailsOnly ? 'Ticket' : 'Reviewing ticket'} {'#'}
           {activeTicket.id}
         </h1>
         <IconPhX className="cursor-pointer text-lg " onClick={() => closeModal()} />
@@ -103,57 +111,61 @@ const ManageTickets: React.FC<Props> = ({ closeModal, previousTicket, nextTicket
           )}
         </div>
 
-        <div className="divider my-2"></div>
+        {!detailsOnly && (
+          <>
+            <div className="divider my-2"></div>
+            <div className="mb-2 text-lg font-semibold">Review</div>
+            <div className="grid grid-cols-2 gap-4">
+              <MSelect
+                value={statusValue}
+                onChange={handleStatusChange}
+                name="status"
+                options={STATUS_OPTIONS}
+                label="Status"
+              />
 
-        <div className="mb-2 text-lg font-semibold">Review</div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <MSelect
-            value={statusValue}
-            onChange={handleStatusChange}
-            name="status"
-            options={STATUS_OPTIONS}
-            label="Status"
-          />
-
-          <MInput label="Notes" as="textarea" value={noteValue ?? ''} onChange={handleNotes} />
-        </div>
+              <MInput label="Notes" as="textarea" value={noteValue ?? ''} onChange={handleNotes} />
+            </div>
+          </>
+        )}
       </div>
 
-      <div className="flex justify-between gap-2">
-        <div>
-          <button
-            type="button"
-            disabled={activeTicketIndex === 0}
-            onClick={previousTicket}
-            className="btn btn-outline btn-sm mt-5"
-          >
-            Previous
-          </button>
-        </div>
-
+      {!detailsOnly && (
         <div className="flex justify-between gap-2">
-          {isLastTicket && (
+          <div>
             <button
               type="button"
-              className="btn  btn-sm mt-5"
-              onClick={onSubmit}
-              disabled={isLastTicket && isNextSubmitDisabled}
+              disabled={activeTicketIndex === 0}
+              onClick={previousTicket}
+              className="btn btn-outline btn-sm mt-5"
             >
-              Submit
+              Previous
             </button>
-          )}
+          </div>
 
-          <button
-            type="button"
-            disabled={isNextSubmitDisabled || isLastTicket}
-            onClick={nextTicket}
-            className="btn btn-outline btn-sm mt-5"
-          >
-            Next
-          </button>
+          <div className="flex justify-between gap-2">
+            {isLastTicket && (
+              <button
+                type="button"
+                className="btn  btn-sm mt-5"
+                onClick={onSubmit}
+                disabled={isLastTicket && isNextSubmitDisabled}
+              >
+                Submit
+              </button>
+            )}
+
+            <button
+              type="button"
+              disabled={isNextSubmitDisabled || isLastTicket}
+              onClick={nextTicket}
+              className="btn btn-outline btn-sm mt-5"
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

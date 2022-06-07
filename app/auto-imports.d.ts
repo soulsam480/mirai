@@ -11,6 +11,7 @@ declare global {
   const IconPhHandshake: typeof import('~icons/ph/handshake.jsx')['default']
   const IconPhHouse: typeof import('~icons/ph/house.jsx')['default']
   const IconPhList: typeof import('~icons/ph/list.jsx')['default']
+  const IconPhListChecks: typeof import('~icons/ph/list-checks.jsx')['default']
   const IconPhMegaphone: typeof import('~icons/ph/megaphone.jsx')['default']
   const IconPhMoonStars: typeof import('~icons/ph/moon-stars.jsx')['default']
   const IconPhPencilSimple: typeof import('~icons/ph/pencil-simple.jsx')['default']

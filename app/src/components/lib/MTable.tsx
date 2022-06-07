@@ -19,6 +19,8 @@ interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   noDataLabel?: React.ReactNode
   /** is table data loading */
   loading?: boolean
+  /** action to perform when a row is clicked */
+  rowOnClick?: (x: any) => void
   /** slot for table settings, sorting menu etc. */
   settingsSlot?: React.ReactNode
 }
@@ -53,13 +55,20 @@ function useTableContext() {
 
 interface MRowProps extends HTMLProps<HTMLTableRowElement> {
   row: any
+  rowOnClick?: (x: any) => void
 }
 
-const MTableRow = React.memo<MRowProps>(({ row, children: _children, ...rest }) => {
+const MTableRow = React.memo<MRowProps>(({ row, rowOnClick, children: _children, ...rest }) => {
   const { bodyRowClass, columns, settingsSlot } = useTableContext()
 
   return (
-    <tr className={clsx([bodyRowClass, 'group'])} {...rest}>
+    <tr
+      className={clsx([bodyRowClass, 'group'])}
+      onClick={() => {
+        rowOnClick(row)
+      }}
+      {...rest}
+    >
       {columns.map((column, i) => (
         <MTableColumn {...column} row={row} key={i} />
       ))}
@@ -105,6 +114,7 @@ export const MTable: React.FC<Props> = ({
   bodyRowClass,
   noDataLabel,
   loading = false,
+  rowOnClick,
   settingsSlot,
   ...rest
 }) => {
@@ -136,7 +146,7 @@ export const MTable: React.FC<Props> = ({
 
           <tbody>
             {!loading && !(rows.length === 0) ? (
-              rows.map((row, i) => <MTableRow row={row} key={i} />)
+              rows.map((row, i) => <MTableRow rowOnClick={rowOnClick} row={row} key={i} />)
             ) : (
               <tr>
                 <td colSpan={columns.length} className="bg-transparent font-normal">

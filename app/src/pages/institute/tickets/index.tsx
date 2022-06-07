@@ -72,11 +72,16 @@ const Tickets: NextPageWithLayout = () => {
 
   const [allStatus, setAllStatus] = useState<TicketStatus | null>(null)
   const [activeModal, setActiveModal] = useState(false)
+  const [activeTicket, setActiveTicket] = useState<Ticket | null>(null)
   const [alertModal, setAlertModal] = useState(false)
 
-  const closeModal = () => {
+  const closeVerifyModal = () => {
     setActiveModal(false)
     void setActiveTicketIndex(0)
+  }
+  const closeDetailsModal = () => {
+    // setTicketDetailsModal(false)
+    void setActiveTicket(null)
   }
 
   const countSelected = selectedTickets.length
@@ -233,6 +238,7 @@ const Tickets: NextPageWithLayout = () => {
               disabled={['RESOLVED', 'CLOSED'].includes(status)}
               checked={selectedTickets.find((ticket) => ticket.id === id) !== undefined}
               onChange={() => handleTicketSelection(id)}
+              onClick={(e) => e.stopPropagation()}
             />
           </div>
         ),
@@ -364,13 +370,24 @@ const Tickets: NextPageWithLayout = () => {
         compact
         noDataLabel={'No tickets were found !'}
         loading={isLoading}
+        rowOnClick={(row) => {
+          // setTicketDetailsModal(true)
+          setActiveTicket(row)
+        }}
         settingsSlot={<ListingSettings />}
       />
+
+      {activeTicket !== null && (
+        <MDialog show={activeTicket !== null} onClose={() => null} noEscape>
+          <ManageTickets activeTicket={activeTicket} detailsOnly={true} closeModal={closeDetailsModal} />
+        </MDialog>
+      )}
 
       {activeModal && (
         <MDialog show={activeModal} onClose={() => null} noEscape>
           <ManageTickets
-            closeModal={closeModal}
+            activeTicket={selectedTickets[activeTicketIndex]}
+            closeModal={closeVerifyModal}
             nextTicket={nextTicket}
             previousTicket={previousTicket}
             onSubmit={() => setAlertModal(true)}
