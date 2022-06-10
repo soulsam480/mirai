@@ -81,22 +81,9 @@ export const ticketRouter = createRouter()
     async resolve({ input }) {
       const errors: TicketResolveResponse[] = []
 
-      for (let index = 0; index < input.data.length; index++) {
-        const ticket = input.data[index]
-
-        // check is job is there in the queue or not
-        const jobId = `${input.key}-${ticket.id}`
-
-        const job = await ticketQueue.getJob(jobId)
-
-        if (job !== null) {
-          // if job exists, add an error and move to next one
-          errors.push({ type: 'system', data: { id: ticket.id, message: 'Ticket is already being processed !' } })
-          continue
-        }
-
+      for (const ticket of input.data) {
         try {
-          await ticketQueue.add({ ...ticket }, { jobId })
+          await ticketQueue.add('ticketResolve', { ...ticket })
         } catch (error) {
           errors.push({ type: 'system', data: { id: ticket.id, error } })
           continue
