@@ -20,7 +20,7 @@ interface Props {
   onSubmit?: () => void
 }
 
-const ManageTickets: React.FC<Props> = ({
+export const ManageTicket: React.FC<Props> = ({
   activeTicket,
   detailsOnly = false,
   closeModal,
@@ -61,8 +61,7 @@ const ManageTickets: React.FC<Props> = ({
     })
   }
 
-  function handleNotes(event: React.ChangeEvent<HTMLInputElement>) {
-    const { value } = event.currentTarget
+  function handleNotes({ currentTarget: { value } }: React.ChangeEvent<HTMLInputElement>) {
     void setSelectedTickets((prev) => {
       return prev.map((activeTicket) => (activeTicket.id === id ? { ...activeTicket, notes: value } : activeTicket))
     })
@@ -80,21 +79,26 @@ const ManageTickets: React.FC<Props> = ({
   return (
     <div className="flex w-full flex-col gap-5 sm:w-[600px]">
       <div className="flex items-center justify-between">
-        <h1 className="p-2 text-xl font-semibold">
+        <div className="p-2 text-xl font-semibold">
           {detailsOnly ? 'Ticket' : 'Reviewing ticket'} {'#'}
           {activeTicket.id}
-        </h1>
-        <IconPhX className="cursor-pointer text-lg " onClick={() => closeModal()} />
+        </div>
+
+        <button className="btn btn-ghost btn-circle btn-sm" onClick={closeModal} title="Close">
+          <IconPhX className="text-lg" />
+        </button>
       </div>
 
       <div className="rounded-md bg-base-300/70 p-4">
         <div className="mb-2 text-lg font-semibold">Details</div>
 
         <div className="grid grid-cols-4 gap-2">
-          <div>Ticket type</div>{' '}
+          <div>Ticket type</div>
+
           <div className="col-span-3">
             <MBadge className="badge-info">{titleCase(ticketType)}</MBadge>
           </div>
+
           {TICKET_DISPLAY_FIELDS.map((field) => {
             return getSafeVal(field.value) !== null ? (
               <React.Fragment key={field.value}>
@@ -102,6 +106,7 @@ const ManageTickets: React.FC<Props> = ({
               </React.Fragment>
             ) : null
           })}
+
           {ticketType === 'STUDENT_ONBOARDING' && (
             <>
               <div>Batch</div> <div className="col-span-3">{studentAcademics?.batch?.name}</div>
@@ -115,6 +120,7 @@ const ManageTickets: React.FC<Props> = ({
           <>
             <div className="divider my-2"></div>
             <div className="mb-2 text-lg font-semibold">Review</div>
+
             <div className="grid grid-cols-2 gap-4">
               <MSelect
                 value={statusValue}
@@ -169,5 +175,3 @@ const ManageTickets: React.FC<Props> = ({
     </div>
   )
 }
-
-export { ManageTickets }

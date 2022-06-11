@@ -1,6 +1,6 @@
 import type { Ticket, TicketStatus } from '@prisma/client'
 import { AppLayout } from 'components/globals/AppLayout'
-import { ManageTickets } from 'components/institute/ticket/ManageTickets'
+import { ManageTicket } from 'components/institute/ticket/ManageTicket'
 import { MAlertDialog } from 'components/lib/MAlertDialog'
 import { MBadge } from 'components/lib/MBadge'
 import { MDialog } from 'components/lib/MDialog'
@@ -68,86 +68,79 @@ const Tickets: NextPageWithLayout = () => {
   const setSelectedTicketsStore = useSetAtom(selectedTicketsSetAtom)
   const [activeTicketIndex, setActiveTicketIndex] = useAtom(activeTicketAtom)
   const setFilters = useResetAtom(ticketFiltersAtom)
-  const [allTicketsSelected, setSelectAll] = useState(false)
 
+  const [allTicketsSelected, setSelectAll] = useState(false)
   const [allStatus, setAllStatus] = useState<TicketStatus | null>(null)
   const [activeModal, setActiveModal] = useState(false)
   const [activeTicket, setActiveTicket] = useState<Ticket | null>(null)
   const [alertModal, setAlertModal] = useState(false)
 
-  const closeVerifyModal = () => {
+  function closeVerifyModal() {
     setActiveModal(false)
     void setActiveTicketIndex(0)
-  }
-  const closeDetailsModal = () => {
-    // setTicketDetailsModal(false)
-    void setActiveTicket(null)
   }
 
   const countSelected = selectedTickets.length
 
-  const previousTicket = () => {
+  function previousTicket() {
     if (activeTicketIndex !== 0) void setActiveTicketIndex((prev) => prev - 1)
   }
 
-  const nextTicket = () => {
+  function nextTicket() {
     if ((activeTicketIndex as number) + 1 !== countSelected) void setActiveTicketIndex((prev) => (prev as number) + 1)
   }
 
-  async function pushTicketToQueue() {
-    const response = await trpcClient.mutation('ticket.action', {
-      key: userData.owner?.code ?? '',
-      data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
-    })
-
-    const { data, success } = response
-    let unProcessedData: any = []
-
-    void setActiveTicketIndex(0)
-    setAlertModal(false)
-    setActiveModal(false)
-
-    if (success === true) {
-      // for no errors
-      setAlert({
-        message: `${
-          selectedTickets.length as number
-        } tickets are being processed. You will be notified once it's done.`,
-        type: 'success',
+  async function submitReview() {
+    try {
+      const response = await trpcClient.mutation('ticket.action', {
+        key: userData.owner?.code ?? '',
+        data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
       })
-    } else {
-      // for no errors
-      selectedTickets.length - data.length !== 0 &&
+
+      const { data, success } = response
+
+      closeVerifyModal()
+      setAlertModal(false)
+
+      if (success === true) {
+        // for no errors
         setAlert({
-          message: `${
-            selectedTickets.length - data.length
-          } tickets are being processed. You will be notified once it's done.`,
+          message: `${selectedTickets.length} tickets are being processed. You will be notified once it's done.`,
           type: 'success',
         })
+      } else {
+        // for successfully processed tickets
+        if (selectedTickets.length - data.length !== 0) {
+          setAlert({
+            message: `${
+              selectedTickets.length - data.length
+            } tickets are being processed. You will be notified once it's done.`,
+            type: 'success',
+          })
+        }
 
-      unProcessedData = data.filter(({ type }) => type === 'system')
-      // for system errors
-      unProcessedData.length !== 0 &&
-        setAlert({
-          message: `${unProcessedData.length as number} tickets are unable to process, please try again.`,
-          type: 'danger',
-        })
+        // for failed tickets
+        if (data.length !== 0) {
+          setAlert({
+            message: `Unable to process ${data.length} tickets, please try again.`,
+            type: 'danger',
+          })
+        }
+      }
 
-      // for duplicate errors
-      data.length - unProcessedData.length !== 0 &&
-        setAlert({
-          message: `${data.length - unProcessedData.length} duplicate tickets were ignored`,
-          type: 'danger',
-        })
+      if (data.length > 0) {
+        void setSelectedTicketsStore(() => tickets.filter((ticket) => data.some(({ id }) => id === ticket.id)))
+
+        return
+      }
+
+      void setSelectedTicketsStore(() => [])
+    } catch (_e) {
+      setAlert({
+        message: 'Unable to process tickets. Please try again',
+        type: 'danger',
+      })
     }
-
-    if (Boolean(unProcessedData) && unProcessedData?.length !== 0) {
-      return await setSelectedTicketsStore(() =>
-        tickets.filter((ticket) => unProcessedData.some(({ data: { id } }) => (id as number) === ticket.id)),
-      )
-    }
-
-    void setSelectedTicketsStore(() => [])
   }
 
   function reviewAll(value: TicketStatus) {
@@ -159,23 +152,24 @@ const Tickets: NextPageWithLayout = () => {
     function handleSelectAll() {
       if (allTicketsSelected) {
         setSelectAll((prev) => !prev)
+        setAllStatus(null)
         // looks a bit weired but setter functions are not available in
         // write-only atoms
         return setSelectedTickets([])
       }
 
-      const toBelSelected = tickets.filter(({ status }) => !['RESOLVED', 'CLOSED'].includes(status))
+      const toBeSelected = tickets.filter(({ status }) => !['RESOLVED', 'CLOSED'].includes(status))
 
-      if (toBelSelected.length === 0) {
+      if (toBeSelected.length === 0) {
         return setAlert({
           message: 'Only tickets with OPEN or INPROGRESS status can be selected',
           type: 'danger',
         })
       }
 
-      if (toBelSelected.length > 100) {
+      if (toBeSelected.length > 100) {
         setSelectAll((prev) => !prev)
-        void setSelectedTickets(toBelSelected.slice(99))
+        void setSelectedTickets(toBeSelected.slice(99))
 
         return setAlert({
           message: 'Maximum 100 tickets can be selected at once for bulk actions',
@@ -183,10 +177,9 @@ const Tickets: NextPageWithLayout = () => {
         })
       }
 
-      // todo: ask sambit about it
       if (
-        toBelSelected.length > 1 &&
-        toBelSelected.slice(1).find(({ status }) => status === toBelSelected[0].status) !== undefined
+        toBeSelected.length > 1 &&
+        toBeSelected.slice(1).find(({ status }) => status !== toBeSelected[0].status) !== undefined
       ) {
         return setAlert({
           message: 'Only tickets of similar status can be selected for bulk actions',
@@ -196,7 +189,7 @@ const Tickets: NextPageWithLayout = () => {
 
       setSelectAll((prev) => !prev)
 
-      void setSelectedTickets(toBelSelected)
+      void setSelectedTickets(toBeSelected)
     }
 
     function handleTicketSelection(selectedId: number) {
@@ -360,7 +353,7 @@ const Tickets: NextPageWithLayout = () => {
         }
         show={alertModal}
         onReject={setAlertModal}
-        onConfirm={async () => await pushTicketToQueue()}
+        onConfirm={async () => await submitReview()}
       />
 
       <MTable
@@ -370,22 +363,20 @@ const Tickets: NextPageWithLayout = () => {
         compact
         noDataLabel={'No tickets were found !'}
         loading={isLoading}
-        rowOnClick={(row) => {
-          // setTicketDetailsModal(true)
-          setActiveTicket(row)
-        }}
+        onRowClick={setActiveTicket}
         settingsSlot={<ListingSettings />}
+        bodyRowClass="cursor-pointer"
       />
 
       {activeTicket !== null && (
         <MDialog show={activeTicket !== null} onClose={() => null} noEscape>
-          <ManageTickets activeTicket={activeTicket} detailsOnly={true} closeModal={closeDetailsModal} />
+          <ManageTicket activeTicket={activeTicket} detailsOnly={true} closeModal={() => setActiveTicket(null)} />
         </MDialog>
       )}
 
       {activeModal && (
         <MDialog show={activeModal} onClose={() => null} noEscape>
-          <ManageTickets
+          <ManageTicket
             activeTicket={selectedTickets[activeTicketIndex]}
             closeModal={closeVerifyModal}
             nextTicket={nextTicket}

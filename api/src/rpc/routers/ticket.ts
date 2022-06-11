@@ -85,7 +85,7 @@ export const ticketRouter = createRouter()
         try {
           await ticketQueue.add('ticketResolve', { ...ticket })
         } catch (error) {
-          errors.push({ type: 'system', data: { id: ticket.id, error } })
+          errors.push({ id: ticket.id, error })
           continue
         }
       }
