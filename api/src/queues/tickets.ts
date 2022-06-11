@@ -96,5 +96,8 @@ const _worker = new Worker<TicketJob>(
   },
   {
     limiter: { max: 1000, duration: 5000 },
+    connection: {
+      port: parseInt(process.env.REDIS_PORT),
+    },
   },
 )

@@ -10,10 +10,11 @@ import autoload from '@fastify/autoload'
 import cors from '@fastify/cors'
 // import cookies from '@fastify/cookie'
 import ws from '@fastify/websocket'
+import { createMongoConnection } from './db'
 
 dotenv.config({ path: join(__dirname, '../.env') })
 
-export function createServer() {
+export async function createServer() {
   const dev = getEnv('NODE_ENV') !== 'production' ?? true
   const port = getEnv('PORT') !== undefined ? Number(getEnv('PORT')) : 4002
 
@@ -70,8 +71,13 @@ export function createServer() {
     }
   }
 
+  await server.ready()
+
+  await createMongoConnection()
+
   void start()
 
+  // eslint-disable-next-line @typescript-eslint/return-await
   return server
 }
 

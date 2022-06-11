@@ -14,7 +14,7 @@ interface WSClientContextType {
 
 const WSClientContext = createContext<WSClientContextType>({
   conn: null,
-  setConn: () => {
+  setConn() {
     //
   },
 })

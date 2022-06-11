@@ -1,8 +1,11 @@
-import { SocketStream } from '@fastify/websocket'
+import type { SocketStream } from '@fastify/websocket'
 import type { WebSocket } from 'ws'
 import { parsePayload, WSPayload } from './parser'
 import superjson from 'superjson'
-import { SessionUser } from '../rpc/context'
+import type { SessionUser } from '../rpc/context'
+import { logger } from '../lib'
+
+let client = 0
 
 export function setupWsHandlers(conn: SocketStream) {
   conn.socket.on('message', (data) => {
@@ -19,10 +22,16 @@ export function setupWsHandlers(conn: SocketStream) {
       handlers[parsedData.op]?.(parsedData.d, conn.socket)
     }
   })
+
+  conn.socket.once('close', () => client--)
 }
 
 const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void> = {
-  auth: (data: SessionUser, socket) => {
+  auth(data: SessionUser, socket) {
+    client++
+
+    logger.info(`Connected clients ${client}`)
+
     if (data.user !== undefined) {
       socket.send(superjson.stringify({ op: 'auth-success' }))
     }

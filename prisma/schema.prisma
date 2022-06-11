@@ -42,7 +42,7 @@ model Account {
   updatedAt DateTime @updatedAt
 
   //TODO: permissions for user roles
-  notifications Notification[]
+  // notifications Notification[]
 }
 
 enum Role {
@@ -395,31 +395,31 @@ enum TicketStatus {
   RESOLVED
 }
 
-model Notification {
-  id   Int     @id @default(autoincrement())
-  read Boolean @default(false)
+// model Notification {
+//   id   Int     @id @default(autoincrement())
+//   read Boolean @default(false)
 
-  // we are only concerned with who owns the notificaiton
-  // irrespective of the source from where it generated
-  owner   Account @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId Int
+//   // we are only concerned with who owns the notificaiton
+//   // irrespective of the source from where it generated
+//   owner   Account @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+//   ownerId Int
 
-  // JSON as data can be random and Json is flexible too
-  // schema
-  // source
-  //   type student | system | admin | institute | post |other
-  //   id number
-  // meta
-  //   for student
-  //   type: profile_change | job_apply |
-  //   details: {}
-  //      profile_change?: {}
-  //        sections: []
-  //      job_apply:{}
-  //        TBD
-  //      createdAt: Date
-  data Json
+//   // JSON as data can be random and Json is flexible too
+//   // schema
+//   // source
+//   //   type student | system | admin | institute | post |other
+//   //   id number
+//   // meta
+//   //   for student
+//   //   type: profile_change | job_apply |
+//   //   details: {}
+//   //      profile_change?: {}
+//   //        sections: []
+//   //      job_apply:{}
+//   //        TBD
+//   //      createdAt: Date
+//   data Json
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }

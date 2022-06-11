@@ -8,7 +8,7 @@
     "fmt": "prettier --config ./prettier.config.cjs --plugin=prettier-plugin-tailwindcss --write **/{src,prisma}/**/*.{js,ts,tsx}",
     "dev:app": "pnpm run --filter @mirai/app dx",
     "dev:api": "pnpm run --filter @mirai/api dx",
-    "dev": "concurrently --kill-others-on-fail \"pnpm run dev:app\"  \"pnpm run dev:api\"",
+    "dev": "run-p dev:*",
     "db-nuke": "pnpm run --filter @mirai/api db-nuke",
     "build:api": "pnpm run --filter @mirai/api build",
     "build:app": "pnpm run --filter @mirai/app build",

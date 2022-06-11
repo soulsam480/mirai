@@ -13,5 +13,6 @@ declare namespace NodeJS {
     REDIS_PORT: string
     NODE_ENV: 'development' | 'production'
     REFRESH_TOKEN_SECRET: string
+    MONGO_URI: string
   }
 }

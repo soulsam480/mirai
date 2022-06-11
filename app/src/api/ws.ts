@@ -57,13 +57,15 @@ export const createWsConn = async (session: Session): Promise<Connection> =>
     socket.addEventListener('message', (e) => {
       if (e.data === `"pong"` || e.data === `pong`) {
         // eslint-disable-next-line no-console
-        console.log('in', 'pong')
+        console.log('pong')
         return
       }
 
       const message = superjson.parse<WSPayload>(e.data)
 
       if (message.op === 'auth-success') {
+        console.log('logged in')
+
         const connection: Connection = {
           close: () => socket.close(),
           subscribe: (opcode, handler) => {
@@ -89,7 +91,7 @@ export const createWsConn = async (session: Session): Promise<Connection> =>
         } else {
           socket.send('ping')
           // eslint-disable-next-line no-console
-          console.log('out', 'ping')
+          console.log('ping')
         }
       }, heartbeatInterval)
 
