@@ -284,8 +284,9 @@ export const bulkTicketResolveSchema = z.object({
     z.object({
       // we can allow different actions i.e. resolve/reject only on reviewed tickets. This ensures
       // lower data load on the system
-      status: z.enum(['RESOLVED']),
+      status: z.enum(['RESOLVED', 'OPEN', 'CLOSED', 'INPROGRESS']),
       id: z.number(),
+      notes: z.string().nullable(),
     }),
   ),
 })

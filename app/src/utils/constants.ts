@@ -1,3 +1,5 @@
+import { Option } from 'types'
+
 export const INDUSTRY_TYPES = [
   'Accounting',
   'Airlines/Aviation',
@@ -159,3 +161,12 @@ export const CATEGORY_TYPES = [
   'Other Backward Classes',
   'Economically Weaker Section',
 ].map((v) => ({ label: v, value: v }))
+
+export const TICKET_DISPLAY_FIELDS: Option[] = [
+  { label: 'Student name', value: 'name' },
+  { label: 'Date of Birth', value: 'dob' },
+  { label: 'Mobile number', value: 'mobileNumber' },
+  { label: 'University ID', value: 'uniId' },
+  { label: 'Gender', value: 'gender' },
+  { label: 'Category', value: 'category' },
+]

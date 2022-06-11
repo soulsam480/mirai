@@ -2,13 +2,11 @@ import React, { createContext, HTMLProps, useContext, useMemo } from 'react'
 import clsx from 'clsx'
 import MSpinner from 'lib/MSpinner'
 
-// TODO: sort, filer and search
-
-interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
+interface Props<R = any> extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   /** Table Schema */
   columns: Column[]
   /** Table data/rows */
-  rows: any[]
+  rows: R[]
   /** less padding tavle */
   compact?: boolean
   /** classes to apply on thead-> tr */
@@ -19,6 +17,8 @@ interface Props extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   noDataLabel?: React.ReactNode
   /** is table data loading */
   loading?: boolean
+  /** action to perform when a row is clicked */
+  onRowClick?: (row: R) => void
   /** slot for table settings, sorting menu etc. */
   settingsSlot?: React.ReactNode
 }
@@ -27,17 +27,22 @@ export interface Column<R = any> {
   /** property inside row that hold column data */
   field: string
   /** Column header label */
-  label: string
+  label?: string
   /** Column classes */
   classes?: string | ((row: R) => string)
   /** classes to apply on column header , thead -> tr -> th */
   headerClasses?: string
   /** Custom formatter to format data before displaying */
   format?: (row: R) => React.ReactNode
+  /** Custom formatter to format data before displaying */
+  headerslot?: React.ReactNode
 }
 
 interface TableContextType
-  extends Pick<Props, 'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading' | 'settingsSlot'> {}
+  extends Pick<
+    Props,
+    'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading' | 'settingsSlot' | 'onRowClick'
+  > {}
 
 const TableContext = createContext<TableContextType | undefined>(undefined)
 
@@ -54,10 +59,16 @@ interface MRowProps extends HTMLProps<HTMLTableRowElement> {
 }
 
 const MTableRow = React.memo<MRowProps>(({ row, children: _children, ...rest }) => {
-  const { bodyRowClass, columns, settingsSlot } = useTableContext()
+  const { bodyRowClass, columns, settingsSlot, onRowClick } = useTableContext()
 
   return (
-    <tr className={clsx([bodyRowClass, 'group'])} {...rest}>
+    <tr
+      {...rest}
+      className={clsx([bodyRowClass, 'group'])}
+      onClick={() => {
+        onRowClick?.(row)
+      }}
+    >
       {columns.map((column, i) => (
         <MTableColumn {...column} row={row} key={i} />
       ))}
@@ -103,16 +114,17 @@ export const MTable: React.FC<Props> = ({
   bodyRowClass,
   noDataLabel,
   loading = false,
+  onRowClick,
   settingsSlot,
   ...rest
 }) => {
   return (
-    <TableContext.Provider value={{ rows, columns, headerClass, bodyRowClass, loading, settingsSlot }}>
-      <div className={clsx(['overflow-x-auto', className])} {...rest}>
+    <TableContext.Provider value={{ rows, columns, headerClass, bodyRowClass, loading, settingsSlot, onRowClick }}>
+      <div {...rest} className={clsx(['overflow-x-auto', className])}>
         <table className={clsx(['table w-full', compact && 'table-compact'])}>
           <thead>
             <tr className={headerClass}>
-              {columns.map(({ label, headerClasses }, i) => (
+              {columns.map(({ label, headerClasses, headerslot }, i) => (
                 <th
                   key={i}
                   className={clsx([
@@ -120,7 +132,7 @@ export const MTable: React.FC<Props> = ({
                     'first:rounded-none last:rounded-none',
                   ])}
                 >
-                  {label}
+                  {headerslot ?? label}
                 </th>
               ))}
 

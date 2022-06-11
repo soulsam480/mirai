@@ -47,7 +47,7 @@ export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
     <div className={clsx(['alert p-2 text-base shadow', bgColor])}>
       <div className="flex items-center space-x-2">
         {iconName}
-        <span>{message}</span>
+        <span className="font-semibold">{message}</span>
       </div>
     </div>
   )

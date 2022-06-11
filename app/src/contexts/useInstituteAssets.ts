@@ -3,7 +3,7 @@ import { useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 import { instituteAssetsLoading, instituteBatches, instituteCourses, instituteDepartments } from 'stores/institute'
 
-export function useStudentFilters() {
+export function useInstituteAssets() {
   const setDepartments = useSetAtom(instituteDepartments)
   const setCourses = useSetAtom(instituteCourses)
   const setBatches = useSetAtom(instituteBatches)

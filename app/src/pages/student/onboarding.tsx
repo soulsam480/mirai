@@ -12,7 +12,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { studentOnboardingSchema } from 'schemas'
-import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constnts'
+import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constants'
 import { z } from 'zod'
 import { NextPageWithLayout } from '../_app'
 
