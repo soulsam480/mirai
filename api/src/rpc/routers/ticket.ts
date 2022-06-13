@@ -14,11 +14,12 @@ export const ticketRouter = createRouter()
         where: { id: input },
       })
 
-      if (ticket == null)
+      if (ticket === null)
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'Institute not found !',
         })
+
       return ticket
     },
   })

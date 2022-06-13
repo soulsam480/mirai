@@ -4,7 +4,6 @@
 
 import WebSocket from 'isomorphic-ws'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { Session } from 'next-auth'
 import superjson from 'superjson'
 import { WSPayload } from '@mirai/api'
 
@@ -12,7 +11,7 @@ const heartbeatInterval = 8000
 const url = process.env.NEXT_WS_BASE ?? 'ws://localhost:4002/sock'
 const connectionTimeout = 15000
 
-export type Opcode = string
+export type Opcode = WSPayload['op']
 export type ListenerHandler<Data = unknown> = (data: Data) => void
 export interface Subscriber<Data = unknown> {
   opcode: Opcode
@@ -25,8 +24,37 @@ export interface Connection {
   send: (opcode: Opcode, data: unknown) => void
 }
 
-export const createWsConn = async (session: Session): Promise<Connection> =>
+const EXPIRY_LENGTH = 900000
+
+// in-memory token cache to avoid extra API calls
+// valid for 15 mins
+let tokenData: {
+  token: string
+  ts: number
+} | null = null
+
+export const createWsConn = async (getToken: () => Promise<string>): Promise<Connection> =>
   await new Promise((resolve, _reject) => {
+    // get frim cache or fetch from API
+    async function fetchToken() {
+      try {
+        if (tokenData === null || tokenData.ts + EXPIRY_LENGTH < Date.now()) {
+          const token = await getToken()
+
+          tokenData = {
+            token,
+            ts: Date.now(),
+          }
+
+          return token
+        }
+
+        return tokenData.token ?? ''
+      } catch (error) {
+        return ''
+      }
+    }
+
     const socket = new ReconnectingWebSocket(url, [], {
       connectionTimeout,
       WebSocket,
@@ -47,10 +75,12 @@ export const createWsConn = async (session: Session): Promise<Connection> =>
       console.log(error)
       if (error.code === 4001) {
         socket.close()
+        tokenData = null
       } else if (error.code === 4003) {
         socket.close()
       } else if (error.code === 4004) {
         socket.close()
+        tokenData = null
       }
     })
 
@@ -79,9 +109,18 @@ export const createWsConn = async (session: Session): Promise<Connection> =>
         }
 
         resolve(connection)
-      } else {
-        subscribers.filter(({ opcode }) => opcode === message.op).forEach((it) => it.handler(message.d))
+
+        return
       }
+
+      // get a new token on expiry and reconnect
+      if (message.op === 'token-expired') {
+        void fetchToken().then((token) => apiSend('auth', { token }))
+
+        return
+      }
+
+      subscribers.filter(({ opcode }) => opcode === message.op).forEach((it) => it.handler(message.d))
     })
 
     socket.addEventListener('open', () => {
@@ -95,6 +134,6 @@ export const createWsConn = async (session: Session): Promise<Connection> =>
         }
       }, heartbeatInterval)
 
-      apiSend('auth', session)
+      void fetchToken().then((token) => apiSend('auth', { token }))
     })
   })

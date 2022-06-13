@@ -2,6 +2,7 @@ import { Connection, createWsConn } from 'api/ws'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, ReactNode, useState, useRef, useMemo } from 'react'
 import { isInstituteRole } from 'utils/helpers'
+import { trpcClient } from 'utils/trpc'
 
 interface WSProviderProps {
   children: ReactNode
@@ -33,10 +34,8 @@ function WSClientProvider({ children }: WSProviderProps): JSX.Element {
     ) {
       isConnecting.current = true
 
-      createWsConn(data)
-        .then((baseConn) => {
-          setConn(baseConn)
-        })
+      createWsConn(() => trpcClient.query('auth.auth_token', data))
+        .then(setConn)
         .catch((e) => {
           // eslint-disable-next-line no-console
           console.log(e)

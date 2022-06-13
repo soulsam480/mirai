@@ -1,7 +1,7 @@
 import superjson from 'superjson'
 
 export interface WSPayload<T = any> {
-  op: 'auth' | 'auth-success'
+  op: 'auth' | 'auth-success' | 'token-expired' | 'notification'
   d: T
 }
 

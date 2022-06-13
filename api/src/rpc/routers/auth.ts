@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid'
 import { LoginSchema, signupSchema } from '@mirai/app'
 import { z } from 'zod'
 import { createRouter } from '../createRouter'
-import { comparePassword, hashPass, prismaQueryHelper } from '../../lib'
+import { authToken, comparePassword, hashPass, prismaQueryHelper } from '../../lib'
 
 export const accountRole = ['STUDENT', 'INSTITUTE', 'INSTITUTE_MOD', 'ADMIN']
 
@@ -171,6 +171,16 @@ export const authRouter = createRouter()
       return {
         token,
       }
+    },
+  })
+  .query('auth_token', {
+    input: z.object({
+      user: z.any(),
+    }),
+    async resolve({ input }) {
+      const token = authToken.encode(input as any)
+
+      return token
     },
   })
 // TODO: add otp login setup

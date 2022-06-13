@@ -21,7 +21,13 @@ type TQueryValues = inferProcedures<AppRouter['_def']['queries']>
 export type QueryOptions<
   TPath extends keyof TQueryValues & string,
   TError = TRPCClientErrorLike<AppRouter>,
-> = UseTRPCQueryOptions<TPath, TQueryValues[TPath]['input'], TQueryValues[TPath]['output'], TError>
+> = UseTRPCQueryOptions<
+  TPath,
+  TQueryValues[TPath]['input'],
+  TQueryValues[TPath]['output'],
+  TQueryValues[TPath]['output'],
+  TError
+>
 
 export type OverWrite<T, K> = Omit<T, keyof K> & K
 export type NullToUndefined<T> = T extends null ? undefined : T

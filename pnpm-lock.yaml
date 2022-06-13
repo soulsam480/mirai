@@ -32,6 +32,7 @@ importers:
       jsonwebtoken: ^8.5.1
       lint-staged: ^13.0.1
       lodash: ^4.17.21
+      mitt: ^3.0.0
       nanoid: ^3.3.4
       next-auth: ^4.5.0
       npm-run-all: ^4.1.5
@@ -50,6 +51,7 @@ importers:
       dayjs: 1.11.3
       jsonwebtoken: 8.5.1
       lodash: 4.17.21
+      mitt: 3.0.0
       next-auth: 4.5.0
       rimraf: 3.0.2
       zod: 3.17.3
@@ -163,7 +165,6 @@ importers:
       daisyui: ^2.15.3
       isomorphic-ws: ^4.0.1
       jotai: ^1.7.2
-      mitt: ^3.0.0
       next: ^12.1.6
       next-compose-plugins: ^2.2.1
       next-http-proxy-middleware: ^1.2.4
@@ -197,7 +198,6 @@ importers:
       daisyui: 2.15.3_ugi4xkrfysqkt4c4y6hkyfj344
       isomorphic-ws: 4.0.1_ws@8.8.0
       jotai: 1.7.2_vasbpaxd2lofykfu3iahnfgjbi
-      mitt: 3.0.0
       next: 12.1.6_ftydfiy4t64mut4ffi4kpkl3d4
       next-compose-plugins: 2.2.1
       next-http-proxy-middleware: 1.2.4

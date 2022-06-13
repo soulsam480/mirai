@@ -216,17 +216,18 @@ const Tickets: NextPageWithLayout = () => {
         headerslot: (
           <div className="flex items-center justify-center">
             <input
-              className="checkbox checkbox-xs"
+              className="checkbox checkbox-xs sm:checkbox-sm"
               type="checkbox"
               checked={allTicketsSelected}
               onChange={handleSelectAll}
+              disabled={tickets.length === 0}
             />
           </div>
         ),
         format: ({ id, status }) => (
           <div className="flex items-center justify-center">
             <input
-              className="checkbox checkbox-xs"
+              className="checkbox checkbox-xs sm:checkbox-sm"
               type="checkbox"
               disabled={['RESOLVED', 'CLOSED'].includes(status)}
               checked={selectedTickets.find((ticket) => ticket.id === id) !== undefined}

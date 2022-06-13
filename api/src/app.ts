@@ -11,6 +11,7 @@ import cors from '@fastify/cors'
 // import cookies from '@fastify/cookie'
 import ws from '@fastify/websocket'
 import { createMongoConnection } from './db'
+import mongoose from 'mongoose'
 
 dotenv.config({ path: join(__dirname, '../.env') })
 
@@ -70,6 +71,10 @@ export async function createServer() {
       process.exit(1)
     }
   }
+
+  server.addHook('onClose', async () => {
+    await mongoose.disconnect()
+  })
 
   await server.ready()
 
