@@ -1,17 +1,13 @@
 import dotenv from 'dotenv'
 import path, { join } from 'path'
 import fastify from 'fastify'
-import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify'
-
-import { appRouter } from './rpc/routers/_appRouter'
-import { createContext, SessionUser } from './rpc/context'
-import { getEnv, logger, setupBull } from './lib'
 import autoload from '@fastify/autoload'
 import cors from '@fastify/cors'
 // import cookies from '@fastify/cookie'
 import ws from '@fastify/websocket'
-import { createMongoConnection } from './db'
-import mongoose from 'mongoose'
+
+import { getEnv } from './lib'
+import type { SessionUser } from './rpc/context'
 
 dotenv.config({ path: join(__dirname, '../.env') })
 
@@ -25,12 +21,20 @@ export async function createServer() {
     },
   })
 
-  void server.register(cors, {
+  await server.register(cors, {
     preflight: true,
     origin: ['localhost:3000'],
   })
 
-  void server.register(ws)
+  await server.register(ws)
+
+  await server.register(autoload, {
+    dir: path.join(__dirname, 'routes'),
+  })
+
+  await server.register(autoload, {
+    dir: path.join(__dirname, 'plugins'),
+  })
 
   server.decorateRequest('session', function () {
     const authHeader = this.headers.authorization
@@ -46,39 +50,22 @@ export async function createServer() {
     return session
   })
 
-  void server.register(fastifyTRPCPlugin, {
-    prefix: '/trpc',
-    trpcOptions: { router: appRouter, createContext },
-  })
-
-  void server.register(autoload, {
-    dir: path.join(__dirname, 'routes'),
-  })
-
   server.get('/', async () => {
     return "This is Mirai's API"
   })
-
-  setupBull(server)
 
   const start = async () => {
     try {
       await server.listen(port)
 
-      if (process.env.NDE_ENV === 'development') logger.info(`listening on http://localhost:${port}`)
+      if (process.env.NDE_ENV === 'development') server.log.info(`listening on http://localhost:${port}`)
     } catch (err) {
       server.log.error(err)
       process.exit(1)
     }
   }
 
-  server.addHook('onClose', async () => {
-    await mongoose.disconnect()
-  })
-
   await server.ready()
-
-  await createMongoConnection()
 
   void start()
 

@@ -3,10 +3,12 @@ import { logger } from '../lib'
 
 export async function createMongoConnection() {
   try {
-    await mongoose.connect(process.env.MONGO_URI)
+    const mongo = await mongoose.connect(process.env.MONGO_URI)
 
     logger.info('Mongo connected')
+    return mongo
   } catch (err) {
     logger.error('Unable to connect to mongo')
+    throw err
   }
 }

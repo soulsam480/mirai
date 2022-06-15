@@ -33,6 +33,10 @@ let tokenData: {
   ts: number
 } | null = null
 
+// de dupe clients
+// this will prevent creation of unused clients
+let socket: ReconnectingWebSocket | null = null
+
 export const createWsConn = async (getToken: () => Promise<string>): Promise<Connection> =>
   await new Promise((resolve, _reject) => {
     // get frim cache or fetch from API
@@ -43,7 +47,9 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
 
           tokenData = {
             token,
-            ts: Date.now(),
+            // we offset it a bit backwords to accomodate the
+            // network latency
+            ts: Date.now() - 500,
           }
 
           return token
@@ -55,36 +61,45 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
       }
     }
 
-    const socket = new ReconnectingWebSocket(url, [], {
+    if (socket !== null) {
+      socket.close()
+      socket = null
+    }
+
+    socket = new ReconnectingWebSocket(url, [], {
       connectionTimeout,
       WebSocket,
+      maxRetries: 10,
     })
 
     const apiSend = (opcode: Opcode, data: unknown) => {
-      if (socket.readyState !== socket.OPEN) return
+      if (socket?.readyState !== socket?.OPEN) return
 
       const raw = superjson.stringify({ op: opcode, d: data })
 
-      socket.send(raw)
+      socket?.send(raw)
     }
 
     const subscribers: Subscriber[] = []
 
-    socket.addEventListener('close', (error) => {
+    socket?.addEventListener('close', (error) => {
       // eslint-disable-next-line no-console
       console.log(error)
       if (error.code === 4001) {
-        socket.close()
+        socket?.close()
         tokenData = null
+        socket = null
       } else if (error.code === 4003) {
-        socket.close()
+        socket?.close()
+        socket = null
       } else if (error.code === 4004) {
-        socket.close()
+        socket?.close()
         tokenData = null
+        socket = null
       }
     })
 
-    socket.addEventListener('message', (e) => {
+    socket?.addEventListener('message', (e) => {
       if (e.data === `"pong"` || e.data === `pong`) {
         // eslint-disable-next-line no-console
         console.log('pong')
@@ -97,7 +112,7 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
         console.log('logged in')
 
         const connection: Connection = {
-          close: () => socket.close(),
+          close: () => socket?.close(),
           subscribe: (opcode, handler) => {
             const subscriber: Subscriber<any> = { opcode, handler }
 
@@ -123,12 +138,12 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
       subscribers.filter(({ opcode }) => opcode === message.op).forEach((it) => it.handler(message.d))
     })
 
-    socket.addEventListener('open', () => {
+    socket?.addEventListener('open', () => {
       const id = setInterval(() => {
-        if (socket.readyState === socket.CLOSED) {
+        if (socket?.readyState === socket?.CLOSED) {
           clearInterval(id)
         } else {
-          socket.send('ping')
+          socket?.send('ping')
           // eslint-disable-next-line no-console
           console.log('ping')
         }

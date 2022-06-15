@@ -28,6 +28,7 @@ export function setupWsHandlers(conn: SocketStream) {
 }
 
 // TODO: remove all handlers on auth error
+// TODO: check for token on every socket op
 const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void> = {
   auth(data: { token: string }, socket) {
     client++
