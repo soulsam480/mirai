@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, prop, Ref, Severity } from '@typegoose/typegoose'
+import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
 interface DataMeta {
@@ -13,21 +13,15 @@ export enum SourceType {
   others = 'others',
 }
 
-@modelOptions({
-  schemaOptions: {
-    toJSON: { virtuals: true, versionKey: false },
-  },
-  options: { allowMixed: Severity.ALLOW },
-})
 export class Data {
-  @prop({ enum: SourceType, required: true })
+  @prop({ enum: SourceType, type: String })
   sourceType!: SourceType
 
-  @prop({ required: true })
-  sourceId!: number
+  @prop()
+  sourceId?: number
 
-  @prop({ required: true })
-  meta!: DataMeta
+  @prop()
+  meta?: DataMeta
 }
 
 @modelOptions({
@@ -38,11 +32,10 @@ export class Notification extends TimeStamps {
   ownerId!: number
 
   @prop({ default: false })
-  read!: boolean
+  read?: boolean
 
-  @prop({ ref: () => Data })
-  data!: Ref<Data>
+  @prop()
+  data!: Data
 }
 
-export const notificationData = getModelForClass(Data)
 export const notification = getModelForClass(Notification)

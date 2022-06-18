@@ -109,6 +109,7 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
       const message = superjson.parse<WSPayload>(e.data)
 
       if (message.op === 'auth-success') {
+        // eslint-disable-next-line no-console
         console.log('logged in')
 
         const connection: Connection = {
@@ -117,6 +118,8 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
             const subscriber: Subscriber<any> = { opcode, handler }
 
             subscribers.push(subscriber)
+
+            console.log(subscribers.length)
 
             return () => subscribers.splice(subscribers.indexOf(subscriber), 1)
           },

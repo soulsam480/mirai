@@ -2,8 +2,7 @@ import { bulkTicketResolveSchema, createTicketSchema, ticketListingInput } from 
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass, isRole, isUniqueId } from '../../lib'
-import { ticketQueue } from '../../queues'
-import { TicketResolveResponse } from '../../types'
+import { flowProducer } from '../../queues'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
@@ -80,18 +79,27 @@ export const ticketRouter = createRouter()
   .mutation('action', {
     input: bulkTicketResolveSchema,
     async resolve({ input }) {
-      const errors: TicketResolveResponse[] = []
+      try {
+        await flowProducer.add({
+          name: `tickt-review-batch-${input.key}-${Date.now()}`,
+          queueName: 'ticketBatch',
+          data: {
+            instituteId: input.key,
+            size: input.data.length,
+          },
+          children: input.data.map((ticket) => {
+            return {
+              name: `ticket-review-${ticket.id}-${Date.now()}`,
+              queueName: 'tickets',
+              data: { ...ticket },
+            }
+          }),
+        })
 
-      for (const ticket of input.data) {
-        try {
-          await ticketQueue.add('ticketResolve', { ...ticket })
-        } catch (error) {
-          errors.push({ id: ticket.id, error })
-          continue
-        }
+        return { success: true, data: null }
+      } catch (error) {
+        return { success: false, data: error }
       }
-
-      return { success: errors.length === 0, data: errors }
     },
   })
   .mutation('remove', {

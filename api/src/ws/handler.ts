@@ -4,7 +4,7 @@ import type { WebSocket } from 'ws'
 import { parsePayload, WSPayload } from './parser'
 import superjson from 'superjson'
 import { authToken, logger } from '../lib'
-import { EventMap, notificationEmitter } from './emitter'
+import { EventMap, wsEventEmitter } from './emitter'
 
 let client = 0
 
@@ -28,7 +28,6 @@ export function setupWsHandlers(conn: SocketStream) {
 }
 
 // TODO: remove all handlers on auth error
-// TODO: check for token on every socket op
 const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void> = {
   auth(data: { token: string }, socket) {
     client++
@@ -37,8 +36,8 @@ const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void
     let userId: number | null = null
 
     function handler(eventData: EventMap['notification']) {
-      if (eventData === userId) {
-        socket.send(superjson.stringify({ op: 'notification' }))
+      if (eventData.id === userId) {
+        socket.send(superjson.stringify({ op: 'notification', d: { ts: eventData.ts } }))
       }
     }
 
@@ -52,16 +51,16 @@ const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void
       socket.send(superjson.stringify({ op: 'auth-success' }))
 
       // attach handler for notification from queue
-      notificationEmitter.on('notification', handler)
+      wsEventEmitter.on('notification', handler)
 
       // remove when client disconnects
-      socket.on('close', () => notificationEmitter.off('notification', handler))
+      socket.on('close', () => wsEventEmitter.off('notification', handler))
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         socket.send(superjson.stringify({ op: 'token-expired' }))
       }
 
-      notificationEmitter.off('notification', handler)
+      wsEventEmitter.off('notification', handler)
     }
   },
 }

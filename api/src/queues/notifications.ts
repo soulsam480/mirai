@@ -1,5 +1,6 @@
 import { Queue, Worker } from 'bullmq'
-import { Notification } from '../entities'
+import { notification, Notification } from '../entities'
+import { wsEventEmitter } from '../ws'
 
 export const notificationQueue = new Queue<Notification>('notifications', {
   connection: {
@@ -9,8 +10,15 @@ export const notificationQueue = new Queue<Notification>('notifications', {
 
 const _worker = new Worker<Notification>(
   'notifications',
-  async () => {
-    //
+  async (job) => {
+    const { data } = job
+
+    await notification.create(data)
+
+    wsEventEmitter.emit('notification', {
+      id: data.ownerId,
+      ts: Date.now(),
+    })
 
     return 'OK'
   },

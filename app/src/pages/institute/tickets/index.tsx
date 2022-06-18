@@ -93,7 +93,7 @@ const Tickets: NextPageWithLayout = () => {
   async function submitReview() {
     try {
       const response = await trpcClient.mutation('ticket.action', {
-        key: userData.owner?.code ?? '',
+        key: userData.id,
         data: selectedTickets.map(({ id, status, notes }) => ({ id, status, notes })),
       })
 
@@ -108,33 +108,17 @@ const Tickets: NextPageWithLayout = () => {
           message: `${selectedTickets.length} tickets are being processed. You will be notified once it's done.`,
           type: 'success',
         })
+
+        void setSelectedTicketsStore(() => [])
       } else {
-        // for successfully processed tickets
-        if (selectedTickets.length - data.length !== 0) {
-          setAlert({
-            message: `${
-              selectedTickets.length - data.length
-            } tickets are being processed. You will be notified once it's done.`,
-            type: 'success',
-          })
-        }
+        setAlert({
+          message: `Unable to process tickets, please try again.`,
+          type: 'danger',
+        })
 
-        // for failed tickets
-        if (data.length !== 0) {
-          setAlert({
-            message: `Unable to process ${data.length} tickets, please try again.`,
-            type: 'danger',
-          })
-        }
+        // eslint-disable-next-line no-console
+        console.error(data)
       }
-
-      if (data.length > 0) {
-        void setSelectedTicketsStore(() => tickets.filter((ticket) => data.some(({ id }) => id === ticket.id)))
-
-        return
-      }
-
-      void setSelectedTicketsStore(() => [])
     } catch (_e) {
       setAlert({
         message: 'Unable to process tickets. Please try again',

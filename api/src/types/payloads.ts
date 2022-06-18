@@ -9,3 +9,7 @@ export interface LoginPayload {
 export interface OnboardingPayload extends z.infer<typeof generateOnboardingUrlSchema> {
   createdAt: string
 }
+export interface NotificationPayload {
+  id: number
+  ts: number
+}
