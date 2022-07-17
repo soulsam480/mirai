@@ -119,8 +119,6 @@ export const createWsConn = async (getToken: () => Promise<string>): Promise<Con
 
             subscribers.push(subscriber)
 
-            console.log(subscribers.length)
-
             return () => subscribers.splice(subscribers.indexOf(subscriber), 1)
           },
           send: apiSend,
