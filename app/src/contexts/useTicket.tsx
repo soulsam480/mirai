@@ -1,3 +1,4 @@
+import { TicketResolveResponse } from '@mirai/api'
 import type { Ticket } from '@prisma/client'
 import { useAlert } from 'components/lib/store/alerts'
 import { loaderAtom } from 'components/lib/store/loader'
@@ -83,6 +84,25 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     },
   })
 
+  const action = trpc.useMutation(['ticket.action'], {
+    async onSuccess(data): Promise<{
+      success: boolean
+      data: TicketResolveResponse[]
+    }> {
+      void utils.invalidateQueries(['ticket.get_all'])
+
+      setAlert({
+        type: 'success',
+        message: 'Ticket Updated',
+      })
+
+      return data
+    },
+    onError(e) {
+      setError(e)
+    },
+  })
+
   const loading = useMemo(() => isLoading === true || create.isLoading, [isLoading, create.isLoading])
 
   useEffect(() => setLoader(loading), [loading, setLoader])
@@ -90,6 +110,7 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
   return {
     ticket,
     create,
+    action,
     isLoading,
   }
 }

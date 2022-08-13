@@ -78,12 +78,12 @@ export const ManageInstitute: React.FC<any> = () => {
   }
 
   function exportSignupLink() {
-    if (instituteData == null) return ''
+    if (instituteData === null) return ''
 
     const { origin } = location
     const { account } = instituteData
 
-    if (account == null) return
+    if (account === null) return
 
     const link = `${origin}/reset-password?${new URLSearchParams({
       accountId: String(account.id),

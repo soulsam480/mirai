@@ -1,12 +1,15 @@
+import type { NotificationPayload } from '@mirai/api'
 import clsx from 'clsx'
 import { MDialog } from 'components/lib/MDialog'
 import { MIcon } from 'components/lib/MIcon'
+import { useWS } from 'contexts'
 import { useAtom, useAtomValue } from 'jotai'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { sidebarAtom } from 'stores/config'
 import { loggedInAtom, useUser } from 'stores/user'
+// import { trpc } from 'utils/trpc'
 import { SettingsModal } from './SettingsModal'
 
 interface Props {}
@@ -16,6 +19,28 @@ export const NavBar: React.FC<Props> = () => {
   const isLoggedIn = useAtomValue(loggedInAtom)
   const [settingsModal, setSettingsModal] = useState(false)
   const [sidebar, setSidebar] = useAtom(sidebarAtom)
+  const [_ts, setTs] = useState<number | undefined>()
+
+  // const { data } = trpc.useQuery(['notification.get_all', { ts }])
+
+  const ws = useWS()
+
+  useEffect(() => {
+    if (ws.conn === null) return
+
+    const unsub = ws.conn?.subscribe<NotificationPayload>('notification', (d) => {
+      setTs(d.ts ?? undefined)
+
+      /**
+       * Handle notifications here
+       * when there is a new notification fetch notifications
+       * listing API with the timestamp which will act as a cursor
+       * uncomment the query above and try performing an action
+       */
+    })
+
+    return unsub
+  }, [ws])
 
   return (
     <div className="sticky top-0 z-10 mb-2 w-full border-b border-base-200 bg-opacity-40 text-neutral backdrop-blur">

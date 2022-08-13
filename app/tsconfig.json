@@ -18,6 +18,6 @@
     "types": ["unplugin-icons/types/react"],
     "incremental": true
   },
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "auto-imports.d.ts"],
+  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "auto-imports.d.ts", "../next-auth.d.ts"],
   "exclude": ["node_modules", ".next", "dist"]
 }

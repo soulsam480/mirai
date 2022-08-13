@@ -2,6 +2,7 @@ import React from 'react'
 import { SessionProvider as NextAuthProvider } from 'next-auth/react'
 import { CurrentAccount } from 'contexts'
 import { useTheme } from 'utils/hooks'
+import { WSClientProvider } from './WsClient'
 
 interface Props {
   pageProps: any
@@ -12,7 +13,9 @@ export const AppProviders: React.FC<Props> = ({ pageProps, children }) => {
 
   return (
     <NextAuthProvider session={pageProps.session}>
-      <CurrentAccount>{children}</CurrentAccount>
+      <CurrentAccount>
+        <WSClientProvider>{children}</WSClientProvider>
+      </CurrentAccount>
     </NextAuthProvider>
   )
 }

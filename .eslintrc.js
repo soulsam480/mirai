@@ -16,12 +16,7 @@ module.exports = {
   },
   rules: {
     'no-console': 1,
-    '@typescript-eslint/restrict-template-expressions': [
-      2,
-      {
-        allowNumber: true,
-      },
-    ],
+    '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     'react/react-in-jsx-scope': 'off',

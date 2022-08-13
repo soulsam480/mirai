@@ -15,7 +15,7 @@ import { useUser } from 'stores/user'
 import { z } from 'zod'
 import { BasicsCard } from './BasicsCard'
 import { formatDate } from 'utils/helpers'
-import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constnts'
+import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constants'
 
 interface Props {}
 

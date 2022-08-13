@@ -3,7 +3,7 @@ import miraiClient from '../db'
 import { comparePassword } from '../lib'
 import { LoginPayload } from '../types/payloads'
 
-export const router: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
+const router: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
   fastify.post<{ Body: LoginPayload }>('/', async ({ body }, reply) => {
     const { email, password } = body
 
@@ -27,4 +27,5 @@ export const router: FastifyPluginAsync = async (fastify, _opts): Promise<void> 
   })
 }
 
-export const prefix = '/auth'
+export default router
+export const autoPrefix = '/auth'

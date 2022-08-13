@@ -11,6 +11,7 @@ import { departmentRouter } from './department'
 import { instituteRouter } from './institute'
 import { studentRouter } from './student'
 import { ticketRouter } from './ticket'
+import { notificationRouter } from './notifications'
 
 /**
  * Create your application's root router
@@ -37,5 +38,6 @@ export const appRouter = createRouter()
   .merge('batch.', batchRouter)
   .merge('student.', studentRouter)
   .merge('ticket.', ticketRouter)
+  .merge('notification.', notificationRouter)
 
 export type AppRouter = typeof appRouter

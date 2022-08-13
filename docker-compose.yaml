@@ -17,11 +17,21 @@ services:
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
-    volumes: 
-      - cache:/data
+    volumes:
+      - cache:/data/cache
 
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongodata:/data/mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_DATABASE=mirai
 
 volumes:
   db_data:
   cache:
     driver: local
+  mongodata:

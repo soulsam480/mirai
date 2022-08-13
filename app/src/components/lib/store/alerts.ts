@@ -23,7 +23,7 @@ export const alertsSubAtom = atom<Alert[], Alert>(
       set(alertsBase, () => [...alerts])
 
       clearTimeout(timeout)
-    }, 2500)
+    }, 3000)
   },
 )
 
