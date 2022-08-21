@@ -1,14 +1,12 @@
 import React from 'react'
 import { useAtom, useAtomValue } from 'jotai'
-import { DepartmentFilter, DepartmentFilterPreview } from 'components/institute/student/filters/DepartmentFilter'
-import { BatchFilter, BatchFilterPreview } from 'components/institute/student/filters/BatchFilter'
-import { CourseFilter, CourseFilterPreview } from 'components/institute/student/filters/CourseFilter'
-import { NameFilter, NameFilterPreview } from 'components/institute/student/filters/NameFilter'
-import { UniIdFilter, UniIdFilterPreview } from 'components/institute/student/filters/UniIdFilter'
-import MSpinner from 'components/lib/MSpinner'
-import { instituteAssetsLoading } from 'stores/institute'
-import { studentFiltersAtom } from 'stores/student'
-import { MIcon } from 'components/lib/MIcon'
+import { instituteAssetsLoading, studentFiltersAtom } from '../../../../stores'
+import { MSpinner, MIcon } from '../../../lib'
+import { BatchFilter, BatchFilterPreview } from './BatchFilter'
+import { DepartmentFilter, DepartmentFilterPreview } from './DepartmentFilter'
+import { CourseFilter, CourseFilterPreview } from './CourseFilter'
+import { NameFilter, NameFilterPreview } from './NameFilter'
+import { UniIdFilter, UniIdFilterPreview } from './UniIdFilter'
 
 interface Props {}
 
@@ -18,7 +16,7 @@ export const StudentFiltersBlock: React.FC<Props> = () => {
 
   const hasAnyFilter = Object.values(filters).some(Boolean)
 
-  return filtersLoading === true ? (
+  return filtersLoading ? (
     <div className="flex items-center space-x-2">
       <MSpinner size="20px" /> <span>Loading filters...</span>
     </div>

@@ -1,17 +1,15 @@
 import type { Institute } from '@prisma/client'
 import clsx from 'clsx'
-import { AppLayout } from 'components/globals/AppLayout'
-import PageLayout from 'components/globals/PageLayout'
-import { ManageInstitute } from 'components/admin/institute/ManageInstitute'
-import { MDialog } from 'components/lib/MDialog'
-import MLink from 'components/lib/MLink'
-import { Column, MTable } from 'components/lib/MTable'
-import { useInstitutes } from 'contexts'
 import { useRouter } from 'next/router'
-import { NextPageWithLayout } from 'pages/_app'
 import { useMemo } from 'react'
-import { getServerSideAuthGuard } from 'server/lib/auth'
 import IconPhPencilSimple from '~icons/ph/pencil-simple.jsx'
+import { ManageInstitute } from '../../../components/admin/institute/ManageInstitute'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import PageLayout from '../../../components/globals/PageLayout'
+import { Column, MDialog, MLink, MTable } from '../../../components/lib'
+import { useInstitutes } from '../../../contexts'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import { NextPageWithLayout } from '../../_app'
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 
@@ -57,7 +55,7 @@ const Institutes: NextPageWithLayout<Props, any> = () => {
         field: '',
         label: 'Edit',
         format: ({ id }) => (
-          <MLink href={`/admin/institute?instituteId=${id as number}`} as={`/admin/institute/${id as number}`}>
+          <MLink href={`/admin/institute?instituteId=${id}`} as={`/admin/institute/${id}`}>
             <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),

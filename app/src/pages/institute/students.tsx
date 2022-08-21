@@ -1,15 +1,13 @@
-import { AppLayout } from 'components/globals/AppLayout'
-import { Column, MTable } from 'lib/MTable'
-import { StudentsListingType, useStudents } from 'contexts/useStudents'
 import { useEffect, useMemo, useState } from 'react'
 import { NextPageWithLayout } from '../_app'
-import { useInstituteAssets } from 'contexts'
-import { studentFiltersAtom } from 'stores/student'
 import { useResetAtom } from 'jotai/utils'
-import { getServerSideAuthGuard } from 'server/lib/auth'
-import { StudentFiltersBlock } from 'components/institute/student/filters'
-import { MDialog } from 'components/lib/MDialog'
-import { GenerateUrlDialog } from 'components/institute/student/GenerateUrlDialog'
+import { getServerSideAuthGuard } from '../../server/lib/auth'
+import { StudentsListingType, useInstituteAssets, useStudents } from '../../contexts'
+import { studentFiltersAtom } from '../../stores'
+import { Column, MDialog, MTable } from '../../components/lib'
+import { GenerateUrlDialog } from '../../components/institute/student/GenerateUrlDialog'
+import { StudentFiltersBlock } from '../../components/institute/student/filters'
+import { AppLayout } from '../../components/globals/AppLayout'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

@@ -1,28 +1,25 @@
 import type { Ticket, TicketStatus } from '@prisma/client'
-import { AppLayout } from 'components/globals/AppLayout'
-import { ManageTicket } from 'components/institute/ticket/ManageTicket'
-import { MAlertDialog } from 'components/lib/MAlertDialog'
-import { MBadge } from 'components/lib/MBadge'
-import { MDialog } from 'components/lib/MDialog'
-import { MIcon } from 'components/lib/MIcon'
-import { MSelect } from 'components/lib/MSelect'
-import { Column, MTable } from 'components/lib/MTable'
-import { useAlert } from 'components/lib/store/alerts'
-import { TicketFiltersBlock } from 'components/tickets/filters'
-import { ListingSettings } from 'components/tickets/ListingSettings'
-import { useInstituteAssets } from 'contexts'
-import { TicketWithMeta, useTickets } from 'contexts/useTicket'
 import { useAtom, useSetAtom } from 'jotai'
 import { useResetAtom } from 'jotai/utils'
-import { NextPageWithLayout } from 'pages/_app'
 import { useEffect, useMemo, useState } from 'react'
-import { getServerSideAuthGuard } from 'server/lib/auth'
-import { activeTicketAtom, selectedTicketsAtom, selectedTicketsSetAtom } from 'stores/ticket'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
-import { useUser } from 'stores/user'
-import { Option } from 'types'
-import { formatDate, interpolate, titleCase } from 'utils/helpers'
-import { trpcClient } from 'utils/trpc'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import { ManageTicket } from '../../../components/institute/ticket/ManageTicket'
+import { Column, MAlertDialog, MBadge, MDialog, MIcon, MSelect, MTable, useAlert } from '../../../components/lib'
+import { TicketFiltersBlock } from '../../../components/tickets/filters'
+import { ListingSettings } from '../../../components/tickets/ListingSettings'
+import { useInstituteAssets } from '../../../contexts'
+import { TicketWithMeta, useTickets } from '../../../contexts/useTicket'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import {
+  activeTicketAtom,
+  selectedTicketsAtom,
+  selectedTicketsSetAtom,
+  ticketFiltersAtom,
+  useUser,
+} from '../../../stores'
+import { Option } from '../../../types'
+import { formatDate, interpolate, titleCase, trpcClient } from '../../../utils'
+import { NextPageWithLayout } from '../../_app'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -87,7 +84,7 @@ const Tickets: NextPageWithLayout = () => {
   }
 
   function nextTicket() {
-    if ((activeTicketIndex as number) + 1 !== countSelected) void setActiveTicketIndex((prev) => (prev as number) + 1)
+    if (activeTicketIndex + 1 !== countSelected) void setActiveTicketIndex((prev) => prev + 1)
   }
 
   async function submitReview() {
@@ -102,7 +99,7 @@ const Tickets: NextPageWithLayout = () => {
       closeVerifyModal()
       setAlertModal(false)
 
-      if (success === true) {
+      if (success) {
         // for no errors
         setAlert({
           message: `${selectedTickets.length} tickets are being processed. You will be notified once it's done.`,

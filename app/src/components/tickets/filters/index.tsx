@@ -1,11 +1,11 @@
-import { MIcon } from 'components/lib/MIcon'
 import { useAtomValue } from 'jotai'
 import React, { useMemo } from 'react'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
 import { StatusFilter, StatusFilterPreview } from './StatusFilter'
 import { TypeFilter, TypeFilterPreview } from './TypeFilter'
 import { useResetAtom } from 'jotai/utils'
 import { CreatedAtFilter, CreatedAtFilterPreview } from './CreatedAtFilter'
+import { ticketFiltersAtom } from '../../../stores'
+import { MIcon } from '../../lib'
 
 interface Props {}
 

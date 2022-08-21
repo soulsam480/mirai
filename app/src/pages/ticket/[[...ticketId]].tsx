@@ -1,4 +1,4 @@
-import { NextPageWithLayout } from 'pages/_app'
+import { NextPageWithLayout } from '../_app'
 
 const TicketDetails: NextPageWithLayout = () => {
   return <div>Ticket</div>

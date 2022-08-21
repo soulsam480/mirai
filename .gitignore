@@ -46,6 +46,6 @@ playwright/videos
 playwright/screenshots
 
 
-temp/*
+temp/
 app/auto-imports.d.ts
 .eslintrc-auto-import.json

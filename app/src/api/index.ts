@@ -10,3 +10,4 @@ export async function authorizeUser(payload: LoginPayload) {
 }
 
 export * from './account'
+export * from './ws'

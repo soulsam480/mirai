@@ -3,7 +3,7 @@ import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
 import { inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
 import type { AppRouter } from '@mirai/api'
-import { MLinkProps } from 'components/lib/MLink'
+import { MLinkProps } from '../components/lib'
 import React from 'react'
 import type { z } from 'zod'
 

@@ -1,22 +1,24 @@
-import { AppLayout } from 'components/globals/AppLayout'
-import { Basics } from 'components/student/profile/Basics'
-import { Education } from 'components/student/profile/Education'
-import { Certifications } from 'components/student/profile/Certification'
-import { Projects } from 'components/student/profile/Project'
-import { Skills } from 'components/student/profile/Skill'
-import { WorkExperience } from 'components/student/profile/WorkExperience'
-import { Course } from 'components/student/profile/Course'
-import { ProfileSection } from 'components/student/ProfileSection'
-import { ProfileSidebar } from 'components/student/ProfileSidebar'
-import { useStudent } from 'contexts/student'
-import { getServerSideAuthGuard } from 'server/lib/auth'
 import type { NextPageWithLayout } from '../_app'
 import { useEvent } from 'react-use'
-import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
 import { useCallback, useEffect } from 'react'
 import { useSetAtom } from 'jotai'
-import { MIcon } from 'components/lib/MIcon'
 import debounce from 'lodash/debounce'
+import { getServerSideAuthGuard } from '../../server/lib/auth'
+import { useStudent } from '../../contexts'
+import { activeProfileAtom, SidebarTabs } from '../../stores'
+import {
+  Basics,
+  Certifications,
+  Course,
+  Education,
+  ProfileSection,
+  ProfileSidebar,
+  Projects,
+  Skills,
+  WorkExperience,
+} from '../../components/student'
+import { MIcon } from '../../components/lib'
+import { AppLayout } from '../../components/globals/AppLayout'
 
 export const getServerSideProps = getServerSideAuthGuard(['STUDENT'])
 

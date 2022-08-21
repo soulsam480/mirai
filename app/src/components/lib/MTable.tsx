@@ -1,6 +1,6 @@
 import React, { createContext, HTMLProps, useContext, useMemo } from 'react'
 import clsx from 'clsx'
-import MSpinner from 'lib/MSpinner'
+import { MSpinner } from './MSpinner'
 
 interface Props<R = any> extends Omit<HTMLProps<HTMLDivElement>, 'rows'> {
   /** Table Schema */

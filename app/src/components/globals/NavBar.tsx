@@ -1,16 +1,14 @@
 import type { NotificationPayload } from '@mirai/api'
 import clsx from 'clsx'
-import { MDialog } from 'components/lib/MDialog'
-import { MIcon } from 'components/lib/MIcon'
-import { useWS } from 'contexts'
+import { useWS } from '../../contexts'
 import { useAtom, useAtomValue } from 'jotai'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { sidebarAtom } from 'stores/config'
-import { loggedInAtom, useUser } from 'stores/user'
+import { loggedInAtom, sidebarAtom, useUser } from '../../stores'
 // import { trpc } from 'utils/trpc'
 import { SettingsModal } from './SettingsModal'
+import { MDialog, MIcon } from '../lib'
 
 interface Props {}
 
@@ -55,7 +53,7 @@ export const NavBar: React.FC<Props> = () => {
           </Link>
         </div>
         <div className="flex flex-none items-center gap-2">
-          {isLoggedIn === false ? (
+          {!isLoggedIn ? (
             <>
               <button className="btn btn-primary btn-ghost btn-sm ">Contact sales</button>
               <Link href="/login">
@@ -64,7 +62,7 @@ export const NavBar: React.FC<Props> = () => {
             </>
           ) : (
             <>
-              <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
+              <div className="dropdown-end dropdown" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
                   <div className="h-8 w-8 rounded-full bg-base-200 text-sm shadow">
                     <span> {(userData.name ?? userData?.tenant?.basics?.name)?.slice(0, 2).toUpperCase()} </span>
@@ -106,8 +104,8 @@ export const NavBar: React.FC<Props> = () => {
               <label
                 htmlFor="mirai-drawer"
                 className={clsx([
-                  'swap drawer-button swap-rotate text-3xl text-base-content lg:hidden',
-                  sidebar === true && 'swap-active',
+                  'swap-rotate swap drawer-button text-3xl text-base-content lg:hidden',
+                  sidebar && 'swap-active',
                 ])}
               >
                 <MIcon className="swap-off">

@@ -1,16 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MInput } from 'components/lib/MInput'
-import { MSelect } from 'components/lib/MSelect'
-import { useDepartments, useCourse } from 'contexts'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { useGlobalError } from 'utils/hooks'
 import { z } from 'zod'
 import omit from 'lodash/omit'
-import { useUser } from 'stores/user'
-import { createCourseSchema } from 'schemas'
-import { MForm } from 'components/lib/MForm'
+import { useGlobalError } from '../../../utils'
+import { useUser } from '../../../stores'
+import { useCourse, useDepartments } from '../../../contexts'
+import { createCourseSchema } from '../../../schemas'
+import { MForm, MInput, MSelect } from '../../lib'
 
 interface Props {}
 
@@ -47,7 +45,7 @@ export const ManageCourse: React.FC<Props> = () => {
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState, setValue } = form
+  const { handleSubmit, setValue } = form
 
   const { course, create, update } = useCourse({
     onSuccess(data) {
@@ -118,51 +116,25 @@ export const ManageCourse: React.FC<Props> = () => {
       >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 ">
           <div>
-            <MInput
-              label="Branch name"
-              {...register('branchName')}
-              placeholder="Branch name"
-              error={formState.errors.branchName}
-            />
+            <MInput name="branchName" label="Branch name" placeholder="Branch name" />
 
-            <MInput
-              label="Branch code"
-              {...register('branchCode')}
-              placeholder="Branch code"
-              error={formState.errors.branchCode}
-            />
+            <MInput name="branchCode" label="Branch code" placeholder="Branch code" />
 
-            <MInput
-              label="Course name"
-              {...register('programName')}
-              placeholder="Course name"
-              error={formState.errors.programName}
-            />
+            <MInput name="programName" label="Course name" placeholder="Course name" />
 
-            <MSelect
-              name="programDurationType"
-              label="Course duration type"
-              options={programDurationType}
-              error={formState.errors.programDurationType}
-            />
+            <MSelect name="programDurationType" label="Course duration type" options={programDurationType} />
           </div>
 
           <div>
             <MInput
+              name="programDuration"
               label="Course duration"
-              {...register('programDuration', { valueAsNumber: true })}
               placeholder="Course duration"
-              error={formState.errors.programDuration}
               type="number"
               min={0}
             />
 
-            <MSelect
-              name="scoreType"
-              label="Course score type"
-              options={courseScoreType}
-              error={formState.errors.scoreType}
-            />
+            <MSelect name="scoreType" label="Course score type" options={courseScoreType} />
 
             <MSelect name="programLevel" label="Course level" options={programLevel} />
 

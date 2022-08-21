@@ -1,16 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { MSelect } from 'components/lib/MSelect'
-import { useAlert } from 'components/lib/store/alerts'
-import { useBatch } from 'contexts/useBatch'
 import { useRouter } from 'next/router'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { createBatchSchema } from 'schemas'
-import { useUser } from 'stores/user'
-import { TRPCErrorType } from 'types'
 import { z } from 'zod'
+import { useBatch } from '../../../contexts'
+import { createBatchSchema } from '../../../schemas'
+import { useUser } from '../../../stores'
+import { TRPCErrorType } from '../../../types'
+import { MForm, MInput, MSelect, useAlert } from '../../lib'
+
+// TODO: add batch start/end
 
 const durationType = ['YEAR', 'MONTH', 'WEEK', 'DAY'].map((o) => ({ label: o, value: o }))
 const statusType = ['ACTIVE', 'INACTIVE'].map((o) => ({ label: o, value: o }))
@@ -54,7 +53,7 @@ export const ManageBatch: React.FC<any> = () => {
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState, setValue } = form
+  const { handleSubmit, setValue } = form
 
   async function createBatch(data: Omit<z.infer<typeof createBatchSchema>, 'instituteId'>) {
     create.mutate({ ...data, instituteId: Number(userData.instituteId) })
@@ -81,7 +80,7 @@ export const ManageBatch: React.FC<any> = () => {
 
   return (
     <>
-      <div className="text-lg font-medium leading-6    ">
+      <div className="text-lg font-medium leading-6">
         {isEditMode ? (
           <>
             Manage <span className="font-bold text-primary">{batch?.name}</span>
@@ -96,18 +95,13 @@ export const ManageBatch: React.FC<any> = () => {
         className="sm:max-w-80 form-control flex sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateBatch : createBatch)}
       >
-        <MInput label="Name" {...register('name')} placeholder="Batch name" error={formState.errors.name} />
+        <MInput label="Name" name="name" placeholder="Batch name" />
 
-        <MInput {...register('duration')} label="Duration" placeholder="Duration" error={formState.errors.duration} />
+        <MInput name="duration" label="Duration" placeholder="Duration" />
 
-        <MSelect
-          name="durationType"
-          label="Batch duration type"
-          options={durationType}
-          error={formState.errors.durationType}
-        />
+        <MSelect name="durationType" label="Batch duration type" options={durationType} />
 
-        <MSelect name="status" label="Status" options={statusType} error={formState.errors.status} />
+        <MSelect name="status" label="Status" options={statusType} />
 
         <div className="flex justify-end space-x-2">
           <button

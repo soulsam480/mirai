@@ -2,8 +2,8 @@ import { Combobox, Portal } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { ReactElement, useMemo, useState } from 'react'
 import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
-import { Option } from 'types'
-import { isSafeVal } from 'utils/helpers'
+import { Option } from '../../types'
+import { isSafeVal } from '../../utils'
 import { MIcon } from './MIcon'
 import { useSelectPopperConfig } from './MSelect'
 
@@ -68,7 +68,7 @@ export const MSearch: React.FC<MSearchProps> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function extractOption(val: any) {
-    const selectedOption = options.find((v) => v.value === (isSafeVal(val) === true ? val : val.value ?? ''))
+    const selectedOption = options.find((v) => v.value === (isSafeVal(val) ? val : val.value ?? ''))
 
     return selectedOption
   }
@@ -84,7 +84,7 @@ export const MSearch: React.FC<MSearchProps> = ({
 
     if (selectedOption !== undefined) return selectedOption
 
-    if (isSafeVal(value) === true) return value
+    if (isSafeVal(value)) return value
 
     return 'Unknown value'
   }, [value, extractOption])
@@ -167,7 +167,7 @@ export const MSearch: React.FC<MSearchProps> = ({
               ) : (
                 filteredOptions.map((option, i) => {
                   const selected =
-                    (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) === option.value
+                    (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
 
                   return (
                     <Combobox.Option

@@ -1,4 +1,4 @@
-import { MDialog } from 'components/lib/MDialog'
+import { MDialog } from '../../components/lib'
 import React from 'react'
 
 interface Props {

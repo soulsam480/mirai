@@ -1,14 +1,13 @@
 import { useRouter } from 'next/router'
 import { useMemo } from 'react'
 import { z } from 'zod'
-import { MInput } from 'components/lib/MInput'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { useUser } from 'stores/user'
-import { useDepartment } from 'contexts'
-import { createDepartmentSchema } from 'schemas'
-import { MForm } from 'components/lib/MForm'
-import { useGlobalError } from 'utils/hooks'
+import { useUser } from '../../../stores'
+import { useGlobalError } from '../../../utils'
+import { useDepartment } from '../../../contexts'
+import { createDepartmentSchema } from '../../../schemas'
+import { MForm, MInput } from '../../lib'
 
 export const ManageDepartment: React.FC<any> = () => {
   const router = useRouter()
@@ -45,7 +44,7 @@ export const ManageDepartment: React.FC<any> = () => {
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState, setValue } = form
+  const { handleSubmit, setValue } = form
 
   async function createDepartment(data: Omit<z.infer<typeof createDepartmentSchema>, 'instituteId'>) {
     create.mutate({ ...data, instituteId: Number(userData.instituteId) })
@@ -72,14 +71,9 @@ export const ManageDepartment: React.FC<any> = () => {
           )}
         </div>
 
-        <MInput label="Name" {...register('name')} placeholder="Department name" error={formState.errors.name} />
+        <MInput label="Name" name="name" placeholder="Department name" />
 
-        <MInput
-          {...register('inCharge')}
-          label="In charge"
-          placeholder="Department incharge"
-          error={formState.errors.inCharge}
-        />
+        <MInput name="inCharge" label="In charge" placeholder="Department incharge" />
 
         <div className="flex justify-end space-x-2">
           <button

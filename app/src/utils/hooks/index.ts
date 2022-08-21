@@ -1,11 +1,11 @@
-import { useAlert } from 'components/lib/store/alerts'
+import { useAlert } from '../../components/lib'
 import { createPopper, Options } from '@popperjs/core'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { RefCallback, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
-import { themeAtom } from 'stores/config'
-import { TRPCErrorType } from 'types'
+import { themeAtom } from '../../stores'
+import { TRPCErrorType } from '../../types'
 
 export * from './student'
 

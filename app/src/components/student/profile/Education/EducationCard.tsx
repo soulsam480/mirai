@@ -1,10 +1,8 @@
 import { StudentEducation } from '@prisma/client'
-import { MAlertDialog } from 'components/lib/MAlertDialog'
-import MFeatureCard from 'components/lib/MFeatureCard'
-import { MIcon } from 'components/lib/MIcon'
-import { useEducation } from 'contexts/student/education'
 import React, { useState } from 'react'
-import { formatDate } from 'utils/helpers'
+import { useEducation } from '../../../../contexts'
+import { formatDate } from '../../../../utils'
+import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
 
 interface Props {
   education: StudentEducation

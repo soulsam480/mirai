@@ -1,17 +1,13 @@
 import { TicketResolveResponse } from '@mirai/api'
 import type { Ticket } from '@prisma/client'
-import { useAlert } from 'components/lib/store/alerts'
-import { loaderAtom } from 'components/lib/store/loader'
+import { useAlert, loaderAtom } from '../components/lib'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { TicketType } from 'schemas'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
-import { loggedInAtom, useUser } from 'stores/user'
-import { OverWrite, QueryOptions } from 'types'
-import { getUserHome } from 'utils/helpers'
-import { useGlobalError, useQuery } from 'utils/hooks'
-import { trpc } from 'utils/trpc'
+import { TicketType } from '../schemas'
+import { loggedInAtom, useUser, ticketFiltersAtom } from '../stores'
+import { OverWrite, QueryOptions } from '../types'
+import { getUserHome, useGlobalError, useQuery, trpc } from '../utils'
 
 interface Ticketmeta {
   type: TicketType
@@ -103,7 +99,7 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     },
   })
 
-  const loading = useMemo(() => isLoading === true || create.isLoading, [isLoading, create.isLoading])
+  const loading = useMemo(() => isLoading || create.isLoading, [isLoading, create.isLoading])
 
   useEffect(() => setLoader(loading), [loading, setLoader])
 

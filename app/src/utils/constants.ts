@@ -1,4 +1,4 @@
-import { Option } from 'types'
+import { Option } from '../types'
 
 export const INDUSTRY_TYPES = [
   'Accounting',

@@ -1,15 +1,12 @@
-import { manageInstituteSchema } from 'schemas'
-import { useAlert } from 'components/lib/store/alerts'
-import { loaderAtom } from 'components/lib/store/loader'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { loggedInAtom, useUser } from 'stores/user'
-import { QueryOptions } from 'types'
-import { getUserHome } from 'utils/helpers'
-import { useStrictQueryCheck } from 'utils/hooks'
-import { trpc } from 'utils/trpc'
 import { z } from 'zod'
+import { loaderAtom, useAlert } from '../components/lib'
+import { manageInstituteSchema } from '../schemas'
+import { loggedInAtom, useUser } from '../stores'
+import { QueryOptions } from '../types'
+import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 
 export function useInstitutes() {
   const userData = useUser()
@@ -56,7 +53,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
       }
     },
     ...opts,
-    enabled: isLoggedIn === true && isQuery,
+    enabled: isLoggedIn && isQuery,
   })
 
   const signUp = trpc.useMutation(['auth.sign_up'], {
@@ -69,7 +66,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
         type: 'success',
       })
 
-      void router.push(`/admin/institute/${instituteId as number}`)
+      void router.push(`/admin/institute/${instituteId}`)
     },
   })
 
@@ -97,7 +94,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
   })
 
   const loading = useMemo(
-    () => isLoading === true || update.isLoading || signUp.isLoading || createInstitute.isLoading,
+    () => isLoading || update.isLoading || signUp.isLoading || createInstitute.isLoading,
     [isLoading, update.isLoading, signUp.isLoading, createInstitute.isLoading],
   )
 

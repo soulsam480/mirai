@@ -13,8 +13,8 @@ import type {
 } from '@prisma/client'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
-import { studentsQuerySchema } from 'schemas'
-import type { OverWrite } from 'types'
+import { studentsQuerySchema } from '../schemas'
+import type { OverWrite } from '../types'
 import { z } from 'zod'
 
 export interface StudentSemScore {

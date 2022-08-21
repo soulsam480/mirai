@@ -1,11 +1,12 @@
 import type { Role } from '@prisma/client'
 import dayjs from 'dayjs'
 import mitt from 'mitt'
-import type { NullToUndefined, SidebarItem } from 'types'
+import type { NullToUndefined, SidebarItem } from '../types'
 import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
 import startCase from 'lodash/startCase'
 import camelCase from 'lodash/camelCase'
+import { forwardRef } from 'react'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
 
@@ -40,7 +41,7 @@ export function defineSidebar(base: string) {
   return {
     stack,
     extend(entries: SidebarItem[]) {
-      stack.push(...entries.map((e) => ({ ...e, path: base + (e.path as string) })))
+      stack.push(...entries.map((e) => ({ ...e, path: base + e.path })))
 
       return stack
     },
@@ -183,4 +184,24 @@ export function interpolate(template: string, interpolations: Record<string, str
   return template.replace(/\{\{\s*(\w+)\s*\}\}/g, (marker, token) => {
     return String(interpolations[token]) ?? marker
   })
+}
+
+export function forwardRefWithAs<T extends { name: string; displayName?: string }>(
+  component: T,
+): T & { displayName: string } {
+  return Object.assign(forwardRef(component as unknown as any) as any, {
+    displayName: component.displayName ?? component.name,
+  })
+}
+
+export function mergeRefs<T = any>(refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>): React.RefCallback<T> {
+  return (value) => {
+    refs.forEach((ref) => {
+      if (typeof ref === 'function') {
+        ref(value)
+      } else if (ref !== null) {
+        ;(ref as React.MutableRefObject<T | null>).current = value
+      }
+    })
+  }
 }

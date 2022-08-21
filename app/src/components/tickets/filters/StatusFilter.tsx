@@ -1,8 +1,7 @@
-import { MSelect } from 'components/lib/MSelect'
 import { useAtom } from 'jotai'
 import React, { useMemo } from 'react'
-import { useSelectAtom } from 'stores/index'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
+import { ticketFiltersAtom, useSelectAtom } from '../../../stores'
+import { MSelect } from '../../lib'
 
 interface Props {}
 

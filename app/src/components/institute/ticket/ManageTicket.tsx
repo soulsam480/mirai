@@ -1,15 +1,11 @@
 import type { Ticket, TicketStatus } from '@prisma/client'
-import { MInput } from 'components/lib/MInput'
 import dayjs from 'dayjs'
 import React from 'react'
-import { TICKET_DISPLAY_FIELDS } from 'utils/constants'
-import { formatDate, titleCase } from 'utils/helpers'
-import { MSelect } from 'lib/MSelect'
 import { useAtom, useAtomValue } from 'jotai'
-import { activeTicketAtom, selectedTicketsAtom, selectedTicketsSnapshotAtom } from 'stores/ticket'
-import { STATUS_OPTIONS } from 'pages/institute/tickets'
-import { useStudentAcademicMeta } from 'utils/hooks'
-import { MBadge } from 'components/lib/MBadge'
+import { activeTicketAtom, selectedTicketsAtom, selectedTicketsSnapshotAtom } from '../../../stores'
+import { formatDate, TICKET_DISPLAY_FIELDS, titleCase, useStudentAcademicMeta } from '../../../utils'
+import { MBadge, MInput, MSelect } from '../../lib'
+import { STATUS_OPTIONS } from '../../../pages/institute/tickets'
 
 interface Props {
   activeTicket: Ticket
@@ -61,7 +57,7 @@ export const ManageTicket: React.FC<Props> = ({
     })
   }
 
-  function handleNotes({ currentTarget: { value } }: React.ChangeEvent<HTMLInputElement>) {
+  function handleNotes({ currentTarget: { value } }: React.ChangeEvent<HTMLTextAreaElement>) {
     void setSelectedTickets((prev) => {
       return prev.map((activeTicket) => (activeTicket.id === id ? { ...activeTicket, notes: value } : activeTicket))
     })
@@ -130,7 +126,7 @@ export const ManageTicket: React.FC<Props> = ({
                 label="Status"
               />
 
-              <MInput label="Notes" as="textarea" value={noteValue ?? ''} onChange={handleNotes} />
+              <MInput name="notes" label="Notes" as="textarea" value={noteValue ?? ''} onChange={handleNotes} />
             </div>
           </>
         )}

@@ -1,8 +1,8 @@
 import clsx from 'clsx'
-import { MIcon } from 'components/lib/MIcon'
 import { useAtomValue } from 'jotai'
 import React from 'react'
-import { activeProfileAtom, SidebarTabs } from 'stores/activeProfile'
+import { activeProfileAtom, SidebarTabs } from '../../stores'
+import { MIcon } from '../lib'
 
 interface Props {
   className?: string

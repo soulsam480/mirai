@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai'
-import { instituteBatches, instituteCourses, instituteDepartments } from 'stores/institute'
+import { instituteBatches, instituteCourses, instituteDepartments } from '../../stores'
 
 export function useStudentAcademicMeta(params: { batchId: number; departmentId: number; courseId: number } | null) {
   const departments = useAtomValue(instituteDepartments)

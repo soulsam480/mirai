@@ -9,7 +9,7 @@ export interface MLinkProps extends LinkProps {
   onClick?: () => void
 }
 
-const MLink: React.FC<MLinkProps> = ({ href, children, className, active, onClick, ...rest }) => {
+export const MLink: React.FC<MLinkProps> = ({ href, children, className, active, onClick, ...rest }) => {
   const { pathname } = useRouter()
 
   const isActive = useMemo(
@@ -27,5 +27,3 @@ const MLink: React.FC<MLinkProps> = ({ href, children, className, active, onClic
 }
 
 MLink.displayName = 'MLink'
-
-export default MLink

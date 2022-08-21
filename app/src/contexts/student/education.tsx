@@ -1,9 +1,8 @@
-import { useAlert } from 'components/lib/store/alerts'
 import { useSetAtom } from 'jotai'
-import { studentEducationAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { TRPCErrorType } from 'types'
-import { trpc, trpcClient } from 'utils/trpc'
+import { useAlert } from '../../components/lib'
+import { studentEducationAtom, useUser } from '../../stores'
+import { TRPCErrorType } from '../../types'
+import { trpc, trpcClient } from '../../utils'
 
 export function useEducation() {
   const setAlert = useAlert()
@@ -73,6 +72,6 @@ export function useEducation() {
     update,
     deleteEducation,
     invalidate,
-    isLoading: isCreateLoading === true || isUpdateLoading,
+    isLoading: isCreateLoading || isUpdateLoading,
   }
 }

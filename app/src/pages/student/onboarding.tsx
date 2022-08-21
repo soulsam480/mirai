@@ -1,19 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { OnboardingPayload, onBoardingTokens } from '@mirai/api'
-import { MBadge } from 'components/lib/MBadge'
-import { MForm } from 'components/lib/MForm'
-import { MIcon } from 'components/lib/MIcon'
-import { MInput } from 'components/lib/MInput'
-import { MSelect } from 'components/lib/MSelect'
-import { useAlert } from 'components/lib/store/alerts'
-import { useTicket } from 'contexts/useTicket'
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { studentOnboardingSchema } from 'schemas'
-import { CATEGORY_TYPES, GENDER_TYPES } from 'utils/constants'
 import { z } from 'zod'
+import { MBadge, MForm, MIcon, MInput, MSelect, useAlert } from '../../components/lib'
+import { useTicket } from '../../contexts'
+import { studentOnboardingSchema } from '../../schemas'
+import { CATEGORY_TYPES, GENDER_TYPES } from '../../utils'
 import { NextPageWithLayout } from '../_app'
 
 export const getServerSideProps: GetServerSideProps<
@@ -94,11 +89,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
     shouldFocusError: true,
   })
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = form
+  const { register, handleSubmit } = form
 
   useEffect(() => {
     if (error !== null) {
@@ -159,21 +150,13 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             <div className="text-center text-lg">Please fill the form below</div>
 
             <div className="grid grid-cols-1 gap-x-2 gap-y-1 sm:grid-cols-2 ">
-              <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" error={errors.name} />
+              <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" />
+
+              <MInput name="name" label="Email" type="email" placeholder="smishra@gmail.com" />
+
+              <MInput name="dob" label="Date of birth" type="date" />
 
               <MInput
-                label="Email"
-                type="email"
-                {...register('email')}
-                placeholder="smishra@gmail.com"
-                error={errors.email}
-              />
-
-              <MInput error={errors.dob} {...register('dob')} name="dob" label="Date of birth" type="date" />
-
-              <MInput
-                error={errors.uniId}
-                {...register('uniId')}
                 name="uniId"
                 label="University ID"
                 placeholder="23f32r23rf2r3r"
@@ -181,32 +164,20 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
               />
 
               <MInput
+                name="password"
                 label="Password"
                 type="password"
-                {...register('password')}
                 placeholder="xxxxxxxxxxx"
-                error={errors.password}
                 hint="Don't worry, you password is encrypted and safe !"
               />
 
-              <MInput
-                label="Repeat Password"
-                type="password"
-                {...register('repassword')}
-                placeholder="xxxxxxxxxxx"
-                error={errors.repassword}
-              />
+              <MInput name="repassword" label="Repeat Password" type="password" placeholder="xxxxxxxxxxx" />
 
-              <MSelect name="gender" label="Gender" options={GENDER_TYPES} error={errors.gender} />
+              <MSelect name="gender" label="Gender" options={GENDER_TYPES} />
 
-              <MInput
-                label="Mobile number"
-                {...register('mobileNumber')}
-                placeholder="+91 873566556"
-                error={errors.mobileNumber}
-              />
+              <MInput name="mobileNumber" label="Mobile number" placeholder="+91 873566556" />
 
-              <MSelect name="category" label="Category" options={CATEGORY_TYPES} error={errors.category} />
+              <MSelect name="category" label="Category" options={CATEGORY_TYPES} />
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">

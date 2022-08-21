@@ -1,10 +1,10 @@
-import ManageBatch from 'components/institute/batch/ManageBatch'
-import { AppLayout } from 'components/globals/AppLayout'
-import { MDialog } from 'components/lib/MDialog'
 import { useRouter } from 'next/router'
-import { NextPageWithLayout } from 'pages/_app'
 import { useEffect } from 'react'
-import { getServerSideAuthGuard } from 'server/lib/auth'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import ManageBatch from '../../../components/institute/batch/ManageBatch'
+import { MDialog } from '../../../components/lib'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import { NextPageWithLayout } from '../../_app'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
