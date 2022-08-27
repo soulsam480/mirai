@@ -38,11 +38,7 @@ export interface Column<R = any> {
   headerslot?: React.ReactNode
 }
 
-interface TableContextType
-  extends Pick<
-    Props,
-    'columns' | 'rows' | 'headerClass' | 'bodyRowClass' | 'loading' | 'settingsSlot' | 'onRowClick'
-  > {}
+interface TableContextType extends Omit<Props, 'compact'> {}
 
 const TableContext = createContext<TableContextType | undefined>(undefined)
 

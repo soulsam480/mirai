@@ -47,7 +47,10 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
 
       void setStudentVal({
         basics: basics as unknown as any,
-        score: score as unknown as any,
+        score:
+          score !== null
+            ? { ...score, scores: typeof score.scores === 'string' ? JSON.parse(score.scores) : score.scores }
+            : (score as unknown as any),
         education,
         experience,
         projects,

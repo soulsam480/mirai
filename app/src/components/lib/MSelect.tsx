@@ -223,7 +223,7 @@ export const MSelect: React.FC<MSelectProps> = ({ name, value: _value, onChange:
   return (
     <Controller
       name={name}
-      control={formCtx?.control}
+      control={formCtx.control}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
         return (
           <BaseSelect onChange={onChange} value={value} {...rest}>

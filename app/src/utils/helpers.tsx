@@ -6,7 +6,7 @@ import lowerCase from 'lodash/lowerCase'
 import upperFirst from 'lodash/upperFirst'
 import startCase from 'lodash/startCase'
 import camelCase from 'lodash/camelCase'
-import { forwardRef } from 'react'
+import { Component, forwardRef } from 'react'
 
 export const toString = (val: any) => Object.prototype.toString.call(val)
 
@@ -203,5 +203,19 @@ export function mergeRefs<T = any>(refs: Array<React.MutableRefObject<T> | React
         ;(ref as React.MutableRefObject<T | null>).current = value
       }
     })
+  }
+}
+
+interface ErrorBoundaryProps {
+  onError: (error: Error) => void
+}
+
+export class ErrorBoundary extends Component<ErrorBoundaryProps> {
+  componentDidCatch(error: Error): void {
+    this.props.onError(error)
+  }
+
+  render(): React.ReactNode {
+    return this.props.children
   }
 }

@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { semUpdateSchema } from '../../../../schemas'
-import { studentCourseAtom, studentScoreAtom } from '../../../../stores'
+import { studentCourseAtom, studentScoreAtom, StudentSemScore } from '../../../../stores'
 import { formatDate, interpolate } from '../../../../utils'
 import { MDialog, MFeatureCard, MForm, MIcon, MInput } from '../../../lib'
 
@@ -171,10 +171,10 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                       >
                         {key === '_update' ? (
                           <button
-                            className="btn btn-circle btn-ghost btn-sm"
+                            className="btn btn-ghost btn-circle btn-sm"
                             onClick={() => {
                               setSelectedSem(semId)
-                              reset(studentScore?.scores?.[String(semId)])
+                              reset(studentScore?.scores?.[String(semId)] ?? {})
                               setDialog(true)
                             }}
                           >

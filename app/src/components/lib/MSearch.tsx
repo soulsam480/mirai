@@ -1,7 +1,7 @@
 import { Combobox, Portal } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { ReactElement, useMemo, useState } from 'react'
-import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { Option } from '../../types'
 import { isSafeVal } from '../../utils'
 import { MIcon } from './MIcon'
@@ -17,21 +17,18 @@ export interface MSearchProps {
   name: string
   label: string
   options: Option[]
-  error?: FieldError
   optionSlot?: (ctx: { option: Option; slotCtx: RenderPropCtx }) => ReactElement
   noDataLabel?: React.ReactNode
-  control?: Control<any, any>
   displayValue?: (option?: Option) => string
   placeholder?: string
   disabled?: boolean
   reset?: boolean
   width?: string
+  value?: any
+  onChange?: (value: any) => void
 }
 
-export const MSearch: React.FC<MSearchProps> = ({
-  name,
-  control,
-  error: _error,
+const BaseMSearch: React.FC<Omit<MSearchProps, 'name'>> = ({
   displayValue = (option) => option?.label ?? '',
   label,
   noDataLabel,
@@ -41,19 +38,10 @@ export const MSearch: React.FC<MSearchProps> = ({
   disabled,
   reset = false,
   width,
+  onChange,
+  value,
+  children,
 }) => {
-  const formCtx = useFormContext()
-  const _control = formCtx !== null ? formCtx.control : control
-
-  const {
-    field: { onChange, value },
-    fieldState: { error },
-  } = useController({
-    name,
-    control: _control,
-  })
-
-  const fieldError = _error ?? error
   const [query, setQuery] = useState('')
 
   const filteredOptions = useMemo(
@@ -87,7 +75,7 @@ export const MSearch: React.FC<MSearchProps> = ({
     if (isSafeVal(value)) return value
 
     return 'Unknown value'
-  }, [value, extractOption])
+  }, [extractOption, value])
 
   const [trigger, container] = useSelectPopperConfig(width)
 
@@ -101,7 +89,7 @@ export const MSearch: React.FC<MSearchProps> = ({
         value={value}
         onChange={(option) => {
           setQuery('')
-          onChange(option.value)
+          onChange?.(option.value)
         }}
         disabled={disabled}
       >
@@ -131,7 +119,7 @@ export const MSearch: React.FC<MSearchProps> = ({
                         onClick={(e) => {
                           e.stopPropagation()
 
-                          onChange('')
+                          onChange?.('')
                         }}
                         data-tip="Reset value"
                       >
@@ -201,9 +189,29 @@ export const MSearch: React.FC<MSearchProps> = ({
         </div>
       </Combobox>
 
-      <label className="label">
-        {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}{' '}
-      </label>
+      {children}
     </div>
+  )
+}
+
+export const MSearch: React.FC<MSearchProps> = ({ onChange: _onChange, value: _value, name, ...rest }) => {
+  const formCtx = useFormContext()
+
+  if (formCtx === null) return <BaseMSearch onChange={_onChange} value={_value} {...rest} />
+
+  return (
+    <Controller
+      name={name}
+      control={formCtx.control}
+      render={({ field: { onChange, value }, fieldState: { error } }) => {
+        return (
+          <BaseMSearch onChange={onChange} value={value} {...rest}>
+            <label className="label">
+              {error !== undefined && <span className="label-text-alt"> {error.message} </span>}
+            </label>
+          </BaseMSearch>
+        )
+      }}
+    />
   )
 }

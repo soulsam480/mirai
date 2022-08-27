@@ -5,7 +5,8 @@
     "emitDecoratorMetadata": true,
     "target": "es2018",
     "module": "commonjs",
-    "lib": ["esnext"]
+    "lib": ["esnext"],
+    "composite": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],

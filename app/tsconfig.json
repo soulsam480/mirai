@@ -8,5 +8,10 @@
     "incremental": true
   },
   "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "auto-imports.d.ts", "../next-auth.d.ts"],
-  "exclude": ["node_modules", ".next", "dist"]
+  "exclude": ["node_modules", ".next", "dist"],
+  "references": [
+    {
+      "path": "../api/tsconfig.json"
+    }
+  ]
 }

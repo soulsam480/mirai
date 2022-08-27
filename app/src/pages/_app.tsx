@@ -12,7 +12,8 @@ import superjson from 'superjson'
 import { DefaultLayout } from '../components/globals/DefaultLayout'
 import { AppProviders } from '../contexts'
 import { MAlertGroup, MLoader } from '../components/lib'
-import { getBaseUrl } from '../utils/helpers'
+import { ErrorBoundary, getBaseUrl } from '../utils/helpers'
+import { useRouter } from 'next/router'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -25,20 +26,31 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
+  const { push } = useRouter()
+
   return (
-    <AppProviders pageProps={pageProps}>
-      {getLayout(
-        <>
-          <Component {...pageProps} />
-          {typeof window !== 'undefined' && (
-            <>
-              <MLoader />
-              <MAlertGroup />
-            </>
-          )}
-        </>,
-      )}
-    </AppProviders>
+    <ErrorBoundary
+      onError={async (error) => {
+        // eslint-disable-next-line no-console
+        console.error(error)
+
+        return process.env.NODE_ENV === 'development' ? null : await push('/500')
+      }}
+    >
+      <AppProviders pageProps={pageProps}>
+        {getLayout(
+          <>
+            <Component {...pageProps} />
+            {typeof window !== 'undefined' && (
+              <>
+                <MLoader />
+                <MAlertGroup />
+              </>
+            )}
+          </>,
+        )}
+      </AppProviders>
+    </ErrorBoundary>
   )
 }) as AppType
 
