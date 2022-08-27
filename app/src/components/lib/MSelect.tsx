@@ -1,10 +1,9 @@
 import { Listbox, Portal } from '@headlessui/react'
 import clsx from 'clsx'
 import { ReactElement, useMemo } from 'react'
-import { Control, Controller, FieldError, useFormContext } from 'react-hook-form'
-import type { Option } from 'types'
-import { isSafeVal } from 'utils/helpers'
-import { usePopper } from 'utils/hooks'
+import { Controller, useFormContext } from 'react-hook-form'
+import type { Option } from '../../types'
+import { isSafeVal, usePopper } from '../../utils'
 import { MIcon } from './MIcon'
 
 interface OptionRenderPropCtx {
@@ -31,10 +30,8 @@ export interface MSelectProps {
   name: string
   label?: string
   options: Option[]
-  error?: FieldError
   optionSlot?: (ctx: { option: Option; slotCtx: OptionRenderPropCtx }) => ReactElement
   noDataLabel?: React.ReactNode
-  control?: Control<any, any>
   disabled?: boolean
   reset?: boolean
   onChange?: (value: any) => void
@@ -90,11 +87,11 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   const optionFromValue = useMemo(() => {
     if (!isValue(value)) return palceholder ?? 'Select'
 
-    const selectedOption = options.find((v) => v.value === (isSafeVal(value) === true ? value : value.value ?? ''))
+    const selectedOption = options.find((v) => v.value === (isSafeVal(value) ? value : value.value ?? ''))
 
     if (selectedOption !== undefined) return selectedOption
 
-    if (isSafeVal(value) === true) return value
+    if (isSafeVal(value)) return value
 
     return 'Unknown value'
   }, [value, options, palceholder])
@@ -133,7 +130,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
                   return (
                     <>
                       <span className="flex-grow">
-                        {isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.label}
+                        {isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.label}
                       </span>
 
                       {reset && !disabled && isValue(value) && (
@@ -172,7 +169,7 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
               {options.length > 0 ? (
                 options.map((option) => {
                   const selected =
-                    (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) === option.value
+                    (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
 
                   return (
                     <Listbox.Option
@@ -218,29 +215,20 @@ const BaseSelect: React.FC<Omit<MSelectProps, 'name'>> = ({
   )
 }
 
-export const MSelect: React.FC<MSelectProps> = ({
-  name,
-  error: _error,
-  control,
-  value: _value,
-  onChange: _onChange,
-  ...rest
-}) => {
+export const MSelect: React.FC<MSelectProps> = ({ name, value: _value, onChange: _onChange, ...rest }) => {
   const formCtx = useFormContext()
 
-  if (formCtx === null && control === undefined) return <BaseSelect onChange={_onChange} value={_value} {...rest} />
+  if (formCtx === null) return <BaseSelect onChange={_onChange} value={_value} {...rest} />
 
   return (
     <Controller
       name={name}
-      control={control ?? formCtx?.control}
+      control={formCtx.control}
       render={({ field: { onChange, value }, fieldState: { error } }) => {
-        const fieldError = _error ?? error
-
         return (
           <BaseSelect onChange={onChange} value={value} {...rest}>
             <label className="label">
-              {fieldError !== undefined && <span className="label-text-alt"> {fieldError.message} </span>}
+              {error !== undefined && <span className="label-text-alt"> {error.message} </span>}
             </label>
           </BaseSelect>
         )

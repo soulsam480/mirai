@@ -1,8 +1,6 @@
-import { MAlertDialog } from 'components/lib/MAlertDialog'
-import MFeatureCard from 'components/lib/MFeatureCard'
-import { MIcon } from 'components/lib/MIcon'
 import React, { useState } from 'react'
-import type { StudentSkill } from 'stores/student'
+import { StudentSkill } from '../../../../stores'
+import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
 
 interface Props {
   skill: StudentSkill

@@ -1,6 +1,6 @@
 import React, { HTMLProps } from 'react'
 import { FormProvider, FormProviderProps } from 'react-hook-form'
-import { OverWrite } from 'types'
+import { OverWrite } from '../../types'
 
 interface Props
   extends OverWrite<HTMLProps<HTMLFormElement>, { form: Omit<FormProviderProps<any, any>, 'children'> }> {}

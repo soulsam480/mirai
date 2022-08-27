@@ -36,4 +36,4 @@ MSpinner.defaultProps = {
 
 MSpinner.displayName = 'MSpinner'
 
-export default MSpinner
+export { MSpinner }

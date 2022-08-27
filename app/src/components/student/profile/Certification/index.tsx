@@ -1,22 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { StudentCertification } from '@prisma/client'
 import clsx from 'clsx'
-import { MDialog } from 'components/lib/MDialog'
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { MSelect } from 'components/lib/MSelect'
-import { useCertification } from 'contexts/student'
 import { useAtomValue } from 'jotai'
 import omit from 'lodash/omit'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { createCertificationSchema } from 'schemas'
-import { studentCertificationsAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { OverWrite, StudentProfileIgnore } from 'types'
-import { STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constants'
-import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
+import { useCertification } from '../../../../contexts'
+import { createCertificationSchema } from '../../../../schemas'
+import { studentCertificationsAtom, useUser } from '../../../../stores'
+import { OverWrite, StudentProfileIgnore } from '../../../../types'
+import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
+import { MDialog, MForm, MInput, MSelect } from '../../../lib'
 import { CertificationCard } from './CertificationCard'
 
 interface Props {}
@@ -52,13 +47,7 @@ export const Certifications: React.FC<Props> = () => {
     shouldFocusError: true,
   })
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setError,
-  } = form
+  const { handleSubmit, reset, setError } = form
 
   function validateNullable(val: z.infer<typeof createCertificationSchema>) {
     const { score, scoreType } = val
@@ -166,86 +155,31 @@ export const Certifications: React.FC<Props> = () => {
           })}
           className="flex flex-col gap-2 md:w-[700px] md:max-w-[700px]"
         >
-          <div className="text-lg font-medium leading-6    ">Certification</div>
+          <div className="text-lg font-medium leading-6">Certification</div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
-              <MInput
-                {...register('name')}
-                error={errors.name}
-                label="Certification name"
-                name="name"
-                placeholder="Intermediate course"
-                disabled={isReadonly}
-              />
+              <MInput label="Certification name" name="name" placeholder="Intermediate course" disabled={isReadonly} />
 
-              <MInput
-                {...register('subject')}
-                error={errors.subject}
-                label="Subject"
-                name="subject"
-                placeholder="Machine design"
-                disabled={isReadonly}
-              />
+              <MInput label="Subject" name="subject" placeholder="Machine design" disabled={isReadonly} />
 
-              <MSelect
-                error={errors.scoreType}
-                label="Score type"
-                name="scoreType"
-                options={SCORE_TYPE}
-                disabled={isReadonly}
-                reset
-              />
+              <MSelect label="Score type" name="scoreType" options={SCORE_TYPE} disabled={isReadonly} reset />
 
-              <MInput
-                error={errors.date}
-                {...register('date')}
-                name="date"
-                label="Issued at"
-                type="date"
-                disabled={isReadonly}
-              />
+              <MInput name="date" label="Issued at" type="date" disabled={isReadonly} />
             </div>
 
             <div>
-              <MInput
-                {...register('institute')}
-                error={errors.institute}
-                label="Institute name"
-                name="institute"
-                placeholder="Institute name"
-                disabled={isReadonly}
-              />
+              <MInput label="Institute name" name="institute" placeholder="Institute name" disabled={isReadonly} />
 
-              <MInput
-                {...register('identificationNumber')}
-                error={errors.identificationNumber}
-                label="Identification number"
-                name="identificationNumber"
-                disabled={isReadonly}
-              />
+              <MInput label="Identification number" name="identificationNumber" disabled={isReadonly} />
 
-              <MInput {...register('score')} error={errors.score} label="Score" name="score" disabled={isReadonly} />
+              <MInput label="Score" name="score" disabled={isReadonly} />
 
-              <MInput
-                error={errors.expiresAt}
-                {...register('expiresAt')}
-                name="expiresAt"
-                label="Expires at"
-                type="date"
-                disabled={isReadonly}
-              />
+              <MInput name="expiresAt" label="Expires at" type="date" disabled={isReadonly} />
             </div>
           </div>
 
-          <MInput
-            {...register('description')}
-            error={errors.description}
-            as="textarea"
-            label="Description"
-            name="description"
-            disabled={isReadonly}
-          />
+          <MInput as="textarea" label="Description" name="description" disabled={isReadonly} />
 
           <div className="flex justify-end gap-2">
             <button
@@ -260,7 +194,7 @@ export const Certifications: React.FC<Props> = () => {
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

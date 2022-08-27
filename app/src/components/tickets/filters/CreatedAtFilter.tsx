@@ -1,9 +1,8 @@
-import { MDateFilter } from 'lib/filters/MDateFilter'
 import { useSetAtom } from 'jotai'
 import React from 'react'
-import { useSelectAtom } from 'stores/index'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
-import { formatDate } from 'utils/helpers'
+import { ticketFiltersAtom, useSelectAtom } from '../../../stores'
+import { formatDate } from '../../../utils'
+import { MDateFilter } from '../../lib'
 
 interface Props {}
 

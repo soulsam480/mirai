@@ -1,9 +1,8 @@
-import { MIcon } from 'components/lib/MIcon'
 import { useSetAtom } from 'jotai'
 import React, { useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
-import { useSelectAtom } from 'stores/index'
-import { studentFiltersAtom } from 'stores/student'
+import { studentFiltersAtom, useSelectAtom } from '../../../../stores'
+import { MIcon } from '../../../lib'
 
 interface Props {}
 

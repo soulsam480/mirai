@@ -1,17 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import clsx from 'clsx'
-import { MDialog } from 'components/lib/MDialog'
-import MFeatureCard from 'components/lib/MFeatureCard'
-import { MForm } from 'components/lib/MForm'
-import { MIcon } from 'components/lib/MIcon'
-import { MInput } from 'components/lib/MInput'
 import { useAtomValue } from 'jotai'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { semUpdateSchema } from 'schemas'
-import { studentCourseAtom, studentScoreAtom, StudentSemScore } from 'stores/student'
-import { formatDate, interpolate } from 'utils/helpers'
 import { z } from 'zod'
+import { semUpdateSchema } from '../../../../schemas'
+import { studentCourseAtom, studentScoreAtom, StudentSemScore } from '../../../../stores'
+import { formatDate, interpolate } from '../../../../utils'
+import { MDialog, MFeatureCard, MForm, MIcon, MInput } from '../../../lib'
 
 interface Props {
   onSemUpdate: (semId: number, data: z.infer<typeof semUpdateSchema>) => void
@@ -44,12 +40,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
     },
   })
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-    reset,
-  } = form
+  const { handleSubmit, reset } = form
 
   if (courseData === null) return null
 
@@ -97,10 +88,9 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
 
               return (
                 <MInput
-                  {...register(key as any, {
-                    valueAsNumber: !['backlogDetails', 'fileUrl'].includes(key),
-                  })}
-                  error={errors[key as keyof typeof errors]}
+                  // {...register(key as any, {
+                  //   valueAsNumber: !['backlogDetails', 'fileUrl'].includes(key),
+                  // })}
                   label={interpolate(SCORE_RENDER_COLS[key], courseData.course)}
                   name={key}
                   key={key}
@@ -109,13 +99,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
             })}
           </div>
 
-          <MInput
-            {...register('backlogDetails')}
-            error={errors.backlogDetails}
-            label="Backlog details"
-            name="backlogDetails"
-            as="textarea"
-          />
+          <MInput label="Backlog details" name="backlogDetails" as="textarea" />
 
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
@@ -187,10 +171,10 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                       >
                         {key === '_update' ? (
                           <button
-                            className="btn btn-circle btn-ghost btn-sm"
+                            className="btn btn-ghost btn-circle btn-sm"
                             onClick={() => {
                               setSelectedSem(semId)
-                              reset(studentScore?.scores?.[String(semId)])
+                              reset(studentScore?.scores?.[String(semId)] ?? {})
                               setDialog(true)
                             }}
                           >

@@ -2,8 +2,7 @@
  * Use this for listing and data rep. pages
  */
 
-import { MIcon } from 'components/lib/MIcon'
-import MLink from 'components/lib/MLink'
+import { MIcon, MLink } from '../../components/lib'
 import React, { HTMLProps } from 'react'
 
 interface PageWrapperProps extends HTMLProps<HTMLDivElement> {}

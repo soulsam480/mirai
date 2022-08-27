@@ -1,13 +1,10 @@
 import { useEffect, useMemo } from 'react'
-import { loaderAtom } from 'components/lib/store/loader'
-import { useAlert } from 'components/lib/store/alerts'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
-import { loggedInAtom, useUser } from 'stores/user'
-import { QueryOptions } from 'types'
-import { getUserHome } from 'utils/helpers'
-import { trpc } from 'utils/trpc'
-import { useStrictQueryCheck } from 'utils/hooks'
+import { QueryOptions } from '../types'
+import { loggedInAtom, useUser } from '../stores'
+import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
+import { loaderAtom, useAlert } from '../components/lib'
 
 export function useDepartments(opts?: QueryOptions<'department.getAll'>) {
   opts = opts ?? {}
@@ -66,7 +63,7 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn === true && isQuery,
+      enabled: isLoggedIn && isQuery,
     },
   )
 
@@ -95,7 +92,7 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
       void router.push('/institute/department')
     },
   })
-  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
   useEffect(() => setLoader(loading), [loading, setLoader])
 
   return {

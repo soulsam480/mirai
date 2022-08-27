@@ -1,10 +1,9 @@
-import { useScore } from 'contexts/student/score'
 import { useAtomValue } from 'jotai'
 import React from 'react'
-import { semUpdateSchema } from 'schemas'
-import { studentScoreAtom } from 'stores/student'
-import { useUser } from 'stores/user'
 import { z } from 'zod'
+import { useScore } from '../../../../contexts'
+import { semUpdateSchema } from '../../../../schemas'
+import { studentScoreAtom, useUser } from '../../../../stores'
 import { CourseCard } from './CourseCard'
 
 interface Props {}

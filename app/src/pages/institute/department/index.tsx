@@ -1,15 +1,13 @@
-import { AppLayout } from 'components/globals/AppLayout'
-import { getServerSideAuthGuard } from 'server/lib/auth'
-import { NextPageWithLayout } from 'pages/_app'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import { NextPageWithLayout } from '../../../pages/_app'
+import { useDepartments } from '../../../contexts'
 import type { Department } from '@prisma/client'
-import { Column, MTable } from 'components/lib/MTable'
-import PageLayout from 'components/globals/PageLayout'
-import { useMemo } from 'react'
-import MLink from 'components/lib/MLink'
-import { MDialog } from 'components/lib/MDialog'
+import PageLayout from '../../../components/globals/PageLayout'
+import { Column, MTable, MLink, MDialog } from '../../../components/lib'
+import { ManageDepartment } from '../../../components/institute/department/ManageDepartment'
 import { useRouter } from 'next/router'
-import { ManageDepartment } from 'components/institute/department/ManageDepartment'
-import { useDepartments } from 'contexts'
+import { useMemo } from 'react'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
@@ -37,10 +35,7 @@ const Departments: NextPageWithLayout = () => {
         field: 'edit',
         label: 'Edit',
         format: ({ id }) => (
-          <MLink
-            href={`/institute/department?departmentId=${id as number}`}
-            as={`/institute/department/${id as number}`}
-          >
+          <MLink href={`/institute/department?departmentId=${id}`} as={`/institute/department/${id}`}>
             <IconPhPencilSimple className="text-lg" />
           </MLink>
         ),

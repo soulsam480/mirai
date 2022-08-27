@@ -1,16 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MForm } from 'components/lib/MForm'
-import { MSelect } from 'components/lib/MSelect'
 import React, { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { generateOnboardingUrlSchema } from 'schemas'
-import { useUser } from 'stores/user'
 import { z } from 'zod'
-import { trpcClient } from 'utils/trpc'
-import { copyToClip } from 'utils/helpers'
-import { useAlert } from 'components/lib/store/alerts'
 import { useAtomValue } from 'jotai'
-import { instituteBatches, instituteCourses, instituteDepartments } from 'stores/institute'
+import { instituteBatches, instituteCourses, instituteDepartments, useUser } from '../../../stores'
+import { MForm, MSelect, useAlert } from '../../lib'
+import { generateOnboardingUrlSchema } from '../../../schemas'
+import { copyToClip, trpcClient } from '../../../utils'
 
 interface Props {
   onClose: (val: boolean) => void
@@ -42,7 +38,7 @@ export const GenerateUrlDialog: React.FC<Props> = ({ onClose }) => {
     shouldFocusError: true,
   })
 
-  const { formState, handleSubmit } = form
+  const { handleSubmit } = form
 
   async function generateUrl(data: z.infer<typeof generateOnboardingUrlSchema>) {
     try {
@@ -68,16 +64,11 @@ export const GenerateUrlDialog: React.FC<Props> = ({ onClose }) => {
     <MForm form={form} className="flex w-full flex-col gap-2 sm:w-80" onSubmit={handleSubmit(generateUrl)}>
       <div className="text-lg">Generate URL</div>
 
-      <MSelect
-        name="departmentId"
-        label="Department"
-        options={departmentOptions}
-        error={formState.errors.departmentId}
-      />
+      <MSelect name="departmentId" label="Department" options={departmentOptions} />
 
-      <MSelect name="batchId" label="Batch" options={batchOptions} error={formState.errors.batchId} />
+      <MSelect name="batchId" label="Batch" options={batchOptions} />
 
-      <MSelect name="courseId" label="Course" options={courseOptions} error={formState.errors.courseId} />
+      <MSelect name="courseId" label="Course" options={courseOptions} />
 
       <div className="flex justify-end">
         <button className="btn btn-outline btn-sm" type="submit">

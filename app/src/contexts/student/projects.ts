@@ -1,9 +1,8 @@
-import { useAlert } from 'components/lib/store/alerts'
+import { useAlert } from '../../components/lib/store'
 import { useSetAtom } from 'jotai'
-import { studentProjectsAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { TRPCErrorType } from 'types'
-import { trpc, trpcClient } from 'utils/trpc'
+import { studentProjectsAtom, useUser } from '../../stores'
+import { TRPCErrorType } from '../../types'
+import { trpc, trpcClient } from '../../utils'
 
 export function useProject() {
   const setAlert = useAlert()
@@ -77,6 +76,6 @@ export function useProject() {
     update,
     deleteProject,
     invalidate,
-    isLoading: isCreateLoading === true || isUpdateLoading,
+    isLoading: isCreateLoading || isUpdateLoading,
   }
 }

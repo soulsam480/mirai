@@ -1,10 +1,10 @@
-import { AppLayout } from 'components/globals/AppLayout'
-import { NextPageWithLayout } from 'pages/_app'
-import { getServerSideAuthGuard } from 'server/lib/auth'
-import { ManageInstitute } from 'components/admin/institute/ManageInstitute'
 import { useRouter } from 'next/router'
-import { MDialog } from 'components/lib/MDialog'
 import { useEffect } from 'react'
+import { ManageInstitute } from '../../../components/admin/institute/ManageInstitute'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import { MDialog } from '../../../components/lib'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import { NextPageWithLayout } from '../../_app'
 
 export const getServerSideProps = getServerSideAuthGuard(['ADMIN'])
 

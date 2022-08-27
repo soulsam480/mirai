@@ -1,7 +1,7 @@
-import { AppLayout } from 'components/globals/AppLayout'
-import { getServerSideAuthGuard } from 'server/lib/auth'
-import { NextPageWithLayout } from 'pages/_app'
-import { ManageDepartment } from 'components/institute/department/ManageDepartment'
+import { AppLayout } from '../../../components/globals/AppLayout'
+import { getServerSideAuthGuard } from '../../../server/lib/auth'
+import { NextPageWithLayout } from '../../../pages/_app'
+import { ManageDepartment } from '../../../components/institute/department/ManageDepartment'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

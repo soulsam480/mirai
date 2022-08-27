@@ -1,13 +1,12 @@
 import clsx from 'clsx'
-import { BgSvg } from 'components/landing/BgSvg'
-import { MIcon } from 'components/lib/MIcon'
 import { GetServerSideProps } from 'next'
 import { Session } from 'next-auth'
 import { getSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useEffect } from 'react'
-import { getUserHome } from 'utils/helpers'
-import { useTheme } from 'utils/hooks'
+import { BgSvg } from '../components/landing/BgSvg'
+import { MIcon } from '../components/lib'
+import { getUserHome, useTheme } from '../utils'
 import { NextPageWithLayout } from './_app'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

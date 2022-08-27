@@ -1,7 +1,7 @@
 import React from 'react'
-import { Option } from 'types'
-import { MSelect } from 'lib/MSelect'
-import { MIcon } from 'lib/MIcon'
+import { Option } from '../../../types'
+import { MIcon } from '../MIcon'
+import { MSelect } from '../MSelect'
 
 export interface DateFilterValue {
   type: 'lt' | 'gte'

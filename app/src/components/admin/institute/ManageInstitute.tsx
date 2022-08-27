@@ -1,16 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { MInput } from 'components/lib/MInput'
+import { MForm, MInput, MSelect, useAlert } from '../../lib'
 import { useRouter } from 'next/router'
 import { useMemo, useRef } from 'react'
 import { useForm } from 'react-hook-form'
-import { copyToClip } from 'utils/helpers'
+import { copyToClip } from '../../../utils/helpers'
 import { z } from 'zod'
-import { useAlert } from 'components/lib/store/alerts'
-import { useInstitute } from 'contexts'
-import { useGlobalError } from 'utils/hooks'
-import { manageInstituteSchema } from 'schemas'
-import { MSelect } from 'components/lib/MSelect'
-import { MForm } from 'components/lib/MForm'
+import { useInstitute } from '../../../contexts'
+import { useGlobalError } from '../../../utils/hooks'
+import { manageInstituteSchema } from '../../../schemas'
 
 const INSTITUTE_STATUS = ['ONBOARDED', 'INPROGRESS', 'PENDING'].map((v) => ({ label: v, value: v }))
 
@@ -60,7 +57,7 @@ export const ManageInstitute: React.FC<any> = () => {
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState, setValue } = form
+  const { handleSubmit, setValue } = form
 
   async function createInstitute(data: z.infer<typeof manageInstituteSchema>) {
     await create(data)
@@ -81,13 +78,13 @@ export const ManageInstitute: React.FC<any> = () => {
     if (instituteData === null) return ''
 
     const { origin } = location
-    const { account } = instituteData
+    const account = instituteData?.account
 
     if (account === null) return
 
     const link = `${origin}/reset-password?${new URLSearchParams({
-      accountId: String(account.id),
-      token: account.accountToken ?? '',
+      accountId: String(account?.id),
+      token: account?.accountToken ?? '',
     }).toString()}`
 
     void copyToClip(link).then(() => setAlert({ message: 'Signup link copied to clipboard !', type: 'success' }))
@@ -110,22 +107,20 @@ export const ManageInstitute: React.FC<any> = () => {
         className="form-control flex w-full sm:w-80"
         onSubmit={handleSubmit(isEditMode ? updateInstitute : createInstitute)}
       >
-        <MInput label="Name" {...register('name')} placeholder="Institute name" error={formState.errors.name} />
+        <MInput label="Name" name="name" placeholder="Institute name" />
 
         <MInput
           disabled={instituteData != null && instituteData.status !== 'PENDING'}
           label="Email"
-          {...register('email')}
+          name="email"
           placeholder="Institute Email"
-          error={formState.errors.email}
         />
 
         <MInput
+          name="code"
           disabled={isEditMode && instituteData?.status !== null}
           label="Code"
-          {...register('code')}
           placeholder="Institute code"
-          error={formState.errors.code}
         />
 
         {/* <label className="label">
@@ -147,7 +142,7 @@ export const ManageInstitute: React.FC<any> = () => {
           )}{' '}
         </label> */}
 
-        <MSelect label="Onboarding status" name="status" options={INSTITUTE_STATUS} error={formState.errors.status} />
+        <MSelect label="Onboarding status" name="status" options={INSTITUTE_STATUS} />
 
         <label className="label">
           <span className="label-text">Logo</span>

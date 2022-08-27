@@ -1,8 +1,7 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { studentAtom } from 'stores/student'
-import { loggedInAtom, useUser } from 'stores/user'
-import { QueryOptions } from 'types'
-import { trpc } from 'utils/trpc'
+import { loggedInAtom, studentAtom, useUser } from '../../stores'
+import { QueryOptions } from '../../types'
+import { trpc } from '../../utils'
 
 export function useStudent(opts?: QueryOptions<'student.get'>) {
   opts = opts ?? {}
@@ -48,7 +47,10 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
 
       void setStudentVal({
         basics: basics as unknown as any,
-        score,
+        score:
+          score !== null
+            ? { ...score, scores: typeof score.scores === 'string' ? JSON.parse(score.scores) : score.scores }
+            : (score as unknown as any),
         education,
         experience,
         projects,
@@ -63,7 +65,7 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
         },
       })
     },
-    enabled: isLoggedIn === true && userData.studentId !== null,
+    enabled: isLoggedIn && userData.studentId !== null,
   })
 
   return { student, isLoading }
@@ -76,3 +78,7 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
 export * from './experience'
 export * from './certification'
 export * from './projects'
+export * from './basics'
+export * from './skills'
+export * from './score'
+export * from './education'

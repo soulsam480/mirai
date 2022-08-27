@@ -1,8 +1,7 @@
-import { Connection, createWsConn } from 'api/ws'
+import { Connection, createWsConn } from '../api'
 import { useSession } from 'next-auth/react'
 import { createContext, useContext, useEffect, ReactNode, useState, useRef, useMemo } from 'react'
-import { isInstituteRole } from 'utils/helpers'
-import { trpcClient } from 'utils/trpc'
+import { isInstituteRole, trpcClient } from '../utils'
 
 interface WSProviderProps {
   children: ReactNode
@@ -26,12 +25,7 @@ function WSClientProvider({ children }: WSProviderProps): JSX.Element {
   const isConnecting = useRef(false)
 
   useEffect(() => {
-    if (
-      conn === null &&
-      status === 'authenticated' &&
-      isInstituteRole(data.user.role).is === true &&
-      !isConnecting.current
-    ) {
+    if (conn === null && status === 'authenticated' && isInstituteRole(data.user.role).is && !isConnecting.current) {
       isConnecting.current = true
 
       createWsConn(() => trpcClient.query('auth.auth_token', data))

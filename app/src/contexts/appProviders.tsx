@@ -1,7 +1,7 @@
 import React from 'react'
 import { SessionProvider as NextAuthProvider } from 'next-auth/react'
-import { CurrentAccount } from 'contexts'
-import { useTheme } from 'utils/hooks'
+import { CurrentAccount } from '../contexts'
+import { useTheme } from '../utils'
 import { WSClientProvider } from './WsClient'
 
 interface Props {

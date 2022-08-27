@@ -2,17 +2,13 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { NextPageWithLayout } from './_app'
 import React, { useState } from 'react'
-import { trpc } from 'utils/trpc'
 import { GetServerSideProps } from 'next'
-import { getUserHome } from 'utils/helpers'
 import { getSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
-import { NavBar } from 'components/globals/NavBar'
-import { useLoader } from 'lib/store/loader'
-import { LoginSchema } from 'schemas'
-import { MForm } from 'lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { MIcon } from 'components/lib/MIcon'
+import { getUserHome, trpc } from '../utils'
+import { MForm, MIcon, MInput, useLoader } from '../components/lib'
+import { LoginSchema } from '../schemas'
+import { NavBar } from '../components/globals/NavBar'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req })
@@ -49,7 +45,7 @@ const Login: NextPageWithLayout = () => {
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState } = form
+  const { handleSubmit } = form
 
   async function userLogin(data: { email: string; password: string }) {
     setError(null)
@@ -61,12 +57,10 @@ const Login: NextPageWithLayout = () => {
       ...data,
     })
 
-    // @ts-expect-error bad lib types
     // eslint-disable-next-line
     if (status && status.error) {
       loader.hide()
 
-      // @ts-expect-error bad lib types
       return setError(status.error)
     }
 
@@ -95,21 +89,9 @@ const Login: NextPageWithLayout = () => {
               </div>
             )}
 
-            <MInput
-              type="email"
-              placeholder="Email"
-              label="Email"
-              error={formState.errors.email}
-              {...register('email')}
-            />
+            <MInput name="email" type="email" placeholder="Email" label="Email" />
 
-            <MInput
-              label="Password"
-              type="password"
-              placeholder="password"
-              {...register('password')}
-              error={formState.errors.password}
-            />
+            <MInput name="password" label="Password" type="password" placeholder="password" />
 
             <button type="submit" className="btn btn-sm btn-block mt-5">
               Submit

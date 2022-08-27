@@ -1,25 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { StudentWorkExperience } from '@prisma/client'
 import clsx from 'clsx'
-import { MCheckbox } from 'components/lib/MCheckbox'
-import { MDialog } from 'components/lib/MDialog'
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { MSearch } from 'components/lib/MSearch'
-import { MSelect } from 'components/lib/MSelect'
-import { useExperience } from 'contexts/student'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
 import omit from 'lodash/omit'
 import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { createExperienceSchema } from 'schemas'
-import { studentExperienceAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { OverWrite, StudentProfileIgnore } from 'types'
-import { INDUSTRY_TYPES, STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constants'
-import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
+import { useExperience } from '../../../../contexts'
+import { createExperienceSchema } from '../../../../schemas'
+import { studentExperienceAtom, useUser } from '../../../../stores'
+import { OverWrite, StudentProfileIgnore } from '../../../../types'
+import { formatDate, getDiff, INDUSTRY_TYPES, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
+import { MCheckbox, MDialog, MForm, MInput, MSearch, MSelect } from '../../../lib'
 import { ExperienceCard } from './ExperienceCard'
 
 interface Props {}
@@ -60,15 +53,7 @@ export const WorkExperience: React.FC<Props> = () => {
     shouldFocusError: true,
   })
 
-  const {
-    register,
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue,
-    setError,
-  } = form
+  const { control, handleSubmit, reset, setValue, setError } = form
 
   const isOngoingVal = useWatch({
     control,
@@ -197,48 +182,15 @@ export const WorkExperience: React.FC<Props> = () => {
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
-              <MInput
-                {...register('company')}
-                error={errors.company}
-                label="Company / Institute name"
-                name="company"
-                placeholder="Acme Inc."
-                disabled={isReadonly}
-              />
+              <MInput label="Company / Institute name" name="company" placeholder="Acme Inc." disabled={isReadonly} />
 
-              <MInput
-                {...register('title')}
-                error={errors.title}
-                label="Title / Designation"
-                name="title"
-                placeholder="Business analyst"
-                disabled={isReadonly}
-              />
+              <MInput label="Title / Designation" name="title" placeholder="Business analyst" disabled={isReadonly} />
 
-              <MInput
-                {...register('location')}
-                error={errors.location}
-                label="Location"
-                name="location"
-                placeholder="Location"
-                disabled={isReadonly}
-              />
+              <MInput label="Location" name="location" placeholder="Location" disabled={isReadonly} />
 
-              <MInput
-                error={errors.startedAt}
-                {...register('startedAt')}
-                name="startedAt"
-                label="Started at"
-                type="date"
-                disabled={isReadonly}
-              />
+              <MInput name="startedAt" label="Started at" type="date" disabled={isReadonly} />
 
-              <MCheckbox
-                error={errors.isOngoing}
-                name="isOngoing"
-                label="I currently work here"
-                disabled={isReadonly}
-              />
+              <MCheckbox name="isOngoing" label="I currently work here" disabled={isReadonly} />
             </div>
 
             <div>
@@ -251,50 +203,17 @@ export const WorkExperience: React.FC<Props> = () => {
                 reset
               />
 
-              <MSelect
-                error={errors.stipend}
-                label="Stipend"
-                name="stipend"
-                options={STIPEND_OPTIONS}
-                disabled={isReadonly}
-              />
+              <MSelect label="Stipend" name="stipend" options={STIPEND_OPTIONS} disabled={isReadonly} />
 
-              <MSelect
-                error={errors.jobType}
-                label="Position type"
-                name="jobType"
-                options={JOB_TYPE}
-                disabled={isReadonly}
-              />
+              <MSelect label="Position type" name="jobType" options={JOB_TYPE} disabled={isReadonly} />
 
-              {isOngoingVal === false && (
-                <MInput
-                  error={errors.endedAt}
-                  {...register('endedAt')}
-                  name="endedAt"
-                  label="Ended at"
-                  type="date"
-                  disabled={isReadonly}
-                />
-              )}
+              {isOngoingVal === false && <MInput name="endedAt" label="Ended at" type="date" disabled={isReadonly} />}
 
-              <MCheckbox
-                error={errors.isCurriculum}
-                name="isCurriculum"
-                label="Included in curriculam"
-                disabled={isReadonly}
-              />
+              <MCheckbox name="isCurriculum" label="Included in curriculam" disabled={isReadonly} />
             </div>
           </div>
 
-          <MInput
-            {...register('notes')}
-            error={errors.notes}
-            as="textarea"
-            label="Description"
-            name="notes"
-            disabled={isReadonly}
-          />
+          <MInput as="textarea" label="Description" name="notes" disabled={isReadonly} />
 
           <div className="flex justify-end gap-2">
             <button
@@ -309,7 +228,7 @@ export const WorkExperience: React.FC<Props> = () => {
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

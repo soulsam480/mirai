@@ -1,23 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { StudentProject } from '@prisma/client'
 import clsx from 'clsx'
-import { MCheckbox } from 'components/lib/MCheckbox'
-import { MDialog } from 'components/lib/MDialog'
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { useProject } from 'contexts/student/projects'
 import dayjs from 'dayjs'
 import { useAtomValue } from 'jotai'
 import omit from 'lodash/omit'
 import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import { createProjectSchema } from 'schemas'
-import { studentProjectsAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { OverWrite, StudentProfileIgnore } from 'types'
-import { STUDENT_PROFILE_IGNORE_KEYS } from 'utils/constants'
-import { formatDate, getDiff } from 'utils/helpers'
 import { z } from 'zod'
+import { useProject } from '../../../../contexts'
+import { createProjectSchema } from '../../../../schemas'
+import { studentProjectsAtom, useUser } from '../../../../stores'
+import { OverWrite, StudentProfileIgnore } from '../../../../types'
+import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
+import { MCheckbox, MDialog, MForm, MInput } from '../../../lib'
 import { ProjectCard } from './ProjectCard'
 
 interface Props {}
@@ -48,15 +43,7 @@ export const Projects: React.FC<Props> = () => {
     shouldFocusError: true,
   })
 
-  const {
-    register,
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue,
-    setError,
-  } = form
+  const { control, handleSubmit, reset, setValue, setError } = form
 
   const isOngoingVal = useWatch({
     control,
@@ -185,62 +172,20 @@ export const Projects: React.FC<Props> = () => {
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div>
-              <MInput
-                {...register('title')}
-                error={errors.title}
-                label="Project title"
-                name="title"
-                placeholder="My awesome project"
-                disabled={isReadonly}
-              />
+              <MInput label="Project title" name="title" placeholder="My awesome project" disabled={isReadonly} />
 
-              <MInput
-                error={errors.startedAt}
-                {...register('startedAt')}
-                name="startedAt"
-                label="Started at"
-                type="date"
-                disabled={isReadonly}
-              />
-              <MCheckbox
-                error={errors.isOngoing}
-                name="isOngoing"
-                label="I'm currently working on this project"
-                disabled={isReadonly}
-              />
+              <MInput name="startedAt" label="Started at" type="date" disabled={isReadonly} />
+              <MCheckbox name="isOngoing" label="I'm currently working on this project" disabled={isReadonly} />
             </div>
 
             <div>
-              <MInput
-                {...register('domain')}
-                error={errors.domain}
-                label="Project domain"
-                name="domain"
-                placeholder="Web development"
-                disabled={isReadonly}
-              />
+              <MInput label="Project domain" name="domain" placeholder="Web development" disabled={isReadonly} />
 
-              {isOngoingVal === false && (
-                <MInput
-                  error={errors.endedAt}
-                  {...register('endedAt')}
-                  name="endedAt"
-                  label="Ended at"
-                  type="date"
-                  disabled={isReadonly}
-                />
-              )}
+              {isOngoingVal === false && <MInput name="endedAt" label="Ended at" type="date" disabled={isReadonly} />}
             </div>
           </div>
 
-          <MInput
-            {...register('description')}
-            error={errors.description}
-            as="textarea"
-            label="Description"
-            name="description"
-            disabled={isReadonly}
-          />
+          <MInput as="textarea" label="Description" name="description" disabled={isReadonly} />
 
           <div className="flex justify-end gap-2">
             <button
@@ -255,7 +200,7 @@ export const Projects: React.FC<Props> = () => {
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

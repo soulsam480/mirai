@@ -1,8 +1,7 @@
-import { useAlert } from 'components/lib/store/alerts'
+import { useAlert } from '../../components/lib'
 import { useSetAtom } from 'jotai'
-import { studentScoreAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { trpc, trpcClient } from 'utils/trpc'
+import { useUser, studentScoreAtom } from '../../stores'
+import { trpc, trpcClient } from '../../utils'
 
 export function useScore() {
   const setAlert = useAlert()

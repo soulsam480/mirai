@@ -1,9 +1,8 @@
-import { useAlert } from 'components/lib/store/alerts'
 import { useSetAtom } from 'jotai'
-import { studentExperienceAtom } from 'stores/student'
-import { useUser } from 'stores/user'
-import { TRPCErrorType } from 'types'
-import { trpc, trpcClient } from 'utils/trpc'
+import { useAlert } from '../../components/lib'
+import { studentExperienceAtom, useUser } from '../../stores'
+import { TRPCErrorType } from '../../types'
+import { trpc, trpcClient } from '../../utils'
 
 export function useExperience() {
   const setAlert = useAlert()
@@ -76,6 +75,6 @@ export function useExperience() {
     update,
     deleteExperience,
     invalidate,
-    isLoading: isCreateLoading === true || isUpdateLoading,
+    isLoading: isCreateLoading || isUpdateLoading,
   }
 }

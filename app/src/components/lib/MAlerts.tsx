@@ -6,9 +6,9 @@ import IconPhInfo from '~icons/ph/info.jsx'
 import IconPhCheckCircle from '~icons/ph/check-circle.jsx'
 import IconPhWarningCircle from '~icons/ph/warning-circle.jsx'
 import IconPhSkull from '~icons/ph/skull.jsx'
-import { Alert, alertsSubAtom } from 'components/lib/store/alerts'
-import { useMounted } from 'utils/hooks'
 import { useAtomValue } from 'jotai'
+import { Alert, alertsSubAtom } from './store'
+import { useMounted } from '../../utils'
 
 export const MAlert: React.FC<Alert> = React.memo(({ type, message }) => {
   const bgColor = useMemo(() => {
@@ -61,7 +61,7 @@ export const MAlertGroup: React.FC<AlertGroupProps> = () => {
   const alerts = useAtomValue(alertsSubAtom)
   const mounted = useMounted()
 
-  return mounted === true
+  return mounted
     ? createPortal(
         <div className="list-group fixed top-0 left-1/2 z-50 -translate-x-1/2 transform">
           <Transition is="div" className="flex flex-col items-center justify-center" show={!(alerts.length === 0)}>

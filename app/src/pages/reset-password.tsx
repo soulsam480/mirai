@@ -1,11 +1,11 @@
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { useAlert } from 'components/lib/store/alerts'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { trpc } from 'utils/trpc'
+import { z } from 'zod'
+import { MForm, MInput, useAlert } from '../components/lib'
+import { trpc } from '../utils'
 import { NextPageWithLayout } from './_app'
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
@@ -31,10 +31,21 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
       password: '',
       confirmPassword: '',
     },
+    resolver: zodResolver(
+      z
+        .object({
+          password: z.string().min(1, 'Required'),
+          confirmPassword: z.string().min(1, 'Required'),
+        })
+        .refine((val) => val.password === val.confirmPassword, {
+          message: 'Both passwords should match',
+          path: ['confirmPassword'],
+        }),
+    ),
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit, formState, getValues } = form
+  const { handleSubmit } = form
 
   const { query, push } = useRouter()
   const setAlert = useAlert()
@@ -83,34 +94,9 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
         <MForm form={form} className="form-control w-full" onSubmit={handleSubmit(handleResetPassword)}>
           <div className="mb-4 text-xl">Reset password</div>
 
-          <MInput
-            label="Password"
-            type="password"
-            {...register('password', {
-              disabled,
-              required: 'Password is required',
-              minLength: {
-                value: 1,
-                message: 'Password is required',
-              },
-            })}
-            error={formState.errors.password}
-          />
+          <MInput label="Password" type="password" name="password" />
 
-          <MInput
-            label="Confirm password"
-            type="password"
-            {...register('confirmPassword', {
-              disabled,
-              required: 'Confirm password is required',
-              minLength: {
-                value: 1,
-                message: 'Confirm password is required',
-              },
-              validate: (value) => getValues('password') === value || 'Passwords should be the same',
-            })}
-            error={formState.errors.confirmPassword}
-          />
+          <MInput label="Confirm password" type="password" name="confirmPassword" />
 
           <button type="submit" className="btn btn-block mt-5" disabled={disabled}>
             Submit

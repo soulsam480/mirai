@@ -1,10 +1,8 @@
 import type { StudentWorkExperience } from '@prisma/client'
-import { MAlertDialog } from 'components/lib/MAlertDialog'
-import MFeatureCard from 'components/lib/MFeatureCard'
-import { MIcon } from 'components/lib/MIcon'
-import { useExperience } from 'contexts/student'
 import React, { useState } from 'react'
-import { formatDate } from 'utils/helpers'
+import { useExperience } from '../../../../contexts'
+import { formatDate } from '../../../../utils'
+import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
 
 interface Props {
   experience: StudentWorkExperience

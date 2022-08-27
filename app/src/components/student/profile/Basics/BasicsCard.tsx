@@ -1,8 +1,8 @@
-import { MIcon } from 'components/lib/MIcon'
+import { MIcon } from '../../../../components/lib'
 import pick from 'lodash/pick'
 import React from 'react'
-import type { StudentAddress, StudentBasicsOverwrite } from 'stores/student'
-import { formatDate } from 'utils/helpers'
+import type { StudentAddress, StudentBasicsOverwrite } from '../../../../stores'
+import { formatDate } from '../../../../utils'
 
 interface Props {
   studentBasics: StudentBasicsOverwrite | null

@@ -1,17 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import clsx from 'clsx'
-import { MDialog } from 'components/lib/MDialog'
-import { MForm } from 'components/lib/MForm'
-import { MInput } from 'components/lib/MInput'
-import { MSelect } from 'components/lib/MSelect'
-import { useSkills } from 'contexts/student/skills'
 import { useAtomValue } from 'jotai'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { createSkillSchema } from 'schemas'
-import { StudentSkill, studentSkillsAtom } from 'stores/student'
-import { useUser } from 'stores/user'
 import { z } from 'zod'
+import { useSkills } from '../../../../contexts'
+import { createSkillSchema } from '../../../../schemas'
+import { StudentSkill, studentSkillsAtom, useUser } from '../../../../stores'
+import { MDialog, MForm, MInput, MSelect } from '../../../lib'
 import { SkillCard } from './SkillCard'
 
 interface Props {}
@@ -36,13 +32,7 @@ export const Skills: React.FC<Props> = () => {
     shouldFocusError: true,
   })
 
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    setValue,
-  } = form
+  const { handleSubmit, reset, setValue } = form
 
   async function submitHandler(val: z.infer<typeof createSkillSchema>, del = false) {
     if (userData.studentId === null) return
@@ -115,22 +105,9 @@ export const Skills: React.FC<Props> = () => {
           <div className="text-lg font-medium leading-6    ">Skill</div>
 
           <div className="grid grid-cols-1 gap-2">
-            <MInput
-              {...register('name')}
-              error={errors.name}
-              label="Skill name"
-              name="name"
-              placeholder="JavaScript"
-              disabled={isEdit || isReadonly}
-            />
+            <MInput label="Skill name" name="name" placeholder="JavaScript" disabled={isEdit || isReadonly} />
 
-            <MSelect
-              label="Proficiency"
-              options={SKILL_SCORES}
-              error={errors.score}
-              name="score"
-              disabled={isReadonly}
-            />
+            <MSelect label="Proficiency" options={SKILL_SCORES} name="score" disabled={isReadonly} />
           </div>
 
           <div className="flex justify-end gap-2">
@@ -146,7 +123,7 @@ export const Skills: React.FC<Props> = () => {
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading === true && 'loading'])}>
+              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

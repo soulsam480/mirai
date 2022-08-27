@@ -4,8 +4,8 @@ import { Combobox, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import React, { Fragment, ReactElement, useMemo, useState } from 'react'
 import { Control, FieldError, useController, useFormContext } from 'react-hook-form'
-import { Option } from 'types'
-import { isSafeVal } from 'utils/helpers'
+import { Option } from '../../types'
+import { isSafeVal } from '../../utils'
 import { MIcon } from './MIcon'
 
 // TODO: uncontrolled
@@ -69,7 +69,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   function extractOption(val: any) {
-    const selectedOption = options.find((v) => v.value === (isSafeVal(val) === true ? val : val.value ?? ''))
+    const selectedOption = options.find((v) => v.value === (isSafeVal(val) ? val : val.value ?? ''))
 
     return selectedOption
   }
@@ -85,7 +85,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
 
     if (selectedOption !== undefined) return selectedOption
 
-    if (isSafeVal(value) === true) return value
+    if (isSafeVal(value)) return value
 
     return 'Unknown value'
   }, [value, extractOption])
@@ -161,7 +161,7 @@ export const MMultiSelect: React.FC<MMultiSelectProps> = ({
               ) : (
                 filteredOptions.map((option, i) => {
                   const selected =
-                    (isSafeVal(optionFromValue) === true ? optionFromValue : optionFromValue.value) === option.value
+                    (isSafeVal(optionFromValue) ? optionFromValue : optionFromValue.value) === option.value
 
                   return (
                     <Combobox.Option

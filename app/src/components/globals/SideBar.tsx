@@ -1,18 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useUser } from 'stores/user'
-import { defineSidebar, eventBus } from 'utils/helpers'
-import MLink from 'lib/MLink'
-import { MIcon } from 'components/lib/MIcon'
 import { useAtom } from 'jotai'
-import { sidebarAtom } from 'stores/config'
 import dynamic from 'next/dynamic'
 import { OnboardingDialog } from './OnboardingDialog'
 import type { Tour } from 'react-shepherd'
 import { createBreakpoint } from 'react-use'
-import { toggleTour } from 'api'
 import type { Role } from '@prisma/client'
+import { defineSidebar, eventBus } from '../../utils'
+import { sidebarAtom, useUser } from '../../stores'
+import { toggleTour } from '../../api'
+import { MIcon, MLink } from '../lib'
 
-const PlatformTour = dynamic(async () => await import('components/globals/PlatformTour'), { ssr: false })
+const PlatformTour = dynamic(async () => await import('../../components/globals/PlatformTour'), { ssr: false })
 
 interface Props {}
 
@@ -115,7 +113,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
 
     eventBus.on('toggle-tour', () => {
       setDialog(true)
-      toggleTour({ id: userData?.id, showTour: true })
+      void toggleTour({ id: userData?.id, showTour: true })
     })
   }, [userData])
 
@@ -123,7 +121,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
     tour.current?.on('complete', () => {
       if (userData.id === undefined) return
 
-      toggleTour({ id: userData?.id, showTour: false })
+      void toggleTour({ id: userData?.id, showTour: false })
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tour.current])
@@ -176,7 +174,7 @@ export const SideBar: React.FC<Props> = ({ children }) => {
         onDismiss={() => {
           setDialog(false)
 
-          toggleTour({ id: userData?.id, showTour: false })
+          void toggleTour({ id: userData?.id, showTour: false })
         }}
       />
 

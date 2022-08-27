@@ -1,13 +1,10 @@
 import { useEffect, useMemo } from 'react'
-import { useAlert } from 'components/lib/store/alerts'
-import { getUserHome } from 'utils/helpers'
+import { loaderAtom, useAlert } from '../components/lib'
+import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
-import { loggedInAtom, useUser } from 'stores/user'
-import { trpc } from 'utils/trpc'
-import { loaderAtom } from 'components/lib/store/loader'
-import { useStrictQueryCheck } from 'utils/hooks'
-import { QueryOptions } from 'types'
+import { loggedInAtom, useUser } from '../stores'
+import { QueryOptions } from '../types'
 
 export function useBatches(opts?: QueryOptions<'batch.getAll'>) {
   opts = opts ?? {}
@@ -61,7 +58,7 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn === true && isQuery,
+      enabled: isLoggedIn && isQuery,
     },
   )
 
@@ -89,7 +86,7 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
     },
   })
 
-  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
   useEffect(() => setLoader(loading), [loading, setLoader])
 
   return {

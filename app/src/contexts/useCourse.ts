@@ -1,13 +1,10 @@
-import { useAlert } from 'components/lib/store/alerts'
-import { loaderAtom } from 'components/lib/store/loader'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
-import { loggedInAtom, useUser } from 'stores/user'
-import { QueryOptions } from 'types'
-import { getUserHome } from 'utils/helpers'
-import { useStrictQueryCheck } from 'utils/hooks'
-import { trpc } from 'utils/trpc'
+import { loaderAtom, useAlert } from '../components/lib'
+import { loggedInAtom, useUser } from '../stores'
+import { QueryOptions } from '../types'
+import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 
 export function useCourses(opts?: QueryOptions<'course.getAll'>) {
   opts = opts ?? {}
@@ -66,7 +63,7 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
         }
       },
       ...opts,
-      enabled: isLoggedIn === true && isQuery,
+      enabled: isLoggedIn && isQuery,
     },
   )
 
@@ -96,7 +93,7 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     },
   })
 
-  const loading = useMemo(() => isLoading === true || update.isLoading, [isLoading, update.isLoading])
+  const loading = useMemo(() => isLoading || update.isLoading, [isLoading, update.isLoading])
 
   useEffect(() => setLoader(loading), [loading, setLoader])
 
@@ -104,6 +101,6 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     course,
     create,
     update,
-    isLoading: isLoading === true || update.isLoading,
+    isLoading: isLoading || update.isLoading,
   }
 }

@@ -1,10 +1,9 @@
 import clsx from 'clsx'
-import { MIcon } from 'components/lib/MIcon'
-import { MSelect } from 'components/lib/MSelect'
 import { useAtom } from 'jotai'
 import React from 'react'
-import { ticketFiltersAtom } from 'stores/ticketFilters'
-import { Option } from 'types'
+import { ticketFiltersAtom } from '../../stores'
+import { Option } from '../../types'
+import { MIcon, MSelect } from '../lib'
 
 interface Props {}
 
@@ -44,7 +43,7 @@ export const ListingSettings: React.FC<Props> = () => {
       optionSlot={({ slotCtx: { selected }, option }) => (
         <div
           className={clsx([
-            selected === true ? 'font-semibold text-primary group-hover:text-base-100' : 'text-base-content',
+            selected ? 'font-semibold text-primary group-hover:text-base-100' : 'text-base-content',
             'flex flex-grow ',
           ])}
         >

@@ -1,16 +1,15 @@
+/* eslint-disable prettier/prettier */
 import type { NotificationPayload } from '@mirai/api'
 import clsx from 'clsx'
-import { MDialog } from 'components/lib/MDialog'
-import { MIcon } from 'components/lib/MIcon'
-import { useWS } from 'contexts'
+import { useWS } from '../../contexts'
 import { useAtom, useAtomValue } from 'jotai'
 import { signOut } from 'next-auth/react'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { sidebarAtom } from 'stores/config'
-import { loggedInAtom, useUser } from 'stores/user'
+import { loggedInAtom, sidebarAtom, useUser } from '../../stores'
 // import { trpc } from 'utils/trpc'
 import { SettingsModal } from './SettingsModal'
+import { MDialog, MIcon } from '../lib'
 
 interface Props {}
 
@@ -55,7 +54,7 @@ export const NavBar: React.FC<Props> = () => {
           </Link>
         </div>
         <div className="flex flex-none items-center gap-2">
-          {isLoggedIn === false ? (
+          {!isLoggedIn ? (
             <>
               <button className="btn btn-primary btn-ghost btn-sm ">Contact sales</button>
               <Link href="/login">
@@ -107,7 +106,7 @@ export const NavBar: React.FC<Props> = () => {
                 htmlFor="mirai-drawer"
                 className={clsx([
                   'swap drawer-button swap-rotate text-3xl text-base-content lg:hidden',
-                  sidebar === true && 'swap-active',
+                  sidebar && 'swap-active',
                 ])}
               >
                 <MIcon className="swap-off">

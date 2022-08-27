@@ -9,11 +9,11 @@ import { AppType } from 'next/dist/shared/lib/utils'
 import { ReactElement, ReactNode } from 'react'
 import type { AppRouter } from '@mirai/api'
 import superjson from 'superjson'
-import { MAlertGroup } from 'components/lib/MAlerts'
-import { DefaultLayout } from 'components/globals/DefaultLayout'
-import { AppProviders } from 'contexts'
-import { MLoader } from 'components/lib/MLoader'
-import { getBaseUrl } from 'utils/helpers'
+import { DefaultLayout } from '../components/globals/DefaultLayout'
+import { AppProviders } from '../contexts'
+import { MAlertGroup, MLoader } from '../components/lib'
+import { ErrorBoundary, getBaseUrl } from '../utils/helpers'
+import { useRouter } from 'next/router'
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode
@@ -26,20 +26,31 @@ type AppPropsWithLayout = AppProps & {
 const MyApp = (({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
+  const { push } = useRouter()
+
   return (
-    <AppProviders pageProps={pageProps}>
-      {getLayout(
-        <>
-          <Component {...pageProps} />
-          {typeof window !== 'undefined' && (
-            <>
-              <MLoader />
-              <MAlertGroup />
-            </>
-          )}
-        </>,
-      )}
-    </AppProviders>
+    <ErrorBoundary
+      onError={async (error) => {
+        // eslint-disable-next-line no-console
+        console.error(error)
+
+        return process.env.NODE_ENV === 'development' ? null : await push('/500')
+      }}
+    >
+      <AppProviders pageProps={pageProps}>
+        {getLayout(
+          <>
+            <Component {...pageProps} />
+            {typeof window !== 'undefined' && (
+              <>
+                <MLoader />
+                <MAlertGroup />
+              </>
+            )}
+          </>,
+        )}
+      </AppProviders>
+    </ErrorBoundary>
   )
 }) as AppType
 
@@ -54,7 +65,7 @@ export default withTRPC<AppRouter>({
             process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
         }),
         httpBatchLink({
-          url: `${getBaseUrl() as string}/api/trpc`,
+          url: `${getBaseUrl()}/api/trpc`,
         }),
       ],
       transformer: superjson,

@@ -1,10 +1,10 @@
 import { useSetAtom } from 'jotai'
 import { useSession } from 'next-auth/react'
 import React from 'react'
-import { userAtom } from 'stores/user'
-import { trpc } from 'utils/trpc'
+import { userAtom } from '../stores'
+import { trpc } from '../utils'
 import { useAtomsDevtools } from 'jotai/devtools'
-import MSpinner from 'components/lib/MSpinner'
+import { MSpinner } from '../components/lib'
 
 interface Props {}
 
@@ -33,7 +33,7 @@ export const CurrentAccount: React.FC<Props> = ({ children }) => {
     useAtomsDevtools('Mirai')
   }
 
-  if (status === 'loading' || isLoading === true) return <FullPageLoader />
+  if (status === 'loading' || isLoading) return <FullPageLoader />
 
   return <>{children}</>
 }

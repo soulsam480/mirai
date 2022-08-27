@@ -1,7 +1,7 @@
-import { useDepartments, useBatches, useCourses } from 'contexts'
+import { useDepartments, useBatches, useCourses } from './index'
 import { useSetAtom } from 'jotai'
 import { useEffect } from 'react'
-import { instituteAssetsLoading, instituteBatches, instituteCourses, instituteDepartments } from 'stores/institute'
+import { instituteAssetsLoading, instituteBatches, instituteCourses, instituteDepartments } from '../stores'
 
 export function useInstituteAssets() {
   const setDepartments = useSetAtom(instituteDepartments)
@@ -28,6 +28,6 @@ export function useInstituteAssets() {
   })
 
   useEffect(() => {
-    void setLoading(department === true || course || batch)
+    void setLoading(department || course || batch)
   }, [department, batch, course, setLoading])
 }

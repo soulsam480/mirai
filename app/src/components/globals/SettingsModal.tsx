@@ -1,8 +1,7 @@
 import clsx from 'clsx'
-import { MIcon } from 'components/lib/MIcon'
+import { MIcon } from '../../components/lib'
 import React from 'react'
-import { eventBus } from 'utils/helpers'
-import { useTheme } from 'utils/hooks'
+import { eventBus, useTheme } from '../../utils'
 
 interface Props {
   onClose: (val: boolean) => void
