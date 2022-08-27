@@ -7,6 +7,7 @@ import { useBatch } from '../../../contexts'
 import { createBatchSchema } from '../../../schemas'
 import { useUser } from '../../../stores'
 import { TRPCErrorType } from '../../../types'
+import { formatDate } from '../../../utils'
 import { MForm, MInput, MSelect, useAlert } from '../../lib'
 
 // TODO: add batch start/end
@@ -27,12 +28,14 @@ export const ManageBatch: React.FC<any> = () => {
 
   const { batch, create, update } = useBatch({
     onSuccess(data) {
-      const { name, status, duration, durationType } = data
+      const { name, status, duration, durationType, startsAt, endsAt } = data
 
-      name !== null && setValue('name', name)
-      status !== null && setValue('status', status)
-      duration !== null && setValue('duration', duration)
-      durationType !== null && setValue('durationType', durationType)
+      setValue('name', name)
+      setValue('status', status)
+      setValue('duration', duration)
+      setValue('durationType', durationType)
+      setValue('startsAt', formatDate(startsAt, 'YYYY-MM-DD'))
+      setValue('endsAt', formatDate(endsAt, 'YYYY-MM-DD'))
     },
     onError(e) {
       setError(e)
@@ -49,6 +52,8 @@ export const ManageBatch: React.FC<any> = () => {
       duration: '',
       durationType: 'YEAR',
       status: 'INACTIVE',
+      endsAt: '',
+      startsAt: '',
     },
     shouldFocusError: true,
   })
@@ -102,6 +107,10 @@ export const ManageBatch: React.FC<any> = () => {
         <MSelect name="durationType" label="Batch duration type" options={durationType} />
 
         <MSelect name="status" label="Status" options={statusType} />
+
+        <MInput name="startsAt" label="Start date" type="date" />
+
+        <MInput name="endsAt" label="End date" type="date" />
 
         <div className="flex justify-end space-x-2">
           <button

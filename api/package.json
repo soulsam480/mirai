@@ -13,7 +13,7 @@
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
     "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
-    "build-2": "cross-env NODE_ENV=production vite build",
+    "build-2": "cross-env NODE_ENV=production tsc",
     "copy-prisma": "node copy.js",
     "build": "run-s build-* copy-prisma",
     "postinstall": "prisma generate --schema=../prisma/schema.prisma",

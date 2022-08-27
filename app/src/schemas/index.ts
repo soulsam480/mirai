@@ -49,6 +49,8 @@ export const createBatchSchema = z.object({
   duration: z.string().min(1, "Batch duration name shouldn't be empty"),
   durationType: z.enum(['YEAR', 'MONTH', 'WEEK', 'DAY']),
   status: z.enum(['ACTIVE', 'INACTIVE']),
+  startsAt: z.string().transform((val) => (val.length > 0 ? dayjs(val).toISOString() : val)),
+  endsAt: z.string().transform((val) => (val.length > 0 ? dayjs(val).toISOString() : val)),
 })
 
 export const createStudentBasicsSchema = z.object({
