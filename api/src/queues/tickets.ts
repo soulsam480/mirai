@@ -3,12 +3,12 @@ import type { TicketStatus } from '@prisma/client'
 import { Queue, Worker } from 'bullmq'
 import { z } from 'zod'
 import miraiClient from '../db'
-import { createStudent } from '../lib'
+import { createStudent, getEnv } from '../lib'
 import { OverWrite, TicketJob } from '../types'
 
 export const ticketQueue = new Queue<TicketJob>('tickets', {
   connection: {
-    port: parseInt(process.env.REDIS_PORT),
+    port: parseInt(getEnv('REDIS_PORT') as string),
   },
 })
 
@@ -97,7 +97,7 @@ const _worker = new Worker<TicketJob>(
   {
     limiter: { max: 1000, duration: 5000 },
     connection: {
-      port: parseInt(process.env.REDIS_PORT),
+      port: parseInt(getEnv('REDIS_PORT') as string),
     },
   },
 )

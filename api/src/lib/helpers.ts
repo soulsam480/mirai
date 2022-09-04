@@ -24,7 +24,7 @@ export function isRole(role: Role) {
   }
 }
 
-export function getEnv(key: string, strict = false) {
+export function getEnv(key: string, strict = process.env.NODE_ENV === 'production') {
   const val = process.env[key]
 
   if (strict && val === undefined) throw new Error(`env var ${key} is not defined`)

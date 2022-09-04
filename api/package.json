@@ -12,12 +12,10 @@
     "dev": "cross-env NODE_ENV=development ts-node-dev --rs --transpile-only --exit-child --ignore-watch node_modules --watch src -- src/app.ts",
     "dx": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai run-s db-up db-migrate-dev db-seed dev",
     "ts-node": "ts-node -T --compiler-options \"{\\\"module\\\":\\\"commonjs\\\"}\"",
-    "build-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
-    "build-2": "cross-env NODE_ENV=production tsc",
-    "copy-prisma": "node copy.js",
-    "build": "run-s build-* copy-prisma",
+    "start-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
+    "start-2": "cross-env NODE_ENV=production ts-node --pretty -T src/app.ts",
     "postinstall": "prisma generate --schema=../prisma/schema.prisma",
-    "start": "cross-env NODE_ENV=production node dist/app.js",
+    "start": "run-s start-*",
     "studio": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai prisma studio --schema=../prisma/schema.prisma"
   },
   "prisma": {

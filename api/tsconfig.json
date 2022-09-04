@@ -6,8 +6,10 @@
     "target": "es2018",
     "module": "commonjs",
     "lib": ["esnext"],
-    "composite": true
+    "outDir": "./dist",
+    "rootDir": "src"
   },
+
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "ts-node": {

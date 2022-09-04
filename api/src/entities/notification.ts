@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose'
+import { getModelForClass, modelOptions, prop, Severity } from '@typegoose/typegoose'
 import { TimeStamps } from '@typegoose/typegoose/lib/defaultClasses'
 
 interface DataMeta {
@@ -20,7 +20,7 @@ export class Data {
   @prop()
   sourceId?: number
 
-  @prop()
+  @prop({ allowMixed: Severity.ALLOW })
   meta?: DataMeta
 }
 

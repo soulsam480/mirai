@@ -10,9 +10,11 @@
     "dev:api": "pnpm run --filter @mirai/api dx",
     "dev": "run-p dev:*",
     "db-nuke": "pnpm run --filter @mirai/api db-nuke",
-    "build:api": "pnpm run --filter @mirai/api build",
     "build:app": "pnpm run --filter @mirai/app build",
     "build": "run-p build:*",
+    "start:api": "pnpm run --filter @mirai/api start",
+    "start:app": "pnpm run --filter @mirai/app start",
+    "start": "run-p start:*",
     "prepare": "husky install",
     "studio": "pnpm run --filter @mirai/api studio",
     "type-check": "tsc --pretty --noEmit --incremental --tsBuildInfoFile \"temp/.tsBuildInfo\" -p tsconfig.json"

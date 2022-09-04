@@ -3,17 +3,15 @@ import path, { join } from 'path'
 import fastify from 'fastify'
 import autoload from '@fastify/autoload'
 import cors from '@fastify/cors'
-// import cookies from '@fastify/cookie'
 import ws from '@fastify/websocket'
-
-import { getEnv } from './lib'
+import { getEnv, logger } from './lib'
 import type { SessionUser } from './rpc/context'
 
 dotenv.config({ path: join(__dirname, '../.env') })
 
 export async function createServer() {
   const dev = getEnv('NODE_ENV') !== 'production' ?? true
-  const port = getEnv('PORT') !== undefined ? Number(getEnv('PORT')) : 4002
+  const port = Number(getEnv('PORT', false) ?? 4002)
 
   const server = fastify({
     logger: dev && {
@@ -58,19 +56,16 @@ export async function createServer() {
     try {
       await server.listen(port)
 
-      if (process.env.NDE_ENV === 'development') server.log.info(`listening on http://localhost:${port}`)
+      logger.info(`listening on http://localhost:${port}`)
     } catch (err) {
-      server.log.error(err)
+      logger.error(err)
       process.exit(1)
     }
   }
 
   await server.ready()
 
-  void start()
-
-  // eslint-disable-next-line @typescript-eslint/return-await
-  return server
+  await start()
 }
 
 void createServer()

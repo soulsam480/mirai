@@ -6,7 +6,8 @@
   "main": "src/index.ts",
   "module": "src/index.ts",
   "scripts": {
-    "build": "next build",
+    "build:app": "next build",
+    "build": "run-s clear build:app",
     "dev": "next dev",
     "dx": "run-s clear dev",
     "start": "next start",

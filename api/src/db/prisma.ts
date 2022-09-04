@@ -1,15 +1,15 @@
 import { PrismaClient } from '@prisma/client'
 import { withExclude } from 'prisma-exclude'
+import { getEnv } from '../lib'
 
 declare global {
-  // allow global `var` declarations
   // eslint-disable-next-line no-var
   var prisma: ReturnType<typeof withExclude> | undefined
 }
 
 let miraiClient: ReturnType<typeof withExclude>
 
-if (process.env.NODE_ENV === 'production') {
+if (getEnv('NODE_ENV') === 'production') {
   miraiClient = withExclude(
     new PrismaClient({
       log: ['error'],
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
   if (global.prisma === undefined || global.prisma === null) {
     global.prisma = withExclude(
       new PrismaClient({
-        log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+        log: getEnv('NODE_ENV') === 'development' ? ['query', 'error', 'warn'] : ['error'],
       }),
     )
   }
