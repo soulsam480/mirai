@@ -5,15 +5,22 @@
     "strict": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "useUnknownInCatchVariables": false,
-    "downlevelIteration": true
+    "useUnknownInCatchVariables": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js", "**/*.d.ts", "prettier.config.cjs", ".eslintrc.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/src/**/*.ts",
+    "**/src/**/*.tsx",
+    "**/src/**/*.js",
+    "**/src/**/*.d.ts",
+    "./app/tailwind.config.js",
+    "prettier.config.cjs",
+    ".eslintrc.js"
+  ],
   "exclude": ["**/node_modules", "**/.next", "out", "**/dist"]
 }

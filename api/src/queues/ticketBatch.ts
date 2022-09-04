@@ -1,5 +1,6 @@
 import { Queue, Worker } from 'bullmq'
 import { SourceType } from '../entities'
+import { getEnv } from '../lib'
 import { notificationQueue } from './notifications'
 
 interface TicketBatchData {
@@ -9,7 +10,7 @@ interface TicketBatchData {
 
 export const ticketBatchQueue = new Queue<TicketBatchData>('ticketBatch', {
   connection: {
-    port: parseInt(process.env.REDIS_PORT),
+    port: parseInt(getEnv('REDIS_PORT') as string),
   },
 })
 
@@ -32,7 +33,7 @@ const _worker = new Worker<TicketBatchData>(
   {
     limiter: { max: 1000, duration: 5000 },
     connection: {
-      port: parseInt(process.env.REDIS_PORT),
+      port: parseInt(getEnv('REDIS_PORT') as string),
     },
   },
 )

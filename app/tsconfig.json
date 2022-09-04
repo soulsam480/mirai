@@ -5,13 +5,10 @@
     "module": "esnext",
     "target": "es5",
     "types": ["unplugin-icons/types/react"],
-    "incremental": true
+    "incremental": true,
+    "noEmit": true,
+    "strict": true
   },
-  "include": ["**/*.d.ts", "**/*.ts", "**/*.tsx", "auto-imports.d.ts", "../next-auth.d.ts"],
-  "exclude": ["node_modules", ".next", "dist"],
-  "references": [
-    {
-      "path": "../api/tsconfig.json"
-    }
-  ]
+  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.tsx", "auto-imports.d.ts", "../next-auth.d.ts"],
+  "exclude": ["node_modules", ".next", "dist"]
 }

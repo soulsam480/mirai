@@ -1,10 +1,11 @@
 import { Queue, Worker } from 'bullmq'
 import { notification, Notification } from '../entities'
+import { getEnv } from '../lib'
 import { wsEventEmitter } from '../ws'
 
 export const notificationQueue = new Queue<Notification>('notifications', {
   connection: {
-    port: parseInt(process.env.REDIS_PORT),
+    port: parseInt(getEnv('REDIS_PORT') as string),
   },
 })
 
@@ -25,7 +26,7 @@ const _worker = new Worker<Notification>(
   {
     limiter: { max: 1000, duration: 5000 },
     connection: {
-      port: parseInt(process.env.REDIS_PORT),
+      port: parseInt(getEnv('REDIS_PORT') as string),
     },
   },
 )
