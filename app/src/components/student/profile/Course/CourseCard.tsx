@@ -161,32 +161,44 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                     <div className="border-b border-base-300 p-2 text-center">{semId}</div>
 
                     {/* score columns */}
-                    {Object.keys(SCORE_RENDER_COLS).map((key) => (
-                      <div
-                        key={key}
-                        className={clsx([
-                          'flex justify-center border-b border-base-300 last:border-0',
-                          key !== '_update' ? 'p-2' : 'p-0.5',
-                        ])}
-                      >
-                        {key === '_update' ? (
-                          <button
-                            className="btn btn-ghost btn-circle btn-sm"
-                            onClick={() => {
-                              setSelectedSem(semId)
-                              reset(studentScore?.scores?.[String(semId)] ?? {})
-                              setDialog(true)
-                            }}
-                          >
-                            <MIcon data-tip={`Update semester ${semId} score`} className="tooltip-top tooltip">
-                              <IconPhPencilSimple />
-                            </MIcon>
-                          </button>
-                        ) : (
-                          renderSafeVal(studentScore?.scores?.[String(semId)]?.[key as keyof StudentSemScore])
-                        )}
-                      </div>
-                    ))}
+                    {Object.keys(SCORE_RENDER_COLS).map((key) => {
+                      const fieldValue = renderSafeVal(
+                        studentScore?.scores?.[String(semId)]?.[key as keyof StudentSemScore],
+                      )
+
+                      return (
+                        <div
+                          key={key}
+                          className={clsx([
+                            'flex justify-center border-b border-base-300 last:border-0',
+                            key !== '_update' ? 'p-2' : 'p-0.5',
+                          ])}
+                        >
+                          {key === '_update' ? (
+                            <button
+                              className="btn btn-ghost btn-circle btn-sm"
+                              onClick={() => {
+                                setSelectedSem(semId)
+                                reset(studentScore?.scores?.[String(semId)] ?? {})
+                                setDialog(true)
+                              }}
+                            >
+                              <MIcon data-tip={`Update semester ${semId} score`} className="tooltip-top tooltip">
+                                <IconPhPencilSimple />
+                              </MIcon>
+                            </button>
+                          ) : key === 'fileUrl' && fieldValue !== '-' ? (
+                            <a href={fieldValue} target="_blank" rel="noreferrer">
+                              <MIcon data-tip="Open marksheet" className="tooltip-top tooltip">
+                                <IconPhLink />
+                              </MIcon>
+                            </a>
+                          ) : (
+                            fieldValue
+                          )}
+                        </div>
+                      )
+                    })}
                   </div>
                 )
               })}

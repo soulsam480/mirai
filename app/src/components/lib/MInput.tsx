@@ -71,8 +71,8 @@ export const MInput = forwardRefWithAs(
         render={({ field: { onChange, value, ...fieldRest }, fieldState: { error } }) => {
           const handleBlur = useCallback(
             (e) => {
-              fieldRest?.onBlur?.()
-              rest?.onBlur?.(e)
+              fieldRest.onBlur()
+              rest.onBlur?.(e)
             },
             [fieldRest],
           )

@@ -3,6 +3,12 @@ import dayjs from 'dayjs'
 import { z } from 'zod'
 import { MOBILE_REGEX, PASSWORD_REGEX } from './regex'
 
+// ? custom primitives
+const stringOrNum = z
+  .string()
+  .or(z.number())
+  .refine((v) => (typeof v === 'string' ? /^\d+$/.test(v) : true), 'Should be numeric')
+
 export const createInstituteSchema = z.object({
   code: z.string().min(1, "Code shouldn't be empty"),
   name: z.string().min(1, "Name shouldn't be empty"),
@@ -295,14 +301,14 @@ export const bulkTicketResolveSchema = z.object({
 
 export const semUpdateSchema = z
   .object({
-    semScore: z.number({ invalid_type_error: 'Should be numeric' }),
-    cummScore: z.number({ invalid_type_error: 'Should be numeric' }),
-    ongoingBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
-    totalBacklogs: z.number({ invalid_type_error: 'Should be numeric' }),
+    semScore: stringOrNum.transform(Number),
+    cummScore: stringOrNum.transform(Number),
+    ongoingBacklogs: stringOrNum.transform(Number),
+    totalBacklogs: stringOrNum.transform(Number),
     fileUrl: z.string(),
-    backlogDetails: z.string(),
+    backlogDetails: z.string().optional(),
   })
-  .refine((val) => (Number(val.ongoingBacklogs) === 0 ? true : Boolean(val.backlogDetails?.trim().length)), {
+  .refine((val) => (val.ongoingBacklogs === 0 ? true : Boolean(val.backlogDetails?.trim().length)), {
     message: 'Backlog details is required',
     path: ['backlogDetails'],
   })
