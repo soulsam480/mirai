@@ -1,63 +1,52 @@
 import { TRPCError } from '@trpc/server'
 import { createCourseSchema } from '@mirai/app'
-import { createRouter } from '../createRouter'
-import { isInstituteRole } from '../../lib'
+import { trpc } from '../trpc'
 import { z } from 'zod'
+import { procedureWithInstitute } from '../procedures'
 
-export const courseRouter = createRouter()
-  .middleware(async ({ ctx, next }) => {
-    if (ctx.session === null || !isInstituteRole(ctx.session.user.role).is)
-      throw new TRPCError({ code: 'UNAUTHORIZED' })
-
-    return await next({
-      // might seem dumb, but it's done like this to keep TS happy
-      ctx: { ...ctx, user: ctx.session },
+export const courseRouter = trpc.router({
+  create: procedureWithInstitute.input(createCourseSchema).mutation(async ({ ctx, input }) => {
+    const program = await ctx.prisma.course.create({
+      data: input,
     })
-  })
-  .mutation('create', {
-    input: createCourseSchema,
-    async resolve({ ctx, input }) {
-      const program = await ctx.prisma.course.create({
-        data: input,
-      })
 
-      return program
-    },
-  })
-  .mutation('update', {
-    input: createCourseSchema.partial().extend({ id: z.number() }).omit({ instituteId: true }),
-    async resolve({ ctx, input }) {
+    return program
+  }),
+
+  update: procedureWithInstitute
+    .input(createCourseSchema.partial().extend({ id: z.number() }).omit({ instituteId: true }))
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
 
       await ctx.prisma.course.update({
         where: { id },
         data,
       })
-    },
-  })
-  .query('getAll', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      const courses = await ctx.prisma.course.findMany({
-        where: { instituteId: input },
-        include: {
-          department: {
-            select: {
-              name: true,
-            },
+    }),
+
+  getAll: procedureWithInstitute.input(z.number()).query(async ({ ctx, input }) => {
+    const courses = await ctx.prisma.course.findMany({
+      where: { instituteId: input },
+      include: {
+        department: {
+          select: {
+            name: true,
           },
         },
-      })
+      },
+    })
 
-      return courses
-    },
-  })
-  .query('get', {
-    input: z.object({
-      instituteId: z.number(),
-      courseId: z.number(),
-    }),
-    async resolve({ ctx, input: { courseId, instituteId } }) {
+    return courses
+  }),
+
+  get: procedureWithInstitute
+    .input(
+      z.object({
+        instituteId: z.number(),
+        courseId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input: { courseId, instituteId } }) => {
       const course = await ctx.prisma.course.findFirst({
         where: { id: courseId, instituteId },
       })
@@ -70,5 +59,5 @@ export const courseRouter = createRouter()
       }
 
       return course
-    },
-  })
+    }),
+})

@@ -1,33 +1,20 @@
 import { createTicketSchema, studentOnboardingSchema } from './../schemas/index'
-import { TRPCClientErrorLike } from '@trpc/client'
-import { UseTRPCQueryOptions } from '@trpc/react'
-import { inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'
-import type { AppRouter } from '@mirai/api'
 import { MLinkProps } from '../components/lib'
 import React from 'react'
 import type { z } from 'zod'
+import { TRPCClientError } from '@trpc/client'
+import { AppRouter } from '@mirai/api'
 
-export type TRPCErrorType = TRPCClientErrorLike<AppRouter>
+export type QueryOptions<Fn extends (...args: any[]) => any, RT = ReturnType<Fn>> = Fn extends (
+  a: infer _A,
+  b: infer B,
+) => RT
+  ? B
+  : Fn extends (a: infer A) => RT
+  ? A
+  : never
 
-type inferProcedures<TObj extends ProcedureRecord<any, any, any, any>> = {
-  [TPath in keyof TObj]: {
-    input: inferProcedureInput<TObj[TPath]>
-    output: inferProcedureOutput<TObj[TPath]>
-  }
-}
-
-type TQueryValues = inferProcedures<AppRouter['_def']['queries']>
-
-export type QueryOptions<
-  TPath extends keyof TQueryValues & string,
-  TError = TRPCClientErrorLike<AppRouter>,
-> = UseTRPCQueryOptions<
-  TPath,
-  TQueryValues[TPath]['input'],
-  TQueryValues[TPath]['output'],
-  TQueryValues[TPath]['output'],
-  TError
->
+export type TRPCErrorType = TRPCClientError<AppRouter>
 
 export type OverWrite<T, K> = Omit<T, keyof K> & K
 export type NullToUndefined<T> = T extends null ? undefined : T
@@ -52,3 +39,5 @@ export type StudentTicketShape = OverWrite<
 >
 
 export type StudentProfileIgnore = 'verified' | 'verifiedBy' | 'verifiedOn' | 'createdAt' | 'updatedAt'
+
+export type AnyObject = Record<string, any>

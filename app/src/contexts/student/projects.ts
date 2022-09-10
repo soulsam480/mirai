@@ -9,7 +9,7 @@ export function useProject() {
   const userData = useUser()
   const setProjects = useSetAtom(studentProjectsAtom)
 
-  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.project.create'], {
+  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.student.project.create.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -26,7 +26,7 @@ export function useProject() {
     },
   })
 
-  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.useMutation(['student.project.update'], {
+  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.student.project.update.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -45,7 +45,7 @@ export function useProject() {
 
   async function deleteProject(id: number) {
     try {
-      await trpcClient.mutation('student.project.remove', id)
+      await trpcClient.student.project.remove.mutate(id)
 
       setAlert({
         type: 'success',
@@ -66,7 +66,7 @@ export function useProject() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.project.get_all', userData.studentId)
+    const data = await trpcClient.student.project.get_all.query(userData.studentId)
 
     void setProjects(data)
   }

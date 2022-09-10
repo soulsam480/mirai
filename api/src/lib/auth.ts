@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs'
 import { WithExcludeClient } from '../db'
 // don't make it an alias, the seed command will fail
 import { getEnv, isInstituteRole } from '../lib/helpers'
+import { SessionUser } from '../rpc/context'
 
 export interface JwtPayload {
   id: number
@@ -24,7 +25,11 @@ export async function hashPass(password: string) {
 
 export function prismaQueryHelper(client: WithExcludeClient) {
   return {
-    async getAccount(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN', email?: string, id?: number) {
+    async getAccount(session: SessionUser) {
+      const role = session?.user?.role
+      const email = session?.user?.email
+      const id = session?.user?.id
+
       let account: any
 
       if (role === 'STUDENT') {

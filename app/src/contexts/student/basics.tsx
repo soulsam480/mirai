@@ -8,7 +8,7 @@ export function useBasics() {
   const userData = useUser()
   const setBasics = useSetAtom(studentBasicsAtom)
 
-  const { mutateAsync: manage, isLoading } = trpc.useMutation(['student.basics.manage'], {
+  const { mutateAsync: manage, isLoading } = trpc.student.basics.manage.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -28,9 +28,9 @@ export function useBasics() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.basics.get', userData.studentId)
+    const data = await trpcClient.student.basics.get.query(userData.studentId)
 
-    void setBasics(data as any)
+    void setBasics(data)
   }
 
   return {

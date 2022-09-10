@@ -9,7 +9,7 @@ export function useCertification() {
   const userData = useUser()
   const setCertifications = useSetAtom(studentCertificationsAtom)
 
-  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.certification.create'], {
+  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.student.certification.create.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -26,7 +26,7 @@ export function useCertification() {
     },
   })
 
-  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.useMutation(['student.certification.update'], {
+  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.student.certification.update.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -45,7 +45,7 @@ export function useCertification() {
 
   async function removeCertification(id: number) {
     try {
-      await trpcClient.mutation('student.certification.remove', id)
+      await trpcClient.student.certification.remove.mutate(id)
 
       setAlert({
         type: 'success',
@@ -65,7 +65,7 @@ export function useCertification() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.certification.get_all', userData.studentId)
+    const data = await trpcClient.student.certification.get_all.query(userData.studentId)
 
     void setCertifications(data)
   }

@@ -8,7 +8,7 @@ export function useScore() {
   const userData = useUser()
   const setScore = useSetAtom(studentScoreAtom)
 
-  const { mutate: updateScoreCard, isLoading } = trpc.useMutation(['student.score.update_score_card'], {
+  const { mutate: updateScoreCard, isLoading } = trpc.student.score.update_score_card.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -30,7 +30,7 @@ export function useScore() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.score.get', userData.studentId)
+    const data = await trpcClient.student.score.get.query(userData.studentId)
 
     void setScore(data as any)
   }

@@ -64,7 +64,7 @@ const Login: NextPageWithLayout = () => {
       return setError(status.error)
     }
 
-    void utils.invalidateQueries(['auth.account'])
+    void utils.auth.account.invalidate()
 
     loader.hide()
 

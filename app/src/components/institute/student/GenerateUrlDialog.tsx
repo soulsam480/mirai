@@ -42,7 +42,7 @@ export const GenerateUrlDialog: React.FC<Props> = ({ onClose }) => {
 
   async function generateUrl(data: z.infer<typeof generateOnboardingUrlSchema>) {
     try {
-      const payload = await trpcClient.mutation('institute.gen_onboarding_token', data)
+      const payload = await trpcClient.institute.gen_onboarding_token.mutate(data)
 
       const { origin } = location
 

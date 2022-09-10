@@ -3,17 +3,17 @@ import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { loaderAtom, useAlert } from '../components/lib'
 import { loggedInAtom, useUser } from '../stores'
-import { QueryOptions } from '../types'
+import { AnyObject } from '../types'
 import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 
-export function useCourses(opts?: QueryOptions<'course.getAll'>) {
+export function useCourses(opts?: AnyObject) {
   opts = opts ?? {}
 
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
-  const { data: courses = [], isLoading } = trpc.useQuery(['course.getAll', userData.instituteId as number], {
+  const { data: courses = [], isLoading } = trpc.course.getAll.useQuery(userData.instituteId as number, {
     ...opts,
     enabled: isLoggedIn,
     onError(e) {
@@ -29,7 +29,7 @@ export function useCourses(opts?: QueryOptions<'course.getAll'>) {
   }
 }
 
-export function useCourse(opts?: QueryOptions<'course.get'>) {
+export function useCourse(opts?: AnyObject) {
   opts = opts ?? {}
 
   const router = useRouter()
@@ -46,14 +46,12 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     skipPath: '/institute/course/create',
   })
 
-  const { data: course, isLoading } = trpc.useQuery(
-    [
-      'course.get',
-      {
-        instituteId: userData.instituteId as number,
-        courseId: +(router.query.courseId as string),
-      },
-    ],
+  const { data: course, isLoading } = trpc.course.get.useQuery(
+    {
+      instituteId: userData.instituteId as number,
+      courseId: +(router.query.courseId as string),
+    },
+
     {
       onError(e) {
         if (e.data?.code === 'NOT_FOUND') {
@@ -67,9 +65,9 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     },
   )
 
-  const update = trpc.useMutation(['course.update'], {
+  const update = trpc.course.update.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['course.getAll'])
+      void utils.course.getAll.invalidate()
 
       setAlert({
         type: 'success',
@@ -80,9 +78,9 @@ export function useCourse(opts?: QueryOptions<'course.get'>) {
     },
   })
 
-  const create = trpc.useMutation(['course.create'], {
+  const create = trpc.course.create.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['course.getAll'])
+      void utils.course.getAll.invalidate()
 
       setAlert({
         type: 'success',

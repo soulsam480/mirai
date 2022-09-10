@@ -4,16 +4,16 @@ import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
 import { loggedInAtom, useUser } from '../stores'
-import { QueryOptions } from '../types'
+import { AnyObject } from '../types'
 
-export function useBatches(opts?: QueryOptions<'batch.getAll'>) {
+export function useBatches(opts?: AnyObject) {
   opts = opts ?? {}
 
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
-  const { data: batches = [], isLoading } = trpc.useQuery(['batch.getAll', userData.instituteId as number], {
+  const { data: batches = [], isLoading } = trpc.batch.getAll.useQuery(userData.instituteId as number, {
     ...opts,
     enabled: isLoggedIn,
     onError(e) {
@@ -26,7 +26,7 @@ export function useBatches(opts?: QueryOptions<'batch.getAll'>) {
   return { batches, isLoading }
 }
 
-export function useBatch(opts?: QueryOptions<'batch.get'>) {
+export function useBatch(opts?: AnyObject) {
   opts = opts ?? {}
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
@@ -42,14 +42,12 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
     skipPath: '/institute/batch/create',
   })
 
-  const { data: batch, isLoading } = trpc.useQuery(
-    [
-      'batch.get',
-      {
-        instituteId: userData.instituteId as number,
-        batchId: +(router.query.batchId as string),
-      },
-    ],
+  const { data: batch, isLoading } = trpc.batch.get.useQuery(
+    {
+      instituteId: userData.instituteId as number,
+      batchId: +(router.query.batchId as string),
+    },
+
     {
       onError(e) {
         if (e.data?.code === 'NOT_FOUND') {
@@ -62,9 +60,9 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
     },
   )
 
-  const update = trpc.useMutation(['batch.update'], {
+  const update = trpc.batch.update.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['batch.getAll'])
+      void utils.batch.getAll.invalidate()
       setAlert({
         type: 'success',
         message: 'Batch updated',
@@ -73,9 +71,9 @@ export function useBatch(opts?: QueryOptions<'batch.get'>) {
     },
   })
 
-  const create = trpc.useMutation(['batch.create'], {
+  const create = trpc.batch.create.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['batch.getAll'])
+      void utils.batch.getAll.invalidate()
 
       setAlert({
         type: 'success',

@@ -28,7 +28,7 @@ function WSClientProvider({ children }: WSProviderProps): JSX.Element {
     if (conn === null && status === 'authenticated' && isInstituteRole(data.user.role).is && !isConnecting.current) {
       isConnecting.current = true
 
-      createWsConn(() => trpcClient.query('auth.auth_token', data))
+      createWsConn(async () => await trpcClient.auth.auth_token.query(data))
         .then(setConn)
         .catch((e) => {
           // eslint-disable-next-line no-console

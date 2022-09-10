@@ -9,7 +9,7 @@ export function useExperience() {
   const userData = useUser()
   const setExperiences = useSetAtom(studentExperienceAtom)
 
-  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.experience.create'], {
+  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.student.experience.create.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -26,7 +26,7 @@ export function useExperience() {
     },
   })
 
-  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.useMutation(['student.experience.update'], {
+  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.student.experience.update.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -45,7 +45,7 @@ export function useExperience() {
 
   async function deleteExperience(id: number) {
     try {
-      await trpcClient.mutation('student.experience.remove', id)
+      await trpcClient.student.experience.remove.mutate(id)
 
       setAlert({
         type: 'success',
@@ -65,7 +65,7 @@ export function useExperience() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.experience.get_all', userData.studentId)
+    const data = await trpcClient.student.experience.get_all.query(userData.studentId)
 
     void setExperiences(data)
   }

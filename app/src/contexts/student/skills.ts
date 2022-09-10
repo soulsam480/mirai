@@ -7,7 +7,7 @@ export function useSkills() {
   const setAlert = useAlert()
   const setSkills = useSetAtom(studentSkillsAtom)
 
-  const { mutateAsync: update, isLoading } = trpc.useMutation(['student.skills.update'], {
+  const { mutateAsync: update, isLoading } = trpc.student.skills.update.useMutation({
     onError() {
       setAlert({
         type: 'danger',

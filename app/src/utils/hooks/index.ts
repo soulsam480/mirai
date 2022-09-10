@@ -5,7 +5,6 @@ import { useRouter } from 'next/router'
 import { RefCallback, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useEffectOnce } from 'react-use'
 import { themeAtom } from '../../stores'
-import { TRPCErrorType } from '../../types'
 
 export * from './student'
 
@@ -66,7 +65,7 @@ export function useStrictQueryCheck({ key, redirect, message, skipPath: skip }: 
 
 export function useGlobalError() {
   const setAlert = useAlert()
-  const [globalError, setError] = useState<TRPCErrorType | null>(null)
+  const [globalError, setError] = useState<any | null>(null)
 
   useEffect(() => {
     if (globalError === null) return

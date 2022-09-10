@@ -50,7 +50,7 @@ const ResetPassword: NextPageWithLayout<{ disabled: boolean }> = ({ disabled }) 
   const { query, push } = useRouter()
   const setAlert = useAlert()
 
-  const { mutateAsync: resetPassword } = trpc.useMutation(['auth.reset_password'], {
+  const { mutateAsync: resetPassword } = trpc.auth.reset_password.useMutation({
     onError(e) {
       setAlert({
         type: 'danger',

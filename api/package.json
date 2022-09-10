@@ -32,7 +32,7 @@
     "@fastify/cors": "^7.0.0",
     "@fastify/websocket": "^5.0.0",
     "@swc/helpers": "^0.3.17",
-    "@trpc/server": "^9.27.1",
+    "@trpc/server": "10.0.0-proxy-alpha.73",
     "@typegoose/typegoose": "^9.11.0",
     "bull": "^4.8.5",
     "bullmq": "^1.89.1",
