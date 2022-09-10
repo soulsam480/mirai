@@ -1,57 +1,45 @@
 import { TRPCError } from '@trpc/server'
 import { createBatchSchema } from '@mirai/app'
-import { isInstituteRole } from '../../lib'
-import { createRouter } from '../createRouter'
+import { trpc } from '../trpc'
 import { z } from 'zod'
+import { procedureWithInstitute } from '../procedures'
 
-export const batchRouter = createRouter()
-  .middleware(async ({ ctx, next }) => {
-    if (ctx.session == null || !isInstituteRole(ctx.session.user.role).is) throw new TRPCError({ code: 'UNAUTHORIZED' })
-
-    const newCtx = await next({
-      // might seem dumb, but it's done like this to keep TS happy
-      ctx: { ...ctx, user: ctx.session },
+export const batchRouter = trpc.router({
+  create: procedureWithInstitute.input(createBatchSchema).mutation(async ({ ctx, input }) => {
+    const batch = await ctx.prisma.batch.create({
+      data: input,
     })
 
-    return newCtx
-  })
-  .mutation('create', {
-    input: createBatchSchema,
-    async resolve({ ctx, input }) {
-      const batch = await ctx.prisma.batch.create({
-        data: input,
-      })
+    return batch
+  }),
 
-      return batch
-    },
-  })
-  .mutation('update', {
-    input: createBatchSchema.extend({ id: z.number() }),
-    async resolve({ ctx, input }) {
+  update: procedureWithInstitute
+    .input(createBatchSchema.extend({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
 
       await ctx.prisma.batch.update({
         where: { id },
         data,
       })
-    },
-  })
-  .query('getAll', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      const batches = await ctx.prisma.batch.findMany({
-        where: { instituteId: input },
-      })
-
-      return batches
-    },
-  })
-  .query('get', {
-    input: z.object({
-      instituteId: z.number(),
-      batchId: z.number(),
     }),
-    async resolve({ ctx, input }) {
+
+  getAll: procedureWithInstitute.input(z.number()).query(async ({ ctx, input }) => {
+    const batches = await ctx.prisma.batch.findMany({
+      where: { instituteId: input },
+    })
+
+    return batches
+  }),
+
+  get: procedureWithInstitute
+    .input(
+      z.object({
+        instituteId: z.number(),
+        batchId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
       const batch = await ctx.prisma.batch.findFirst({
         where: {
           id: input.batchId,
@@ -67,5 +55,5 @@ export const batchRouter = createRouter()
       }
 
       return batch
-    },
-  })
+    }),
+})

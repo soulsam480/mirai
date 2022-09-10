@@ -9,7 +9,7 @@ export function useEducation() {
   const userData = useUser()
   const setEducation = useSetAtom(studentEducationAtom)
 
-  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.education.create'], {
+  const { mutateAsync: create, isLoading: isCreateLoading } = trpc.student.education.create.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -21,10 +21,12 @@ export function useEducation() {
         type: 'success',
         message: 'Student education created successfully !',
       })
+
       void invalidate()
     },
   })
-  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.useMutation(['student.education.update'], {
+
+  const { mutateAsync: update, isLoading: isUpdateLoading } = trpc.student.education.update.useMutation({
     onError() {
       setAlert({
         type: 'danger',
@@ -42,7 +44,7 @@ export function useEducation() {
 
   async function deleteEducation(id: number) {
     try {
-      await trpcClient.mutation('student.education.remove', id)
+      await trpcClient.student.education.remove.mutate(id)
 
       setAlert({
         type: 'success',
@@ -62,7 +64,7 @@ export function useEducation() {
   async function invalidate() {
     if (userData.studentId === null) return
 
-    const data = await trpcClient.query('student.education.get_all', userData.studentId)
+    const data = await trpcClient.student.education.get_all.query(userData.studentId)
 
     void setEducation(data)
   }

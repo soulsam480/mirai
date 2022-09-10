@@ -20,9 +20,8 @@ export const CurrentAccount: React.FC<Props> = ({ children }) => {
   const setUser = useSetAtom(userAtom)
   const { data, status } = useSession()
 
-  const { isLoading = true } = trpc.useQuery(['auth.account'], {
-    refetchOnWindowFocus: false,
-    enabled: status === 'authenticated' && Boolean(data),
+  const { isLoading = true } = trpc.auth.account.useQuery(undefined, {
+    enabled: status === 'authenticated' && data !== null,
     onSuccess(data) {
       data !== null && setUser(data)
     },

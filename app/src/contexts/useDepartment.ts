@@ -1,19 +1,19 @@
 import { useEffect, useMemo } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import { useRouter } from 'next/router'
-import { QueryOptions } from '../types'
+import { AnyObject } from '../types'
 import { loggedInAtom, useUser } from '../stores'
 import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 import { loaderAtom, useAlert } from '../components/lib'
 
-export function useDepartments(opts?: QueryOptions<'department.getAll'>) {
+export function useDepartments(opts?: AnyObject) {
   opts = opts ?? {}
 
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
-  const { data: departments = [], isLoading } = trpc.useQuery(['department.getAll', userData.instituteId as number], {
+  const { data: departments = [], isLoading } = trpc.department.getAll.useQuery(userData.instituteId as number, {
     ...opts,
     enabled: isLoggedIn,
     onError(e) {
@@ -29,7 +29,7 @@ export function useDepartments(opts?: QueryOptions<'department.getAll'>) {
   }
 }
 
-export function useDepartment(opts?: QueryOptions<'department.get'>) {
+export function useDepartment(opts?: AnyObject) {
   opts = opts ?? {}
 
   const router = useRouter()
@@ -46,14 +46,11 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
     skipPath: '/institute/department/create',
   })
 
-  const { data: department, isLoading } = trpc.useQuery(
-    [
-      'department.get',
-      {
-        instituteId: userDate.instituteId as number,
-        departmentId: +(router.query.departmentId as string),
-      },
-    ],
+  const { data: department, isLoading } = trpc.department.get.useQuery(
+    {
+      instituteId: userDate.instituteId as number,
+      departmentId: +(router.query.departmentId as string),
+    },
     {
       onError(e) {
         if (e.data?.code === 'NOT_FOUND') {
@@ -67,9 +64,9 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
     },
   )
 
-  const update = trpc.useMutation(['department.update'], {
+  const update = trpc.department.update.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['department.getAll'])
+      void utils.department.getAll.invalidate()
 
       setAlert({
         type: 'success',
@@ -80,9 +77,9 @@ export function useDepartment(opts?: QueryOptions<'department.get'>) {
     },
   })
 
-  const create = trpc.useMutation(['department.create'], {
+  const create = trpc.department.create.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['department.getAll'])
+      void utils.department.getAll.invalidate()
 
       setAlert({
         type: 'success',

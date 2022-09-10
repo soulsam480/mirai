@@ -1,16 +1,16 @@
 import { useAtomValue, useSetAtom } from 'jotai'
 import { loggedInAtom, studentAtom, useUser } from '../../stores'
-import { QueryOptions } from '../../types'
+import { AnyObject } from '../../types'
 import { trpc } from '../../utils'
 
-export function useStudent(opts?: QueryOptions<'student.get'>) {
+export function useStudent(opts: AnyObject = {}) {
   opts = opts ?? {}
 
   const isLoggedIn = useAtomValue(loggedInAtom)
   const userData = useUser()
   const setStudentVal = useSetAtom(studentAtom)
 
-  const { data: student = null, isLoading } = trpc.useQuery(['student.get', userData.studentId as number], {
+  const { data: student = null, isLoading } = trpc.student.get.useQuery(userData.studentId as number, {
     ...opts,
     onSuccess(data) {
       opts?.onSuccess !== undefined && opts.onSuccess(data)

@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { loaderAtom, useAlert } from '../components/lib'
 import { manageInstituteSchema } from '../schemas'
 import { loggedInAtom, useUser } from '../stores'
-import { QueryOptions } from '../types'
+import { AnyObject } from '../types'
 import { getUserHome, trpc, useStrictQueryCheck } from '../utils'
 
 export function useInstitutes() {
@@ -13,7 +13,7 @@ export function useInstitutes() {
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
 
-  const { data: institutes = [], isLoading } = trpc.useQuery(['institute.get_all'], {
+  const { data: institutes = [], isLoading } = trpc.institute.get_all.useQuery(undefined, {
     enabled: isLoggedIn,
     onError(e) {
       if (e.data?.code === 'UNAUTHORIZED') {
@@ -28,7 +28,7 @@ export function useInstitutes() {
   }
 }
 
-export function useInstitute(opts?: QueryOptions<'institute.get'>) {
+export function useInstitute(opts?: AnyObject) {
   opts = opts ?? {}
 
   const router = useRouter()
@@ -44,7 +44,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     skipPath: '/admin/institute/create',
   })
 
-  const { data: institute, isLoading } = trpc.useQuery(['institute.get', +(router.query.instituteId as string)], {
+  const { data: institute, isLoading } = trpc.institute.get.useQuery(+(router.query.instituteId as string), {
     onError(e) {
       if (e.data?.code === 'NOT_FOUND') {
         setAlert({ type: 'danger', message: 'Institute not found' })
@@ -56,7 +56,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     enabled: isLoggedIn && isQuery,
   })
 
-  const signUp = trpc.useMutation(['auth.sign_up'], {
+  const signUp = trpc.auth.sign_up.useMutation({
     onError: opts?.onError,
     onSuccess({ instituteId }) {
       if (instituteId === null) return
@@ -70,7 +70,7 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     },
   })
 
-  const createInstitute = trpc.useMutation(['account.create_institute'], {
+  const createInstitute = trpc.account.create_institute.useMutation({
     onError: opts?.onError,
   })
 
@@ -80,9 +80,9 @@ export function useInstitute(opts?: QueryOptions<'institute.get'>) {
     signUp.mutate({ role: 'INSTITUTE', email, instituteId, name: rest.name })
   }
 
-  const update = trpc.useMutation(['account.update_institute'], {
+  const update = trpc.account.update_institute.useMutation({
     onSuccess() {
-      void utils.invalidateQueries(['institute.get_all'])
+      void utils.institute.get_all.invalidate()
 
       setAlert({
         type: 'success',

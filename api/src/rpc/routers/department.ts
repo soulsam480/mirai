@@ -1,53 +1,43 @@
 import { TRPCError } from '@trpc/server'
-import { createRouter } from '../createRouter'
+import { trpc } from '../trpc'
 import { createDepartmentSchema } from '@mirai/app'
 import { z } from 'zod'
-import { isInstituteRole } from '../../lib'
+import { procedureWithInstitute } from '../procedures'
 
-export const departmentRouter = createRouter()
-  .middleware(async ({ ctx, next }) => {
-    if (ctx.session == null || !isInstituteRole(ctx.session.user.role).is) throw new TRPCError({ code: 'UNAUTHORIZED' })
-
-    return await next({
-      // might seem dumb, but it's done like this to keep TS happy
-      ctx: { ...ctx, user: ctx.session },
+export const departmentRouter = trpc.router({
+  create: procedureWithInstitute.input(createDepartmentSchema).mutation(async ({ ctx, input }) => {
+    const department = await ctx.prisma.department.create({
+      data: input,
     })
-  })
-  .mutation('create', {
-    input: createDepartmentSchema,
-    async resolve({ ctx, input }) {
-      const department = await ctx.prisma.department.create({
-        data: input,
-      })
 
-      return department
-    },
-  })
-  .mutation('update', {
-    input: createDepartmentSchema.extend({ id: z.number() }),
-    async resolve({ ctx, input }) {
+    return department
+  }),
+
+  update: procedureWithInstitute
+    .input(createDepartmentSchema.extend({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input
 
       await ctx.prisma.department.update({
         where: { id },
         data,
       })
-    },
-  })
-  .query('getAll', {
-    input: z.number(),
-    async resolve({ ctx, input }) {
-      const departments = await ctx.prisma.department.findMany({ where: { instituteId: input } })
-
-      return departments
-    },
-  })
-  .query('get', {
-    input: z.object({
-      instituteId: z.number(),
-      departmentId: z.number(),
     }),
-    async resolve({ ctx, input }) {
+
+  getAll: procedureWithInstitute.input(z.number()).query(async ({ ctx, input }) => {
+    const departments = await ctx.prisma.department.findMany({ where: { instituteId: input } })
+
+    return departments
+  }),
+
+  get: procedureWithInstitute
+    .input(
+      z.object({
+        instituteId: z.number(),
+        departmentId: z.number(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
       const department = await ctx.prisma.department.findFirst({
         where: { id: input.departmentId, instituteId: input.instituteId },
       })
@@ -60,5 +50,5 @@ export const departmentRouter = createRouter()
       }
 
       return department
-    },
-  })
+    }),
+})

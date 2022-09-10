@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useMemo } from 'react'
 import { TicketType } from '../schemas'
 import { loggedInAtom, useUser, ticketFiltersAtom } from '../stores'
-import { OverWrite, QueryOptions } from '../types'
+import { AnyObject, OverWrite } from '../types'
 import { getUserHome, useGlobalError, useQuery, trpc } from '../utils'
 
 interface Ticketmeta {
@@ -16,23 +16,20 @@ interface Ticketmeta {
 
 export type TicketWithMeta = OverWrite<Ticket, { meta: Ticketmeta }>
 
-export function useTickets(opts?: QueryOptions<'ticket.get_all'>) {
+export function useTickets(opts?: AnyObject) {
   opts = opts ?? {}
   const userData = useUser()
   const isLoggedIn = useAtomValue(loggedInAtom)
   const router = useRouter()
   const ticketFilters = useAtomValue(ticketFiltersAtom)
 
-  const { data: tickets = [], isLoading } = trpc.useQuery(
-    [
-      'ticket.get_all',
-      {
-        // TODO: fix bug
-        // when date filter value is not there don't refetch
-        instituteId: userData.instituteId as number,
-        ...ticketFilters,
-      },
-    ],
+  const { data: tickets = [], isLoading } = trpc.ticket.get_all.useQuery(
+    {
+      // TODO: fix bug
+      // when date filter value is not there don't refetch
+      instituteId: userData.instituteId as number,
+      ...ticketFilters,
+    },
     {
       ...opts,
       // TODO: check for role
@@ -48,7 +45,7 @@ export function useTickets(opts?: QueryOptions<'ticket.get_all'>) {
   return { tickets, isLoading }
 }
 
-export function useTicket(opts?: QueryOptions<'ticket.get'>) {
+export function useTicket(opts?: AnyObject) {
   opts = opts ?? {}
   const setAlert = useAlert()
   const setLoader = useSetAtom(loaderAtom)
@@ -56,7 +53,7 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
   const { isQuery, queryVal } = useQuery('ticketId')
   const setError = useGlobalError()
 
-  const { data: ticket, isLoading } = trpc.useQuery(['ticket.get', Number(queryVal)], {
+  const { data: ticket, isLoading } = trpc.ticket.get.useQuery(Number(queryVal), {
     onError(e) {
       setError(e)
     },
@@ -64,9 +61,9 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     enabled: isQuery,
   })
 
-  const create = trpc.useMutation(['ticket.create'], {
+  const create = trpc.ticket.create.useMutation({
     async onSuccess(data): Promise<Ticket> {
-      void utils.invalidateQueries(['ticket.get_all'])
+      void utils.ticket.get_all.invalidate()
 
       setAlert({
         type: 'success',
@@ -80,12 +77,12 @@ export function useTicket(opts?: QueryOptions<'ticket.get'>) {
     },
   })
 
-  const action = trpc.useMutation(['ticket.action'], {
+  const action = trpc.ticket.action.useMutation({
     async onSuccess(data): Promise<{
       success: boolean
       data: TicketResolveResponse[]
     }> {
-      void utils.invalidateQueries(['ticket.get_all'])
+      void utils.ticket.get_all.invalidate()
 
       setAlert({
         type: 'success',
