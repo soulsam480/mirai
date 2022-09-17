@@ -15,7 +15,12 @@ export async function createServer() {
 
   const server = fastify({
     logger: dev && {
-      prettyPrint: true,
+      transport: {
+        target: 'pino-pretty',
+        options: {
+          colorize: true,
+        },
+      },
     },
   })
 
@@ -54,9 +59,9 @@ export async function createServer() {
 
   const start = async () => {
     try {
-      await server.listen(port)
-
-      logger.info(`listening on http://localhost:${port}`)
+      await server.listen({
+        port,
+      })
     } catch (err) {
       logger.error(err)
       process.exit(1)
