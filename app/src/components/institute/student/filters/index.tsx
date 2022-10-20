@@ -7,6 +7,7 @@ import { DepartmentFilter, DepartmentFilterPreview } from './DepartmentFilter'
 import { CourseFilter, CourseFilterPreview } from './CourseFilter'
 import { NameFilter, NameFilterPreview } from './NameFilter'
 import { UniIdFilter, UniIdFilterPreview } from './UniIdFilter'
+import IconPhX from '~icons/ph/x'
 
 interface Props {}
 

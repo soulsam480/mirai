@@ -2,3 +2,6 @@
 **/out/*
 **/.next/*
 **/dist/*
+next.config.js
+prettier.config.cjs
+**/tailwind.config.js

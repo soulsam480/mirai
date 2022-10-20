@@ -2,8 +2,6 @@ module.exports = {
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [
     'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
-    'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'plugin:prettier/recommended',
     'standard-with-typescript',
     'prettier',
@@ -19,11 +17,8 @@ module.exports = {
     '@typescript-eslint/restrict-template-expressions': 0,
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-empty-interface': 'off',
-    'react/display-name': 0,
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     '@typescript-eslint/explicit-member-accessibility': 0,
@@ -43,12 +38,6 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
-    'react/jsx-no-undef': [
-      0,
-      {
-        allowGlobals: true,
-      },
-    ],
     'prettier/prettier': [
       'error',
       {
@@ -56,10 +45,5 @@ module.exports = {
       },
     ],
     'no-extra-boolean-cast': 'off',
-  },
-  settings: {
-    react: {
-      version: 'detect',
-    },
   },
 }

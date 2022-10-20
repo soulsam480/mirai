@@ -9,6 +9,7 @@ import { getUserHome, trpc } from '../utils'
 import { MForm, MIcon, MInput, useLoader } from '../components/lib'
 import { LoginSchema } from '../schemas'
 import { NavBar } from '../components/globals/NavBar'
+import IconPhWarningCircle from '~icons/ph/warning-circle'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req })

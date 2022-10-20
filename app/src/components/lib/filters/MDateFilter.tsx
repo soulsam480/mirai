@@ -2,6 +2,7 @@ import React from 'react'
 import { Option } from '../../../types'
 import { MIcon } from '../MIcon'
 import { MSelect } from '../MSelect'
+import IconPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 
 export interface DateFilterValue {
   type: 'lt' | 'gte'

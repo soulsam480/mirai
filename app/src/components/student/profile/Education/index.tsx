@@ -14,6 +14,7 @@ import { useEducation } from '../../../../contexts'
 import { createStudentEducationSchema } from '../../../../schemas'
 import { formatDate, getDiff } from '../../../../utils'
 import { MCheckbox, MDialog, MForm, MInput, MSelect } from '../../../lib'
+import IconPhPlus from '~icons/ph/plus'
 
 interface Props {}
 

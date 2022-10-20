@@ -5,6 +5,9 @@ import { Controller, useFormContext } from 'react-hook-form'
 import type { Option } from '../../types'
 import { isSafeVal, usePopper } from '../../utils'
 import { MIcon } from './MIcon'
+import IconPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+import IconPhCaretDown from '~icons/ph/caret-down'
+import IconPhWarningCircle from '~icons/ph/warning-circle'
 
 interface OptionRenderPropCtx {
   active: boolean

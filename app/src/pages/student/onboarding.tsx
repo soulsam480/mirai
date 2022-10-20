@@ -10,6 +10,7 @@ import { useTicket } from '../../contexts'
 import { studentOnboardingSchema } from '../../schemas'
 import { CATEGORY_TYPES, GENDER_TYPES } from '../../utils'
 import { NextPageWithLayout } from '../_app'
+import IconPhWarningCircle from '~icons/ph/warning-circle.jsx'
 
 export const getServerSideProps: GetServerSideProps<
   {

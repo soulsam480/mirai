@@ -8,6 +8,10 @@ import { semUpdateSchema } from '../../../../schemas'
 import { studentCourseAtom, studentScoreAtom, StudentSemScore } from '../../../../stores'
 import { formatDate, interpolate } from '../../../../utils'
 import { MDialog, MFeatureCard, MForm, MIcon, MInput } from '../../../lib'
+import IconPhTable from '~icons/ph/table'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhLink from '~icons/ph/link'
+import IconPhCircleWavyWarning from '~icons/ph/circle-wavy-warning'
 
 interface Props {
   onSemUpdate: (semId: number, data: z.infer<typeof semUpdateSchema>) => void
@@ -176,7 +180,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                         >
                           {key === '_update' ? (
                             <button
-                              className="btn btn-ghost btn-circle btn-sm"
+                              className="btn btn-circle btn-ghost btn-sm"
                               onClick={() => {
                                 setSelectedSem(semId)
                                 reset(studentScore?.scores?.[String(semId)] ?? {})

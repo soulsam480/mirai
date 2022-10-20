@@ -6,6 +6,9 @@ import { Option } from '../../types'
 import { isSafeVal } from '../../utils'
 import { MIcon } from './MIcon'
 import { useSelectPopperConfig } from './MSelect'
+import IconPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
+import IconPhCaretDown from '~icons/ph/caret-down'
+import IconPhWarningCircle from '~icons/ph/warning-circle'
 
 interface RenderPropCtx {
   active: boolean

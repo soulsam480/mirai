@@ -14,6 +14,7 @@ import { OverWrite, StudentProfileIgnore } from '../../../../types'
 import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
 import { MCheckbox, MDialog, MForm, MInput } from '../../../lib'
 import { ProjectCard } from './ProjectCard'
+import IconPhPlus from '~icons/ph/plus'
 
 interface Props {}
 

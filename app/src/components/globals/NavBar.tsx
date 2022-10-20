@@ -10,6 +10,8 @@ import { loggedInAtom, sidebarAtom, useUser } from '../../stores'
 // import { trpc } from 'utils/trpc'
 import { SettingsModal } from './SettingsModal'
 import { MDialog, MIcon } from '../lib'
+import IconPhList from '~icons/ph/list'
+import IconPhX from '~icons/ph/x'
 
 interface Props {}
 

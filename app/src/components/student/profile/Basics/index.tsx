@@ -78,15 +78,15 @@ export const Basics: React.FC<Props> = () => {
     const validator = z.string().min(1, 'Field is required')
     let score = 0
 
-    const { currentAddress = {}, permanentAddress = {} } = val
+    const { currentAddress, permanentAddress } = val
 
     ADDRES_FIELDS.forEach((field) => {
-      if (!validator.safeParse(currentAddress[field]).success) {
+      if (!validator.safeParse(currentAddress?.[field]).success) {
         setError(`currentAddress.${field}`, { message: `${field} is required` })
         score++
       }
 
-      if (!validator.safeParse(permanentAddress[field]).success) {
+      if (!validator.safeParse(permanentAddress?.[field]).success) {
         setError(`permanentAddress.${field}`, { message: `${field} is required` })
 
         score++

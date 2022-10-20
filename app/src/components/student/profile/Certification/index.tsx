@@ -13,6 +13,7 @@ import { OverWrite, StudentProfileIgnore } from '../../../../types'
 import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
 import { MDialog, MForm, MInput, MSelect } from '../../../lib'
 import { CertificationCard } from './CertificationCard'
+import IconPhPlus from '~icons/ph/plus'
 
 interface Props {}
 

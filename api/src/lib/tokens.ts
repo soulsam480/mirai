@@ -1,6 +1,6 @@
 import * as jsonwebtoken from 'jsonwebtoken'
 import type { SessionUser } from '../rpc/context'
-import { OnboardingPayload } from '../types'
+import type { OnboardingPayload } from '../types'
 import { getEnv } from './helpers'
 
 export const onBoardingTokens = {

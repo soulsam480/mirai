@@ -10,10 +10,21 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "types": ["unplugin-icons/types/react"],
     "useUnknownInCatchVariables": false,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
   },
-  "include": [".eslintrc.js", "prisma/seed.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/src/**/*.ts",
+    "**/src/**/*.tsx",
+    "**/src/**/*.js",
+    "**/src/**/*.d.ts",
+    "./app/tailwind.config.js",
+    "prettier.config.cjs",
+    ".eslintrc.js",
+    "next-auth.d.ts"
+  ],
   "exclude": ["**/node_modules", "**/.next", "out", "**/dist"]
 }

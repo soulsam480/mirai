@@ -1,5 +1,4 @@
 import { Role } from '@prisma/client'
-import mongoose from 'mongoose'
 import * as pino from 'pino'
 
 export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' | 'ADMIN') {
@@ -8,10 +7,6 @@ export function isInstituteRole(role: 'STUDENT' | 'INSTITUTE' | 'INSTITUTE_MOD' 
     isOwner: role === 'INSTITUTE',
     is: ['INSTITUTE', 'INSTITUTE_MOD'].includes(role),
   }
-}
-
-export function getUserHome(role: Role) {
-  return role === 'ADMIN' ? '/admin' : isInstituteRole(role).is ? '/institute' : '/student'
 }
 
 export function isRole(role: Role) {
@@ -38,7 +33,3 @@ const transport = pino.transport({
 })
 
 export const logger = pino.pino(transport)
-
-export function getObjectId(val: string) {
-  return new mongoose.Types.ObjectId(val)
-}

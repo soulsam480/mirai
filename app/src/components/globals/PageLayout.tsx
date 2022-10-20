@@ -4,6 +4,7 @@
 
 import { MIcon, MLink } from '../../components/lib'
 import React, { HTMLProps } from 'react'
+import IconPhPlus from '~icons/ph/plus'
 
 interface PageWrapperProps extends HTMLProps<HTMLDivElement> {}
 

@@ -2,6 +2,9 @@ import clsx from 'clsx'
 import { MIcon } from '../../components/lib'
 import React from 'react'
 import { eventBus, useTheme } from '../../utils'
+import IconPhX from '~icons/ph/x'
+import IconPhSun from '~icons/ph/sun'
+import IconPhMoonStars from '~icons/ph/moon-stars'
 
 interface Props {
   onClose: (val: boolean) => void

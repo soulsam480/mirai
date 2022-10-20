@@ -8,6 +8,7 @@ import { useMemo } from 'react'
 import type { Course } from '@prisma/client'
 import { useRouter } from 'next/router'
 import { Column, MDialog, MLink, MTable } from '../../../components/lib'
+import IconPhPencilSimple from '~icons/ph/pencil-simple.jsx'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 

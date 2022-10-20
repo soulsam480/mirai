@@ -3,6 +3,12 @@ import React, { useState } from 'react'
 import { useExperience } from '../../../../contexts'
 import { formatDate } from '../../../../utils'
 import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
+import IconPhBuildings from '~icons/ph/buildings'
+import IconPhAt from '~icons/ph/at'
+import IconPhCalendar from '~icons/ph/calendar'
+import IconPhMoney from '~icons/ph/money'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhTrash from '~icons/ph/trash'
 
 interface Props {
   experience: StudentWorkExperience

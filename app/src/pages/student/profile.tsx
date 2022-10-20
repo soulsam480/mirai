@@ -19,6 +19,7 @@ import {
 } from '../../components/student'
 import { MIcon } from '../../components/lib'
 import { AppLayout } from '../../components/globals/AppLayout'
+import IconPhUser from '~icons/ph/user.jsx'
 
 export const getServerSideProps = getServerSideAuthGuard(['STUDENT'])
 
