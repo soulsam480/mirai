@@ -28,7 +28,7 @@
   "dependencies": {
     "@mirai/api": "workspace:*",
     "@mirai/app": "workspace:*",
-    "@prisma/client": "^4.4.0",
+    "@prisma/client": "^4.5.0",
     "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.5",
