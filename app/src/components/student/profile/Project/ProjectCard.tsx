@@ -3,6 +3,11 @@ import React, { useState } from 'react'
 import { useProject } from '../../../../contexts'
 import { formatDate } from '../../../../utils'
 import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
+import IconPhRocket from '~icons/ph/rocket'
+import IconPhBracketsAngle from '~icons/ph/brackets-angle'
+import IconPhCalendar from '~icons/ph/calendar'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhTrash from '~icons/ph/trash'
 
 interface Props {
   project: StudentProject

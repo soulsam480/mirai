@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 const { withSuperjson } = require('next-superjson')
 const withPlugins = require('next-compose-plugins')
 const withTM = require('next-transpile-modules')(['@mirai/api'], { debug: true })
@@ -18,27 +19,10 @@ const nextConfig = {
     config.externals = [...config.externals, 'bcrypt']
 
     config.plugins.push(
-      require('unplugin-auto-import/webpack')({
-        resolvers: [
-          require('unplugin-icons/resolver')({
-            prefix: 'Icon',
-            extension: 'jsx',
-          }),
-        ],
-        eslintrc: {
-          enabled: true,
-          filepath: '../.eslintrc-auto-import.json',
-        },
-      }),
-    )
-
-    config.plugins.push(
       require('unplugin-icons/webpack')({
         compiler: 'jsx',
         jsx: 'react',
-        // autoInstall: true,
         prefix: 'icon',
-        extension: 'jsx',
       }),
     )
 

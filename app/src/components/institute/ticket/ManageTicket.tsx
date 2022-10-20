@@ -6,6 +6,7 @@ import { activeTicketAtom, selectedTicketsAtom, selectedTicketsSnapshotAtom } fr
 import { formatDate, TICKET_DISPLAY_FIELDS, titleCase, useStudentAcademicMeta } from '../../../utils'
 import { MBadge, MInput, MSelect } from '../../lib'
 import { STATUS_OPTIONS } from '../../../pages/institute/tickets'
+import IconPhX from '~icons/ph/x'
 
 interface Props {
   activeTicket: Ticket

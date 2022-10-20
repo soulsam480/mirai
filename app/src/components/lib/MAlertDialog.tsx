@@ -1,6 +1,8 @@
 import React from 'react'
 import { MDialog } from './MDialog'
 import { MIcon } from './MIcon'
+import IconPhWarningCircle from '~icons/ph/warning-circle'
+import IconPhCheckCircle from '~icons/ph/check-circle'
 
 interface Props {
   label: React.ReactNode

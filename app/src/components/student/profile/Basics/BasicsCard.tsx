@@ -3,6 +3,9 @@ import pick from 'lodash/pick'
 import React from 'react'
 import type { StudentAddress, StudentBasicsOverwrite } from '../../../../stores'
 import { formatDate } from '../../../../utils'
+import IconPhIdentificationCard from '~icons/ph/identification-card'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhEnvelope from '~icons/ph/envelope'
 
 interface Props {
   studentBasics: StudentBasicsOverwrite | null
@@ -46,7 +49,7 @@ export const BasicsCard: React.FC<Props> = ({ studentBasics, onTrigger }) => {
 
         <div>Date of birth </div>
         <div className="col-span-3">
-          {(studentBasics?.dob !== undefined && formatDate(studentBasics.dob, 'DD MMM YYYY')) || '-'}
+          {(studentBasics?.dob !== undefined && formatDate(studentBasics.dob, 'DD MMM YYYY').length > 0) || '-'}
         </div>
       </div>
 

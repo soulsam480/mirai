@@ -3,6 +3,13 @@ import { useAtomValue } from 'jotai'
 import React from 'react'
 import { activeProfileAtom, SidebarTabs } from '../../stores'
 import { MIcon } from '../lib'
+import IconPhIdentificationCard from '~icons/ph/identification-card'
+import IconPhBooks from '~icons/ph/books'
+import IconPhBookOpen from '~icons/ph/book-open'
+import IconPhBuildings from '~icons/ph/buildings'
+import IconPhShieldCheckered from '~icons/ph/shield-checkered'
+import IconPhRocket from '~icons/ph/rocket'
+import IconPhGraduationCap from '~icons/ph/graduation-cap'
 
 interface Props {
   className?: string

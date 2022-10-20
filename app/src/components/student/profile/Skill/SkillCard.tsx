@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { StudentSkill } from '../../../../stores'
 import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
+import IconPhShieldCheckered from '~icons/ph/shield-checkered'
+import IconPhRuler from '~icons/ph/ruler'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhTrash from '~icons/ph/trash'
 
 interface Props {
   skill: StudentSkill

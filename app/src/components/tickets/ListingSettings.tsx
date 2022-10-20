@@ -4,6 +4,8 @@ import React from 'react'
 import { ticketFiltersAtom } from '../../stores'
 import { Option } from '../../types'
 import { MIcon, MSelect } from '../lib'
+import IconPhSortAscending from '~icons/ph/sort-ascending'
+import IconPhSortDescending from '~icons/ph/sort-descending'
 
 interface Props {}
 

@@ -9,6 +9,16 @@ import { defineSidebar, eventBus } from '../../utils'
 import { sidebarAtom, useUser } from '../../stores'
 import { toggleTour } from '../../api'
 import { MIcon, MLink } from '../lib'
+import IconPhBuildings from '~icons/ph/buildings'
+import IconPhGraduationCap from '~icons/ph/graduation-cap'
+import IconPhCirclesThree from '~icons/ph/circles-three'
+import IconPhBooks from '~icons/ph/books'
+import IconPhUsers from '~icons/ph/users'
+import IconPhStudent from '~icons/ph/student'
+import IconPhTicket from '~icons/ph/ticket'
+import IconPhUser from '~icons/ph/user'
+import IconPhFiles from '~icons/ph/files'
+import IconPhHandshake from '~icons/ph/handshake'
 
 const PlatformTour = dynamic(async () => await import('../../components/globals/PlatformTour'), { ssr: false })
 

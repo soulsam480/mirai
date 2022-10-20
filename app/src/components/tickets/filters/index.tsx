@@ -6,6 +6,7 @@ import { useResetAtom } from 'jotai/utils'
 import { CreatedAtFilter, CreatedAtFilterPreview } from './CreatedAtFilter'
 import { ticketFiltersAtom } from '../../../stores'
 import { MIcon } from '../../lib'
+import IconPhXCircle from '~icons/ph/x-circle'
 
 interface Props {}
 

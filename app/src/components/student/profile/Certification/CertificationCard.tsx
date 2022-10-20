@@ -3,6 +3,12 @@ import React, { useState } from 'react'
 import { useCertification } from '../../../../contexts'
 import { formatDate } from '../../../../utils'
 import { MAlertDialog, MFeatureCard, MIcon } from '../../../lib'
+import IconPhGraduationCap from '~icons/ph/graduation-cap'
+import IconPhBookOpen from '~icons/ph/book-open'
+import IconPhBuildings from '~icons/ph/buildings'
+import IconPhCalendar from '~icons/ph/calendar'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
+import IconPhTrash from '~icons/ph/trash'
 
 interface Props {
   certification: StudentCertification

@@ -9,6 +9,7 @@ import { createSkillSchema } from '../../../../schemas'
 import { StudentSkill, studentSkillsAtom, useUser } from '../../../../stores'
 import { MDialog, MForm, MInput, MSelect } from '../../../lib'
 import { SkillCard } from './SkillCard'
+import IconPhPlus from '~icons/ph/plus'
 
 interface Props {}
 

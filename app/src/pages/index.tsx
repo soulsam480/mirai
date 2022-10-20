@@ -8,6 +8,8 @@ import { BgSvg } from '../components/landing/BgSvg'
 import { MIcon } from '../components/lib'
 import { getUserHome, useTheme } from '../utils'
 import { NextPageWithLayout } from './_app'
+import IconPhMegaphone from '~icons/ph/megaphone'
+import IconPhHouse from '~icons/ph/house'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const user = await getSession({ req: ctx.req })
