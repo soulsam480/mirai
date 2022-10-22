@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { loggedInAtom, studentAtom, useUser } from '../../stores'
+import { loggedInAtom, studentAtom, useStudentUnverifiedSections, useUser } from '../../stores'
 import { QueryOptions } from '../../types'
 import { trpc } from '../../utils'
 
@@ -9,6 +9,7 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
   const isLoggedIn = useAtomValue(loggedInAtom)
   const userData = useUser()
   const setStudentVal = useSetAtom(studentAtom)
+  const setUnverifiedSections = useStudentUnverifiedSections('all')
 
   const { data: student = null, isLoading } = trpc.useQuery(['student.get', userData.studentId as number], {
     ...opts,
@@ -44,6 +45,8 @@ export function useStudent(opts?: QueryOptions<'student.get'>) {
         institute,
         ...rest
       } = data
+
+      setUnverifiedSections(data)
 
       void setStudentVal({
         basics: basics as unknown as any,

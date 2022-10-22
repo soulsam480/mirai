@@ -170,3 +170,5 @@ export const TICKET_DISPLAY_FIELDS: Option[] = [
   { label: 'Gender', value: 'gender' },
   { label: 'Category', value: 'category' },
 ]
+
+export const STUDENT_VERIFICATION_SECTIONS = ['score', 'education', 'experience', 'projects', 'certifications']

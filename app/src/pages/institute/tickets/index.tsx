@@ -20,8 +20,8 @@ import {
 import { Option } from '../../../types'
 import { formatDate, interpolate, titleCase, trpcClient } from '../../../utils'
 import { NextPageWithLayout } from '../../_app'
-import IconPhListChecks from '~icons/ph/list-checks.jsx'
-import IconPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise.jsx'
+import IconPhListChecks from '~icons/ph/list-checks'
+import IconPhArrowCounterClockwise from '~icons/ph/arrow-counter-clockwise'
 
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
 
@@ -283,7 +283,7 @@ const Tickets: NextPageWithLayout = () => {
               <div>{interpolate('{{count}} ticket selected', { count: countSelected })}</div>
 
               <button
-                className="btn btn-sm flex items-center gap-2"
+                className="btn-sm btn flex items-center gap-2"
                 onClick={() => {
                   setActiveModal(true)
                 }}
@@ -295,7 +295,7 @@ const Tickets: NextPageWithLayout = () => {
               </button>
 
               <button
-                className="btn btn-sm flex items-center gap-2"
+                className="btn-sm btn flex items-center gap-2"
                 onClick={() => {
                   void setSelectedTicketsStore(() => [])
                 }}
@@ -321,7 +321,7 @@ const Tickets: NextPageWithLayout = () => {
                 palceholder="Select status to continue"
               />
 
-              <button className="btn btn-sm" disabled={allStatus === null} onClick={() => setAlertModal(true)}>
+              <button className="btn-sm btn" disabled={allStatus === null} onClick={() => setAlertModal(true)}>
                 Submit
               </button>
             </>

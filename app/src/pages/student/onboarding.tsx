@@ -10,7 +10,7 @@ import { useTicket } from '../../contexts'
 import { studentOnboardingSchema } from '../../schemas'
 import { CATEGORY_TYPES, GENDER_TYPES } from '../../utils'
 import { NextPageWithLayout } from '../_app'
-import IconPhWarningCircle from '~icons/ph/warning-circle.jsx'
+import IconPhWarningCircle from '~icons/ph/warning-circle'
 
 export const getServerSideProps: GetServerSideProps<
   {
@@ -182,7 +182,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">
-              <button type="submit" className="btn btn-sm mt-5">
+              <button type="submit" className="btn-sm btn mt-5">
                 Submit
               </button>
             </div>

@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint **/{src,prisma}/**/*.{js,ts,tsx}",
     "lint-fix": "pnpm lint --fix",
-    "fmt": "prettier --config ./prettier.config.cjs --plugin=prettier-plugin-tailwindcss --write **/{src,prisma}/**/*.{js,ts,tsx}",
+    "fmt": "prettier --config ./prettier.config.cjs --loglevel silent --plugin=prettier-plugin-tailwindcss **/{src,prisma}/**/*.{js,ts,tsx}",
+    "fmt-fix": "pnpm fmt --write",
     "dev:app": "pnpm run --filter @mirai/app dx",
     "dev:api": "pnpm run --filter @mirai/api dx",
     "dev": "run-p dev:*",
@@ -17,7 +18,8 @@
     "start": "run-p start:*",
     "prepare": "husky install",
     "studio": "pnpm run --filter @mirai/api studio",
-    "type-check": "tsc --pretty --noEmit --incremental --tsBuildInfoFile \"temp/.tsBuildInfo\" -p tsconfig.check.json"
+    "type-check": "tsc --pretty --noEmit --incremental --tsBuildInfoFile \"temp/.tsBuildInfo\" -p tsconfig.check.json",
+    "test:lint": "run-s -c fmt lint type-check"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [

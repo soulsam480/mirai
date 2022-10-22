@@ -15,11 +15,12 @@ import {
   ProfileSidebar,
   Projects,
   Skills,
+  VerifyDataBanner,
   WorkExperience,
 } from '../../components/student'
 import { MIcon } from '../../components/lib'
 import { AppLayout } from '../../components/globals/AppLayout'
-import IconPhUser from '~icons/ph/user.jsx'
+import IconPhUser from '~icons/ph/user'
 
 export const getServerSideProps = getServerSideAuthGuard(['STUDENT'])
 
@@ -94,6 +95,8 @@ const StudentProfile: NextPageWithLayout = () => {
   return (
     <div className="flex items-start gap-2">
       <div className="mb-[100px] flex flex-grow flex-col gap-2">
+        <VerifyDataBanner />
+
         <ProfileSection id="basics">
           <Basics />
         </ProfileSection>
@@ -123,14 +126,18 @@ const StudentProfile: NextPageWithLayout = () => {
         </ProfileSection>
       </div>
 
-      <div className="hidden max-h-screen w-60 overflow-y-auto rounded-sm bg-base-200 p-1 sm:sticky sm:top-0 sm:block sm:shadow-md">
-        <ProfileSidebar onClick={closeDrawer} />
+      <div className="hidden max-h-screen w-60 overflow-y-auto sm:sticky sm:top-0 sm:block">
+        <div className="flex flex-col gap-4">
+          <div className=" rounded-sm bg-base-200 p-1 sm:shadow-md">
+            <ProfileSidebar onClick={closeDrawer} />
+          </div>
+        </div>
       </div>
 
       {/* bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 flex h-12 w-full justify-center border-t border-base-300 bg-base-200 transition-all duration-300 ease-in-out sm:hidden">
-        <div className="dropdown dropdown-top w-full">
-          <label tabIndex={0} className="btn btn-ghost btn-block flex gap-2 rounded-none">
+        <div className="dropdown-top dropdown w-full">
+          <label tabIndex={0} className="btn-ghost btn-block btn flex gap-2 rounded-none">
             <MIcon className="text-lg">
               <IconPhUser />
             </MIcon>

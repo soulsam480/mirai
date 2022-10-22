@@ -1,12 +1,13 @@
 import { useAlert } from '../../components/lib'
 import { useSetAtom } from 'jotai'
-import { useUser, studentScoreAtom } from '../../stores'
+import { useUser, studentScoreAtom, useStudentUnverifiedSections } from '../../stores'
 import { trpc, trpcClient } from '../../utils'
 
 export function useScore() {
   const setAlert = useAlert()
   const userData = useUser()
   const setScore = useSetAtom(studentScoreAtom)
+  const setUnverifiedSections = useStudentUnverifiedSections('score')
 
   const { mutate: updateScoreCard, isLoading } = trpc.useMutation(['student.score.update_score_card'], {
     onError() {
@@ -32,6 +33,7 @@ export function useScore() {
 
     const data = await trpcClient.query('student.score.get', userData.studentId)
 
+    setUnverifiedSections(data)
     void setScore(data as any)
   }
 

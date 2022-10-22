@@ -11,11 +11,13 @@ import type {
   Department,
   Institute,
 } from '@prisma/client'
-import { atom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { studentsQuerySchema } from '../schemas'
 import type { OverWrite } from '../types'
 import { z } from 'zod'
+import { STUDENT_VERIFICATION_SECTIONS } from '../utils'
+import { useCallback } from 'react'
 
 export interface StudentSemScore {
   ongoingBacklogs?: number
@@ -42,6 +44,8 @@ export interface StudentValueType {
   course: StduentCourseComposed | null
 }
 
+export type StudentValueUpdateType = OverWrite<StudentValueType, { skills: string | StudentSkill[] }>
+
 export type StudentSkillScore = 'Beginner' | 'Intermediate' | 'Expert'
 
 export interface StudentSkill {
@@ -67,6 +71,18 @@ export interface StduentCourseComposed {
 
 export interface StudentBasicsOverwrite
   extends OverWrite<StudentBasics, { permanentAddress: StudentAddress; currentAddress: StudentAddress }> {}
+
+export type StudentSectionsThatRequireVerification =
+  | 'score'
+  | 'education'
+  | 'experience'
+  | 'projects'
+  | 'certifications'
+
+export interface StudentUnverifiedSection {
+  name: StudentSectionsThatRequireVerification
+  entries: number[] | null
+}
 
 export const studentBasicsAtom = atom<StudentBasicsOverwrite | null>(null)
 studentBasicsAtom.debugLabel = 'studentBasicsAtom'
@@ -95,7 +111,7 @@ studentBaseAtom.debugLabel = 'studentBaseAtom'
 export const studentCourseAtom = atom<StduentCourseComposed | null>(null)
 studentCourseAtom.debugLabel = 'studentCourseAtom'
 
-export const studentAtom = atom<StudentValueType, OverWrite<StudentValueType, { skills: string | StudentSkill[] }>>(
+export const studentAtom = atom<StudentValueType, StudentValueUpdateType>(
   (get) => {
     return {
       basics: get(studentBasicsAtom),
@@ -129,3 +145,70 @@ export type StudentQueryType = Omit<z.infer<typeof studentsQuerySchema>, 'instit
 
 export const studentFiltersAtom = atomWithReset<StudentQueryType>({ name: '', uniId: '' })
 studentFiltersAtom.debugLabel = 'studentFiltersAtom'
+
+export const studentUnverifiedSectionAtom = atom<StudentUnverifiedSection[]>([])
+studentUnverifiedSectionAtom.debugLabel = 'studentUnverifiedSectionAtom'
+
+function getSectionUnverifiedData(
+  section: StudentUnverifiedSection['name'],
+  data: any,
+): StudentUnverifiedSection | null {
+  if (Array.isArray(data)) {
+    const unverifiedEntries = data.filter(({ verified }) => verified === false)
+
+    if (unverifiedEntries.length > 0) {
+      return {
+        name: section,
+        entries: unverifiedEntries.map(({ id }) => id),
+      }
+    }
+
+    return null
+  }
+
+  if (data?.verified === false) {
+    return { name: section, entries: null }
+  }
+
+  return null
+}
+
+export function useStudentUnverifiedSections(section: StudentUnverifiedSection['name'] | 'all') {
+  const [unverifiedSections, setUnverifiedSections] = useAtom(studentUnverifiedSectionAtom)
+
+  const setSections = useCallback(
+    (changedUnverifiedData: any) => {
+      if (section === 'all') {
+        const changedUnverifiedSections = STUDENT_VERIFICATION_SECTIONS.reduce<StudentUnverifiedSection[]>(
+          (acc, section) => {
+            const sectionData = getSectionUnverifiedData(
+              section as StudentSectionsThatRequireVerification,
+              changedUnverifiedData[section],
+            )
+
+            if (sectionData === null) return acc
+
+            acc.push(sectionData)
+
+            return acc
+          },
+          [],
+        )
+
+        setUnverifiedSections(changedUnverifiedSections)
+      } else {
+        const changedUnverifiedSection = getSectionUnverifiedData(section, changedUnverifiedData)
+
+        if (changedUnverifiedSection !== null) {
+          setUnverifiedSections([
+            ...unverifiedSections.filter(({ name }) => name !== section),
+            changedUnverifiedSection,
+          ])
+        }
+      }
+    },
+    [section, setUnverifiedSections, unverifiedSections],
+  )
+
+  return setSections
+}

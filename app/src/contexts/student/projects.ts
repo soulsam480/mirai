@@ -1,6 +1,6 @@
 import { useAlert } from '../../components/lib/store'
 import { useSetAtom } from 'jotai'
-import { studentProjectsAtom, useUser } from '../../stores'
+import { studentProjectsAtom, useUser, useStudentUnverifiedSections } from '../../stores'
 import { TRPCErrorType } from '../../types'
 import { trpc, trpcClient } from '../../utils'
 
@@ -8,6 +8,7 @@ export function useProject() {
   const setAlert = useAlert()
   const userData = useUser()
   const setProjects = useSetAtom(studentProjectsAtom)
+  const setUnverifiedSections = useStudentUnverifiedSections('projects')
 
   const { mutateAsync: create, isLoading: isCreateLoading } = trpc.useMutation(['student.project.create'], {
     onError() {
@@ -68,6 +69,7 @@ export function useProject() {
 
     const data = await trpcClient.query('student.project.get_all', userData.studentId)
 
+    setUnverifiedSections(data)
     void setProjects(data)
   }
 

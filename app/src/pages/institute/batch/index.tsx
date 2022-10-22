@@ -8,7 +8,7 @@ import { Column, MDialog, MLink, MTable } from '../../../components/lib'
 import { useBatches } from '../../../contexts'
 import { getServerSideAuthGuard } from '../../../server/lib/auth'
 import { NextPageWithLayout } from '../../_app'
-import IconPhPencilSimple from '~icons/ph/pencil-simple.jsx'
+import IconPhPencilSimple from '~icons/ph/pencil-simple'
 
 // TODO: add support for admin view
 export const getServerSideProps = getServerSideAuthGuard(['INSTITUTE', 'INSTITUTE_MOD'])
