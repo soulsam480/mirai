@@ -1,16 +1,10 @@
 import { createTicketSchema, studentOnboardingSchema } from '@mirai/app'
 import type { TicketStatus } from '@prisma/client'
-import { Queue, Worker } from 'bullmq'
 import { z } from 'zod'
 import miraiClient from '../db'
-import { createStudent, getEnv } from '../lib'
+import { createStudent } from '../lib'
 import { OverWrite, TicketJob } from '../types'
-
-export const ticketQueue = new Queue<TicketJob>('tickets', {
-  connection: {
-    port: parseInt(getEnv('REDIS_PORT') as string),
-  },
-})
+import { addJob, boss, JobNames } from './boss'
 
 type StudentTicketShape = OverWrite<
   z.infer<typeof createTicketSchema>['meta'],
@@ -30,74 +24,84 @@ function isDup(current: TicketStatus, incoming: TicketStatus) {
   return false
 }
 
-const _worker = new Worker<TicketJob>(
-  'tickets',
-  async (job) => {
-    const ticket = await miraiClient.ticket.findFirst({
-      where: { id: job.data.id },
-      include: { institute: { select: { name: true } } },
+async function addBatchJobIfLast(job: TicketJob, instituteId: number) {
+  if (!job.lastInBatch) return
+
+  await addJob('TICKET_BATCH', {
+    instituteId,
+    size: job.batchSize,
+  })
+}
+
+void boss.work<TicketJob, any>('TICKET' as JobNames, async (job) => {
+  const ticket = await miraiClient.ticket.findFirst({
+    where: { id: job.data.id },
+    include: { institute: { select: { name: true } } },
+  })
+
+  if (ticket === null) {
+    return {
+      success: false,
+      message: "Ticket doesn't exist",
+    }
+  }
+
+  const meta = ticket.meta as StudentTicketShape
+
+  // here we'll probably handle different tickets with early return if blocks
+  if (meta.type !== 'STUDENT_ONBOARDING') {
+    await addBatchJobIfLast(job.data, ticket.instituteId)
+
+    return {
+      success: false,
+      message: 'non-student ticket',
+    }
+  }
+
+  const { id: ticketId, status: incomingStatus, notes } = job.data
+
+  // second level check. When same status, avoid processing again
+  if (isDup(ticket.status, incomingStatus)) {
+    await addBatchJobIfLast(job.data, ticket.instituteId)
+
+    return {
+      success: true,
+      message: 'Duplicate ticket review',
+    }
+  }
+
+  if (incomingStatus !== 'RESOLVED') {
+    await miraiClient.ticket.update({
+      where: { id: ticketId },
+      data: {
+        status: incomingStatus,
+        notes,
+        closedAt: incomingStatus === 'CLOSED' ? new Date().toISOString() : null,
+        closedBy: incomingStatus === 'CLOSED' ? ticket.institute.name ?? 'Institute admin' : null,
+      },
     })
 
-    if (ticket === null)
-      return {
-        success: false,
-        message: "Ticket doesn't exist",
-      }
+    await addBatchJobIfLast(job.data, ticket.instituteId)
 
-    const meta = ticket.meta as StudentTicketShape
-
-    // here we'll probably handle different tickets with early return if blocks
-    if (meta.type !== 'STUDENT_ONBOARDING')
-      return {
-        success: false,
-        message: 'non-student ticket',
-      }
-
-    const { id: ticketId, status: incomingStatus, notes } = job.data
-
-    // second level check. When same status, avoid processing again
-    if (isDup(ticket.status, incomingStatus)) {
-      return {
-        success: true,
-        message: 'Duplicate ticket review',
-      }
+    return {
+      success: true,
+      message: `Ticket handled with status ${incomingStatus}`,
     }
+  }
 
-    if (incomingStatus !== 'RESOLVED') {
-      await miraiClient.ticket.update({
-        where: { id: ticketId },
-        data: {
-          status: incomingStatus,
-          notes,
-          closedAt: incomingStatus === 'CLOSED' ? new Date().toISOString() : null,
-          closedBy: incomingStatus === 'CLOSED' ? ticket.institute.name ?? 'Institute admin' : null,
-        },
-      })
+  try {
+    const createResult = await createStudent({ ...meta.data, instituteId: ticket.instituteId })
 
-      return {
-        success: true,
-        message: `Ticket handled with status ${incomingStatus}`,
-      }
+    // resolve the ticket
+    await miraiClient.ticket.update({ where: { id: ticketId }, data: { status: incomingStatus, notes } })
+
+    await addBatchJobIfLast(job.data, ticket.instituteId)
+
+    return createResult
+  } catch (error) {
+    return {
+      success: false,
+      message: error.toString(),
     }
-
-    try {
-      const createResult = await createStudent({ ...meta.data, instituteId: ticket.instituteId })
-
-      // resolve the ticket
-      await miraiClient.ticket.update({ where: { id: ticketId }, data: { status: incomingStatus, notes } })
-
-      return createResult
-    } catch (error) {
-      return {
-        success: false,
-        message: error.toString(),
-      }
-    }
-  },
-  {
-    limiter: { max: 1000, duration: 5000 },
-    connection: {
-      port: parseInt(getEnv('REDIS_PORT') as string),
-    },
-  },
-)
+  }
+})

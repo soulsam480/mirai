@@ -20,7 +20,6 @@ export const NavBar: React.FC<Props> = () => {
   const isLoggedIn = useAtomValue(loggedInAtom)
   const [settingsModal, setSettingsModal] = useState(false)
   const [sidebar, setSidebar] = useAtom(sidebarAtom)
-  const [_ts, setTs] = useState<number | undefined>()
 
   // const { data } = trpc.useQuery(['notification.get_all', { ts }])
 
@@ -29,8 +28,9 @@ export const NavBar: React.FC<Props> = () => {
   useEffect(() => {
     if (ws.conn === null) return
 
-    const unsub = ws.conn?.subscribe<NotificationPayload>('notification', (d) => {
-      setTs(d.ts ?? undefined)
+    const unsub = ws.conn.subscribe<NotificationPayload>('notification', (d) => {
+      // eslint-disable-next-line no-console
+      console.log(d)
 
       /**
        * Handle notifications here
@@ -58,14 +58,14 @@ export const NavBar: React.FC<Props> = () => {
         <div className="flex flex-none items-center gap-2">
           {!isLoggedIn ? (
             <>
-              <button className="btn btn-primary btn-ghost btn-sm ">Contact sales</button>
+              <button className="btn-primary btn-ghost btn-sm btn ">Contact sales</button>
               <Link href="/login">
-                <a className="btn btn-secondary btn-ghost btn-sm ">Login / Signup</a>
+                <a className="btn-secondary btn-ghost btn-sm btn ">Login / Signup</a>
               </Link>
             </>
           ) : (
             <>
-              <div className="dropdown dropdown-end" onClick={() => setSidebar(false)}>
+              <div className="dropdown-end dropdown" onClick={() => setSidebar(false)}>
                 <button tabIndex={0} className="placeholder avatar">
                   <div className="h-8 w-8 rounded-full bg-base-200 text-sm shadow">
                     <span> {(userData.name ?? userData?.tenant?.basics?.name)?.slice(0, 2).toUpperCase()} </span>
@@ -85,7 +85,7 @@ export const NavBar: React.FC<Props> = () => {
 
                   <li>
                     <div className="p-0">
-                      <button className="btn btn-outline btn-sm btn-block" onClick={() => setSettingsModal(true)}>
+                      <button className="btn-outline btn-block btn-sm btn" onClick={() => setSettingsModal(true)}>
                         Settings
                       </button>
                     </div>
@@ -94,7 +94,7 @@ export const NavBar: React.FC<Props> = () => {
                   <li>
                     <div className="p-0">
                       <button
-                        className="btn btn-outline btn-sm btn-block"
+                        className="btn-outline btn-block btn-sm btn"
                         onClick={async () => await signOut({ redirect: true, callbackUrl: '/login' })}
                       >
                         Logout

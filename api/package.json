@@ -25,8 +25,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@bull-board/api": "^4.5.0",
-    "@bull-board/fastify": "^4.5.0",
     "@fastify/autoload": "^5.4.1",
     "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.1.0",
@@ -34,12 +32,12 @@
     "@swc/helpers": "^0.4.12",
     "@trpc/server": "^9.27.4",
     "@typegoose/typegoose": "^9.12.1",
-    "bullmq": "^2.3.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.8.1",
     "fastify-plugin": "^4.3.0",
     "mongoose": "~6.6.5",
     "next-auth": "*",
+    "pg-boss": "^8.1.1",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.1",
     "prisma": "^4.4.0",
@@ -50,7 +48,6 @@
   "devDependencies": {
     "@mirai/app": "workspace:*",
     "@swc/core": "*",
-    "@types/bull": "^4.10.0",
     "@types/ws": "^8.5.3",
     "typescript": "*"
   }

@@ -4,9 +4,15 @@ import type { WebSocket } from 'ws'
 import { parsePayload, WSPayload } from './parser'
 import superjson from 'superjson'
 import { authToken, logger } from '../lib'
-import { EventMap, wsEventEmitter } from './emitter'
+import { EventMap, mq } from './mq'
 
-let client = 0
+interface IClientMeta {
+  joinedAt: number
+  authenticated: boolean
+  subscriptions: string[]
+}
+
+const wsClients = new Map<string, IClientMeta>()
 
 export function setupWsHandlers(conn: SocketStream) {
   conn.socket.on('message', function (data) {
@@ -23,16 +29,11 @@ export function setupWsHandlers(conn: SocketStream) {
       handlers[parsedData.op]?.(parsedData.d, conn.socket)
     }
   })
-
-  conn.socket.once('close', () => client--)
 }
 
 // TODO: remove all handlers on auth error
 const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void> = {
   auth(data: { token: string }, socket) {
-    client++
-    logger.info(`Connected clients ${client}`)
-
     let userId: number | null = null
 
     function handler(eventData: EventMap['notification']) {
@@ -51,16 +52,31 @@ const handlers: Record<string, (data: WSPayload['d'], socket: WebSocket) => void
       socket.send(superjson.stringify({ op: 'auth-success' }))
 
       // attach handler for notification from queue
-      wsEventEmitter.on('notification', handler)
+      mq.on('notification', handler)
+
+      const joinedAt = Date.now()
+
+      // we have joinedAt inside key to allow same user to have multiple connections
+      wsClients.set(`${session.user.id}-${joinedAt}`, {
+        authenticated: true,
+        joinedAt,
+        subscriptions: ['notification'],
+      })
+      logger.info(`Connected clients ${wsClients.size}`)
 
       // remove when client disconnects
-      socket.on('close', () => wsEventEmitter.off('notification', handler))
+      socket.on('close', () => {
+        mq.off('notification', handler)
+
+        wsClients.delete(`${session.user.id}-${joinedAt}`)
+        logger.info(`Connected clients ${wsClients.size}`)
+      })
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         socket.send(superjson.stringify({ op: 'token-expired' }))
       }
 
-      wsEventEmitter.off('notification', handler)
+      mq.off('notification', handler)
     }
   },
 }

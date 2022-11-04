@@ -6,4 +6,4 @@ export type EventMap = {
   notification: NotificationPayload
 }
 
-export const wsEventEmitter = mitt<EventMap>()
+export const mq = mitt<EventMap>()
