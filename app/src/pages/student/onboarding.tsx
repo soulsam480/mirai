@@ -90,7 +90,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
     shouldFocusError: true,
   })
 
-  const { register, handleSubmit } = form
+  const { handleSubmit } = form
 
   useEffect(() => {
     if (error !== null) {
@@ -151,9 +151,9 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             <div className="text-center text-lg">Please fill the form below</div>
 
             <div className="grid grid-cols-1 gap-x-2 gap-y-1 sm:grid-cols-2 ">
-              <MInput label="Name" {...register('name')} placeholder="Sachin Mishra" />
+              <MInput name="name" label="Name" placeholder="Sachin Mishra" />
 
-              <MInput name="name" label="Email" type="email" placeholder="smishra@gmail.com" />
+              <MInput name="email" label="Email" type="email" placeholder="smishra@gmail.com" />
 
               <MInput name="dob" label="Date of birth" type="date" />
 
@@ -182,7 +182,7 @@ const StudentOnboarding: NextPageWithLayout<InferGetServerSidePropsType<typeof g
             </div>
 
             <div className="mt-4 flex justify-end space-x-2">
-              <button type="submit" className="btn btn-sm mt-5">
+              <button type="submit" className="btn-sm btn mt-5">
                 Submit
               </button>
             </div>

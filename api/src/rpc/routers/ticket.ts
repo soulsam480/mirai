@@ -2,7 +2,7 @@ import { bulkTicketResolveSchema, createTicketSchema, ticketListingInput } from 
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass, isRole, isUniqueId } from '../../lib'
-import { flowProducer } from '../../queues'
+import { addJob } from '../../queues'
 import { createRouter } from '../createRouter'
 
 export const ticketRouter = createRouter()
@@ -80,21 +80,15 @@ export const ticketRouter = createRouter()
     input: bulkTicketResolveSchema,
     async resolve({ input }) {
       try {
-        await flowProducer.add({
-          name: `tickt-review-batch-${input.key}-${Date.now()}`,
-          queueName: 'ticketBatch',
-          data: {
-            instituteId: input.key,
-            size: input.data.length,
-          },
-          children: input.data.map((ticket) => {
-            return {
-              name: `ticket-review-${ticket.id}-${Date.now()}`,
-              queueName: 'tickets',
-              data: { ...ticket },
-            }
-          }),
-        })
+        for (let index = 0; index < input.data.length; index++) {
+          const ticketReview = input.data[index]
+
+          await addJob('TICKET', {
+            ...ticketReview,
+            lastInBatch: index === input.data.length - 1,
+            batchSize: input.data.length,
+          })
+        }
 
         return { success: true, data: null }
       } catch (error) {
