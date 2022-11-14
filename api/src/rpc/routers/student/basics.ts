@@ -1,6 +1,6 @@
 import { createRouter } from '../../createRouter'
 import { z } from 'zod'
-import { createStudentBasicsSchema } from '@mirai/app'
+import { createStudentBasicsSchema } from '@mirai/schema'
 import { TRPCError } from '@trpc/server'
 
 export const basicsRouter = createRouter()

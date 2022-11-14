@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useSkills } from '../../../../contexts'
-import { createSkillSchema } from '../../../../schemas'
+import { createSkillSchema } from '@mirai/schema'
 import { StudentSkill, studentSkillsAtom, useUser } from '../../../../stores'
 import { MDialog, MForm, MInput, MSelect } from '../../../lib'
 import { SkillCard } from './SkillCard'
@@ -79,7 +79,7 @@ export const Skills: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6    ">Skills</div>
-        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
+        <button className="flex-start btn-ghost btn-sm btn gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconPhPlus />
           </span>
@@ -118,13 +118,13 @@ export const Skills: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="   btn btn-outline btn-sm mt-5"
+              className="   btn-outline btn-sm btn mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading && 'loading'])}>
+              <button type="submit" className={clsx(['   btn-sm btn mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

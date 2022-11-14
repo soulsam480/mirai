@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
-import { createDepartmentSchema } from '@mirai/app'
+import { createDepartmentSchema } from '@mirai/schema'
 import { z } from 'zod'
 import { isInstituteRole } from '../../lib'
 

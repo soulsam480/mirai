@@ -1,4 +1,4 @@
-import { createProjectSchema } from '@mirai/app'
+import { createProjectSchema } from '@mirai/schema'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'

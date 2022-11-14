@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCertification } from '../../../../contexts'
-import { createCertificationSchema } from '../../../../schemas'
+import { createCertificationSchema } from '@mirai/schema'
 import { studentCertificationsAtom, useUser } from '../../../../stores'
 import { OverWrite, StudentProfileIgnore } from '../../../../types'
 import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
@@ -124,7 +124,7 @@ export const Certifications: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6    ">Certifications</div>
-        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
+        <button className="flex-start btn-ghost btn-sm btn gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconPhPlus />
           </span>
@@ -189,13 +189,13 @@ export const Certifications: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="btn btn-outline btn-sm mt-5"
+              className="btn-outline btn-sm btn mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading && 'loading'])}>
+              <button type="submit" className={clsx(['btn-sm btn mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

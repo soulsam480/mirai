@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
-import { createInstituteSchema, tourSchema } from '@mirai/app'
+import { createInstituteSchema, tourSchema } from '@mirai/schema'
 
 export const accountRouter = createRouter()
   .middleware(async ({ ctx, next }) => {

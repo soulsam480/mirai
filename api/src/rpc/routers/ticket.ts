@@ -1,4 +1,4 @@
-import { bulkTicketResolveSchema, createTicketSchema, ticketListingInput } from '@mirai/app'
+import { bulkTicketResolveSchema, createTicketSchema, ticketListingInput } from '@mirai/schema'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { hashPass, isRole, isUniqueId } from '../../lib'

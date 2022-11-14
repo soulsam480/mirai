@@ -1,4 +1,4 @@
-import { createCertificationSchema } from '@mirai/app'
+import { createCertificationSchema } from '@mirai/schema'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'

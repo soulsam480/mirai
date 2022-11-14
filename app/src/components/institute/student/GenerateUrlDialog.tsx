@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { useAtomValue } from 'jotai'
 import { instituteBatches, instituteCourses, instituteDepartments, useUser } from '../../../stores'
 import { MForm, MSelect, useAlert } from '../../lib'
-import { generateOnboardingUrlSchema } from '../../../schemas'
+import { generateOnboardingUrlSchema } from '@mirai/schema'
 import { copyToClip, trpcClient } from '../../../utils'
 
 interface Props {
@@ -71,7 +71,7 @@ export const GenerateUrlDialog: React.FC<Props> = ({ onClose }) => {
       <MSelect name="courseId" label="Course" options={courseOptions} />
 
       <div className="flex justify-end">
-        <button className="btn btn-outline btn-sm" type="submit">
+        <button className="btn-outline btn-sm btn" type="submit">
           Copy to clipboard
         </button>
       </div>

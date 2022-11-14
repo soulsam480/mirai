@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'
-import { generateOnboardingUrlSchema, studentsQuerySchema } from '@mirai/app'
+import { generateOnboardingUrlSchema, studentsQuerySchema } from '@mirai/schema'
 import { onBoardingTokens } from '../../lib'
 import dayjs from 'dayjs'
 

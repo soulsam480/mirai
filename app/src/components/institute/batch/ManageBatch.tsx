@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useBatch } from '../../../contexts'
-import { createBatchSchema } from '../../../schemas'
+import { createBatchSchema } from '@mirai/schema'
 import { useUser } from '../../../stores'
 import { TRPCErrorType } from '../../../types'
 import { formatDate } from '../../../utils'
@@ -116,12 +116,12 @@ export const ManageBatch: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/batch')}
-            className="   btn btn-outline btn-sm mt-5"
+            className="   btn-outline btn-sm btn mt-5"
           >
             Cancel
           </button>
 
-          <button type="submit" className="   btn btn-sm mt-5">
+          <button type="submit" className="   btn-sm btn mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
         </div>

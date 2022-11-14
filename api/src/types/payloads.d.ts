@@ -1,4 +1,4 @@
-import { generateOnboardingUrlSchema } from '@mirai/app'
+import { generateOnboardingUrlSchema } from '@mirai/schema'
 import { z } from 'zod'
 
 export interface LoginPayload {

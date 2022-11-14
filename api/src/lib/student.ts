@@ -1,4 +1,4 @@
-import { studentOnboardingSchema } from '@mirai/app'
+import { studentOnboardingSchema } from '@mirai/schema'
 import { z } from 'zod'
 import miraiClient from '../db'
 import snakeCase from 'lodash/snakeCase'

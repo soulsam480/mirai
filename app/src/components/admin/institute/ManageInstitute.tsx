@@ -7,7 +7,7 @@ import { copyToClip } from '../../../utils/helpers'
 import { z } from 'zod'
 import { useInstitute } from '../../../contexts'
 import { useGlobalError } from '../../../utils/hooks'
-import { manageInstituteSchema } from '../../../schemas'
+import { manageInstituteSchema } from '@mirai/schema'
 
 const INSTITUTE_STATUS = ['ONBOARDED', 'INPROGRESS', 'PENDING'].map((v) => ({ label: v, value: v }))
 
@@ -156,19 +156,19 @@ export const ManageInstitute: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/admin/institute')}
-            className="   btn btn-outline btn-sm mt-5"
+            className="   btn-outline btn-sm btn mt-5"
           >
             Cancel{' '}
           </button>
 
-          <button type="submit" className="   btn btn-sm mt-5">
+          <button type="submit" className="   btn-sm btn mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
           {isEditMode && instituteData?.status === 'PENDING' && (
             <button
               type="button"
               onClick={exportSignupLink}
-              className="   btn btn-sm mt-5"
+              className="   btn-sm btn mt-5"
               title="Generate Signup link for institute"
             >
               {' '}

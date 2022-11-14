@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import { useUser } from '../../../stores'
 import { useGlobalError } from '../../../utils'
 import { useDepartment } from '../../../contexts'
-import { createDepartmentSchema } from '../../../schemas'
+import { createDepartmentSchema } from '@mirai/schema'
 import { MForm, MInput } from '../../lib'
 
 export const ManageDepartment: React.FC<any> = () => {
@@ -79,12 +79,12 @@ export const ManageDepartment: React.FC<any> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/department')}
-            className="btn btn-outline btn-sm mt-5"
+            className="btn-outline btn-sm btn mt-5"
           >
             Cancel
           </button>
 
-          <button type="submit" className="btn btn-sm mt-5">
+          <button type="submit" className="btn-sm btn mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
         </div>
