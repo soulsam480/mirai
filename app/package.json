@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir ../temp/tsc-output"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.3",
+    "@headlessui/react": "^1.7.4",
     "@hookform/resolvers": "^2.9.9",
     "@popperjs/core": "^2.11.6",
     "@prisma/client": "*",
@@ -24,36 +24,36 @@
     "@trpc/server": "*",
     "axios": "^0.27.2",
     "clsx": "^1.2.1",
-    "daisyui": "^2.31.0",
+    "daisyui": "^2.40.1",
     "isomorphic-ws": "^5.0.0",
-    "jotai": "^1.8.5",
+    "jotai": "^1.9.2",
     "next": "^12.3.1",
     "next-compose-plugins": "^2.2.1",
-    "next-http-proxy-middleware": "^1.2.4",
+    "next-http-proxy-middleware": "^1.2.5",
     "next-transpile-modules": "^9.1.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-hook-form": "^7.37.0",
+    "react-hook-form": "^7.39.3",
     "react-query": "^3.39.2",
     "react-shepherd": "^4.1.0",
     "react-use": "^17.4.0",
     "reconnecting-websocket": "^4.4.0",
-    "superjson": "^1.10.1",
-    "ws": "^8.9.0"
+    "superjson": "^1.11.0",
+    "ws": "^8.11.0"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.2",
-    "@svgr/core": "^6.4.0",
-    "@tailwindcss/typography": "^0.5.7",
+    "@svgr/core": "^6.5.1",
+    "@tailwindcss/typography": "^0.5.8",
     "@types/react": "^17.0.47",
     "@types/react-dom": "^17.0.16",
     "@types/ws": "^8.5.3",
-    "autoprefixer": "^10.4.12",
+    "autoprefixer": "^10.4.13",
     "babel-plugin-superjson-next": "^0.4.4",
     "next-superjson": "^0.0.4",
-    "postcss": "^8.4.18",
-    "sass": "^1.55.0",
-    "tailwindcss": "^3.2.0"
+    "postcss": "^8.4.19",
+    "sass": "^1.56.1",
+    "tailwindcss": "^3.2.4"
   },
   "publishConfig": {
     "access": "restricted"

@@ -27,8 +27,8 @@
   "dependencies": {
     "@fastify/autoload": "^5.4.1",
     "@fastify/cookie": "^8.3.0",
-    "@fastify/cors": "^8.1.0",
-    "@fastify/websocket": "^7.1.0",
+    "@fastify/cors": "^8.2.0",
+    "@fastify/websocket": "^7.1.1",
     "@swc/helpers": "^0.4.12",
     "@trpc/server": "^9.27.4",
     "dotenv": "^16.0.3",
@@ -38,9 +38,9 @@
     "pg-boss": "^8.1.1",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.1",
-    "prisma": "^4.4.0",
+    "prisma": "^4.6.1",
     "prisma-exclude": "^1.0.2",
-    "superjson": "^1.10.1",
+    "superjson": "^1.11.0",
     "ts-node-dev": "^2.0.0"
   },
   "devDependencies": {
