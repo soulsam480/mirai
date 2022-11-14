@@ -7,7 +7,7 @@ import omit from 'lodash/omit'
 import { useGlobalError } from '../../../utils'
 import { useUser } from '../../../stores'
 import { useCourse, useDepartments } from '../../../contexts'
-import { createCourseSchema } from '../../../schemas'
+import { createCourseSchema } from '@mirai/schema'
 import { MForm, MInput, MSelect } from '../../lib'
 
 interface Props {}
@@ -146,12 +146,12 @@ export const ManageCourse: React.FC<Props> = () => {
           <button
             type="button"
             onClick={async () => await router.push('/institute/course')}
-            className="btn btn-outline btn-sm mt-5"
+            className="btn-outline btn-sm btn mt-5"
           >
             Cancel
           </button>
 
-          <button type="submit" className="   btn btn-sm mt-5">
+          <button type="submit" className="   btn-sm btn mt-5">
             {isEditMode ? 'Update' : 'Create'}
           </button>
         </div>

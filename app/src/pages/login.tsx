@@ -7,7 +7,7 @@ import { getSession, signIn } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { getUserHome, trpc } from '../utils'
 import { MForm, MIcon, MInput, useLoader } from '../components/lib'
-import { LoginSchema } from '../schemas'
+import { LoginSchema } from '@mirai/schema'
 import { NavBar } from '../components/globals/NavBar'
 import IconPhWarningCircle from '~icons/ph/warning-circle'
 
@@ -94,7 +94,7 @@ const Login: NextPageWithLayout = () => {
 
             <MInput name="password" label="Password" type="password" placeholder="password" />
 
-            <button type="submit" className="btn btn-sm btn-block mt-5">
+            <button type="submit" className="btn-block btn-sm btn mt-5">
               Submit
             </button>
           </MForm>

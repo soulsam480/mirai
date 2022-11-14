@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { z } from 'zod'
 import { useProject } from '../../../../contexts'
-import { createProjectSchema } from '../../../../schemas'
+import { createProjectSchema } from '@mirai/schema'
 import { studentProjectsAtom, useUser } from '../../../../stores'
 import { OverWrite, StudentProfileIgnore } from '../../../../types'
 import { formatDate, getDiff, STUDENT_PROFILE_IGNORE_KEYS } from '../../../../utils'
@@ -137,7 +137,7 @@ export const Projects: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6    ">Projects</div>
-        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
+        <button className="flex-start btn-ghost btn-sm btn gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconPhPlus />
           </span>
@@ -195,13 +195,13 @@ export const Projects: React.FC<Props> = () => {
                 setDialog(false)
                 resetForm()
               }}
-              className="   btn btn-outline btn-sm mt-5"
+              className="   btn-outline btn-sm btn mt-5"
             >
               Cancel
             </button>
 
             {!isReadonly && (
-              <button type="submit" className={clsx(['   btn btn-sm mt-5', isLoading && 'loading'])}>
+              <button type="submit" className={clsx(['   btn-sm btn mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             )}

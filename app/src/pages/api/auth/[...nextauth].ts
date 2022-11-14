@@ -14,7 +14,7 @@ export default NextAuth({
   callbacks: {
     jwt: ({ token, user }) => {
       if (user !== undefined) {
-        token.id = user.id
+        token.id = user.id as number
         token.role = user.role
       }
 

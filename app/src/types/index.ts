@@ -1,4 +1,4 @@
-import { createTicketSchema, studentOnboardingSchema } from './../schemas/index'
+import { createTicketSchema, studentOnboardingSchema } from '@mirai/schema'
 import { TRPCClientErrorLike } from '@trpc/client'
 import { UseTRPCQueryOptions } from '@trpc/react'
 import { inferProcedureInput, inferProcedureOutput, ProcedureRecord } from '@trpc/server'

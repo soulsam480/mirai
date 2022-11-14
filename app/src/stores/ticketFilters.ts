@@ -1,5 +1,5 @@
 import { atomWithReset } from 'jotai/utils'
-import { ticketListingInput } from '../schemas'
+import { ticketListingInput } from '@mirai/schema'
 import { z } from 'zod'
 
 type TicketFilterQuery = Omit<z.infer<typeof ticketListingInput>, 'instituteId'>

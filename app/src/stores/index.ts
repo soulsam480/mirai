@@ -4,7 +4,7 @@ import { useCallback } from 'react'
 
 export function useSelectAtom<T, K>(anAtom: Atom<T>, keyFn: (v: Awaited<T>) => K) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useAtomValue(selectAtom(anAtom, useCallback(keyFn, []) as any))
+  return useAtomValue(selectAtom(anAtom, useCallback(keyFn, [])))
 }
 
 export * from './activeProfile'

@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server'
-import { createBatchSchema } from '@mirai/app'
+import { createBatchSchema } from '@mirai/schema'
 import { isInstituteRole } from '../../lib'
 import { createRouter } from '../createRouter'
 import { z } from 'zod'

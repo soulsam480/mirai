@@ -6,6 +6,6 @@ declare module 'fastify' {
   }
 
   interface FastifyInstance {
-    addJobToQueue: typeof import('./queues/boss').addJob
+    addJobToQueue: typeof import('@mirai/api/src/queues/boss').addJob
   }
 }

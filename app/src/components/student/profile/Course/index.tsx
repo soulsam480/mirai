@@ -2,7 +2,7 @@ import { useAtomValue } from 'jotai'
 import React from 'react'
 import { z } from 'zod'
 import { useScore } from '../../../../contexts'
-import { semUpdateSchema } from '../../../../schemas'
+import { semUpdateSchema } from '@mirai/schema'
 import { studentScoreAtom, useUser } from '../../../../stores'
 import { CourseCard } from './CourseCard'
 

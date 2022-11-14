@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useBasics } from '../../../../contexts'
-import { createStudentBasicsSchema } from '../../../../schemas'
+import { createStudentBasicsSchema } from '@mirai/schema'
 import { StudentAddress, studentBasicsAtom, useUser } from '../../../../stores'
 import { CATEGORY_TYPES, formatDate, GENDER_TYPES } from '../../../../utils'
 import { MDialog, MForm, MInput, MSelect } from '../../../lib'
@@ -204,7 +204,7 @@ export const Basics: React.FC<Props> = () => {
                     <input
                       type="checkbox"
                       checked={sameAsPermanent}
-                      className="checkbox checkbox-primary checkbox-sm"
+                      className="checkbox-primary checkbox checkbox-sm"
                       onChange={({ target: { checked } }) => {
                         handleSameAddress(checked)
                       }}
@@ -235,12 +235,12 @@ export const Basics: React.FC<Props> = () => {
                 setDialog(false)
                 setSameAsPermanent(false)
               }}
-              className="btn btn-outline btn-sm mt-5"
+              className="btn-outline btn-sm btn mt-5"
             >
               Cancel
             </button>
 
-            <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading && 'loading'])}>
+            <button type="submit" className={clsx(['btn-sm btn mt-5', isLoading && 'loading'])}>
               Save
             </button>
           </div>

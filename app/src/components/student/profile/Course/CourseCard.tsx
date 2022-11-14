@@ -4,7 +4,7 @@ import { useAtomValue } from 'jotai'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { semUpdateSchema } from '../../../../schemas'
+import { semUpdateSchema } from '@mirai/schema'
 import { studentCourseAtom, studentScoreAtom, StudentSemScore } from '../../../../stores'
 import { formatDate, interpolate } from '../../../../utils'
 import { MDialog, MFeatureCard, MForm, MIcon, MInput } from '../../../lib'
@@ -107,7 +107,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
 
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
-              className="btn btn-outline btn-sm"
+              className="btn-outline btn-sm btn"
               onClick={() => {
                 setDialog(false)
                 setSelectedSem(null)
@@ -118,7 +118,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
               Cancel
             </button>
 
-            <button className="btn btn-sm" type="submit">
+            <button className="btn-sm btn" type="submit">
               Save
             </button>
           </div>
@@ -180,7 +180,7 @@ export const CourseCard: React.FC<Props> = ({ onSemUpdate }) => {
                         >
                           {key === '_update' ? (
                             <button
-                              className="btn btn-circle btn-ghost btn-sm"
+                              className="btn-ghost btn-sm btn-circle btn"
                               onClick={() => {
                                 setSelectedSem(semId)
                                 reset(studentScore?.scores?.[String(semId)] ?? {})

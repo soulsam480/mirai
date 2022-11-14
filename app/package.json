@@ -3,13 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "license": "GNU GPLv3",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
   "scripts": {
     "build:app": "next build",
-    "build": "pnpm run build:app",
+    "build": "run-s clear build:app",
     "dev": "next dev",
-    "dx": "pnpm run dev",
+    "dx": "run-s clear dev",
+    "clear": "rimraf dist",
     "start": "next start",
     "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir ../temp/tsc-output"
   },
@@ -39,7 +38,8 @@
     "react-use": "^17.4.0",
     "reconnecting-websocket": "^4.4.0",
     "superjson": "^1.11.0",
-    "ws": "^8.11.0"
+    "ws": "^8.11.0",
+    "@mirai/schema": "workspace:*"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.2",

@@ -1,4 +1,4 @@
-import { createTicketSchema, studentOnboardingSchema } from '@mirai/app'
+import { createTicketSchema, studentOnboardingSchema } from '@mirai/schema'
 import type { TicketStatus } from '@prisma/client'
 import { z } from 'zod'
 import miraiClient from '../db'

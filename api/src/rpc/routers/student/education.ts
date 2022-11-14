@@ -1,4 +1,4 @@
-import { createStudentEducationSchema } from '@mirai/app'
+import { createStudentEducationSchema } from '@mirai/schema'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 import { createRouter } from '../../createRouter'

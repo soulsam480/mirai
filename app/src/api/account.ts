@@ -1,4 +1,4 @@
-import { tourSchema } from '../schemas'
+import { tourSchema } from '@mirai/schema'
 import { trpcClient } from '../utils/trpc'
 import { z } from 'zod'
 

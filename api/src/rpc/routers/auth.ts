@@ -1,6 +1,6 @@
 import { TRPCError } from '@trpc/server'
 import { nanoid } from 'nanoid'
-import { LoginSchema, signupSchema } from '@mirai/app'
+import { LoginSchema, signupSchema } from '@mirai/schema'
 import { z } from 'zod'
 import { createRouter } from '../createRouter'
 import { authToken, comparePassword, hashPass, prismaQueryHelper } from '../../lib'

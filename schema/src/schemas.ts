@@ -1,7 +1,7 @@
 import { StudentScoreType } from '@prisma/client'
 import dayjs from 'dayjs'
 import { z } from 'zod'
-import { MOBILE_REGEX, PASSWORD_REGEX } from './regex'
+import { MOBILE_REGEX, PASSWORD_REGEX } from './utils'
 
 // ? custom primitives
 const stringOrNum = z

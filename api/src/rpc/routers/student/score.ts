@@ -1,7 +1,7 @@
 import { createRouter } from '../../createRouter'
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
-import { semUpdateSchema } from '@mirai/app'
+import { semUpdateSchema } from '@mirai/schema'
 
 export const scoreRouter = createRouter()
   .query('get', {

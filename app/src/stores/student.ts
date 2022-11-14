@@ -13,7 +13,7 @@ import type {
 } from '@prisma/client'
 import { atom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
-import { studentsQuerySchema } from '../schemas'
+import { studentsQuerySchema } from '@mirai/schema'
 import type { OverWrite } from '../types'
 import { z } from 'zod'
 

@@ -11,7 +11,7 @@ import { EducationCard } from './EducationCard'
 import { OverWrite } from '../../../../types'
 import { studentEducationAtom, useUser } from '../../../../stores'
 import { useEducation } from '../../../../contexts'
-import { createStudentEducationSchema } from '../../../../schemas'
+import { createStudentEducationSchema } from '@mirai/schema'
 import { formatDate, getDiff } from '../../../../utils'
 import { MCheckbox, MDialog, MForm, MInput, MSelect } from '../../../lib'
 import IconPhPlus from '~icons/ph/plus'
@@ -153,7 +153,7 @@ export const Education: React.FC<Props> = () => {
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <div className="text-lg font-medium leading-6">Education</div>
-        <button className="flex-start btn btn-ghost btn-sm gap-2" onClick={() => setDialog(true)}>
+        <button className="flex-start btn-ghost btn-sm btn gap-2" onClick={() => setDialog(true)}>
           <span>
             <IconPhPlus />
           </span>
@@ -228,12 +228,12 @@ export const Education: React.FC<Props> = () => {
                   setDialog(false)
                   resetForm()
                 }}
-                className="btn btn-outline btn-sm mt-5"
+                className="btn-outline btn-sm btn mt-5"
               >
                 Cancel
               </button>
 
-              <button type="submit" className={clsx(['btn btn-sm mt-5', isLoading && 'loading'])}>
+              <button type="submit" className={clsx(['btn-sm btn mt-5', isLoading && 'loading'])}>
                 Save
               </button>
             </div>
