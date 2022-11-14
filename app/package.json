@@ -7,11 +7,10 @@
   "module": "src/index.ts",
   "scripts": {
     "build:app": "next build",
-    "build": "run-s clear build:app",
+    "build": "pnpm run build:app",
     "dev": "next dev",
-    "dx": "run-s clear dev",
+    "dx": "pnpm run dev",
     "start": "next start",
-    "clear": "rimraf dist",
     "typecheck": "tsc --noEmit --pretty -p tsconfig.json --outDir ../temp/tsc-output"
   },
   "dependencies": {
