@@ -1,4 +1,3 @@
-import { SourceType } from '../entities'
 import { addJob, boss, JobNames } from './boss'
 
 export interface TicketBatchData {
@@ -13,7 +12,7 @@ void boss.work<TicketBatchData, any>('TICKET_BATCH' as JobNames, async (job) => 
   await addJob('NOTIFICATION', {
     ownerId: data.instituteId,
     data: {
-      sourceType: SourceType.system,
+      sourceType: 'system',
       meta: {
         type: 'ticketBatch',
         size: data.size,
