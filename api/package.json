@@ -15,7 +15,6 @@
     "build": "tsc",
     "start-1": "prisma migrate deploy --schema=../prisma/schema.prisma",
     "start-2": "cross-env NODE_ENV=production node dist/app.js",
-    "postinstall": "prisma generate --schema=../prisma/schema.prisma",
     "start": "run-s start-*",
     "studio": "cross-env DATABASE_URL=postgresql://postgres:@localhost:5632/mirai prisma studio --schema=../prisma/schema.prisma"
   },
@@ -35,11 +34,10 @@
     "dotenv": "^16.0.3",
     "fastify": "^4.8.1",
     "fastify-plugin": "^4.3.0",
-    "next-auth": "*",
     "pg-boss": "^8.1.1",
     "pino": "^8.6.1",
     "pino-pretty": "^9.1.1",
-    "prisma": "^4.6.1",
+    "prisma": "*",
     "prisma-exclude": "^1.0.2",
     "superjson": "^1.11.0",
     "ts-node-dev": "^2.0.0"
@@ -47,7 +45,6 @@
   "devDependencies": {
     "@mirai/schema": "workspace:*",
     "@swc/core": "*",
-    "@types/ws": "^8.5.3",
-    "typescript": "*"
+    "@types/ws": "^8.5.3"
   }
 }

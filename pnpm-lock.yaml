@@ -5,7 +5,6 @@ importers:
   .:
     specifiers:
       '@mirai/api': workspace:*
-      '@mirai/app': workspace:*
       '@prisma/client': ^4.6.1
       '@types/bcryptjs': ^2.4.2
       '@types/jsonwebtoken': ^8.5.9
@@ -39,6 +38,7 @@ importers:
       npm-run-all: ^4.1.5
       prettier: ^2.7.1
       prettier-plugin-tailwindcss: ^0.1.13
+      prisma: ^4.6.1
       rimraf: ^3.0.2
       ts-node: ^10.9.1
       typescript: ^4.8.4
@@ -46,8 +46,7 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@mirai/api': link:api
-      '@mirai/app': link:app
-      '@prisma/client': 4.6.1
+      '@prisma/client': 4.6.1_prisma@4.6.1
       bcryptjs: 2.4.3
       cross-env: 7.0.3
       dayjs: 1.11.6
@@ -83,6 +82,7 @@ importers:
       npm-run-all: 4.1.5
       prettier: 2.7.1
       prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
+      prisma: 4.6.1
       ts-node: 10.9.1_lw7q66ikwuedwcorwkk4v6trsa
       typescript: 4.8.4
       unplugin-icons: 0.14.13
@@ -101,15 +101,13 @@ importers:
       dotenv: ^16.0.3
       fastify: ^4.8.1
       fastify-plugin: ^4.3.0
-      next-auth: '*'
       pg-boss: ^8.1.1
       pino: ^8.6.1
       pino-pretty: ^9.1.1
-      prisma: ^4.6.1
+      prisma: '*'
       prisma-exclude: ^1.0.2
       superjson: ^1.11.0
       ts-node-dev: ^2.0.0
-      typescript: '*'
     dependencies:
       '@fastify/autoload': 5.4.1
       '@fastify/cookie': 8.3.0
@@ -120,19 +118,17 @@ importers:
       dotenv: 16.0.3
       fastify: 4.9.2
       fastify-plugin: 4.3.0
-      next-auth: 4.16.4
       pg-boss: 8.1.1
       pino: 8.7.0
       pino-pretty: 9.1.1
       prisma: 4.6.1
       prisma-exclude: 1.0.2
       superjson: 1.11.0
-      ts-node-dev: 2.0.0_6yqwcne7hyxkofmgunm52xhmgy
+      ts-node-dev: 2.0.0_@swc+core@1.3.9
     devDependencies:
       '@mirai/schema': link:../schema
       '@swc/core': 1.3.9
       '@types/ws': 8.5.3
-      typescript: 4.8.4
 
   app:
     specifiers:
@@ -1007,6 +1003,20 @@ packages:
       '@prisma/engines-version': 4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32
     dev: false
 
+  /@prisma/client/4.6.1_prisma@4.6.1:
+    resolution: {integrity: sha512-M1+NNrMzqaOIxT7PBGcTs3IZo7d1EW/+gVQd4C4gUgWBDGgD9AcIeZnUSidgWClmpMSgVUdnVORjsWWGUameYA==}
+    engines: {node: '>=14.17'}
+    requiresBuild: true
+    peerDependencies:
+      prisma: '*'
+    peerDependenciesMeta:
+      prisma:
+        optional: true
+    dependencies:
+      '@prisma/engines-version': 4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32
+      prisma: 4.6.1
+    dev: false
+
   /@prisma/engines-version/4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32:
     resolution: {integrity: sha512-HUCmkXAU2jqp2O1RvNtbE+seLGLyJGEABZS/R38rZjSAafAy0WzBuHq+tbZMnD+b5OSCsTVtIPVcuvx1ySxcWQ==}
     dev: false
@@ -1014,7 +1024,6 @@ packages:
   /@prisma/engines/4.6.1:
     resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
     requiresBuild: true
-    dev: false
 
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
@@ -5005,7 +5014,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.6.1
-    dev: false
 
   /process-warning/2.0.0:
     resolution: {integrity: sha512-+MmoAXoUX+VTHAlwns0h+kFUWFs/3FZy+ZuchkgjyOu3oioLAo2LB5aCfKPh2+P9O18i3m43tUEv3YqttSy0Ww==}
@@ -5841,7 +5849,7 @@ packages:
     resolution: {integrity: sha512-Z86EW+fFFh/IFB1fqQ3/+7Zpf9t2ebOAxNI/V6Wo7r5gqiqtxmgTlQ1qbqQcjLKYeSHPTsEmvlJUDg/EuL0uHQ==}
     dev: false
 
-  /ts-node-dev/2.0.0_6yqwcne7hyxkofmgunm52xhmgy:
+  /ts-node-dev/2.0.0_@swc+core@1.3.9:
     resolution: {integrity: sha512-ywMrhCfH6M75yftYvrvNarLEY+SUXtUvU8/0Z6llrHQVBx12GiFk5sStF8UdfE/yfzk9IAq7O5EEbTQsxlBI8w==}
     engines: {node: '>=0.8.0'}
     hasBin: true
@@ -5860,16 +5868,15 @@ packages:
       rimraf: 2.7.1
       source-map-support: 0.5.21
       tree-kill: 1.2.2
-      ts-node: 10.9.1_6yqwcne7hyxkofmgunm52xhmgy
+      ts-node: 10.9.1_@swc+core@1.3.9
       tsconfig: 7.0.0
-      typescript: 4.8.4
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
       - '@types/node'
     dev: false
 
-  /ts-node/10.9.1_6yqwcne7hyxkofmgunm52xhmgy:
+  /ts-node/10.9.1_@swc+core@1.3.9:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -5895,7 +5902,6 @@ packages:
       create-require: 1.1.1
       diff: 4.0.2
       make-error: 1.3.6
-      typescript: 4.8.4
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     dev: false
@@ -5996,6 +6002,7 @@ packages:
     resolution: {integrity: sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==}
     engines: {node: '>=4.2.0'}
     hasBin: true
+    dev: true
 
   /unbox-primitive/1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
