@@ -21,7 +21,7 @@
     "type-check": "tsc --pretty --noEmit --incremental --tsBuildInfoFile \"temp/.tsBuildInfo\" -p tsconfig.check.json",
     "build-schema": "pnpm run --filter @mirai/schema build",
     "dev:schema": "pnpm run --filter @mirai/schema dev",
-    "postinstall": "pnpm run build-schema"
+    "postinstall": "run-s build-schema"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -31,8 +31,6 @@
   },
   "dependencies": {
     "@mirai/api": "workspace:*",
-    "@mirai/app": "workspace:*",
-    "@prisma/client": "^4.6.1",
     "bcryptjs": "^2.4.3",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.6",
@@ -45,6 +43,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
+    "@prisma/client": "^4.6.1",
     "@types/jsonwebtoken": "^8.5.9",
     "@types/lodash": "^4.14.186",
     "@types/node": "^18.11.0",
