@@ -16,7 +16,6 @@
     "@headlessui/react": "^1.7.4",
     "@hookform/resolvers": "^2.9.9",
     "@popperjs/core": "^2.11.6",
-    "@prisma/client": "*",
     "@trpc/client": "^9.27.4",
     "@trpc/next": "^9.27.4",
     "@trpc/react": "^9.27.4",
@@ -39,7 +38,8 @@
     "reconnecting-websocket": "^4.4.0",
     "superjson": "^1.11.0",
     "ws": "^8.11.0",
-    "@mirai/schema": "workspace:*"
+    "@mirai/schema": "workspace:*",
+    "@prisma/client": "*"
   },
   "devDependencies": {
     "@iconify-json/ph": "^1.1.2",

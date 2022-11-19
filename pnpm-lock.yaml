@@ -38,7 +38,6 @@ importers:
       npm-run-all: ^4.1.5
       prettier: ^2.7.1
       prettier-plugin-tailwindcss: ^0.1.13
-      prisma: ^4.6.1
       rimraf: ^3.0.2
       ts-node: ^10.9.1
       typescript: ^4.8.4
@@ -46,7 +45,6 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@mirai/api': link:api
-      '@prisma/client': 4.6.1_prisma@4.6.1
       bcryptjs: 2.4.3
       cross-env: 7.0.3
       dayjs: 1.11.6
@@ -57,6 +55,7 @@ importers:
       rimraf: 3.0.2
       zod: 3.19.1
     devDependencies:
+      '@prisma/client': 4.6.1
       '@types/bcryptjs': 2.4.2
       '@types/jsonwebtoken': 8.5.9
       '@types/lodash': 4.14.186
@@ -82,7 +81,6 @@ importers:
       npm-run-all: 4.1.5
       prettier: 2.7.1
       prettier-plugin-tailwindcss: 0.1.13_prettier@2.7.1
-      prisma: 4.6.1
       ts-node: 10.9.1_lw7q66ikwuedwcorwkk4v6trsa
       typescript: 4.8.4
       unplugin-icons: 0.14.13
@@ -94,6 +92,7 @@ importers:
       '@fastify/cors': ^8.2.0
       '@fastify/websocket': ^7.1.1
       '@mirai/schema': workspace:*
+      '@prisma/client': '*'
       '@swc/core': '*'
       '@swc/helpers': ^0.4.12
       '@trpc/server': ^9.27.4
@@ -104,7 +103,7 @@ importers:
       pg-boss: ^8.1.1
       pino: ^8.6.1
       pino-pretty: ^9.1.1
-      prisma: '*'
+      prisma: ^4.6.1
       prisma-exclude: ^1.0.2
       superjson: ^1.11.0
       ts-node-dev: ^2.0.0
@@ -113,6 +112,7 @@ importers:
       '@fastify/cookie': 8.3.0
       '@fastify/cors': 8.2.0
       '@fastify/websocket': 7.1.1
+      '@prisma/client': 4.6.1_prisma@4.6.1
       '@swc/helpers': 0.4.12
       '@trpc/server': 9.27.4
       dotenv: 16.0.3
@@ -1001,7 +1001,6 @@ packages:
         optional: true
     dependencies:
       '@prisma/engines-version': 4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32
-    dev: false
 
   /@prisma/client/4.6.1_prisma@4.6.1:
     resolution: {integrity: sha512-M1+NNrMzqaOIxT7PBGcTs3IZo7d1EW/+gVQd4C4gUgWBDGgD9AcIeZnUSidgWClmpMSgVUdnVORjsWWGUameYA==}
@@ -1019,11 +1018,11 @@ packages:
 
   /@prisma/engines-version/4.6.1-3.694eea289a8462c80264df36757e4fdc129b1b32:
     resolution: {integrity: sha512-HUCmkXAU2jqp2O1RvNtbE+seLGLyJGEABZS/R38rZjSAafAy0WzBuHq+tbZMnD+b5OSCsTVtIPVcuvx1ySxcWQ==}
-    dev: false
 
   /@prisma/engines/4.6.1:
     resolution: {integrity: sha512-3u2/XxvxB+Q7cMXHnKU0CpBiUK1QWqpgiBv28YDo1zOIJE3FCF8DI2vrp6vuwjGt5h0JGXDSvmSf4D4maVjJdw==}
     requiresBuild: true
+    dev: false
 
   /@rushstack/eslint-patch/1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
@@ -5014,6 +5013,7 @@ packages:
     requiresBuild: true
     dependencies:
       '@prisma/engines': 4.6.1
+    dev: false
 
   /process-warning/2.0.0:
     resolution: {integrity: sha512-+MmoAXoUX+VTHAlwns0h+kFUWFs/3FZy+ZuchkgjyOu3oioLAo2LB5aCfKPh2+P9O18i3m43tUEv3YqttSy0Ww==}

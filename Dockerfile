@@ -25,8 +25,10 @@ COPY api/package.json ./api/package.json
 COPY package.json ./
 COPY schema ./schema
 COPY prisma ./prisma
-RUN pnpm install --frozen-lockfile --shamefully-hoist --reporter=append-only  --filter @mirai/api && \ pnpm store prune && \ rm -rf ~/.pnpm-store
-COPY --from=builder /usr/src/app/api/dist ./api/dist
+RUN pnpm install --frozen-lockfile --ignore-scripts --reporter=append-only  --filter @mirai/api && \
+    pnpm store prune && \
+    rm -rf ~/.pnpm-store
+COPY --from=install /usr/src/app/api/dist ./api/dist
 EXPOSE 4444
 
 CMD ["npm", "run", "start:api"]
