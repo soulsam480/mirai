@@ -31,6 +31,11 @@ export const basicsRouter = createRouter()
         update: data,
       })
 
+      await ctx.prisma.student.update({
+        where: { id: studentId },
+        data: { dataUpdatedAt: new Date() },
+      })
+
       return result
     },
   })

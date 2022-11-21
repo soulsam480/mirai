@@ -90,6 +90,11 @@ export const studentRouter = createRouter()
         select: { skills: true },
       })
 
+      await ctx.prisma.student.update({
+        where: { id: studentId },
+        data: { dataUpdatedAt: new Date() },
+      })
+
       return skillData
     },
   })

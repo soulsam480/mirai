@@ -312,3 +312,18 @@ export const semUpdateSchema = z
     message: 'Backlog details is required',
     path: ['backlogDetails'],
   })
+
+export const notificationDataSchema = z.object({
+  sourceType: z.enum(['system', 'admin', 'institute', 'other']),
+  sourceId: z.number().optional(),
+  meta: z.record(z.any()).refine((data) => {
+    if ('type' in data) {
+      return z
+        .string()
+        .regex(/^[A-Z0-9_]+$/)
+        .safeParse(data.type).success
+    }
+
+    return true
+  }),
+})
