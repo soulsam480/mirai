@@ -8,8 +8,8 @@
     "dev": "tsc -w --preserveWatchOutput"
   },
   "dependencies": {
-    "zod": "*",
-    "@prisma/client": "*",
-    "dayjs": "*"
+    "@prisma/client": "^4.8.1",
+    "dayjs": "^1.11.7",
+    "zod": "^3.20.2"
   }
 }
