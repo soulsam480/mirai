@@ -27,7 +27,7 @@ export async function addJob<T extends JobNames>(name: T, data: Jobs[T]) {
 }
 
 export async function registerWorkers() {
-  await boss.schedule('STUDENT_DATA_DIFF' as JobNames, '*/5 * * * *')
+  await boss.schedule('STUDENT_DATA_DIFF' as JobNames, '0 4 * * *')
 
   await boss.work('TICKET' as JobNames, ticketWorker)
   await boss.work('STUDENT_DATA_DIFF' as JobNames, dataDiffWorker)

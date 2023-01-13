@@ -1,5 +1,6 @@
-import dayjs from 'dayjs'
 import miraiClient from '../db'
+import { logger } from '../lib'
+import { addJob } from './boss'
 
 export async function dataDiffWorker() {
   // get all institutes with active status
@@ -17,11 +18,11 @@ export async function dataDiffWorker() {
         students: {
           some: {
             AND: {
-              // Batch: {
-              //   status: 'ACTIVE',
-              // },
+              Batch: {
+                status: 'ACTIVE',
+              },
               dataUpdatedAt: {
-                gte: dayjs().subtract(1, 'D').toDate(),
+                gt: new Date(new Date().getDate() - 1),
               },
               OR: [
                 {
@@ -66,20 +67,20 @@ export async function dataDiffWorker() {
       },
     })
 
-    // institutes.forEach(async (institute) => {
-    //   await addJob('NOTIFICATION', {
-    //     ownerId: institute.account?.id as number,
-    //     data: {
-    //       sourceType: 'system',
-    //       meta: {
-    //         type: 'STUDENT_DATA_DIFF',
-    //         studentCount: institute._count.students,
-    //       },
-    //     },
-    //   })
-    // })
+    logger.info('[MIRAI INFRA] Sending notification to ', institutes.length, ' institutes')
 
-    console.log(institutes)
+    for (const institute of institutes) {
+      await addJob('NOTIFICATION', {
+        ownerId: institute.account?.id as number,
+        data: {
+          sourceType: 'system',
+          meta: {
+            type: 'STUDENT_DATA_DIFF',
+            studentCount: institute._count.students,
+          },
+        },
+      })
+    }
 
     const nextCursor = institutes.at(-1)?.id
 

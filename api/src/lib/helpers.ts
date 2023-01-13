@@ -29,7 +29,21 @@ export function getEnv(key: string, strict = process.env.NODE_ENV === 'productio
 
 const transport = pino.transport({
   target: 'pino-pretty',
-  options: { colorize: true },
+  options: {
+    colorize: true,
+  },
 })
 
-export const logger = pino.pino(transport)
+export const logger = pino.pino(
+  {
+    hooks: {
+      logMethod(args, method) {
+        if (args.length > 1) {
+          args[0] = args.filter(String).join('')
+        }
+        method.apply(this, args)
+      },
+    },
+  },
+  transport,
+)
