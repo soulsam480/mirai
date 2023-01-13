@@ -3,7 +3,7 @@ import { useSession } from 'next-auth/react'
 import React from 'react'
 import { userAtom } from '../stores'
 import { trpc } from '../utils'
-import { useAtomsDevtools } from 'jotai/devtools'
+import { useAtomsDevtools } from 'jotai-devtools'
 import { MSpinner } from '../components/lib'
 
 interface Props {}
