@@ -28,7 +28,13 @@ export const scoreRouter = createRouter()
         where: { studentId },
         data: {
           scores: data,
+          verified: false,
         },
+      })
+
+      await ctx.prisma.student.update({
+        where: { id: studentId },
+        data: { dataUpdatedAt: new Date() },
       })
 
       return scoreData

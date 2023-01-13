@@ -135,6 +135,8 @@ model Student {
   course   Course? @relation(fields: [courseId], references: [id])
   courseId Int?
 
+  dataUpdatedAt DateTime @default(now())
+
   // basics
   basics         StudentBasics?
   score          StudentScore?

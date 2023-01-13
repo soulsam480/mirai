@@ -1,12 +1,12 @@
-import { addJob, boss, JobNames } from './boss'
+import { Job } from 'pg-boss'
+import { addJob, Jobs } from './boss'
 
 export interface TicketBatchData {
   instituteId: number
   size: number
 }
 
-// TODO: move to pub-sub system
-void boss.work<TicketBatchData, any>('TICKET_BATCH' as JobNames, async (job) => {
+export async function ticketBatchWorker(job: Job<Jobs['TICKET_BATCH']>) {
   const { data } = job
 
   await addJob('NOTIFICATION', {
@@ -14,9 +14,9 @@ void boss.work<TicketBatchData, any>('TICKET_BATCH' as JobNames, async (job) => 
     data: {
       sourceType: 'system',
       meta: {
-        type: 'ticketBatch',
+        type: 'TICKET_BATCH',
         size: data.size,
       },
     },
   })
-})
+}

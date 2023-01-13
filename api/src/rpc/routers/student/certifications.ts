@@ -13,6 +13,11 @@ export const certificationRouter = createRouter()
         },
       })
 
+      await ctx.prisma.student.update({
+        where: { id: certificationData.studentId },
+        data: { dataUpdatedAt: new Date() },
+      })
+
       return certificationData
     },
   })
@@ -26,6 +31,11 @@ export const certificationRouter = createRouter()
         data: {
           ...data,
         },
+      })
+
+      await ctx.prisma.student.update({
+        where: { id: certificationData.studentId },
+        data: { dataUpdatedAt: new Date() },
       })
 
       return certificationData

@@ -5,7 +5,6 @@ importers:
   .:
     specifiers:
       '@mirai/api': workspace:*
-      '@mirai/app': workspace:*
       '@prisma/client': ^4.6.1
       '@types/bcryptjs': ^2.4.2
       '@types/jsonwebtoken': ^8.5.9
@@ -46,7 +45,6 @@ importers:
       zod: ^3.19.1
     dependencies:
       '@mirai/api': link:api
-      '@mirai/app': link:app
       '@prisma/client': 4.6.1
       bcryptjs: 2.4.3
       cross-env: 7.0.3

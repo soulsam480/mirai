@@ -1,10 +1,11 @@
 import { createTicketSchema, studentOnboardingSchema } from '@mirai/schema'
 import type { TicketStatus } from '@prisma/client'
+import { Job } from 'pg-boss'
 import { z } from 'zod'
 import miraiClient from '../db'
 import { createStudent } from '../lib'
 import { OverWrite, TicketJob } from '../types'
-import { addJob, boss, JobNames } from './boss'
+import { addJob, Jobs } from './boss'
 
 type StudentTicketShape = OverWrite<
   z.infer<typeof createTicketSchema>['meta'],
@@ -33,7 +34,7 @@ async function addBatchJobIfLast(job: TicketJob, instituteId: number) {
   })
 }
 
-void boss.work<TicketJob, any>('TICKET' as JobNames, async (job) => {
+export async function ticketWorker(job: Job<Jobs['TICKET']>) {
   const ticket = await miraiClient.ticket.findFirst({
     where: { id: job.data.id },
     include: { institute: { select: { name: true } } },
@@ -104,4 +105,4 @@ void boss.work<TicketJob, any>('TICKET' as JobNames, async (job) => {
       message: error.toString(),
     }
   }
-})
+}

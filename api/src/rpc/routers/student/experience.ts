@@ -13,6 +13,11 @@ export const experienceRouter = createRouter()
         },
       })
 
+      await ctx.prisma.student.update({
+        where: { id: input.studentId },
+        data: { dataUpdatedAt: new Date() },
+      })
+
       return experienceData
     },
   })
@@ -25,7 +30,13 @@ export const experienceRouter = createRouter()
         where: { id },
         data: {
           ...data,
+          verified: false,
         },
+      })
+
+      await ctx.prisma.student.update({
+        where: { id: experienceData.studentId },
+        data: { dataUpdatedAt: new Date() },
       })
 
       return experienceData

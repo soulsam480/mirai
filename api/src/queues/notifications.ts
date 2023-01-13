@@ -1,14 +1,16 @@
+import { notificationDataSchema } from '@mirai/schema'
+import { Job } from 'pg-boss'
+import { z } from 'zod'
 import miraiClient from '../db'
 import { mq } from '../ws'
-import { boss } from './boss'
+import { Jobs } from './boss'
 
 export interface CreateNotificationPayload {
   ownerId: number
-  data: Record<string, any>
+  data: z.infer<typeof notificationDataSchema>
 }
 
-// TODO: move to pub-sub system
-void boss.work<CreateNotificationPayload, any>('some', async (job) => {
+export async function notificationWorker(job: Job<Jobs['NOTIFICATION']>) {
   const { data } = job
 
   await miraiClient.notification.create({
@@ -21,4 +23,4 @@ void boss.work<CreateNotificationPayload, any>('some', async (job) => {
   })
 
   return 'OK'
-})
+}
